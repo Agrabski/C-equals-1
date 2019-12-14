@@ -9,7 +9,7 @@
             "type": "antlr-debug",
             "request": "launch",
             "input": "test.txt",
-            "grammar": "Grammar/CMinusEqualsMinus1Revision0.g4",
+            "grammar": "Grammar/Revision0/CMinusEqualsMinus1Revision0.g4",
             "printParseTree": true,
             "visualParseTree": true
         }
