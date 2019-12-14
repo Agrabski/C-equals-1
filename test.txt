@@ -1,0 +1,5 @@
+language standard = 0;
+interface a 
+{
+    int n = s + s;
+}
