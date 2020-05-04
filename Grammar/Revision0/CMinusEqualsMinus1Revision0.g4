@@ -1,203 +1,192 @@
 grammar CMinusEqualsMinus1Revision0;
 
-compilationUnit
-    : languageStandardDeclaration declarationSequence EOF
-    | declarationSequence
-    ;
+compilationUnit:
+	languageStandardDeclaration declarationSequence EOF
+	| declarationSequence;
 
+languageStandardDeclaration:
+	'standard' '=' IntegerLiteral SemiColon;
 
-OpenBracket : '{';
-CloseBracket : '}';
-RAWSTRING : '"' .*? '(' .*? ')' .*? '"';
-DOUBLEQUOTE : '"';
-SINGLEQUOTE : '\'';
-ParamOpen : '(';
-PARAMCLOSE : ')';
-ATTROBITEOPEN : '[';
-ATTROBITECLOSE : ']';
+declarationSequence: declaration*;
 
-declarationSequence
-    : declaration declarationSequence
-    | declaration
-    ;
+declaration: functionDeclaration;
+//| classDeclaration | interfaceDeclaration | structDeclaration | namespaceDeclaration;
 
-declaration
-    : classOrInterfaceDeclaration
-    | functionDeclaration
-    ;
+namespaceDeclaration : 'namespace' qualifiedIdentifier OpenBracket declarationSequence CloseBracket;
 
-classOrInterfaceDeclaration
-    : attributeSequence Class identifier classBody
-    | attributeSequence Interface identifier classBody
-    | Class identifier
-    ;
+functionDeclaration:
+	attributeSequence? 'fn' Identifier ParamOpen parameterList ParamClose '->' qualifiedIdentifier
+		functionBody;
 
-classBody
-    : OpenBracket memberDeclarationSequence CloseBracket
-    ;
+parameterList:
+	| qualifiedIdentifier Identifier
+	| (qualifiedIdentifier Identifier ',')+ qualifiedIdentifier Identifier;
 
-memberDeclarationSequence
-    : memberDeclaration memberDeclarationSequence?
-    |
-    ;
+functionBody: OpenBracket statement* CloseBracket;
 
-memberDeclaration
-    : functionDeclaration
-    | memberVariableDeclaration
-    ;
+compoundStatement:
+	OpenBracket statement* CloseBracket
+	| statement;
 
-memberVariableDeclaration
-    : accessibility? qualifiedTypeName reference? identifier semiColon
-    | accessibility? qualifiedTypeName reference? identifier asssigment expression semiColon
-    ;
+statement:
+	expression SemiColon
+	| ifStatement
+	| loopStatement
+	| assigmentStatement SemiColon;
+
+ifStatement:
+	'if' ParamOpen logicalExpression ParamClose compoundStatement;
+
+loopStatement:
+	rangeForStatement
+	| forStatement
+	| whileStatement
+	| doWhileStatement
+	| infiniteLoopStatement;
+
+rangeForStatement:
+	'for' ParamOpen Identifier 'in' expression ParamClose compoundStatement;
+
+forStatement:
+	'for' ParamOpen expression SemiColon logicalExpression SemiColon expression ParamClose
+		compoundStatement;
+
+whileStatement: whileHeader compoundStatement;
+doWhileStatement: 'do' compoundStatement whileHeader SemiColon;
+whileHeader: 'while' ParamOpen logicalExpression ParamClose;
+
+infiniteLoopStatement: 'loop' compoundStatement;
+
+//todo
+functionCall:
+	qualifiedIdentifier ParamOpen (
+		functionCallParameter (Comma functionCallParameter)*
+	)? ParamClose;
+functionCallParameter: expression | arithmeticExpression | logicalExpression;
+attributeSequence: attribute+;
+
+attribute: ATTROBITEOPEN functionCall ATTROBITECLOSE;
+
+qualifiedIdentifier: Identifier (DoubleColon Identifier)*;
 
 expression
-    : identifier
-    | literal
-    | expression binaryOperator expression
-    //| unaryOperator expression		TODO
-    ;
+    :functionCall
+	| throwExpression
+	| qualifiedIdentifier
+	| ParamOpen expression ParamClose;
 
-functionDeclaration
-    : attributeSequence accessibility virtuality? qualifiedTypeName identifier ParamOpen argumentSequence PARAMCLOSE semiColon
-    | attributeSequence accessibility virtuality? qualifiedTypeName identifier ParamOpen argumentSequence PARAMCLOSE functionBody
-    ;
+arithmeticExpression:
+	arithmeticExpression ArithmeticBinaryOperator arithmeticExpression
+	| functionCall
+	| qualifiedIdentifier
+	| ArithmeticUnaryOperator arithmeticExpression
+	| IntegerLiteral
+	| expression;
 
-functionBody
-    : statementBlock
-    | defaultSpecification
-    ;
+logicalExpression:
+	logicalExpression LogicalBinaryOperator logicalExpression
+	| functionCall
+	| qualifiedIdentifier
+	| LogicalUnaryOperator logicalExpression
+	| comparisonExpression
+	| expression;
 
+comparisonExpression: arithmeticExpression ComparsionOperator arithmeticExpression;
 
-attributeSequence
-    : 
-    | attributeUse attributeSequence
-    | attributeUse
-    ;
+assigmentStatement:
+	lExpression Asssigment (
+		expression
+		| arithmeticExpression
+		| logicalExpression
+	);
 
-qualifiedTypeName 
-    : identifier doubleColon qualifiedTypeName
-    | identifier
-    ;
+lExpression: qualifiedIdentifier;
 
-attributeUse
-    : ATTROBITEOPEN identifier ATTROBITECLOSE;
+throwExpression: Throw expression;
 
-languageStandardDeclaration
-    : 'language standard' asssigment standardNumber semiColon;
+Identifier: LETTER (LETTER | DIGIT)*;
 
-standardNumber : integerLiteral;
+OpenBracket: '{';
+CloseBracket: '}';
+RAWSTRING: '"' .*? '(' .*? ')' .*? '"';
+DOUBLEQUOTE: '"';
+SINGLEQUOTE: '\'';
+ParamOpen: '(';
+ParamClose: ')';
+ATTROBITEOPEN: '[';
+ATTROBITECLOSE: ']';
 
-identifier : LETTER (DIGIT|LETTER)*;
+ArithmeticBinaryOperator:
+	| Plus
+	| Minus
+	| Star
+	| PlusEquals
+	| MinusEquals
+	| MultiplyEquals
+	| DivideEquals;
+ArithmeticUnaryOperator: Plus | Minus;
 
-invocation : identifier ParamOpen argumentUseSequence PARAMCLOSE;
+ComparsionOperator:
+	GreaterThan
+	| LessThan
+	| GreaterEqual
+	| LessEqual
+	| Equal
+	| NotEqual;
 
-argumentSequence 
-    : qualifiedTypeName identifier comma argumentSequence 
-    | qualifiedTypeName comma argumentSequence
-    | qualifiedTypeName
-    | qualifiedTypeName identifier
-    ;
+LogicalBinaryOperator: Or | And | Xor;
 
-argumentUseSequence
-    : identifierOrLiteral comma argumentSequence
-    | identifierOrLiteral
-    ;
+LogicalUnaryOperator: Not;
 
-identifierOrLiteral
-    : identifier
-    | literal
-    ;
+Not: '!';
+DoubleColon: '::';
+SemiColon: ';';
+Comma: ',';
+Period: '.';
+Equals: '==';
+Asssigment: '=';
+NotEquals: '!=';
+Plus: '+';
+Minus: '-';
+Star: '*';
+PlusEquals: '+=';
+MinusEquals: '-=';
+MultiplyEquals: '*=';
+DivideEquals: '/=';
+GreaterThan: '>';
+LessThan: '<';
+GreaterEqual: '>=';
+LessEqual: '<=';
+Equal: '==';
+NotEqual: '!=';
+Or: '||';
+And: '&&';
+Xor: '^^';
+Strong: '!';
+Nullable: '?';
+Mutable: '^';
+Ref: '&';
+Class: 'class';
+Interface: 'interface';
+Public: 'public';
+Private: 'private';
+Protected: 'protected';
+Internal: 'internal';
+Final: 'final';
+Virtual: 'virtual';
+Abstract: 'abstract';
+Override: 'override';
+DefaultSpecification: '=' 'default';
+Attribute: 'attribute';
+Throw: 'throw';
 
-literal
-    : numericLiteral
-    | stringLiteral
-    //| classLiteral		TODO
-    //| characterLiteral	TODO
-    ;
+IntegerLiteral: (DIGIT)+;
 
-numericLiteral
-    : integerLiteral
-    | floatingPointLiteral
-    ;
+DIGIT: [0-9];
 
-accessibility
-    : Public
-    | Private
-    | Protected
-    | Internal;
+LETTER: [a-zA-Z];
 
-virtuality
-    : Virtual
-    | Final
-    | Abstract
-    | Override
-    ;
-    
-
-stringLiteral : DOUBLEQUOTE RAWSTRING DOUBLEQUOTE;
-
-floatingPointLiteral : integerLiteral comma integerLiteral;
-
-statementBlock : OpenBracket statementSequence CloseBracket;
-
-statementSequence : statement statementSequence?;
-
-statement 
-	: statementBlock
-	| invocation
-	| variableDeclaration
-	;
-
-variableDeclaration : qualifiedTypeName reference? identifier asssigment expression;
-
-
-binaryOperator
-    : plus
-    | minus
-    | star
-    | or
-    | and
-    | xor
-    ;
-
-reference
-    : nullable? strong? mutable? ref;
-
-doubleColon : '::';
-semiColon : ';';
-comma : ',';
-period : '.';
-equals : '==';
-asssigment : '=';
-notEquals : '!=';
-plus : '+';
-minus : '-';
-star : '*';
-or : '||';
-and : '&&';
-xor : '^^';
-strong : '!';
-nullable : '?';
-mutable : '?';
-ref : '&';
-Class : 'class';
-Interface : 'interface';
-Public : 'public';
-Private : 'private';
-Protected : 'protected';
-Internal : 'internal';
-Final : 'final';
-Virtual : 'virtual';
-Abstract : 'abstract';
-Override : 'override';
-defaultSpecification : '=' 'default';
-
-
-integerLiteral : (DIGIT)*;
-
-DIGIT
-   : [0-9]
-   ;
-
-LETTER : [a-zA-Z];
+Whitespace: [ \t]+ -> skip;
+Newline: ('\r' '\n'? | '\n') -> skip;
+BlockComment: '/*' .*? '*/' -> skip;
+LineComment: '//' ~ [\r\n]* -> skip;

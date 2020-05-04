@@ -1,1 +1,16 @@
 .antlr
+/Compiler/CM1Compiler_CPP/antlr_runtime/.vs/antlr4cpp-vs2017/v16
+/Compiler/CM1Compiler_CPP/antlr_runtime/bin/vs-2015/x64/Debug DLL
+/Compiler/CM1Compiler_CPP/antlr_runtime/obj/x64/Debug DLL/antlr4cpp-vs2017
+/Compiler/CM1Compiler_CPP/antlr_runtime/packages/Microsoft.Gsl.0.1.2.1
+/Compiler/CM1Compiler_CPP/antlr_runtime/antlrcpp.xcodeproj
+/Compiler/CM1Compiler_CPP/CM1Compiler_CPP/x64/Debug
+/Compiler/CM1Compiler_CPP/DataStructures/Debug
+/Compiler/CM1Compiler_CPP/DataStructures/x64/Debug
+**/bin
+**/obj
+**/.idea
+**/.vs
+**/Debug
+**/Release
+**/packages
