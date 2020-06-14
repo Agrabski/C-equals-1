@@ -28,6 +28,18 @@ public:
 	void enter(not_null<CMinusEqualsMinus1Revision0Parser::DeclarationContext*> ) override { }
 	void exit(not_null<CMinusEqualsMinus1Revision0Parser::DeclarationContext*>) override { }
 
+	void enter(not_null<CMinusEqualsMinus1Revision0Parser::ClassDeclarationContext*> ) override { }
+	void exit(not_null<CMinusEqualsMinus1Revision0Parser::ClassDeclarationContext*>) override { }
+
+	void enter(not_null<CMinusEqualsMinus1Revision0Parser::ClassContentSequenceContext*> ) override { }
+	void exit(not_null<CMinusEqualsMinus1Revision0Parser::ClassContentSequenceContext*>) override { }
+
+	void enter(not_null<CMinusEqualsMinus1Revision0Parser::FieldDeclarationContext*> ) override { }
+	void exit(not_null<CMinusEqualsMinus1Revision0Parser::FieldDeclarationContext*>) override { }
+
+	void enter(not_null<CMinusEqualsMinus1Revision0Parser::ImplementedInterfacesSequenceContext*> ) override { }
+	void exit(not_null<CMinusEqualsMinus1Revision0Parser::ImplementedInterfacesSequenceContext*>) override { }
+
 	void enter(not_null<CMinusEqualsMinus1Revision0Parser::NamespaceDeclarationContext*> ) override { }
 	void exit(not_null<CMinusEqualsMinus1Revision0Parser::NamespaceDeclarationContext*>) override { }
 
@@ -36,6 +48,9 @@ public:
 
 	void enter(not_null<CMinusEqualsMinus1Revision0Parser::ParameterListContext*> ) override { }
 	void exit(not_null<CMinusEqualsMinus1Revision0Parser::ParameterListContext*>) override { }
+
+	void enter(not_null<CMinusEqualsMinus1Revision0Parser::ParameterContext*> ) override { }
+	void exit(not_null<CMinusEqualsMinus1Revision0Parser::ParameterContext*>) override { }
 
 	void enter(not_null<CMinusEqualsMinus1Revision0Parser::FunctionBodyContext*> ) override { }
 	void exit(not_null<CMinusEqualsMinus1Revision0Parser::FunctionBodyContext*>) override { }

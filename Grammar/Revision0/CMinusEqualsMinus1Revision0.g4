@@ -7,20 +7,34 @@ compilationUnit:
 languageStandardDeclaration:
 	'standard' '=' IntegerLiteral SemiColon;
 
-declarationSequence: declaration*;
+declarationSequence: declaration+;
 
 declaration: functionDeclaration;
 //| classDeclaration | interfaceDeclaration | structDeclaration | namespaceDeclaration;
 
-namespaceDeclaration : 'namespace' qualifiedIdentifier OpenBracket declarationSequence CloseBracket;
+classDeclaration:
+	AccessSpecifier? Class Identifier ':' implementedInterfacesSequence OpenBracket
+		classContentSequence CloseBracket;
+
+classContentSequence: (functionDeclaration | fieldDeclaration)+;
+
+fieldDeclaration:
+	attributeSequence? AccessSpecifier? qualifiedIdentifier Identifier;
+
+implementedInterfacesSequence:
+	qualifiedIdentifier
+	| (qualifiedIdentifier ',')+ qualifiedIdentifier;
+
+namespaceDeclaration:
+	'namespace' qualifiedIdentifier OpenBracket declarationSequence CloseBracket;
 
 functionDeclaration:
-	attributeSequence? 'fn' Identifier ParamOpen parameterList ParamClose '->' qualifiedIdentifier
-		functionBody;
+	(attributeSequence)? AccessSpecifier? 'fn' Identifier ParamOpen parameterList ParamClose '->'
+		qualifiedIdentifier functionBody;
 
-parameterList:
-	| qualifiedIdentifier Identifier
-	| (qualifiedIdentifier Identifier ',')+ qualifiedIdentifier Identifier;
+parameterList: | parameter | (parameter ',')+ parameter;
+
+parameter: attributeSequence? qualifiedIdentifier Identifier;
 
 functionBody: OpenBracket statement* CloseBracket;
 
@@ -57,20 +71,22 @@ whileHeader: 'while' ParamOpen logicalExpression ParamClose;
 
 infiniteLoopStatement: 'loop' compoundStatement;
 
-//todo
 functionCall:
 	qualifiedIdentifier ParamOpen (
 		functionCallParameter (Comma functionCallParameter)*
 	)? ParamClose;
-functionCallParameter: expression | arithmeticExpression | logicalExpression;
+functionCallParameter:
+	expression
+	| arithmeticExpression
+	| logicalExpression;
 attributeSequence: attribute+;
 
 attribute: ATTROBITEOPEN functionCall ATTROBITECLOSE;
 
 qualifiedIdentifier: Identifier (DoubleColon Identifier)*;
 
-expression
-    :functionCall
+expression:
+	functionCall
 	| throwExpression
 	| qualifiedIdentifier
 	| ParamOpen expression ParamClose;
@@ -91,7 +107,8 @@ logicalExpression:
 	| comparisonExpression
 	| expression;
 
-comparisonExpression: arithmeticExpression ComparsionOperator arithmeticExpression;
+comparisonExpression:
+	arithmeticExpression ComparsionOperator arithmeticExpression;
 
 assigmentStatement:
 	lExpression Asssigment (
@@ -103,6 +120,8 @@ assigmentStatement:
 lExpression: qualifiedIdentifier;
 
 throwExpression: Throw expression;
+
+AccessSpecifier: Public | Private | Protected;
 
 Identifier: LETTER (LETTER | DIGIT)*;
 

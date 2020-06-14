@@ -28,7 +28,7 @@ ParserRuleContext::ParserRuleContext(ParserRuleContext* parent, size_t invokingS
 	: RuleContext(parent, invokingStateNumber), start(nullptr), stop(nullptr) {
 }
 
-void ParserRuleContext::copyFrom(ParserRuleContext* ctx) {
+void ParserRuleContext::copyFrom(ParserRuleContext const* ctx) {
 	// from RuleContext
 	this->parent = ctx->parent;
 	this->invokingState = ctx->invokingState;
@@ -36,21 +36,8 @@ void ParserRuleContext::copyFrom(ParserRuleContext* ctx) {
 	this->start = ctx->start;
 	this->stop = ctx->stop;
 
-	// copy any error nodes to alt label node
-	if (!ctx->children.empty()) {
-		for (auto& child : ctx->children) {
-			auto errorNode = dynamic_cast<ErrorNode*>(child.get());
-			if (errorNode != nullptr) {
-				errorNode->setParent(this);
-				children.push_back(errorNode->clone(this));
-			}
-		}
-
-		// Remove the just reparented error nodes from the source context.
-		ctx->children.erase(std::remove_if(ctx->children.begin(), ctx->children.end(), [this](auto const& e) -> bool {
-			return std::find(children.begin(), children.end(), e) != children.end();
-		}), ctx->children.end());
-	}
+	for (auto& child : ctx->children)
+		children.push_back(child->clone(this));
 }
 
 tree::TerminalNode* ParserRuleContext::addChild(std::unique_ptr<tree::TerminalNode>&& t)

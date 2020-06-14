@@ -31,6 +31,22 @@ public:
 		return visitChildren(ctx);
 	}
 
+	antlrcpp::Any visitClassDeclaration(CMinusEqualsMinus1Revision0Parser::ClassDeclarationContext *ctx) override {
+		return visitChildren(ctx);
+	}
+
+	antlrcpp::Any visitClassContentSequence(CMinusEqualsMinus1Revision0Parser::ClassContentSequenceContext *ctx) override {
+		return visitChildren(ctx);
+	}
+
+	antlrcpp::Any visitFieldDeclaration(CMinusEqualsMinus1Revision0Parser::FieldDeclarationContext *ctx) override {
+		return visitChildren(ctx);
+	}
+
+	antlrcpp::Any visitImplementedInterfacesSequence(CMinusEqualsMinus1Revision0Parser::ImplementedInterfacesSequenceContext *ctx) override {
+		return visitChildren(ctx);
+	}
+
 	antlrcpp::Any visitNamespaceDeclaration(CMinusEqualsMinus1Revision0Parser::NamespaceDeclarationContext *ctx) override {
 		return visitChildren(ctx);
 	}
@@ -40,6 +56,10 @@ public:
 	}
 
 	antlrcpp::Any visitParameterList(CMinusEqualsMinus1Revision0Parser::ParameterListContext *ctx) override {
+		return visitChildren(ctx);
+	}
+
+	antlrcpp::Any visitParameter(CMinusEqualsMinus1Revision0Parser::ParameterContext *ctx) override {
 		return visitChildren(ctx);
 	}
 

@@ -1,0 +1,1 @@
+./antlr.jar CMinusEqualsMinus1Revision0.g4 -Dlanguage=Cpp -visitor -o "../../Compiler/CM1Compiler_CPP/Parser"

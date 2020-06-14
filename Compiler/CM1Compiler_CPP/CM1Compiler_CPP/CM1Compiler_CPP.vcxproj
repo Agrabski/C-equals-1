@@ -166,8 +166,20 @@
     <ClInclude Include="CLIInterface.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Compiler\Compiler.vcxproj">
+      <Project>{1e6d57e0-da00-4fee-b18f-9cd8ee91bc56}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\DataStructures\DataStructures.vcxproj">
+      <Project>{024db03c-6b42-4915-a616-13f402d932ac}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\LanguageLogic\LanguageLogic.vcxproj">
+      <Project>{7c7ce242-0e30-44ad-8c49-5d27cab900b8}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\ParserAdapter\ParserAdapter.vcxproj">
       <Project>{2e56be24-256e-4ab8-a485-9f7d7e4a9ad8}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Parser\Parser.vcxproj">
+      <Project>{94df607a-ac46-41f1-a284-1113ad742f01}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

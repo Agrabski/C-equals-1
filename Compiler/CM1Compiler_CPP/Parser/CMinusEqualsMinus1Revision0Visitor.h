@@ -27,11 +27,21 @@ public:
 
 		virtual antlrcpp::Any visitDeclaration(CMinusEqualsMinus1Revision0Parser::DeclarationContext *context) = 0;
 
+		virtual antlrcpp::Any visitClassDeclaration(CMinusEqualsMinus1Revision0Parser::ClassDeclarationContext *context) = 0;
+
+		virtual antlrcpp::Any visitClassContentSequence(CMinusEqualsMinus1Revision0Parser::ClassContentSequenceContext *context) = 0;
+
+		virtual antlrcpp::Any visitFieldDeclaration(CMinusEqualsMinus1Revision0Parser::FieldDeclarationContext *context) = 0;
+
+		virtual antlrcpp::Any visitImplementedInterfacesSequence(CMinusEqualsMinus1Revision0Parser::ImplementedInterfacesSequenceContext *context) = 0;
+
 		virtual antlrcpp::Any visitNamespaceDeclaration(CMinusEqualsMinus1Revision0Parser::NamespaceDeclarationContext *context) = 0;
 
 		virtual antlrcpp::Any visitFunctionDeclaration(CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext *context) = 0;
 
 		virtual antlrcpp::Any visitParameterList(CMinusEqualsMinus1Revision0Parser::ParameterListContext *context) = 0;
+
+		virtual antlrcpp::Any visitParameter(CMinusEqualsMinus1Revision0Parser::ParameterContext *context) = 0;
 
 		virtual antlrcpp::Any visitFunctionBody(CMinusEqualsMinus1Revision0Parser::FunctionBodyContext *context) = 0;
 

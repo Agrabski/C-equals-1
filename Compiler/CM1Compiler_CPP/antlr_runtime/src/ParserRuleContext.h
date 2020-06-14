@@ -71,11 +71,8 @@ namespace antlr4 {
 
 		}
 		ParserRuleContext(ParserRuleContext* parent, size_t invokingStateNumber);
-		/** COPY a ctx (I'm deliberately not using copy constructor) to avoid
-		 *  confusion with creating node with parent. Does not copy children
-		 *  (except error leaves).
-		 */
-		virtual void copyFrom(ParserRuleContext* ctx);
+
+		virtual void copyFrom(ParserRuleContext const* ctx);
 
 
 		// Double dispatch methods for listeners

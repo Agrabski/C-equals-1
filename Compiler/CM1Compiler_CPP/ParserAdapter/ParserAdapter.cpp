@@ -9,5 +9,5 @@ std::unique_ptr<CompilationUnit> ParserAdapter::parse(std::istream& stream)
 	auto lexer = CMinusEqualsMinus1Revision0Lexer(&aStream);
 	antlr4::BufferedTokenStream tokenStream(&lexer);
 	auto parser = CMinusEqualsMinus1Revision0Parser(&tokenStream);
-	return parser.parseCompilationUnit();
+	return parser.parsecompilationUnit();
 }
