@@ -29,3 +29,10 @@ QualifiedName cMCompiler::dataStructures::QualifiedName::next() const
 	result.name_.erase(result.name_.begin());
 	return result;
 }
+
+std::ostream& cMCompiler::dataStructures::operator<<(std::ostream& os, QualifiedName const& name)
+{
+	for (auto& n : name.name_)
+		os << "::" << n;
+	return os;
+}

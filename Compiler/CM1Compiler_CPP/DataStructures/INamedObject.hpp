@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include "QualifiedName.hpp"
 
 namespace cMCompiler::dataStructures
 {
@@ -15,6 +16,7 @@ namespace cMCompiler::dataStructures
 		virtual ~INamedObject() = default;
 		std::string const& name() const noexcept { return name_; }
 		INamedObject* parent() const noexcept { return parent_; }
+		QualifiedName qualifiedName();
 		virtual std::vector<INamedObject*> children() = 0;
 	};
 }

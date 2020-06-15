@@ -26,8 +26,29 @@ public:
 	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::DeclarationContext *>) = 0;
 	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::DeclarationContext *>) = 0;
 
+	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext *>) = 0;
+	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext *>) = 0;
+
+	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::AttributeContentSequenceContext *>) = 0;
+	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::AttributeContentSequenceContext *>) = 0;
+
+	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext *>) = 0;
+	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext *>) = 0;
+
 	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::ClassDeclarationContext *>) = 0;
 	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::ClassDeclarationContext *>) = 0;
+
+	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext *>) = 0;
+	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext *>) = 0;
+
+	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::InterfaceContentSequenceContext *>) = 0;
+	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::InterfaceContentSequenceContext *>) = 0;
+
+	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::StructDeclarationContext *>) = 0;
+	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::StructDeclarationContext *>) = 0;
+
+	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::StructContentSequenceContext *>) = 0;
+	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::StructContentSequenceContext *>) = 0;
 
 	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::ClassContentSequenceContext *>) = 0;
 	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::ClassContentSequenceContext *>) = 0;

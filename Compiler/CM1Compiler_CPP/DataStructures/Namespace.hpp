@@ -5,23 +5,75 @@
 #include "Type.hpp"
 #include "Function.hpp"
 #include "Accessibility.hpp"
+#include "Attribute.hpp"
 
 namespace cMCompiler::dataStructures
 {
 	class Type;
 	class Function;
+	class Attribute;
 	class Namespace : public INamedObject
 	{
 		std::vector<std::unique_ptr<Type>> types_;
 		std::vector<std::unique_ptr<Function>> functions_;
 		std::vector<std::unique_ptr<Namespace>> namespaces_;
+		std::vector<std::unique_ptr<Attribute>> attributes_;
+#pragma region Bulshit
+		template<typename T, typename std::enable_if<std::is_same<typename T,typename Type>::value,int>::type = 0>
+		std::vector<std::unique_ptr<T>>& getAppropriate()
+		{
+			return types_;
+		}
+		template<typename T, typename std::enable_if<std::is_same<typename T, typename Function>::value, int>::type = 0>
+		std::vector<std::unique_ptr<T>>& getAppropriate()
+		{
+			return functions_;
+		}
+		template<typename T, typename std::enable_if<std::is_same<typename T, typename Namespace>::value, int>::type = 0>
+		std::vector<std::unique_ptr<T>>& getAppropriate()
+		{
+			return namespaces_;
+		}
+		template<typename T, typename std::enable_if<std::is_same<typename T, typename Attribute>::value, int>::type = 0>
+		std::vector<std::unique_ptr<T>>& getAppropriate()
+		{
+			return attributes_;
+		}
+#pragma endregion
+
 	public:
 		std::vector<Namespace*> namespaces();
 		Namespace(std::string name, Namespace*parent) : INamedObject(name, parent) {}
-		Type* appendType(std::string name, Accessibility accessibility);
-		Function* appendFunction(std::string name, Accessibility accessibility);
-		Namespace* appendNamespace(std::string name);
 		std::vector<INamedObject*> children() final;
+		template<typename T>
+		T* append(std::string name)
+		{
+			auto tmp = std::make_unique<T>(name, this);
+			auto const result = tmp.get();
+			getAppropriate<T>().push_back(std::move(tmp));
+			return result;
+		}
+
+		template<typename T>
+		std::vector<T*> get()
+		{
+			std::vector<T*> result;
+			auto& collection = getAppropriate<T>();
+			for (auto& e : collection)
+				result.push_back(e.get());
+			return result;
+		}
+
+		template<typename T>
+		T* get(std::string name)
+		{
+			auto& collection = getAppropriate<T>();
+			auto result = std::find_if(begin(collection), end(collection), [&](auto const& e) {return e->name() == name; });
+			if (result != end(collection))
+				return result->get();
+			return nullptr;
+
+		}
 
 	};
 }

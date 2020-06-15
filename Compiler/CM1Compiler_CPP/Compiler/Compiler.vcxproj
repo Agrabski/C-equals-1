@@ -34,11 +34,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CompilationUnitDatabaseBuilder.hpp" />
-    <ClInclude Include="PackageDatabaseManager.hpp" />
+    <ClInclude Include="IntermidiateRepresentationEmmiter.hpp" />
     <ClInclude Include="Preprocessor.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CompilationUnitDatabaseBuilder.cpp" />
+    <ClCompile Include="IntermidiateRepresentationEmmiter.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

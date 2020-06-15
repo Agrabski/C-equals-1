@@ -35,14 +35,26 @@ antlrcpp::Any cMCompiler::compiler::CompilationUnitDataBaseBuilder::visitFunctio
 	dataStructures::Accessibility accessibility = Accessibility::Private;
 	if (ctx->AccessSpecifier() != nullptr)
 		accessibility = parse(ctx->AccessSpecifier()->getText());
-	not_null function = namespaceStack_.back()->appendFunction(ctx->Identifier()->getText(), accessibility);
+	not_null function = namespaceStack_.back()->append<Function>(ctx->Identifier(0)->getText());
+	function->setAccessibility(accessibility);
 
 	for (not_null<CMinusEqualsMinus1Revision0Parser::ParameterContext*> variable : ctx->parameterList()->parameter())
 	{
-		auto const type = nameResolver_.resolve<Type>(QualifiedName(variable->qualifiedIdentifier()->getText()), this->namespaceStack_.back());
-		auto const var = function->appendVariable(variable->Identifier()->getText(), type);
+		auto const type = nameResolver_.resolve<Type>(variable->Identifier(1)->getText(), resolutionContext_);
+		auto const var = function->appendVariable(variable->Identifier(0)->getText(), type);
 		// todo: attribute support
 	}
 
+	return antlrcpp::Any();
+}
+
+antlrcpp::Any cMCompiler::compiler::CompilationUnitDataBaseBuilder::visitImportDeclaration(CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext* ctx)
+{
+	assert(ctx != nullptr);
+	QualifiedName newNamespace = ctx->qualifiedIdentifier()->getText();
+	for (not_null<antlr4::tree::TerminalNode*> unconfirmedName : ctx->Identifier())
+	{
+		nameResolver_.addImport(unconfirmedName->getText(), newNamespace, &database_, resolutionContext_);
+	}
 	return antlrcpp::Any();
 }

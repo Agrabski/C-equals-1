@@ -164,11 +164,14 @@
     <ClInclude Include="Accessibility.hpp" />
     <ClInclude Include="Attribute.hpp" />
     <ClInclude Include="AttributeInstance.hpp" />
+    <ClInclude Include="AttributeTarget.hpp" />
     <ClInclude Include="CompilationContext.hpp" />
     <ClInclude Include="Function.hpp" />
     <ClInclude Include="INamedObject.hpp" />
     <ClInclude Include="Interface.hpp" />
+    <ClInclude Include="IntermidiateRepresentation\IInstruction.hpp" />
     <ClInclude Include="Namespace.hpp" />
+    <ClInclude Include="ObjectWithAccessibility.hpp" />
     <ClInclude Include="PackageDatabase.hpp" />
     <ClInclude Include="QualifiedName.hpp" />
     <ClInclude Include="Type.hpp" />
@@ -179,7 +182,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Accessibility.cpp" />
+    <ClCompile Include="AttributeTarget.cpp" />
     <ClCompile Include="Function.cpp" />
+    <ClCompile Include="INamedObject.cpp" />
     <ClCompile Include="Namespace.cpp" />
     <ClCompile Include="QualifiedName.cpp" />
   </ItemGroup>

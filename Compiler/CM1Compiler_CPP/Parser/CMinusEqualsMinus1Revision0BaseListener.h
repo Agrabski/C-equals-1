@@ -28,8 +28,29 @@ public:
 	void enter(not_null<CMinusEqualsMinus1Revision0Parser::DeclarationContext*> ) override { }
 	void exit(not_null<CMinusEqualsMinus1Revision0Parser::DeclarationContext*>) override { }
 
+	void enter(not_null<CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext*> ) override { }
+	void exit(not_null<CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext*>) override { }
+
+	void enter(not_null<CMinusEqualsMinus1Revision0Parser::AttributeContentSequenceContext*> ) override { }
+	void exit(not_null<CMinusEqualsMinus1Revision0Parser::AttributeContentSequenceContext*>) override { }
+
+	void enter(not_null<CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext*> ) override { }
+	void exit(not_null<CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext*>) override { }
+
 	void enter(not_null<CMinusEqualsMinus1Revision0Parser::ClassDeclarationContext*> ) override { }
 	void exit(not_null<CMinusEqualsMinus1Revision0Parser::ClassDeclarationContext*>) override { }
+
+	void enter(not_null<CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext*> ) override { }
+	void exit(not_null<CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext*>) override { }
+
+	void enter(not_null<CMinusEqualsMinus1Revision0Parser::InterfaceContentSequenceContext*> ) override { }
+	void exit(not_null<CMinusEqualsMinus1Revision0Parser::InterfaceContentSequenceContext*>) override { }
+
+	void enter(not_null<CMinusEqualsMinus1Revision0Parser::StructDeclarationContext*> ) override { }
+	void exit(not_null<CMinusEqualsMinus1Revision0Parser::StructDeclarationContext*>) override { }
+
+	void enter(not_null<CMinusEqualsMinus1Revision0Parser::StructContentSequenceContext*> ) override { }
+	void exit(not_null<CMinusEqualsMinus1Revision0Parser::StructContentSequenceContext*>) override { }
 
 	void enter(not_null<CMinusEqualsMinus1Revision0Parser::ClassContentSequenceContext*> ) override { }
 	void exit(not_null<CMinusEqualsMinus1Revision0Parser::ClassContentSequenceContext*>) override { }

@@ -16,21 +16,21 @@ public:
 	enum
 {
 		T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, 
-		T__7 = 8, T__8 = 9, T__9 = 10, T__10 = 11, AccessSpecifier = 12, Identifier = 13, 
-		OpenBracket = 14, CloseBracket = 15, RAWSTRING = 16, DOUBLEQUOTE = 17, 
-		SINGLEQUOTE = 18, ParamOpen = 19, ParamClose = 20, ATTROBITEOPEN = 21, 
-		ATTROBITECLOSE = 22, ArithmeticBinaryOperator = 23, ArithmeticUnaryOperator = 24, 
-		ComparsionOperator = 25, LogicalBinaryOperator = 26, LogicalUnaryOperator = 27, 
-		Not = 28, DoubleColon = 29, SemiColon = 30, Comma = 31, Period = 32, Equals = 33, 
-		Asssigment = 34, NotEquals = 35, Plus = 36, Minus = 37, Star = 38, PlusEquals = 39, 
-		MinusEquals = 40, MultiplyEquals = 41, DivideEquals = 42, GreaterThan = 43, 
-		LessThan = 44, GreaterEqual = 45, LessEqual = 46, Equal = 47, NotEqual = 48, 
-		Or = 49, And = 50, Xor = 51, Strong = 52, Nullable = 53, Mutable = 54, 
-		Ref = 55, Class = 56, Interface = 57, Public = 58, Private = 59, Protected = 60, 
-		Internal = 61, Final = 62, Virtual = 63, Abstract = 64, Override = 65, 
-		DefaultSpecification = 66, Attribute = 67, Throw = 68, IntegerLiteral = 69, 
-		DIGIT = 70, LETTER = 71, Whitespace = 72, Newline = 73, BlockComment = 74, 
-		LineComment = 75
+		T__7 = 8, T__8 = 9, T__9 = 10, T__10 = 11, T__11 = 12, T__12 = 13, T__13 = 14, 
+		T__14 = 15, T__15 = 16, T__16 = 17, T__17 = 18, T__18 = 19, AccessSpecifier = 20, 
+		Identifier = 21, OpenBracket = 22, CloseBracket = 23, RAWSTRING = 24, 
+		DOUBLEQUOTE = 25, SINGLEQUOTE = 26, ParamOpen = 27, ParamClose = 28, ATTROBITEOPEN = 29, 
+		ATTROBITECLOSE = 30, ArithmeticBinaryOperator = 31, ArithmeticUnaryOperator = 32, 
+		ComparsionOperator = 33, LogicalBinaryOperator = 34, LogicalUnaryOperator = 35, 
+		Not = 36, DoubleColon = 37, SemiColon = 38, Comma = 39, Period = 40, Equals = 41, 
+		Asssigment = 42, NotEquals = 43, Plus = 44, Minus = 45, Star = 46, PlusEquals = 47, 
+		MinusEquals = 48, MultiplyEquals = 49, DivideEquals = 50, GreaterEqual = 51, 
+		LessEqual = 52, Equal = 53, NotEqual = 54, Or = 55, And = 56, Xor = 57, 
+		Strong = 58, Nullable = 59, Mutable = 60, Ref = 61, Class = 62, Interface = 63, 
+		Public = 64, Private = 65, Protected = 66, Internal = 67, Final = 68, 
+		Virtual = 69, Abstract = 70, Override = 71, DefaultSpecification = 72, 
+		Attribute = 73, Throw = 74, IntegerLiteral = 75, DIGIT = 76, LETTER = 77, 
+		Whitespace = 78, Newline = 79, BlockComment = 80, LineComment = 81
 	};
 
 	CMinusEqualsMinus1Revision0Lexer(antlr4::CharStream *input);

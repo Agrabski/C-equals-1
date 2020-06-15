@@ -14,7 +14,7 @@ Namespace* NamespaceBuilder::buildNamespace(QualifiedName name, Namespace* curre
 		if (found != end(namespaces))
 			currentNamespace = *found;
 		else
-			currentNamespace = currentNamespace->appendNamespace(nextName);
+			currentNamespace = currentNamespace->append<Namespace>(nextName);
 	}
 	return currentNamespace;
 }

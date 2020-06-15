@@ -8,7 +8,8 @@ namespace cMCompiler::dataStructures
 		Namespace rootNamespace_;
 		std::string name_;
 	public:
+		std::string const& name() const noexcept { return name_; }
 		Namespace* rootNamespace() noexcept { return &rootNamespace_; }
-		PackageDatabase(std::string name) : name_(std::move(name_)), rootNamespace_("",nullptr) {}
+		PackageDatabase(std::string name) : name_(std::move(name)), rootNamespace_("",nullptr) {}
 	};
 }

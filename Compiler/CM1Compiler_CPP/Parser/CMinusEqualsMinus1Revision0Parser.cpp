@@ -111,28 +111,34 @@ CMinusEqualsMinus1Revision0Parser::CompilationUnitContext* CMinusEqualsMinus1Rev
 	});
 	try
 {
-		setState(75);//750
+		setState(89);//750
 		_errHandler->sync(this, ctx);
 		switch (_input->LA(1))
 		{
 			case CMinusEqualsMinus1Revision0Parser::T__0:
 			{
 				enterOuterAlt(ctx, 1);
-				setState(70); //951
+				setState(84); //951
 				languageStandardDeclaration(ctx);
-				setState(71); //951
+				setState(85); //951
 				declarationSequence(ctx);
-				setState(72);//958
+				setState(86);//958
 				match(CMinusEqualsMinus1Revision0Parser::EOF,ctx);
 				break;
 			}
 
-			case CMinusEqualsMinus1Revision0Parser::T__3:
+			case CMinusEqualsMinus1Revision0Parser::T__1:
+			case CMinusEqualsMinus1Revision0Parser::T__6:
+			case CMinusEqualsMinus1Revision0Parser::T__9:
+			case CMinusEqualsMinus1Revision0Parser::T__10:
+			case CMinusEqualsMinus1Revision0Parser::T__11:
 			case CMinusEqualsMinus1Revision0Parser::AccessSpecifier:
 			case CMinusEqualsMinus1Revision0Parser::ATTROBITEOPEN:
+			case CMinusEqualsMinus1Revision0Parser::Class:
+			case CMinusEqualsMinus1Revision0Parser::Interface:
 			{
 				enterOuterAlt(ctx, 2);
-				setState(74); //951
+				setState(88); //951
 				declarationSequence(ctx);
 				break;
 			}
@@ -241,13 +247,13 @@ CMinusEqualsMinus1Revision0Parser::LanguageStandardDeclarationContext* CMinusEqu
 	try
 {
 		enterOuterAlt(ctx, 1);
-		setState(77);//958
+		setState(91);//958
 		match(CMinusEqualsMinus1Revision0Parser::T__0,ctx);
-		setState(78);//958
+		setState(92);//958
 		match(CMinusEqualsMinus1Revision0Parser::Asssigment,ctx);
-		setState(79);//958
+		setState(93);//958
 		match(CMinusEqualsMinus1Revision0Parser::IntegerLiteral,ctx);
-		setState(80);//958
+		setState(94);//958
 		match(CMinusEqualsMinus1Revision0Parser::SemiColon,ctx);
 	 
 	}
@@ -346,20 +352,26 @@ CMinusEqualsMinus1Revision0Parser::DeclarationSequenceContext* CMinusEqualsMinus
 	try
 {
 		enterOuterAlt(ctx, 1);
-		setState(83); //814
+		setState(97); //814
 		_errHandler->sync(this, ctx);
 		_la = _input->LA(1);
 		do
 		{
-			setState(82); //951
+			setState(96); //951
 			declaration(ctx);
-			setState(85); //820
+			setState(99); //820
 			_errHandler->sync(this, ctx);
 			_la = _input->LA(1);
 		} while ((((_la & ~ 0x3fULL) == 0) &&
-			((1ULL << _la) & ((1ULL << CMinusEqualsMinus1Revision0Parser::T__3)
+			((1ULL << _la) & ((1ULL << CMinusEqualsMinus1Revision0Parser::T__1)
+			| (1ULL << CMinusEqualsMinus1Revision0Parser::T__6)
+			| (1ULL << CMinusEqualsMinus1Revision0Parser::T__9)
+			| (1ULL << CMinusEqualsMinus1Revision0Parser::T__10)
+			| (1ULL << CMinusEqualsMinus1Revision0Parser::T__11)
 			| (1ULL << CMinusEqualsMinus1Revision0Parser::AccessSpecifier)
-			| (1ULL << CMinusEqualsMinus1Revision0Parser::ATTROBITEOPEN))) != 0));
+			| (1ULL << CMinusEqualsMinus1Revision0Parser::ATTROBITEOPEN)
+			| (1ULL << CMinusEqualsMinus1Revision0Parser::Class)
+			| (1ULL << CMinusEqualsMinus1Revision0Parser::Interface))) != 0));
 	 
 	}
 	catch (RecognitionException &e)
@@ -391,6 +403,36 @@ CMinusEqualsMinus1Revision0Parser::DeclarationContext::DeclarationContext(antlr4
 CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext* CMinusEqualsMinus1Revision0Parser::DeclarationContext::functionDeclaration()
 {
 	return getRuleContext<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext>(0);//1165
+}
+
+CMinusEqualsMinus1Revision0Parser::ClassDeclarationContext* CMinusEqualsMinus1Revision0Parser::DeclarationContext::classDeclaration()
+{
+	return getRuleContext<CMinusEqualsMinus1Revision0Parser::ClassDeclarationContext>(0);//1165
+}
+
+CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext* CMinusEqualsMinus1Revision0Parser::DeclarationContext::interfaceDeclaration()
+{
+	return getRuleContext<CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext>(0);//1165
+}
+
+CMinusEqualsMinus1Revision0Parser::StructDeclarationContext* CMinusEqualsMinus1Revision0Parser::DeclarationContext::structDeclaration()
+{
+	return getRuleContext<CMinusEqualsMinus1Revision0Parser::StructDeclarationContext>(0);//1165
+}
+
+CMinusEqualsMinus1Revision0Parser::NamespaceDeclarationContext* CMinusEqualsMinus1Revision0Parser::DeclarationContext::namespaceDeclaration()
+{
+	return getRuleContext<CMinusEqualsMinus1Revision0Parser::NamespaceDeclarationContext>(0);//1165
+}
+
+CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext* CMinusEqualsMinus1Revision0Parser::DeclarationContext::importDeclaration()
+{
+	return getRuleContext<CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext>(0);//1165
+}
+
+CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext* CMinusEqualsMinus1Revision0Parser::DeclarationContext::attributeDeclaration()
+{
+	return getRuleContext<CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext>(0);//1165
 }
 
 
@@ -450,9 +492,67 @@ CMinusEqualsMinus1Revision0Parser::DeclarationContext* CMinusEqualsMinus1Revisio
 	});
 	try
 {
-		enterOuterAlt(ctx, 1);
-		setState(87); //951
-		functionDeclaration(ctx);
+		setState(108);//830
+		_errHandler->sync(this, ctx);
+		switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 2, ctx))
+		{
+		case 1:
+		{
+			enterOuterAlt(ctx, 1);
+			setState(101); //951
+			functionDeclaration(ctx);
+			break;
+		}
+
+		case 2:
+		{
+			enterOuterAlt(ctx, 2);
+			setState(102); //951
+			classDeclaration(ctx);
+			break;
+		}
+
+		case 3:
+		{
+			enterOuterAlt(ctx, 3);
+			setState(103); //951
+			interfaceDeclaration(ctx);
+			break;
+		}
+
+		case 4:
+		{
+			enterOuterAlt(ctx, 4);
+			setState(104); //951
+			structDeclaration(ctx);
+			break;
+		}
+
+		case 5:
+		{
+			enterOuterAlt(ctx, 5);
+			setState(105); //951
+			namespaceDeclaration(ctx);
+			break;
+		}
+
+		case 6:
+		{
+			enterOuterAlt(ctx, 6);
+			setState(106); //951
+			importDeclaration(ctx);
+			break;
+		}
+
+		case 7:
+		{
+			enterOuterAlt(ctx, 7);
+			setState(107); //951
+			attributeDeclaration(ctx);
+			break;
+		}
+
+		}
 	 
 	}
 	catch (RecognitionException &e)
@@ -469,6 +569,435 @@ std::unique_ptr< CMinusEqualsMinus1Revision0Parser::DeclarationContext> CMinusEq
 {
 	declaration();
 	auto result = std::unique_ptr<DeclarationContext>(dynamic_cast<DeclarationContext*>(_root.release()));
+	assert(result != nullptr);
+	return result;
+}
+
+
+//----------------- AttributeDeclarationContext ------------------------------------------------------------------
+
+CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext::AttributeDeclarationContext(antlr4::ParserRuleContext *parent, size_t invokingState)
+	: antlr4::ParserRuleContext(parent, invokingState)
+{
+}
+
+tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext::Identifier()
+{
+	return getToken(CMinusEqualsMinus1Revision0Parser::Identifier, 0);
+}
+
+tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext::OpenBracket()
+{
+	return getToken(CMinusEqualsMinus1Revision0Parser::OpenBracket, 0);
+}
+
+CMinusEqualsMinus1Revision0Parser::AttributeContentSequenceContext* CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext::attributeContentSequence()
+{
+	return getRuleContext<CMinusEqualsMinus1Revision0Parser::AttributeContentSequenceContext>(0);//1165
+}
+
+tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext::CloseBracket()
+{
+	return getToken(CMinusEqualsMinus1Revision0Parser::CloseBracket, 0);
+}
+
+tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext::AccessSpecifier()
+{
+	return getToken(CMinusEqualsMinus1Revision0Parser::AccessSpecifier, 0);
+}
+
+std::vector<tree::TerminalNode *> CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext::Interface()
+{
+	return getTokens(CMinusEqualsMinus1Revision0Parser::Interface);
+}
+
+tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext::Interface(size_t i)
+{
+	return getToken(CMinusEqualsMinus1Revision0Parser::Interface, i);
+}
+
+
+size_t CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext::getRuleIndex() const
+{
+	return CMinusEqualsMinus1Revision0Parser::RuleAttributeDeclaration;//688
+}
+
+void CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext::copyFrom(AttributeDeclarationContext *ctx)
+{
+	antlr4::ParserRuleContext::copyFrom(ctx);
+}
+
+std::unique_ptr<antlr4::tree::ParseTree> CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext::clone(ParseTree* parent) const
+{
+	auto result = std::make_unique<AttributeDeclarationContext>();
+	result->copyFrom(this);
+	result->parent = parent;
+	return result;
+}
+void CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext::enterRule(not_null<tree::ParseTreeListener*> listener)
+{
+	auto parserListener = dynamic_cast<CMinusEqualsMinus1Revision0Listener *>(listener.get());//1212
+	if (parserListener != nullptr)
+		parserListener->enter(this);
+}
+
+void CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext::exitRule(not_null<tree::ParseTreeListener*> listener)
+{
+	auto parserListener = dynamic_cast<CMinusEqualsMinus1Revision0Listener *>(listener.get());//1212
+	if (parserListener != nullptr)
+		parserListener->exit(this);
+}
+
+
+antlrcpp::Any CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext::accept(tree::ParseTreeVisitor *visitor)
+{
+	if (auto parserVisitor = dynamic_cast<CMinusEqualsMinus1Revision0Visitor*>(visitor))//1226
+		return parserVisitor->visitAttributeDeclaration(this);
+	else
+		return visitor->visitChildren(this);
+}
+
+CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext* CMinusEqualsMinus1Revision0Parser::attributeDeclaration( antlr4::ParserRuleContext *parent)
+{
+#ifdef PARSER_DEBUG
+	if(parent != nullptr)
+		std::cout<<parent->getText()<<std::endl;
+#endif
+	auto _localctx = std::make_unique<AttributeDeclarationContext>(parent, getState());//549
+	auto ctx = _localctx.get();//549
+	enterRule(std::move(_localctx), 8, CMinusEqualsMinus1Revision0Parser::RuleAttributeDeclaration);
+	size_t _la = 0;
+
+	auto onExit = finally([=]
+{
+		exitRule(ctx);
+	});
+	try
+{
+		enterOuterAlt(ctx, 1);
+		setState(111);//788
+		_errHandler->sync(this, ctx);
+
+		_la = _input->LA(1);
+		if (_la == CMinusEqualsMinus1Revision0Parser::AccessSpecifier)
+		{
+			setState(110);//958
+			match(CMinusEqualsMinus1Revision0Parser::AccessSpecifier,ctx);
+		}
+		setState(113);//958
+		match(CMinusEqualsMinus1Revision0Parser::T__1,ctx);
+		setState(114);//958
+		match(CMinusEqualsMinus1Revision0Parser::T__2,ctx);
+		setState(116); //814
+		_errHandler->sync(this, ctx);
+		_la = _input->LA(1);
+		do
+		{
+			setState(115);//970
+			_la = _input->LA(1);
+			if (!((((_la & ~ 0x3fULL) == 0) &&
+				((1ULL << _la) & ((1ULL << CMinusEqualsMinus1Revision0Parser::T__3)
+				| (1ULL << CMinusEqualsMinus1Revision0Parser::T__4)
+				| (1ULL << CMinusEqualsMinus1Revision0Parser::Interface))) != 0)))
+			{
+			_errHandler->recoverInline(this, ctx);
+			}
+			else
+			{
+				_errHandler->reportMatch(this);
+				consume(ctx);
+			}
+			setState(118); //820
+			_errHandler->sync(this, ctx);
+			_la = _input->LA(1);
+		} while ((((_la & ~ 0x3fULL) == 0) &&
+			((1ULL << _la) & ((1ULL << CMinusEqualsMinus1Revision0Parser::T__3)
+			| (1ULL << CMinusEqualsMinus1Revision0Parser::T__4)
+			| (1ULL << CMinusEqualsMinus1Revision0Parser::Interface))) != 0));
+		setState(120);//958
+		match(CMinusEqualsMinus1Revision0Parser::T__5,ctx);
+		setState(121);//958
+		match(CMinusEqualsMinus1Revision0Parser::Identifier,ctx);
+		setState(122);//958
+		match(CMinusEqualsMinus1Revision0Parser::OpenBracket,ctx);
+		setState(123); //951
+		attributeContentSequence(ctx);
+		setState(124);//958
+		match(CMinusEqualsMinus1Revision0Parser::CloseBracket,ctx);
+	 
+	}
+	catch (RecognitionException &e)
+{
+		_errHandler->reportError(this, e, ctx);
+		ctx->exception = std::current_exception();
+		_errHandler->recover(this, ctx->exception, ctx);
+	}
+
+	return ctx;
+}
+
+std::unique_ptr< CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext> CMinusEqualsMinus1Revision0Parser::parseattributeDeclaration()
+{
+	attributeDeclaration();
+	auto result = std::unique_ptr<AttributeDeclarationContext>(dynamic_cast<AttributeDeclarationContext*>(_root.release()));
+	assert(result != nullptr);
+	return result;
+}
+
+
+//----------------- AttributeContentSequenceContext ------------------------------------------------------------------
+
+CMinusEqualsMinus1Revision0Parser::AttributeContentSequenceContext::AttributeContentSequenceContext(antlr4::ParserRuleContext *parent, size_t invokingState)
+	: antlr4::ParserRuleContext(parent, invokingState)
+{
+}
+
+std::vector<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext *> CMinusEqualsMinus1Revision0Parser::AttributeContentSequenceContext::functionDeclaration()
+{
+	return getRuleContexts<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext>();//1174
+}
+
+CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext* CMinusEqualsMinus1Revision0Parser::AttributeContentSequenceContext::functionDeclaration(size_t i)
+{
+	return getRuleContext<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext>(i);//1183
+}
+
+
+size_t CMinusEqualsMinus1Revision0Parser::AttributeContentSequenceContext::getRuleIndex() const
+{
+	return CMinusEqualsMinus1Revision0Parser::RuleAttributeContentSequence;//688
+}
+
+void CMinusEqualsMinus1Revision0Parser::AttributeContentSequenceContext::copyFrom(AttributeContentSequenceContext *ctx)
+{
+	antlr4::ParserRuleContext::copyFrom(ctx);
+}
+
+std::unique_ptr<antlr4::tree::ParseTree> CMinusEqualsMinus1Revision0Parser::AttributeContentSequenceContext::clone(ParseTree* parent) const
+{
+	auto result = std::make_unique<AttributeContentSequenceContext>();
+	result->copyFrom(this);
+	result->parent = parent;
+	return result;
+}
+void CMinusEqualsMinus1Revision0Parser::AttributeContentSequenceContext::enterRule(not_null<tree::ParseTreeListener*> listener)
+{
+	auto parserListener = dynamic_cast<CMinusEqualsMinus1Revision0Listener *>(listener.get());//1212
+	if (parserListener != nullptr)
+		parserListener->enter(this);
+}
+
+void CMinusEqualsMinus1Revision0Parser::AttributeContentSequenceContext::exitRule(not_null<tree::ParseTreeListener*> listener)
+{
+	auto parserListener = dynamic_cast<CMinusEqualsMinus1Revision0Listener *>(listener.get());//1212
+	if (parserListener != nullptr)
+		parserListener->exit(this);
+}
+
+
+antlrcpp::Any CMinusEqualsMinus1Revision0Parser::AttributeContentSequenceContext::accept(tree::ParseTreeVisitor *visitor)
+{
+	if (auto parserVisitor = dynamic_cast<CMinusEqualsMinus1Revision0Visitor*>(visitor))//1226
+		return parserVisitor->visitAttributeContentSequence(this);
+	else
+		return visitor->visitChildren(this);
+}
+
+CMinusEqualsMinus1Revision0Parser::AttributeContentSequenceContext* CMinusEqualsMinus1Revision0Parser::attributeContentSequence( antlr4::ParserRuleContext *parent)
+{
+#ifdef PARSER_DEBUG
+	if(parent != nullptr)
+		std::cout<<parent->getText()<<std::endl;
+#endif
+	auto _localctx = std::make_unique<AttributeContentSequenceContext>(parent, getState());//549
+	auto ctx = _localctx.get();//549
+	enterRule(std::move(_localctx), 10, CMinusEqualsMinus1Revision0Parser::RuleAttributeContentSequence);
+	size_t _la = 0;
+
+	auto onExit = finally([=]
+{
+		exitRule(ctx);
+	});
+	try
+{
+		enterOuterAlt(ctx, 1);
+		setState(129);//800
+		_errHandler->sync(this, ctx);
+		_la = _input->LA(1);
+		while ((((_la & ~ 0x3fULL) == 0) &&
+			((1ULL << _la) & ((1ULL << CMinusEqualsMinus1Revision0Parser::T__11)
+			| (1ULL << CMinusEqualsMinus1Revision0Parser::AccessSpecifier)
+			| (1ULL << CMinusEqualsMinus1Revision0Parser::ATTROBITEOPEN))) != 0))
+		{
+			setState(126); //951
+			functionDeclaration(ctx);
+			setState(131);//806
+			_errHandler->sync(this, ctx);
+			_la = _input->LA(1);
+		}
+	 
+	}
+	catch (RecognitionException &e)
+{
+		_errHandler->reportError(this, e, ctx);
+		ctx->exception = std::current_exception();
+		_errHandler->recover(this, ctx->exception, ctx);
+	}
+
+	return ctx;
+}
+
+std::unique_ptr< CMinusEqualsMinus1Revision0Parser::AttributeContentSequenceContext> CMinusEqualsMinus1Revision0Parser::parseattributeContentSequence()
+{
+	attributeContentSequence();
+	auto result = std::unique_ptr<AttributeContentSequenceContext>(dynamic_cast<AttributeContentSequenceContext*>(_root.release()));
+	assert(result != nullptr);
+	return result;
+}
+
+
+//----------------- ImportDeclarationContext ------------------------------------------------------------------
+
+CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext::ImportDeclarationContext(antlr4::ParserRuleContext *parent, size_t invokingState)
+	: antlr4::ParserRuleContext(parent, invokingState)
+{
+}
+
+std::vector<tree::TerminalNode *> CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext::OpenBracket()
+{
+	return getTokens(CMinusEqualsMinus1Revision0Parser::OpenBracket);
+}
+
+tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext::OpenBracket(size_t i)
+{
+	return getToken(CMinusEqualsMinus1Revision0Parser::OpenBracket, i);
+}
+
+std::vector<tree::TerminalNode *> CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext::CloseBracket()
+{
+	return getTokens(CMinusEqualsMinus1Revision0Parser::CloseBracket);
+}
+
+tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext::CloseBracket(size_t i)
+{
+	return getToken(CMinusEqualsMinus1Revision0Parser::CloseBracket, i);
+}
+
+CMinusEqualsMinus1Revision0Parser::QualifiedIdentifierContext* CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext::qualifiedIdentifier()
+{
+	return getRuleContext<CMinusEqualsMinus1Revision0Parser::QualifiedIdentifierContext>(0);//1165
+}
+
+std::vector<tree::TerminalNode *> CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext::Identifier()
+{
+	return getTokens(CMinusEqualsMinus1Revision0Parser::Identifier);
+}
+
+tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext::Identifier(size_t i)
+{
+	return getToken(CMinusEqualsMinus1Revision0Parser::Identifier, i);
+}
+
+
+size_t CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext::getRuleIndex() const
+{
+	return CMinusEqualsMinus1Revision0Parser::RuleImportDeclaration;//688
+}
+
+void CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext::copyFrom(ImportDeclarationContext *ctx)
+{
+	antlr4::ParserRuleContext::copyFrom(ctx);
+}
+
+std::unique_ptr<antlr4::tree::ParseTree> CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext::clone(ParseTree* parent) const
+{
+	auto result = std::make_unique<ImportDeclarationContext>();
+	result->copyFrom(this);
+	result->parent = parent;
+	return result;
+}
+void CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext::enterRule(not_null<tree::ParseTreeListener*> listener)
+{
+	auto parserListener = dynamic_cast<CMinusEqualsMinus1Revision0Listener *>(listener.get());//1212
+	if (parserListener != nullptr)
+		parserListener->enter(this);
+}
+
+void CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext::exitRule(not_null<tree::ParseTreeListener*> listener)
+{
+	auto parserListener = dynamic_cast<CMinusEqualsMinus1Revision0Listener *>(listener.get());//1212
+	if (parserListener != nullptr)
+		parserListener->exit(this);
+}
+
+
+antlrcpp::Any CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext::accept(tree::ParseTreeVisitor *visitor)
+{
+	if (auto parserVisitor = dynamic_cast<CMinusEqualsMinus1Revision0Visitor*>(visitor))//1226
+		return parserVisitor->visitImportDeclaration(this);
+	else
+		return visitor->visitChildren(this);
+}
+
+CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext* CMinusEqualsMinus1Revision0Parser::importDeclaration( antlr4::ParserRuleContext *parent)
+{
+#ifdef PARSER_DEBUG
+	if(parent != nullptr)
+		std::cout<<parent->getText()<<std::endl;
+#endif
+	auto _localctx = std::make_unique<ImportDeclarationContext>(parent, getState());//549
+	auto ctx = _localctx.get();//549
+	enterRule(std::move(_localctx), 12, CMinusEqualsMinus1Revision0Parser::RuleImportDeclaration);
+	size_t _la = 0;
+
+	auto onExit = finally([=]
+{
+		exitRule(ctx);
+	});
+	try
+{
+		enterOuterAlt(ctx, 1);
+		setState(132);//958
+		match(CMinusEqualsMinus1Revision0Parser::T__6,ctx);
+		setState(133);//958
+		match(CMinusEqualsMinus1Revision0Parser::OpenBracket,ctx);
+		setState(135); //814
+		_errHandler->sync(this, ctx);
+		_la = _input->LA(1);
+		do
+		{
+			setState(134);//958
+			match(CMinusEqualsMinus1Revision0Parser::Identifier,ctx);
+			setState(137); //820
+			_errHandler->sync(this, ctx);
+			_la = _input->LA(1);
+		} while (_la == CMinusEqualsMinus1Revision0Parser::Identifier);
+		setState(139);//958
+		match(CMinusEqualsMinus1Revision0Parser::CloseBracket,ctx);
+		setState(140);//958
+		match(CMinusEqualsMinus1Revision0Parser::T__7,ctx);
+		setState(141);//958
+		match(CMinusEqualsMinus1Revision0Parser::OpenBracket,ctx);
+		setState(142); //951
+		qualifiedIdentifier(ctx);
+		setState(143);//958
+		match(CMinusEqualsMinus1Revision0Parser::CloseBracket,ctx);
+	 
+	}
+	catch (RecognitionException &e)
+{
+		_errHandler->reportError(this, e, ctx);
+		ctx->exception = std::current_exception();
+		_errHandler->recover(this, ctx->exception, ctx);
+	}
+
+	return ctx;
+}
+
+std::unique_ptr< CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext> CMinusEqualsMinus1Revision0Parser::parseimportDeclaration()
+{
+	importDeclaration();
+	auto result = std::unique_ptr<ImportDeclarationContext>(dynamic_cast<ImportDeclarationContext*>(_root.release()));
 	assert(result != nullptr);
 	return result;
 }
@@ -509,6 +1038,11 @@ CMinusEqualsMinus1Revision0Parser::ClassContentSequenceContext* CMinusEqualsMinu
 tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::ClassDeclarationContext::CloseBracket()
 {
 	return getToken(CMinusEqualsMinus1Revision0Parser::CloseBracket, 0);
+}
+
+CMinusEqualsMinus1Revision0Parser::AttributeSequenceContext* CMinusEqualsMinus1Revision0Parser::ClassDeclarationContext::attributeSequence()
+{
+	return getRuleContext<CMinusEqualsMinus1Revision0Parser::AttributeSequenceContext>(0);//1165
 }
 
 tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::ClassDeclarationContext::AccessSpecifier()
@@ -565,7 +1099,7 @@ CMinusEqualsMinus1Revision0Parser::ClassDeclarationContext* CMinusEqualsMinus1Re
 #endif
 	auto _localctx = std::make_unique<ClassDeclarationContext>(parent, getState());//549
 	auto ctx = _localctx.get();//549
-	enterRule(std::move(_localctx), 8, CMinusEqualsMinus1Revision0Parser::RuleClassDeclaration);
+	enterRule(std::move(_localctx), 14, CMinusEqualsMinus1Revision0Parser::RuleClassDeclaration);
 	size_t _la = 0;
 
 	auto onExit = finally([=]
@@ -575,28 +1109,37 @@ CMinusEqualsMinus1Revision0Parser::ClassDeclarationContext* CMinusEqualsMinus1Re
 	try
 {
 		enterOuterAlt(ctx, 1);
-		setState(90);//788
+		setState(146);//788
+		_errHandler->sync(this, ctx);
+
+		_la = _input->LA(1);
+		if (_la == CMinusEqualsMinus1Revision0Parser::ATTROBITEOPEN)
+		{
+			setState(145); //951
+			attributeSequence(ctx);
+		}
+		setState(149);//788
 		_errHandler->sync(this, ctx);
 
 		_la = _input->LA(1);
 		if (_la == CMinusEqualsMinus1Revision0Parser::AccessSpecifier)
 		{
-			setState(89);//958
+			setState(148);//958
 			match(CMinusEqualsMinus1Revision0Parser::AccessSpecifier,ctx);
 		}
-		setState(92);//958
+		setState(151);//958
 		match(CMinusEqualsMinus1Revision0Parser::Class,ctx);
-		setState(93);//958
+		setState(152);//958
 		match(CMinusEqualsMinus1Revision0Parser::Identifier,ctx);
-		setState(94);//958
-		match(CMinusEqualsMinus1Revision0Parser::T__1,ctx);
-		setState(95); //951
+		setState(153);//958
+		match(CMinusEqualsMinus1Revision0Parser::T__8,ctx);
+		setState(154); //951
 		implementedInterfacesSequence(ctx);
-		setState(96);//958
+		setState(155);//958
 		match(CMinusEqualsMinus1Revision0Parser::OpenBracket,ctx);
-		setState(97); //951
+		setState(156); //951
 		classContentSequence(ctx);
-		setState(98);//958
+		setState(157);//958
 		match(CMinusEqualsMinus1Revision0Parser::CloseBracket,ctx);
 	 
 	}
@@ -614,6 +1157,532 @@ std::unique_ptr< CMinusEqualsMinus1Revision0Parser::ClassDeclarationContext> CMi
 {
 	classDeclaration();
 	auto result = std::unique_ptr<ClassDeclarationContext>(dynamic_cast<ClassDeclarationContext*>(_root.release()));
+	assert(result != nullptr);
+	return result;
+}
+
+
+//----------------- InterfaceDeclarationContext ------------------------------------------------------------------
+
+CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext::InterfaceDeclarationContext(antlr4::ParserRuleContext *parent, size_t invokingState)
+	: antlr4::ParserRuleContext(parent, invokingState)
+{
+}
+
+tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext::Interface()
+{
+	return getToken(CMinusEqualsMinus1Revision0Parser::Interface, 0);
+}
+
+tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext::Identifier()
+{
+	return getToken(CMinusEqualsMinus1Revision0Parser::Identifier, 0);
+}
+
+CMinusEqualsMinus1Revision0Parser::ImplementedInterfacesSequenceContext* CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext::implementedInterfacesSequence()
+{
+	return getRuleContext<CMinusEqualsMinus1Revision0Parser::ImplementedInterfacesSequenceContext>(0);//1165
+}
+
+tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext::OpenBracket()
+{
+	return getToken(CMinusEqualsMinus1Revision0Parser::OpenBracket, 0);
+}
+
+CMinusEqualsMinus1Revision0Parser::InterfaceContentSequenceContext* CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext::interfaceContentSequence()
+{
+	return getRuleContext<CMinusEqualsMinus1Revision0Parser::InterfaceContentSequenceContext>(0);//1165
+}
+
+tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext::CloseBracket()
+{
+	return getToken(CMinusEqualsMinus1Revision0Parser::CloseBracket, 0);
+}
+
+CMinusEqualsMinus1Revision0Parser::AttributeSequenceContext* CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext::attributeSequence()
+{
+	return getRuleContext<CMinusEqualsMinus1Revision0Parser::AttributeSequenceContext>(0);//1165
+}
+
+tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext::AccessSpecifier()
+{
+	return getToken(CMinusEqualsMinus1Revision0Parser::AccessSpecifier, 0);
+}
+
+
+size_t CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext::getRuleIndex() const
+{
+	return CMinusEqualsMinus1Revision0Parser::RuleInterfaceDeclaration;//688
+}
+
+void CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext::copyFrom(InterfaceDeclarationContext *ctx)
+{
+	antlr4::ParserRuleContext::copyFrom(ctx);
+}
+
+std::unique_ptr<antlr4::tree::ParseTree> CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext::clone(ParseTree* parent) const
+{
+	auto result = std::make_unique<InterfaceDeclarationContext>();
+	result->copyFrom(this);
+	result->parent = parent;
+	return result;
+}
+void CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext::enterRule(not_null<tree::ParseTreeListener*> listener)
+{
+	auto parserListener = dynamic_cast<CMinusEqualsMinus1Revision0Listener *>(listener.get());//1212
+	if (parserListener != nullptr)
+		parserListener->enter(this);
+}
+
+void CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext::exitRule(not_null<tree::ParseTreeListener*> listener)
+{
+	auto parserListener = dynamic_cast<CMinusEqualsMinus1Revision0Listener *>(listener.get());//1212
+	if (parserListener != nullptr)
+		parserListener->exit(this);
+}
+
+
+antlrcpp::Any CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext::accept(tree::ParseTreeVisitor *visitor)
+{
+	if (auto parserVisitor = dynamic_cast<CMinusEqualsMinus1Revision0Visitor*>(visitor))//1226
+		return parserVisitor->visitInterfaceDeclaration(this);
+	else
+		return visitor->visitChildren(this);
+}
+
+CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext* CMinusEqualsMinus1Revision0Parser::interfaceDeclaration( antlr4::ParserRuleContext *parent)
+{
+#ifdef PARSER_DEBUG
+	if(parent != nullptr)
+		std::cout<<parent->getText()<<std::endl;
+#endif
+	auto _localctx = std::make_unique<InterfaceDeclarationContext>(parent, getState());//549
+	auto ctx = _localctx.get();//549
+	enterRule(std::move(_localctx), 16, CMinusEqualsMinus1Revision0Parser::RuleInterfaceDeclaration);
+	size_t _la = 0;
+
+	auto onExit = finally([=]
+{
+		exitRule(ctx);
+	});
+	try
+{
+		enterOuterAlt(ctx, 1);
+		setState(160);//788
+		_errHandler->sync(this, ctx);
+
+		_la = _input->LA(1);
+		if (_la == CMinusEqualsMinus1Revision0Parser::ATTROBITEOPEN)
+		{
+			setState(159); //951
+			attributeSequence(ctx);
+		}
+		setState(163);//788
+		_errHandler->sync(this, ctx);
+
+		_la = _input->LA(1);
+		if (_la == CMinusEqualsMinus1Revision0Parser::AccessSpecifier)
+		{
+			setState(162);//958
+			match(CMinusEqualsMinus1Revision0Parser::AccessSpecifier,ctx);
+		}
+		setState(165);//958
+		match(CMinusEqualsMinus1Revision0Parser::Interface,ctx);
+		setState(166);//958
+		match(CMinusEqualsMinus1Revision0Parser::Identifier,ctx);
+		setState(167);//958
+		match(CMinusEqualsMinus1Revision0Parser::T__8,ctx);
+		setState(168); //951
+		implementedInterfacesSequence(ctx);
+		setState(169);//958
+		match(CMinusEqualsMinus1Revision0Parser::OpenBracket,ctx);
+		setState(170); //951
+		interfaceContentSequence(ctx);
+		setState(171);//958
+		match(CMinusEqualsMinus1Revision0Parser::CloseBracket,ctx);
+	 
+	}
+	catch (RecognitionException &e)
+{
+		_errHandler->reportError(this, e, ctx);
+		ctx->exception = std::current_exception();
+		_errHandler->recover(this, ctx->exception, ctx);
+	}
+
+	return ctx;
+}
+
+std::unique_ptr< CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext> CMinusEqualsMinus1Revision0Parser::parseinterfaceDeclaration()
+{
+	interfaceDeclaration();
+	auto result = std::unique_ptr<InterfaceDeclarationContext>(dynamic_cast<InterfaceDeclarationContext*>(_root.release()));
+	assert(result != nullptr);
+	return result;
+}
+
+
+//----------------- InterfaceContentSequenceContext ------------------------------------------------------------------
+
+CMinusEqualsMinus1Revision0Parser::InterfaceContentSequenceContext::InterfaceContentSequenceContext(antlr4::ParserRuleContext *parent, size_t invokingState)
+	: antlr4::ParserRuleContext(parent, invokingState)
+{
+}
+
+std::vector<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext *> CMinusEqualsMinus1Revision0Parser::InterfaceContentSequenceContext::functionDeclaration()
+{
+	return getRuleContexts<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext>();//1174
+}
+
+CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext* CMinusEqualsMinus1Revision0Parser::InterfaceContentSequenceContext::functionDeclaration(size_t i)
+{
+	return getRuleContext<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext>(i);//1183
+}
+
+
+size_t CMinusEqualsMinus1Revision0Parser::InterfaceContentSequenceContext::getRuleIndex() const
+{
+	return CMinusEqualsMinus1Revision0Parser::RuleInterfaceContentSequence;//688
+}
+
+void CMinusEqualsMinus1Revision0Parser::InterfaceContentSequenceContext::copyFrom(InterfaceContentSequenceContext *ctx)
+{
+	antlr4::ParserRuleContext::copyFrom(ctx);
+}
+
+std::unique_ptr<antlr4::tree::ParseTree> CMinusEqualsMinus1Revision0Parser::InterfaceContentSequenceContext::clone(ParseTree* parent) const
+{
+	auto result = std::make_unique<InterfaceContentSequenceContext>();
+	result->copyFrom(this);
+	result->parent = parent;
+	return result;
+}
+void CMinusEqualsMinus1Revision0Parser::InterfaceContentSequenceContext::enterRule(not_null<tree::ParseTreeListener*> listener)
+{
+	auto parserListener = dynamic_cast<CMinusEqualsMinus1Revision0Listener *>(listener.get());//1212
+	if (parserListener != nullptr)
+		parserListener->enter(this);
+}
+
+void CMinusEqualsMinus1Revision0Parser::InterfaceContentSequenceContext::exitRule(not_null<tree::ParseTreeListener*> listener)
+{
+	auto parserListener = dynamic_cast<CMinusEqualsMinus1Revision0Listener *>(listener.get());//1212
+	if (parserListener != nullptr)
+		parserListener->exit(this);
+}
+
+
+antlrcpp::Any CMinusEqualsMinus1Revision0Parser::InterfaceContentSequenceContext::accept(tree::ParseTreeVisitor *visitor)
+{
+	if (auto parserVisitor = dynamic_cast<CMinusEqualsMinus1Revision0Visitor*>(visitor))//1226
+		return parserVisitor->visitInterfaceContentSequence(this);
+	else
+		return visitor->visitChildren(this);
+}
+
+CMinusEqualsMinus1Revision0Parser::InterfaceContentSequenceContext* CMinusEqualsMinus1Revision0Parser::interfaceContentSequence( antlr4::ParserRuleContext *parent)
+{
+#ifdef PARSER_DEBUG
+	if(parent != nullptr)
+		std::cout<<parent->getText()<<std::endl;
+#endif
+	auto _localctx = std::make_unique<InterfaceContentSequenceContext>(parent, getState());//549
+	auto ctx = _localctx.get();//549
+	enterRule(std::move(_localctx), 18, CMinusEqualsMinus1Revision0Parser::RuleInterfaceContentSequence);
+	size_t _la = 0;
+
+	auto onExit = finally([=]
+{
+		exitRule(ctx);
+	});
+	try
+{
+		enterOuterAlt(ctx, 1);
+		setState(176);//800
+		_errHandler->sync(this, ctx);
+		_la = _input->LA(1);
+		while ((((_la & ~ 0x3fULL) == 0) &&
+			((1ULL << _la) & ((1ULL << CMinusEqualsMinus1Revision0Parser::T__11)
+			| (1ULL << CMinusEqualsMinus1Revision0Parser::AccessSpecifier)
+			| (1ULL << CMinusEqualsMinus1Revision0Parser::ATTROBITEOPEN))) != 0))
+		{
+			setState(173); //951
+			functionDeclaration(ctx);
+			setState(178);//806
+			_errHandler->sync(this, ctx);
+			_la = _input->LA(1);
+		}
+	 
+	}
+	catch (RecognitionException &e)
+{
+		_errHandler->reportError(this, e, ctx);
+		ctx->exception = std::current_exception();
+		_errHandler->recover(this, ctx->exception, ctx);
+	}
+
+	return ctx;
+}
+
+std::unique_ptr< CMinusEqualsMinus1Revision0Parser::InterfaceContentSequenceContext> CMinusEqualsMinus1Revision0Parser::parseinterfaceContentSequence()
+{
+	interfaceContentSequence();
+	auto result = std::unique_ptr<InterfaceContentSequenceContext>(dynamic_cast<InterfaceContentSequenceContext*>(_root.release()));
+	assert(result != nullptr);
+	return result;
+}
+
+
+//----------------- StructDeclarationContext ------------------------------------------------------------------
+
+CMinusEqualsMinus1Revision0Parser::StructDeclarationContext::StructDeclarationContext(antlr4::ParserRuleContext *parent, size_t invokingState)
+	: antlr4::ParserRuleContext(parent, invokingState)
+{
+}
+
+tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::StructDeclarationContext::Identifier()
+{
+	return getToken(CMinusEqualsMinus1Revision0Parser::Identifier, 0);
+}
+
+tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::StructDeclarationContext::OpenBracket()
+{
+	return getToken(CMinusEqualsMinus1Revision0Parser::OpenBracket, 0);
+}
+
+CMinusEqualsMinus1Revision0Parser::StructContentSequenceContext* CMinusEqualsMinus1Revision0Parser::StructDeclarationContext::structContentSequence()
+{
+	return getRuleContext<CMinusEqualsMinus1Revision0Parser::StructContentSequenceContext>(0);//1165
+}
+
+tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::StructDeclarationContext::CloseBracket()
+{
+	return getToken(CMinusEqualsMinus1Revision0Parser::CloseBracket, 0);
+}
+
+CMinusEqualsMinus1Revision0Parser::AttributeSequenceContext* CMinusEqualsMinus1Revision0Parser::StructDeclarationContext::attributeSequence()
+{
+	return getRuleContext<CMinusEqualsMinus1Revision0Parser::AttributeSequenceContext>(0);//1165
+}
+
+tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::StructDeclarationContext::AccessSpecifier()
+{
+	return getToken(CMinusEqualsMinus1Revision0Parser::AccessSpecifier, 0);
+}
+
+
+size_t CMinusEqualsMinus1Revision0Parser::StructDeclarationContext::getRuleIndex() const
+{
+	return CMinusEqualsMinus1Revision0Parser::RuleStructDeclaration;//688
+}
+
+void CMinusEqualsMinus1Revision0Parser::StructDeclarationContext::copyFrom(StructDeclarationContext *ctx)
+{
+	antlr4::ParserRuleContext::copyFrom(ctx);
+}
+
+std::unique_ptr<antlr4::tree::ParseTree> CMinusEqualsMinus1Revision0Parser::StructDeclarationContext::clone(ParseTree* parent) const
+{
+	auto result = std::make_unique<StructDeclarationContext>();
+	result->copyFrom(this);
+	result->parent = parent;
+	return result;
+}
+void CMinusEqualsMinus1Revision0Parser::StructDeclarationContext::enterRule(not_null<tree::ParseTreeListener*> listener)
+{
+	auto parserListener = dynamic_cast<CMinusEqualsMinus1Revision0Listener *>(listener.get());//1212
+	if (parserListener != nullptr)
+		parserListener->enter(this);
+}
+
+void CMinusEqualsMinus1Revision0Parser::StructDeclarationContext::exitRule(not_null<tree::ParseTreeListener*> listener)
+{
+	auto parserListener = dynamic_cast<CMinusEqualsMinus1Revision0Listener *>(listener.get());//1212
+	if (parserListener != nullptr)
+		parserListener->exit(this);
+}
+
+
+antlrcpp::Any CMinusEqualsMinus1Revision0Parser::StructDeclarationContext::accept(tree::ParseTreeVisitor *visitor)
+{
+	if (auto parserVisitor = dynamic_cast<CMinusEqualsMinus1Revision0Visitor*>(visitor))//1226
+		return parserVisitor->visitStructDeclaration(this);
+	else
+		return visitor->visitChildren(this);
+}
+
+CMinusEqualsMinus1Revision0Parser::StructDeclarationContext* CMinusEqualsMinus1Revision0Parser::structDeclaration( antlr4::ParserRuleContext *parent)
+{
+#ifdef PARSER_DEBUG
+	if(parent != nullptr)
+		std::cout<<parent->getText()<<std::endl;
+#endif
+	auto _localctx = std::make_unique<StructDeclarationContext>(parent, getState());//549
+	auto ctx = _localctx.get();//549
+	enterRule(std::move(_localctx), 20, CMinusEqualsMinus1Revision0Parser::RuleStructDeclaration);
+	size_t _la = 0;
+
+	auto onExit = finally([=]
+{
+		exitRule(ctx);
+	});
+	try
+{
+		enterOuterAlt(ctx, 1);
+		setState(180);//788
+		_errHandler->sync(this, ctx);
+
+		_la = _input->LA(1);
+		if (_la == CMinusEqualsMinus1Revision0Parser::ATTROBITEOPEN)
+		{
+			setState(179); //951
+			attributeSequence(ctx);
+		}
+		setState(183);//788
+		_errHandler->sync(this, ctx);
+
+		_la = _input->LA(1);
+		if (_la == CMinusEqualsMinus1Revision0Parser::AccessSpecifier)
+		{
+			setState(182);//958
+			match(CMinusEqualsMinus1Revision0Parser::AccessSpecifier,ctx);
+		}
+		setState(185);//958
+		match(CMinusEqualsMinus1Revision0Parser::T__9,ctx);
+		setState(186);//958
+		match(CMinusEqualsMinus1Revision0Parser::Identifier,ctx);
+		setState(187);//958
+		match(CMinusEqualsMinus1Revision0Parser::OpenBracket,ctx);
+		setState(188); //951
+		structContentSequence(ctx);
+		setState(189);//958
+		match(CMinusEqualsMinus1Revision0Parser::CloseBracket,ctx);
+	 
+	}
+	catch (RecognitionException &e)
+{
+		_errHandler->reportError(this, e, ctx);
+		ctx->exception = std::current_exception();
+		_errHandler->recover(this, ctx->exception, ctx);
+	}
+
+	return ctx;
+}
+
+std::unique_ptr< CMinusEqualsMinus1Revision0Parser::StructDeclarationContext> CMinusEqualsMinus1Revision0Parser::parsestructDeclaration()
+{
+	structDeclaration();
+	auto result = std::unique_ptr<StructDeclarationContext>(dynamic_cast<StructDeclarationContext*>(_root.release()));
+	assert(result != nullptr);
+	return result;
+}
+
+
+//----------------- StructContentSequenceContext ------------------------------------------------------------------
+
+CMinusEqualsMinus1Revision0Parser::StructContentSequenceContext::StructContentSequenceContext(antlr4::ParserRuleContext *parent, size_t invokingState)
+	: antlr4::ParserRuleContext(parent, invokingState)
+{
+}
+
+std::vector<CMinusEqualsMinus1Revision0Parser::FieldDeclarationContext *> CMinusEqualsMinus1Revision0Parser::StructContentSequenceContext::fieldDeclaration()
+{
+	return getRuleContexts<CMinusEqualsMinus1Revision0Parser::FieldDeclarationContext>();//1174
+}
+
+CMinusEqualsMinus1Revision0Parser::FieldDeclarationContext* CMinusEqualsMinus1Revision0Parser::StructContentSequenceContext::fieldDeclaration(size_t i)
+{
+	return getRuleContext<CMinusEqualsMinus1Revision0Parser::FieldDeclarationContext>(i);//1183
+}
+
+
+size_t CMinusEqualsMinus1Revision0Parser::StructContentSequenceContext::getRuleIndex() const
+{
+	return CMinusEqualsMinus1Revision0Parser::RuleStructContentSequence;//688
+}
+
+void CMinusEqualsMinus1Revision0Parser::StructContentSequenceContext::copyFrom(StructContentSequenceContext *ctx)
+{
+	antlr4::ParserRuleContext::copyFrom(ctx);
+}
+
+std::unique_ptr<antlr4::tree::ParseTree> CMinusEqualsMinus1Revision0Parser::StructContentSequenceContext::clone(ParseTree* parent) const
+{
+	auto result = std::make_unique<StructContentSequenceContext>();
+	result->copyFrom(this);
+	result->parent = parent;
+	return result;
+}
+void CMinusEqualsMinus1Revision0Parser::StructContentSequenceContext::enterRule(not_null<tree::ParseTreeListener*> listener)
+{
+	auto parserListener = dynamic_cast<CMinusEqualsMinus1Revision0Listener *>(listener.get());//1212
+	if (parserListener != nullptr)
+		parserListener->enter(this);
+}
+
+void CMinusEqualsMinus1Revision0Parser::StructContentSequenceContext::exitRule(not_null<tree::ParseTreeListener*> listener)
+{
+	auto parserListener = dynamic_cast<CMinusEqualsMinus1Revision0Listener *>(listener.get());//1212
+	if (parserListener != nullptr)
+		parserListener->exit(this);
+}
+
+
+antlrcpp::Any CMinusEqualsMinus1Revision0Parser::StructContentSequenceContext::accept(tree::ParseTreeVisitor *visitor)
+{
+	if (auto parserVisitor = dynamic_cast<CMinusEqualsMinus1Revision0Visitor*>(visitor))//1226
+		return parserVisitor->visitStructContentSequence(this);
+	else
+		return visitor->visitChildren(this);
+}
+
+CMinusEqualsMinus1Revision0Parser::StructContentSequenceContext* CMinusEqualsMinus1Revision0Parser::structContentSequence( antlr4::ParserRuleContext *parent)
+{
+#ifdef PARSER_DEBUG
+	if(parent != nullptr)
+		std::cout<<parent->getText()<<std::endl;
+#endif
+	auto _localctx = std::make_unique<StructContentSequenceContext>(parent, getState());//549
+	auto ctx = _localctx.get();//549
+	enterRule(std::move(_localctx), 22, CMinusEqualsMinus1Revision0Parser::RuleStructContentSequence);
+	size_t _la = 0;
+
+	auto onExit = finally([=]
+{
+		exitRule(ctx);
+	});
+	try
+{
+		enterOuterAlt(ctx, 1);
+		setState(194);//800
+		_errHandler->sync(this, ctx);
+		_la = _input->LA(1);
+		while ((((_la & ~ 0x3fULL) == 0) &&
+			((1ULL << _la) & ((1ULL << CMinusEqualsMinus1Revision0Parser::AccessSpecifier)
+			| (1ULL << CMinusEqualsMinus1Revision0Parser::Identifier)
+			| (1ULL << CMinusEqualsMinus1Revision0Parser::ATTROBITEOPEN))) != 0))
+		{
+			setState(191); //951
+			fieldDeclaration(ctx);
+			setState(196);//806
+			_errHandler->sync(this, ctx);
+			_la = _input->LA(1);
+		}
+	 
+	}
+	catch (RecognitionException &e)
+{
+		_errHandler->reportError(this, e, ctx);
+		ctx->exception = std::current_exception();
+		_errHandler->recover(this, ctx->exception, ctx);
+	}
+
+	return ctx;
+}
+
+std::unique_ptr< CMinusEqualsMinus1Revision0Parser::StructContentSequenceContext> CMinusEqualsMinus1Revision0Parser::parsestructContentSequence()
+{
+	structContentSequence();
+	auto result = std::unique_ptr<StructContentSequenceContext>(dynamic_cast<StructContentSequenceContext*>(_root.release()));
 	assert(result != nullptr);
 	return result;
 }
@@ -695,7 +1764,7 @@ CMinusEqualsMinus1Revision0Parser::ClassContentSequenceContext* CMinusEqualsMinu
 #endif
 	auto _localctx = std::make_unique<ClassContentSequenceContext>(parent, getState());//549
 	auto ctx = _localctx.get();//549
-	enterRule(std::move(_localctx), 10, CMinusEqualsMinus1Revision0Parser::RuleClassContentSequence);
+	enterRule(std::move(_localctx), 24, CMinusEqualsMinus1Revision0Parser::RuleClassContentSequence);
 	size_t _la = 0;
 
 	auto onExit = finally([=]
@@ -705,38 +1774,38 @@ CMinusEqualsMinus1Revision0Parser::ClassContentSequenceContext* CMinusEqualsMinu
 	try
 {
 		enterOuterAlt(ctx, 1);
-		setState(102); //814
+		setState(201);//800
 		_errHandler->sync(this, ctx);
 		_la = _input->LA(1);
-		do
+		while ((((_la & ~ 0x3fULL) == 0) &&
+			((1ULL << _la) & ((1ULL << CMinusEqualsMinus1Revision0Parser::T__11)
+			| (1ULL << CMinusEqualsMinus1Revision0Parser::AccessSpecifier)
+			| (1ULL << CMinusEqualsMinus1Revision0Parser::Identifier)
+			| (1ULL << CMinusEqualsMinus1Revision0Parser::ATTROBITEOPEN))) != 0))
 		{
-			setState(102);//830
+			setState(199);//830
 			_errHandler->sync(this, ctx);
-			switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 3, ctx))
+			switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 15, ctx))
 			{
 			case 1:
 			{
-				setState(100); //951
+				setState(197); //951
 				functionDeclaration(ctx);
 				break;
 			}
 
 			case 2:
 			{
-				setState(101); //951
+				setState(198); //951
 				fieldDeclaration(ctx);
 				break;
 			}
 
 			}
-			setState(104); //820
+			setState(203);//806
 			_errHandler->sync(this, ctx);
 			_la = _input->LA(1);
-		} while ((((_la & ~ 0x3fULL) == 0) &&
-			((1ULL << _la) & ((1ULL << CMinusEqualsMinus1Revision0Parser::T__3)
-			| (1ULL << CMinusEqualsMinus1Revision0Parser::AccessSpecifier)
-			| (1ULL << CMinusEqualsMinus1Revision0Parser::Identifier)
-			| (1ULL << CMinusEqualsMinus1Revision0Parser::ATTROBITEOPEN))) != 0));
+		}
 	 
 	}
 	catch (RecognitionException &e)
@@ -765,14 +1834,14 @@ CMinusEqualsMinus1Revision0Parser::FieldDeclarationContext::FieldDeclarationCont
 {
 }
 
-CMinusEqualsMinus1Revision0Parser::QualifiedIdentifierContext* CMinusEqualsMinus1Revision0Parser::FieldDeclarationContext::qualifiedIdentifier()
+std::vector<tree::TerminalNode *> CMinusEqualsMinus1Revision0Parser::FieldDeclarationContext::Identifier()
 {
-	return getRuleContext<CMinusEqualsMinus1Revision0Parser::QualifiedIdentifierContext>(0);//1165
+	return getTokens(CMinusEqualsMinus1Revision0Parser::Identifier);
 }
 
-tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::FieldDeclarationContext::Identifier()
+tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::FieldDeclarationContext::Identifier(size_t i)
 {
-	return getToken(CMinusEqualsMinus1Revision0Parser::Identifier, 0);
+	return getToken(CMinusEqualsMinus1Revision0Parser::Identifier, i);
 }
 
 CMinusEqualsMinus1Revision0Parser::AttributeSequenceContext* CMinusEqualsMinus1Revision0Parser::FieldDeclarationContext::attributeSequence()
@@ -834,7 +1903,7 @@ CMinusEqualsMinus1Revision0Parser::FieldDeclarationContext* CMinusEqualsMinus1Re
 #endif
 	auto _localctx = std::make_unique<FieldDeclarationContext>(parent, getState());//549
 	auto ctx = _localctx.get();//549
-	enterRule(std::move(_localctx), 12, CMinusEqualsMinus1Revision0Parser::RuleFieldDeclaration);
+	enterRule(std::move(_localctx), 26, CMinusEqualsMinus1Revision0Parser::RuleFieldDeclaration);
 	size_t _la = 0;
 
 	auto onExit = finally([=]
@@ -844,27 +1913,29 @@ CMinusEqualsMinus1Revision0Parser::FieldDeclarationContext* CMinusEqualsMinus1Re
 	try
 {
 		enterOuterAlt(ctx, 1);
-		setState(107);//788
+		setState(205);//788
 		_errHandler->sync(this, ctx);
 
 		_la = _input->LA(1);
 		if (_la == CMinusEqualsMinus1Revision0Parser::ATTROBITEOPEN)
 		{
-			setState(106); //951
+			setState(204); //951
 			attributeSequence(ctx);
 		}
-		setState(110);//788
+		setState(208);//788
 		_errHandler->sync(this, ctx);
 
 		_la = _input->LA(1);
 		if (_la == CMinusEqualsMinus1Revision0Parser::AccessSpecifier)
 		{
-			setState(109);//958
+			setState(207);//958
 			match(CMinusEqualsMinus1Revision0Parser::AccessSpecifier,ctx);
 		}
-		setState(112); //951
-		qualifiedIdentifier(ctx);
-		setState(113);//958
+		setState(210);//958
+		match(CMinusEqualsMinus1Revision0Parser::Identifier,ctx);
+		setState(211);//958
+		match(CMinusEqualsMinus1Revision0Parser::T__8,ctx);
+		setState(212);//958
 		match(CMinusEqualsMinus1Revision0Parser::Identifier,ctx);
 	 
 	}
@@ -894,14 +1965,14 @@ CMinusEqualsMinus1Revision0Parser::ImplementedInterfacesSequenceContext::Impleme
 {
 }
 
-std::vector<CMinusEqualsMinus1Revision0Parser::QualifiedIdentifierContext *> CMinusEqualsMinus1Revision0Parser::ImplementedInterfacesSequenceContext::qualifiedIdentifier()
+std::vector<tree::TerminalNode *> CMinusEqualsMinus1Revision0Parser::ImplementedInterfacesSequenceContext::Identifier()
 {
-	return getRuleContexts<CMinusEqualsMinus1Revision0Parser::QualifiedIdentifierContext>();//1174
+	return getTokens(CMinusEqualsMinus1Revision0Parser::Identifier);
 }
 
-CMinusEqualsMinus1Revision0Parser::QualifiedIdentifierContext* CMinusEqualsMinus1Revision0Parser::ImplementedInterfacesSequenceContext::qualifiedIdentifier(size_t i)
+tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::ImplementedInterfacesSequenceContext::Identifier(size_t i)
 {
-	return getRuleContext<CMinusEqualsMinus1Revision0Parser::QualifiedIdentifierContext>(i);//1183
+	return getToken(CMinusEqualsMinus1Revision0Parser::Identifier, i);
 }
 
 std::vector<tree::TerminalNode *> CMinusEqualsMinus1Revision0Parser::ImplementedInterfacesSequenceContext::Comma()
@@ -963,7 +2034,7 @@ CMinusEqualsMinus1Revision0Parser::ImplementedInterfacesSequenceContext* CMinusE
 #endif
 	auto _localctx = std::make_unique<ImplementedInterfacesSequenceContext>(parent, getState());//549
 	auto ctx = _localctx.get();//549
-	enterRule(std::move(_localctx), 14, CMinusEqualsMinus1Revision0Parser::RuleImplementedInterfacesSequence);
+	enterRule(std::move(_localctx), 28, CMinusEqualsMinus1Revision0Parser::RuleImplementedInterfacesSequence);
 
 	auto onExit = finally([=]
 {
@@ -972,22 +2043,22 @@ CMinusEqualsMinus1Revision0Parser::ImplementedInterfacesSequenceContext* CMinusE
 	try
 {
 		size_t alt;
-		setState(125);//830
+		setState(222);//830
 		_errHandler->sync(this, ctx);
-		switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 8, ctx))
+		switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 20, ctx))
 		{
 		case 1:
 		{
 			enterOuterAlt(ctx, 1);
-			setState(115); //951
-			qualifiedIdentifier(ctx);
+			setState(214);//958
+			match(CMinusEqualsMinus1Revision0Parser::Identifier,ctx);
 			break;
 		}
 
 		case 2:
 		{
 			enterOuterAlt(ctx, 2);
-			setState(119); //883
+			setState(217); //883
 			_errHandler->sync(this, ctx);
 			alt = 1;
 			do
@@ -996,9 +2067,9 @@ CMinusEqualsMinus1Revision0Parser::ImplementedInterfacesSequenceContext* CMinusE
 			{
 					case 1:
 					{
-								setState(116); //951
-								qualifiedIdentifier(ctx);
-								setState(117);//958
+								setState(215);//958
+								match(CMinusEqualsMinus1Revision0Parser::Identifier,ctx);
+								setState(216);//958
 								match(CMinusEqualsMinus1Revision0Parser::Comma,ctx);
 								break;
 							}
@@ -1006,12 +2077,12 @@ CMinusEqualsMinus1Revision0Parser::ImplementedInterfacesSequenceContext* CMinusE
 				default:
 					throw NoViableAltException(this, ctx);
 				}
-				setState(121); //900
+				setState(219); //900
 				_errHandler->sync(this, ctx);
-				alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 7, ctx);
+				alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 19, ctx);
 			} while (alt != 2 && alt != atn::ATN::INVALID_ALT_NUMBER);
-			setState(123); //951
-			qualifiedIdentifier(ctx);
+			setState(221);//958
+			match(CMinusEqualsMinus1Revision0Parser::Identifier,ctx);
 			break;
 		}
 
@@ -1113,7 +2184,7 @@ CMinusEqualsMinus1Revision0Parser::NamespaceDeclarationContext* CMinusEqualsMinu
 #endif
 	auto _localctx = std::make_unique<NamespaceDeclarationContext>(parent, getState());//549
 	auto ctx = _localctx.get();//549
-	enterRule(std::move(_localctx), 16, CMinusEqualsMinus1Revision0Parser::RuleNamespaceDeclaration);
+	enterRule(std::move(_localctx), 30, CMinusEqualsMinus1Revision0Parser::RuleNamespaceDeclaration);
 
 	auto onExit = finally([=]
 {
@@ -1122,15 +2193,15 @@ CMinusEqualsMinus1Revision0Parser::NamespaceDeclarationContext* CMinusEqualsMinu
 	try
 {
 		enterOuterAlt(ctx, 1);
-		setState(127);//958
-		match(CMinusEqualsMinus1Revision0Parser::T__2,ctx);
-		setState(128); //951
+		setState(224);//958
+		match(CMinusEqualsMinus1Revision0Parser::T__10,ctx);
+		setState(225); //951
 		qualifiedIdentifier(ctx);
-		setState(129);//958
+		setState(226);//958
 		match(CMinusEqualsMinus1Revision0Parser::OpenBracket,ctx);
-		setState(130); //951
+		setState(227); //951
 		declarationSequence(ctx);
-		setState(131);//958
+		setState(228);//958
 		match(CMinusEqualsMinus1Revision0Parser::CloseBracket,ctx);
 	 
 	}
@@ -1160,9 +2231,14 @@ CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext::FunctionDeclarati
 {
 }
 
-tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext::Identifier()
+std::vector<tree::TerminalNode *> CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext::Identifier()
 {
-	return getToken(CMinusEqualsMinus1Revision0Parser::Identifier, 0);
+	return getTokens(CMinusEqualsMinus1Revision0Parser::Identifier);
+}
+
+tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext::Identifier(size_t i)
+{
+	return getToken(CMinusEqualsMinus1Revision0Parser::Identifier, i);
 }
 
 tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext::ParamOpen()
@@ -1178,11 +2254,6 @@ CMinusEqualsMinus1Revision0Parser::ParameterListContext* CMinusEqualsMinus1Revis
 tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext::ParamClose()
 {
 	return getToken(CMinusEqualsMinus1Revision0Parser::ParamClose, 0);
-}
-
-CMinusEqualsMinus1Revision0Parser::QualifiedIdentifierContext* CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext::qualifiedIdentifier()
-{
-	return getRuleContext<CMinusEqualsMinus1Revision0Parser::QualifiedIdentifierContext>(0);//1165
 }
 
 CMinusEqualsMinus1Revision0Parser::FunctionBodyContext* CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext::functionBody()
@@ -1249,7 +2320,7 @@ CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext* CMinusEqualsMinus
 #endif
 	auto _localctx = std::make_unique<FunctionDeclarationContext>(parent, getState());//549
 	auto ctx = _localctx.get();//549
-	enterRule(std::move(_localctx), 18, CMinusEqualsMinus1Revision0Parser::RuleFunctionDeclaration);
+	enterRule(std::move(_localctx), 32, CMinusEqualsMinus1Revision0Parser::RuleFunctionDeclaration);
 	size_t _la = 0;
 
 	auto onExit = finally([=]
@@ -1259,39 +2330,46 @@ CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext* CMinusEqualsMinus
 	try
 {
 		enterOuterAlt(ctx, 1);
-		setState(134);//788
+		setState(231);//788
 		_errHandler->sync(this, ctx);
 
 		_la = _input->LA(1);
 		if (_la == CMinusEqualsMinus1Revision0Parser::ATTROBITEOPEN)
 		{
-			setState(133); //951
+			setState(230); //951
 			attributeSequence(ctx);
 		}
-		setState(137);//788
+		setState(234);//788
 		_errHandler->sync(this, ctx);
 
 		_la = _input->LA(1);
 		if (_la == CMinusEqualsMinus1Revision0Parser::AccessSpecifier)
 		{
-			setState(136);//958
+			setState(233);//958
 			match(CMinusEqualsMinus1Revision0Parser::AccessSpecifier,ctx);
 		}
-		setState(139);//958
-		match(CMinusEqualsMinus1Revision0Parser::T__3,ctx);
-		setState(140);//958
+		setState(236);//958
+		match(CMinusEqualsMinus1Revision0Parser::T__11,ctx);
+		setState(237);//958
 		match(CMinusEqualsMinus1Revision0Parser::Identifier,ctx);
-		setState(141);//958
+		setState(238);//958
 		match(CMinusEqualsMinus1Revision0Parser::ParamOpen,ctx);
-		setState(142); //951
+		setState(239); //951
 		parameterList(ctx);
-		setState(143);//958
+		setState(240);//958
 		match(CMinusEqualsMinus1Revision0Parser::ParamClose,ctx);
-		setState(144);//958
-		match(CMinusEqualsMinus1Revision0Parser::T__4,ctx);
-		setState(145); //951
-		qualifiedIdentifier(ctx);
-		setState(146); //951
+		setState(243);//788
+		_errHandler->sync(this, ctx);
+
+		_la = _input->LA(1);
+		if (_la == CMinusEqualsMinus1Revision0Parser::T__12)
+		{
+			setState(241);//958
+			match(CMinusEqualsMinus1Revision0Parser::T__12,ctx);
+			setState(242);//958
+			match(CMinusEqualsMinus1Revision0Parser::Identifier,ctx);
+		}
+		setState(245); //951
 		functionBody(ctx);
 	 
 	}
@@ -1390,7 +2468,7 @@ CMinusEqualsMinus1Revision0Parser::ParameterListContext* CMinusEqualsMinus1Revis
 #endif
 	auto _localctx = std::make_unique<ParameterListContext>(parent, getState());//549
 	auto ctx = _localctx.get();//549
-	enterRule(std::move(_localctx), 20, CMinusEqualsMinus1Revision0Parser::RuleParameterList);
+	enterRule(std::move(_localctx), 34, CMinusEqualsMinus1Revision0Parser::RuleParameterList);
 
 	auto onExit = finally([=]
 {
@@ -1399,9 +2477,9 @@ CMinusEqualsMinus1Revision0Parser::ParameterListContext* CMinusEqualsMinus1Revis
 	try
 {
 		size_t alt;
-		setState(159);//830
+		setState(258);//830
 		_errHandler->sync(this, ctx);
-		switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 12, ctx))
+		switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 25, ctx))
 		{
 		case 1:
 		{
@@ -1413,7 +2491,7 @@ CMinusEqualsMinus1Revision0Parser::ParameterListContext* CMinusEqualsMinus1Revis
 		case 2:
 		{
 			enterOuterAlt(ctx, 2);
-			setState(149); //951
+			setState(248); //951
 			parameter(ctx);
 			break;
 		}
@@ -1421,7 +2499,7 @@ CMinusEqualsMinus1Revision0Parser::ParameterListContext* CMinusEqualsMinus1Revis
 		case 3:
 		{
 			enterOuterAlt(ctx, 3);
-			setState(153); //883
+			setState(252); //883
 			_errHandler->sync(this, ctx);
 			alt = 1;
 			do
@@ -1430,9 +2508,9 @@ CMinusEqualsMinus1Revision0Parser::ParameterListContext* CMinusEqualsMinus1Revis
 			{
 					case 1:
 					{
-								setState(150); //951
+								setState(249); //951
 								parameter(ctx);
-								setState(151);//958
+								setState(250);//958
 								match(CMinusEqualsMinus1Revision0Parser::Comma,ctx);
 								break;
 							}
@@ -1440,11 +2518,11 @@ CMinusEqualsMinus1Revision0Parser::ParameterListContext* CMinusEqualsMinus1Revis
 				default:
 					throw NoViableAltException(this, ctx);
 				}
-				setState(155); //900
+				setState(254); //900
 				_errHandler->sync(this, ctx);
-				alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 11, ctx);
+				alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 24, ctx);
 			} while (alt != 2 && alt != atn::ATN::INVALID_ALT_NUMBER);
-			setState(157); //951
+			setState(256); //951
 			parameter(ctx);
 			break;
 		}
@@ -1478,14 +2556,14 @@ CMinusEqualsMinus1Revision0Parser::ParameterContext::ParameterContext(antlr4::Pa
 {
 }
 
-CMinusEqualsMinus1Revision0Parser::QualifiedIdentifierContext* CMinusEqualsMinus1Revision0Parser::ParameterContext::qualifiedIdentifier()
+std::vector<tree::TerminalNode *> CMinusEqualsMinus1Revision0Parser::ParameterContext::Identifier()
 {
-	return getRuleContext<CMinusEqualsMinus1Revision0Parser::QualifiedIdentifierContext>(0);//1165
+	return getTokens(CMinusEqualsMinus1Revision0Parser::Identifier);
 }
 
-tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::ParameterContext::Identifier()
+tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::ParameterContext::Identifier(size_t i)
 {
-	return getToken(CMinusEqualsMinus1Revision0Parser::Identifier, 0);
+	return getToken(CMinusEqualsMinus1Revision0Parser::Identifier, i);
 }
 
 CMinusEqualsMinus1Revision0Parser::AttributeSequenceContext* CMinusEqualsMinus1Revision0Parser::ParameterContext::attributeSequence()
@@ -1542,7 +2620,7 @@ CMinusEqualsMinus1Revision0Parser::ParameterContext* CMinusEqualsMinus1Revision0
 #endif
 	auto _localctx = std::make_unique<ParameterContext>(parent, getState());//549
 	auto ctx = _localctx.get();//549
-	enterRule(std::move(_localctx), 22, CMinusEqualsMinus1Revision0Parser::RuleParameter);
+	enterRule(std::move(_localctx), 36, CMinusEqualsMinus1Revision0Parser::RuleParameter);
 	size_t _la = 0;
 
 	auto onExit = finally([=]
@@ -1552,18 +2630,20 @@ CMinusEqualsMinus1Revision0Parser::ParameterContext* CMinusEqualsMinus1Revision0
 	try
 {
 		enterOuterAlt(ctx, 1);
-		setState(162);//788
+		setState(261);//788
 		_errHandler->sync(this, ctx);
 
 		_la = _input->LA(1);
 		if (_la == CMinusEqualsMinus1Revision0Parser::ATTROBITEOPEN)
 		{
-			setState(161); //951
+			setState(260); //951
 			attributeSequence(ctx);
 		}
-		setState(164); //951
-		qualifiedIdentifier(ctx);
-		setState(165);//958
+		setState(263);//958
+		match(CMinusEqualsMinus1Revision0Parser::Identifier,ctx);
+		setState(264);//958
+		match(CMinusEqualsMinus1Revision0Parser::T__8,ctx);
+		setState(265);//958
 		match(CMinusEqualsMinus1Revision0Parser::Identifier,ctx);
 	 
 	}
@@ -1662,7 +2742,7 @@ CMinusEqualsMinus1Revision0Parser::FunctionBodyContext* CMinusEqualsMinus1Revisi
 #endif
 	auto _localctx = std::make_unique<FunctionBodyContext>(parent, getState());//549
 	auto ctx = _localctx.get();//549
-	enterRule(std::move(_localctx), 24, CMinusEqualsMinus1Revision0Parser::RuleFunctionBody);
+	enterRule(std::move(_localctx), 38, CMinusEqualsMinus1Revision0Parser::RuleFunctionBody);
 	size_t _la = 0;
 
 	auto onExit = finally([=]
@@ -1672,28 +2752,28 @@ CMinusEqualsMinus1Revision0Parser::FunctionBodyContext* CMinusEqualsMinus1Revisi
 	try
 {
 		enterOuterAlt(ctx, 1);
-		setState(167);//958
+		setState(267);//958
 		match(CMinusEqualsMinus1Revision0Parser::OpenBracket,ctx);
-		setState(171);//800
+		setState(271);//800
 		_errHandler->sync(this, ctx);
 		_la = _input->LA(1);
-		while (((((_la - 6) & ~ 0x3fULL) == 0) &&
-			((1ULL << (_la - 6)) & ((1ULL << (CMinusEqualsMinus1Revision0Parser::T__5 - 6))
-			| (1ULL << (CMinusEqualsMinus1Revision0Parser::T__6 - 6))
-			| (1ULL << (CMinusEqualsMinus1Revision0Parser::T__8 - 6))
-			| (1ULL << (CMinusEqualsMinus1Revision0Parser::T__9 - 6))
-			| (1ULL << (CMinusEqualsMinus1Revision0Parser::T__10 - 6))
-			| (1ULL << (CMinusEqualsMinus1Revision0Parser::Identifier - 6))
-			| (1ULL << (CMinusEqualsMinus1Revision0Parser::ParamOpen - 6))
-			| (1ULL << (CMinusEqualsMinus1Revision0Parser::Throw - 6)))) != 0))
+		while (((((_la - 14) & ~ 0x3fULL) == 0) &&
+			((1ULL << (_la - 14)) & ((1ULL << (CMinusEqualsMinus1Revision0Parser::T__13 - 14))
+			| (1ULL << (CMinusEqualsMinus1Revision0Parser::T__14 - 14))
+			| (1ULL << (CMinusEqualsMinus1Revision0Parser::T__16 - 14))
+			| (1ULL << (CMinusEqualsMinus1Revision0Parser::T__17 - 14))
+			| (1ULL << (CMinusEqualsMinus1Revision0Parser::T__18 - 14))
+			| (1ULL << (CMinusEqualsMinus1Revision0Parser::Identifier - 14))
+			| (1ULL << (CMinusEqualsMinus1Revision0Parser::ParamOpen - 14))
+			| (1ULL << (CMinusEqualsMinus1Revision0Parser::Throw - 14)))) != 0))
 		{
-			setState(168); //951
+			setState(268); //951
 			statement(ctx);
-			setState(173);//806
+			setState(273);//806
 			_errHandler->sync(this, ctx);
 			_la = _input->LA(1);
 		}
-		setState(174);//958
+		setState(274);//958
 		match(CMinusEqualsMinus1Revision0Parser::CloseBracket,ctx);
 	 
 	}
@@ -1792,7 +2872,7 @@ CMinusEqualsMinus1Revision0Parser::CompoundStatementContext* CMinusEqualsMinus1R
 #endif
 	auto _localctx = std::make_unique<CompoundStatementContext>(parent, getState());//549
 	auto ctx = _localctx.get();//549
-	enterRule(std::move(_localctx), 26, CMinusEqualsMinus1Revision0Parser::RuleCompoundStatement);
+	enterRule(std::move(_localctx), 40, CMinusEqualsMinus1Revision0Parser::RuleCompoundStatement);
 	size_t _la = 0;
 
 	auto onExit = finally([=]
@@ -1801,50 +2881,50 @@ CMinusEqualsMinus1Revision0Parser::CompoundStatementContext* CMinusEqualsMinus1R
 	});
 	try
 {
-		setState(185);//750
+		setState(285);//750
 		_errHandler->sync(this, ctx);
 		switch (_input->LA(1))
 		{
 			case CMinusEqualsMinus1Revision0Parser::OpenBracket:
 			{
 				enterOuterAlt(ctx, 1);
-				setState(176);//958
+				setState(276);//958
 				match(CMinusEqualsMinus1Revision0Parser::OpenBracket,ctx);
-				setState(180);//800
+				setState(280);//800
 				_errHandler->sync(this, ctx);
 				_la = _input->LA(1);
-				while (((((_la - 6) & ~ 0x3fULL) == 0) &&
-					((1ULL << (_la - 6)) & ((1ULL << (CMinusEqualsMinus1Revision0Parser::T__5 - 6))
-					| (1ULL << (CMinusEqualsMinus1Revision0Parser::T__6 - 6))
-					| (1ULL << (CMinusEqualsMinus1Revision0Parser::T__8 - 6))
-					| (1ULL << (CMinusEqualsMinus1Revision0Parser::T__9 - 6))
-					| (1ULL << (CMinusEqualsMinus1Revision0Parser::T__10 - 6))
-					| (1ULL << (CMinusEqualsMinus1Revision0Parser::Identifier - 6))
-					| (1ULL << (CMinusEqualsMinus1Revision0Parser::ParamOpen - 6))
-					| (1ULL << (CMinusEqualsMinus1Revision0Parser::Throw - 6)))) != 0))
+				while (((((_la - 14) & ~ 0x3fULL) == 0) &&
+					((1ULL << (_la - 14)) & ((1ULL << (CMinusEqualsMinus1Revision0Parser::T__13 - 14))
+					| (1ULL << (CMinusEqualsMinus1Revision0Parser::T__14 - 14))
+					| (1ULL << (CMinusEqualsMinus1Revision0Parser::T__16 - 14))
+					| (1ULL << (CMinusEqualsMinus1Revision0Parser::T__17 - 14))
+					| (1ULL << (CMinusEqualsMinus1Revision0Parser::T__18 - 14))
+					| (1ULL << (CMinusEqualsMinus1Revision0Parser::Identifier - 14))
+					| (1ULL << (CMinusEqualsMinus1Revision0Parser::ParamOpen - 14))
+					| (1ULL << (CMinusEqualsMinus1Revision0Parser::Throw - 14)))) != 0))
 				{
-					setState(177); //951
+					setState(277); //951
 					statement(ctx);
-					setState(182);//806
+					setState(282);//806
 					_errHandler->sync(this, ctx);
 					_la = _input->LA(1);
 				}
-				setState(183);//958
+				setState(283);//958
 				match(CMinusEqualsMinus1Revision0Parser::CloseBracket,ctx);
 				break;
 			}
 
-			case CMinusEqualsMinus1Revision0Parser::T__5:
-			case CMinusEqualsMinus1Revision0Parser::T__6:
-			case CMinusEqualsMinus1Revision0Parser::T__8:
-			case CMinusEqualsMinus1Revision0Parser::T__9:
-			case CMinusEqualsMinus1Revision0Parser::T__10:
+			case CMinusEqualsMinus1Revision0Parser::T__13:
+			case CMinusEqualsMinus1Revision0Parser::T__14:
+			case CMinusEqualsMinus1Revision0Parser::T__16:
+			case CMinusEqualsMinus1Revision0Parser::T__17:
+			case CMinusEqualsMinus1Revision0Parser::T__18:
 			case CMinusEqualsMinus1Revision0Parser::Identifier:
 			case CMinusEqualsMinus1Revision0Parser::ParamOpen:
 			case CMinusEqualsMinus1Revision0Parser::Throw:
 			{
 				enterOuterAlt(ctx, 2);
-				setState(184); //951
+				setState(284); //951
 				statement(ctx);
 				break;
 			}
@@ -1954,7 +3034,7 @@ CMinusEqualsMinus1Revision0Parser::StatementContext* CMinusEqualsMinus1Revision0
 #endif
 	auto _localctx = std::make_unique<StatementContext>(parent, getState());//549
 	auto ctx = _localctx.get();//549
-	enterRule(std::move(_localctx), 28, CMinusEqualsMinus1Revision0Parser::RuleStatement);
+	enterRule(std::move(_localctx), 42, CMinusEqualsMinus1Revision0Parser::RuleStatement);
 
 	auto onExit = finally([=]
 {
@@ -1962,16 +3042,16 @@ CMinusEqualsMinus1Revision0Parser::StatementContext* CMinusEqualsMinus1Revision0
 	});
 	try
 {
-		setState(195);//830
+		setState(295);//830
 		_errHandler->sync(this, ctx);
-		switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 17, ctx))
+		switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 30, ctx))
 		{
 		case 1:
 		{
 			enterOuterAlt(ctx, 1);
-			setState(187); //951
+			setState(287); //951
 			expression(ctx);
-			setState(188);//958
+			setState(288);//958
 			match(CMinusEqualsMinus1Revision0Parser::SemiColon,ctx);
 			break;
 		}
@@ -1979,7 +3059,7 @@ CMinusEqualsMinus1Revision0Parser::StatementContext* CMinusEqualsMinus1Revision0
 		case 2:
 		{
 			enterOuterAlt(ctx, 2);
-			setState(190); //951
+			setState(290); //951
 			ifStatement(ctx);
 			break;
 		}
@@ -1987,7 +3067,7 @@ CMinusEqualsMinus1Revision0Parser::StatementContext* CMinusEqualsMinus1Revision0
 		case 3:
 		{
 			enterOuterAlt(ctx, 3);
-			setState(191); //951
+			setState(291); //951
 			loopStatement(ctx);
 			break;
 		}
@@ -1995,9 +3075,9 @@ CMinusEqualsMinus1Revision0Parser::StatementContext* CMinusEqualsMinus1Revision0
 		case 4:
 		{
 			enterOuterAlt(ctx, 4);
-			setState(192); //951
+			setState(292); //951
 			assigmentStatement(ctx);
-			setState(193);//958
+			setState(293);//958
 			match(CMinusEqualsMinus1Revision0Parser::SemiColon,ctx);
 			break;
 		}
@@ -2100,7 +3180,7 @@ CMinusEqualsMinus1Revision0Parser::IfStatementContext* CMinusEqualsMinus1Revisio
 #endif
 	auto _localctx = std::make_unique<IfStatementContext>(parent, getState());//549
 	auto ctx = _localctx.get();//549
-	enterRule(std::move(_localctx), 30, CMinusEqualsMinus1Revision0Parser::RuleIfStatement);
+	enterRule(std::move(_localctx), 44, CMinusEqualsMinus1Revision0Parser::RuleIfStatement);
 
 	auto onExit = finally([=]
 {
@@ -2109,15 +3189,15 @@ CMinusEqualsMinus1Revision0Parser::IfStatementContext* CMinusEqualsMinus1Revisio
 	try
 {
 		enterOuterAlt(ctx, 1);
-		setState(197);//958
-		match(CMinusEqualsMinus1Revision0Parser::T__5,ctx);
-		setState(198);//958
+		setState(297);//958
+		match(CMinusEqualsMinus1Revision0Parser::T__13,ctx);
+		setState(298);//958
 		match(CMinusEqualsMinus1Revision0Parser::ParamOpen,ctx);
-		setState(199); //951
+		setState(299); //951
 		logicalExpression(0,ctx);
-		setState(200);//958
+		setState(300);//958
 		match(CMinusEqualsMinus1Revision0Parser::ParamClose,ctx);
-		setState(201); //951
+		setState(301); //951
 		compoundStatement(ctx);
 	 
 	}
@@ -2221,7 +3301,7 @@ CMinusEqualsMinus1Revision0Parser::LoopStatementContext* CMinusEqualsMinus1Revis
 #endif
 	auto _localctx = std::make_unique<LoopStatementContext>(parent, getState());//549
 	auto ctx = _localctx.get();//549
-	enterRule(std::move(_localctx), 32, CMinusEqualsMinus1Revision0Parser::RuleLoopStatement);
+	enterRule(std::move(_localctx), 46, CMinusEqualsMinus1Revision0Parser::RuleLoopStatement);
 
 	auto onExit = finally([=]
 {
@@ -2229,14 +3309,14 @@ CMinusEqualsMinus1Revision0Parser::LoopStatementContext* CMinusEqualsMinus1Revis
 	});
 	try
 {
-		setState(208);//830
+		setState(308);//830
 		_errHandler->sync(this, ctx);
-		switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 18, ctx))
+		switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 31, ctx))
 		{
 		case 1:
 		{
 			enterOuterAlt(ctx, 1);
-			setState(203); //951
+			setState(303); //951
 			rangeForStatement(ctx);
 			break;
 		}
@@ -2244,7 +3324,7 @@ CMinusEqualsMinus1Revision0Parser::LoopStatementContext* CMinusEqualsMinus1Revis
 		case 2:
 		{
 			enterOuterAlt(ctx, 2);
-			setState(204); //951
+			setState(304); //951
 			forStatement(ctx);
 			break;
 		}
@@ -2252,7 +3332,7 @@ CMinusEqualsMinus1Revision0Parser::LoopStatementContext* CMinusEqualsMinus1Revis
 		case 3:
 		{
 			enterOuterAlt(ctx, 3);
-			setState(205); //951
+			setState(305); //951
 			whileStatement(ctx);
 			break;
 		}
@@ -2260,7 +3340,7 @@ CMinusEqualsMinus1Revision0Parser::LoopStatementContext* CMinusEqualsMinus1Revis
 		case 4:
 		{
 			enterOuterAlt(ctx, 4);
-			setState(206); //951
+			setState(306); //951
 			doWhileStatement(ctx);
 			break;
 		}
@@ -2268,7 +3348,7 @@ CMinusEqualsMinus1Revision0Parser::LoopStatementContext* CMinusEqualsMinus1Revis
 		case 5:
 		{
 			enterOuterAlt(ctx, 5);
-			setState(207); //951
+			setState(307); //951
 			infiniteLoopStatement(ctx);
 			break;
 		}
@@ -2376,7 +3456,7 @@ CMinusEqualsMinus1Revision0Parser::RangeForStatementContext* CMinusEqualsMinus1R
 #endif
 	auto _localctx = std::make_unique<RangeForStatementContext>(parent, getState());//549
 	auto ctx = _localctx.get();//549
-	enterRule(std::move(_localctx), 34, CMinusEqualsMinus1Revision0Parser::RuleRangeForStatement);
+	enterRule(std::move(_localctx), 48, CMinusEqualsMinus1Revision0Parser::RuleRangeForStatement);
 
 	auto onExit = finally([=]
 {
@@ -2385,19 +3465,19 @@ CMinusEqualsMinus1Revision0Parser::RangeForStatementContext* CMinusEqualsMinus1R
 	try
 {
 		enterOuterAlt(ctx, 1);
-		setState(210);//958
-		match(CMinusEqualsMinus1Revision0Parser::T__6,ctx);
-		setState(211);//958
+		setState(310);//958
+		match(CMinusEqualsMinus1Revision0Parser::T__14,ctx);
+		setState(311);//958
 		match(CMinusEqualsMinus1Revision0Parser::ParamOpen,ctx);
-		setState(212);//958
+		setState(312);//958
 		match(CMinusEqualsMinus1Revision0Parser::Identifier,ctx);
-		setState(213);//958
-		match(CMinusEqualsMinus1Revision0Parser::T__7,ctx);
-		setState(214); //951
+		setState(313);//958
+		match(CMinusEqualsMinus1Revision0Parser::T__15,ctx);
+		setState(314); //951
 		expression(ctx);
-		setState(215);//958
+		setState(315);//958
 		match(CMinusEqualsMinus1Revision0Parser::ParamClose,ctx);
-		setState(216); //951
+		setState(316); //951
 		compoundStatement(ctx);
 	 
 	}
@@ -2516,7 +3596,7 @@ CMinusEqualsMinus1Revision0Parser::ForStatementContext* CMinusEqualsMinus1Revisi
 #endif
 	auto _localctx = std::make_unique<ForStatementContext>(parent, getState());//549
 	auto ctx = _localctx.get();//549
-	enterRule(std::move(_localctx), 36, CMinusEqualsMinus1Revision0Parser::RuleForStatement);
+	enterRule(std::move(_localctx), 50, CMinusEqualsMinus1Revision0Parser::RuleForStatement);
 
 	auto onExit = finally([=]
 {
@@ -2525,23 +3605,23 @@ CMinusEqualsMinus1Revision0Parser::ForStatementContext* CMinusEqualsMinus1Revisi
 	try
 {
 		enterOuterAlt(ctx, 1);
-		setState(218);//958
-		match(CMinusEqualsMinus1Revision0Parser::T__6,ctx);
-		setState(219);//958
+		setState(318);//958
+		match(CMinusEqualsMinus1Revision0Parser::T__14,ctx);
+		setState(319);//958
 		match(CMinusEqualsMinus1Revision0Parser::ParamOpen,ctx);
-		setState(220); //951
+		setState(320); //951
 		expression(ctx);
-		setState(221);//958
+		setState(321);//958
 		match(CMinusEqualsMinus1Revision0Parser::SemiColon,ctx);
-		setState(222); //951
+		setState(322); //951
 		logicalExpression(0,ctx);
-		setState(223);//958
+		setState(323);//958
 		match(CMinusEqualsMinus1Revision0Parser::SemiColon,ctx);
-		setState(224); //951
+		setState(324); //951
 		expression(ctx);
-		setState(225);//958
+		setState(325);//958
 		match(CMinusEqualsMinus1Revision0Parser::ParamClose,ctx);
-		setState(226); //951
+		setState(326); //951
 		compoundStatement(ctx);
 	 
 	}
@@ -2630,7 +3710,7 @@ CMinusEqualsMinus1Revision0Parser::WhileStatementContext* CMinusEqualsMinus1Revi
 #endif
 	auto _localctx = std::make_unique<WhileStatementContext>(parent, getState());//549
 	auto ctx = _localctx.get();//549
-	enterRule(std::move(_localctx), 38, CMinusEqualsMinus1Revision0Parser::RuleWhileStatement);
+	enterRule(std::move(_localctx), 52, CMinusEqualsMinus1Revision0Parser::RuleWhileStatement);
 
 	auto onExit = finally([=]
 {
@@ -2639,9 +3719,9 @@ CMinusEqualsMinus1Revision0Parser::WhileStatementContext* CMinusEqualsMinus1Revi
 	try
 {
 		enterOuterAlt(ctx, 1);
-		setState(228); //951
+		setState(328); //951
 		whileHeader(ctx);
-		setState(229); //951
+		setState(329); //951
 		compoundStatement(ctx);
 	 
 	}
@@ -2735,7 +3815,7 @@ CMinusEqualsMinus1Revision0Parser::DoWhileStatementContext* CMinusEqualsMinus1Re
 #endif
 	auto _localctx = std::make_unique<DoWhileStatementContext>(parent, getState());//549
 	auto ctx = _localctx.get();//549
-	enterRule(std::move(_localctx), 40, CMinusEqualsMinus1Revision0Parser::RuleDoWhileStatement);
+	enterRule(std::move(_localctx), 54, CMinusEqualsMinus1Revision0Parser::RuleDoWhileStatement);
 
 	auto onExit = finally([=]
 {
@@ -2744,13 +3824,13 @@ CMinusEqualsMinus1Revision0Parser::DoWhileStatementContext* CMinusEqualsMinus1Re
 	try
 {
 		enterOuterAlt(ctx, 1);
-		setState(231);//958
-		match(CMinusEqualsMinus1Revision0Parser::T__8,ctx);
-		setState(232); //951
+		setState(331);//958
+		match(CMinusEqualsMinus1Revision0Parser::T__16,ctx);
+		setState(332); //951
 		compoundStatement(ctx);
-		setState(233); //951
+		setState(333); //951
 		whileHeader(ctx);
-		setState(234);//958
+		setState(334);//958
 		match(CMinusEqualsMinus1Revision0Parser::SemiColon,ctx);
 	 
 	}
@@ -2844,7 +3924,7 @@ CMinusEqualsMinus1Revision0Parser::WhileHeaderContext* CMinusEqualsMinus1Revisio
 #endif
 	auto _localctx = std::make_unique<WhileHeaderContext>(parent, getState());//549
 	auto ctx = _localctx.get();//549
-	enterRule(std::move(_localctx), 42, CMinusEqualsMinus1Revision0Parser::RuleWhileHeader);
+	enterRule(std::move(_localctx), 56, CMinusEqualsMinus1Revision0Parser::RuleWhileHeader);
 
 	auto onExit = finally([=]
 {
@@ -2853,13 +3933,13 @@ CMinusEqualsMinus1Revision0Parser::WhileHeaderContext* CMinusEqualsMinus1Revisio
 	try
 {
 		enterOuterAlt(ctx, 1);
-		setState(236);//958
-		match(CMinusEqualsMinus1Revision0Parser::T__9,ctx);
-		setState(237);//958
+		setState(336);//958
+		match(CMinusEqualsMinus1Revision0Parser::T__17,ctx);
+		setState(337);//958
 		match(CMinusEqualsMinus1Revision0Parser::ParamOpen,ctx);
-		setState(238); //951
+		setState(338); //951
 		logicalExpression(0,ctx);
-		setState(239);//958
+		setState(339);//958
 		match(CMinusEqualsMinus1Revision0Parser::ParamClose,ctx);
 	 
 	}
@@ -2943,7 +4023,7 @@ CMinusEqualsMinus1Revision0Parser::InfiniteLoopStatementContext* CMinusEqualsMin
 #endif
 	auto _localctx = std::make_unique<InfiniteLoopStatementContext>(parent, getState());//549
 	auto ctx = _localctx.get();//549
-	enterRule(std::move(_localctx), 44, CMinusEqualsMinus1Revision0Parser::RuleInfiniteLoopStatement);
+	enterRule(std::move(_localctx), 58, CMinusEqualsMinus1Revision0Parser::RuleInfiniteLoopStatement);
 
 	auto onExit = finally([=]
 {
@@ -2952,9 +4032,9 @@ CMinusEqualsMinus1Revision0Parser::InfiniteLoopStatementContext* CMinusEqualsMin
 	try
 {
 		enterOuterAlt(ctx, 1);
-		setState(241);//958
-		match(CMinusEqualsMinus1Revision0Parser::T__10,ctx);
-		setState(242); //951
+		setState(341);//958
+		match(CMinusEqualsMinus1Revision0Parser::T__18,ctx);
+		setState(342); //951
 		compoundStatement(ctx);
 	 
 	}
@@ -2984,9 +4064,9 @@ CMinusEqualsMinus1Revision0Parser::FunctionCallContext::FunctionCallContext(antl
 {
 }
 
-CMinusEqualsMinus1Revision0Parser::QualifiedIdentifierContext* CMinusEqualsMinus1Revision0Parser::FunctionCallContext::qualifiedIdentifier()
+tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::FunctionCallContext::Identifier()
 {
-	return getRuleContext<CMinusEqualsMinus1Revision0Parser::QualifiedIdentifierContext>(0);//1165
+	return getToken(CMinusEqualsMinus1Revision0Parser::Identifier, 0);
 }
 
 tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::FunctionCallContext::ParamOpen()
@@ -3068,7 +4148,7 @@ CMinusEqualsMinus1Revision0Parser::FunctionCallContext* CMinusEqualsMinus1Revisi
 #endif
 	auto _localctx = std::make_unique<FunctionCallContext>(parent, getState());//549
 	auto ctx = _localctx.get();//549
-	enterRule(std::move(_localctx), 46, CMinusEqualsMinus1Revision0Parser::RuleFunctionCall);
+	enterRule(std::move(_localctx), 60, CMinusEqualsMinus1Revision0Parser::RuleFunctionCall);
 	size_t _la = 0;
 
 	auto onExit = finally([=]
@@ -3078,39 +4158,39 @@ CMinusEqualsMinus1Revision0Parser::FunctionCallContext* CMinusEqualsMinus1Revisi
 	try
 {
 		enterOuterAlt(ctx, 1);
-		setState(244); //951
-		qualifiedIdentifier(ctx);
-		setState(245);//958
+		setState(344);//958
+		match(CMinusEqualsMinus1Revision0Parser::Identifier,ctx);
+		setState(345);//958
 		match(CMinusEqualsMinus1Revision0Parser::ParamOpen,ctx);
-		setState(254);//788
+		setState(354);//788
 		_errHandler->sync(this, ctx);
 
 		_la = _input->LA(1);
-		if (((((_la - 13) & ~ 0x3fULL) == 0) &&
-			((1ULL << (_la - 13)) & ((1ULL << (CMinusEqualsMinus1Revision0Parser::Identifier - 13))
-			| (1ULL << (CMinusEqualsMinus1Revision0Parser::ParamOpen - 13))
-			| (1ULL << (CMinusEqualsMinus1Revision0Parser::ArithmeticUnaryOperator - 13))
-			| (1ULL << (CMinusEqualsMinus1Revision0Parser::LogicalUnaryOperator - 13))
-			| (1ULL << (CMinusEqualsMinus1Revision0Parser::Throw - 13))
-			| (1ULL << (CMinusEqualsMinus1Revision0Parser::IntegerLiteral - 13)))) != 0))
+		if (((((_la - 21) & ~ 0x3fULL) == 0) &&
+			((1ULL << (_la - 21)) & ((1ULL << (CMinusEqualsMinus1Revision0Parser::Identifier - 21))
+			| (1ULL << (CMinusEqualsMinus1Revision0Parser::ParamOpen - 21))
+			| (1ULL << (CMinusEqualsMinus1Revision0Parser::ArithmeticUnaryOperator - 21))
+			| (1ULL << (CMinusEqualsMinus1Revision0Parser::LogicalUnaryOperator - 21))
+			| (1ULL << (CMinusEqualsMinus1Revision0Parser::Throw - 21))
+			| (1ULL << (CMinusEqualsMinus1Revision0Parser::IntegerLiteral - 21)))) != 0))
 		{
-			setState(246); //951
+			setState(346); //951
 			functionCallParameter(ctx);
-			setState(251);//800
+			setState(351);//800
 			_errHandler->sync(this, ctx);
 			_la = _input->LA(1);
 			while (_la == CMinusEqualsMinus1Revision0Parser::Comma)
 			{
-				setState(247);//958
+				setState(347);//958
 				match(CMinusEqualsMinus1Revision0Parser::Comma,ctx);
-				setState(248); //951
+				setState(348); //951
 				functionCallParameter(ctx);
-				setState(253);//806
+				setState(353);//806
 				_errHandler->sync(this, ctx);
 				_la = _input->LA(1);
 			}
 		}
-		setState(256);//958
+		setState(356);//958
 		match(CMinusEqualsMinus1Revision0Parser::ParamClose,ctx);
 	 
 	}
@@ -3204,7 +4284,7 @@ CMinusEqualsMinus1Revision0Parser::FunctionCallParameterContext* CMinusEqualsMin
 #endif
 	auto _localctx = std::make_unique<FunctionCallParameterContext>(parent, getState());//549
 	auto ctx = _localctx.get();//549
-	enterRule(std::move(_localctx), 48, CMinusEqualsMinus1Revision0Parser::RuleFunctionCallParameter);
+	enterRule(std::move(_localctx), 62, CMinusEqualsMinus1Revision0Parser::RuleFunctionCallParameter);
 
 	auto onExit = finally([=]
 {
@@ -3212,14 +4292,14 @@ CMinusEqualsMinus1Revision0Parser::FunctionCallParameterContext* CMinusEqualsMin
 	});
 	try
 {
-		setState(261);//830
+		setState(361);//830
 		_errHandler->sync(this, ctx);
-		switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 21, ctx))
+		switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 34, ctx))
 		{
 		case 1:
 		{
 			enterOuterAlt(ctx, 1);
-			setState(258); //951
+			setState(358); //951
 			expression(ctx);
 			break;
 		}
@@ -3227,7 +4307,7 @@ CMinusEqualsMinus1Revision0Parser::FunctionCallParameterContext* CMinusEqualsMin
 		case 2:
 		{
 			enterOuterAlt(ctx, 2);
-			setState(259); //951
+			setState(359); //951
 			arithmeticExpression(0,ctx);
 			break;
 		}
@@ -3235,7 +4315,7 @@ CMinusEqualsMinus1Revision0Parser::FunctionCallParameterContext* CMinusEqualsMin
 		case 3:
 		{
 			enterOuterAlt(ctx, 3);
-			setState(260); //951
+			setState(360); //951
 			logicalExpression(0,ctx);
 			break;
 		}
@@ -3328,7 +4408,7 @@ CMinusEqualsMinus1Revision0Parser::AttributeSequenceContext* CMinusEqualsMinus1R
 #endif
 	auto _localctx = std::make_unique<AttributeSequenceContext>(parent, getState());//549
 	auto ctx = _localctx.get();//549
-	enterRule(std::move(_localctx), 50, CMinusEqualsMinus1Revision0Parser::RuleAttributeSequence);
+	enterRule(std::move(_localctx), 64, CMinusEqualsMinus1Revision0Parser::RuleAttributeSequence);
 	size_t _la = 0;
 
 	auto onExit = finally([=]
@@ -3338,14 +4418,14 @@ CMinusEqualsMinus1Revision0Parser::AttributeSequenceContext* CMinusEqualsMinus1R
 	try
 {
 		enterOuterAlt(ctx, 1);
-		setState(264); //814
+		setState(364); //814
 		_errHandler->sync(this, ctx);
 		_la = _input->LA(1);
 		do
 		{
-			setState(263); //951
+			setState(363); //951
 			attribute(ctx);
-			setState(266); //820
+			setState(366); //820
 			_errHandler->sync(this, ctx);
 			_la = _input->LA(1);
 		} while (_la == CMinusEqualsMinus1Revision0Parser::ATTROBITEOPEN);
@@ -3441,7 +4521,7 @@ CMinusEqualsMinus1Revision0Parser::AttributeContext* CMinusEqualsMinus1Revision0
 #endif
 	auto _localctx = std::make_unique<AttributeContext>(parent, getState());//549
 	auto ctx = _localctx.get();//549
-	enterRule(std::move(_localctx), 52, CMinusEqualsMinus1Revision0Parser::RuleAttribute);
+	enterRule(std::move(_localctx), 66, CMinusEqualsMinus1Revision0Parser::RuleAttribute);
 
 	auto onExit = finally([=]
 {
@@ -3450,11 +4530,11 @@ CMinusEqualsMinus1Revision0Parser::AttributeContext* CMinusEqualsMinus1Revision0
 	try
 {
 		enterOuterAlt(ctx, 1);
-		setState(268);//958
+		setState(368);//958
 		match(CMinusEqualsMinus1Revision0Parser::ATTROBITEOPEN,ctx);
-		setState(269); //951
+		setState(369); //951
 		functionCall(ctx);
-		setState(270);//958
+		setState(370);//958
 		match(CMinusEqualsMinus1Revision0Parser::ATTROBITECLOSE,ctx);
 	 
 	}
@@ -3553,7 +4633,8 @@ CMinusEqualsMinus1Revision0Parser::QualifiedIdentifierContext* CMinusEqualsMinus
 #endif
 	auto _localctx = std::make_unique<QualifiedIdentifierContext>(parent, getState());//549
 	auto ctx = _localctx.get();//549
-	enterRule(std::move(_localctx), 54, CMinusEqualsMinus1Revision0Parser::RuleQualifiedIdentifier);
+	enterRule(std::move(_localctx), 68, CMinusEqualsMinus1Revision0Parser::RuleQualifiedIdentifier);
+	size_t _la = 0;
 
 	auto onExit = finally([=]
 {
@@ -3561,25 +4642,21 @@ CMinusEqualsMinus1Revision0Parser::QualifiedIdentifierContext* CMinusEqualsMinus
 	});
 	try
 {
-		size_t alt;
 		enterOuterAlt(ctx, 1);
-		setState(272);//958
+		setState(372);//958
 		match(CMinusEqualsMinus1Revision0Parser::Identifier,ctx);
-		setState(277);//865
+		setState(377);//800
 		_errHandler->sync(this, ctx);
-		alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 23, ctx);
-		while (alt != 2 && alt != atn::ATN::INVALID_ALT_NUMBER)
+		_la = _input->LA(1);
+		while (_la == CMinusEqualsMinus1Revision0Parser::DoubleColon)
 		{
-			if (alt == 1)
-		{
-				setState(273);//958
-				match(CMinusEqualsMinus1Revision0Parser::DoubleColon,ctx);
-				setState(274);//958
-				match(CMinusEqualsMinus1Revision0Parser::Identifier,ctx); 
-			}
-			setState(279);//875
+			setState(373);//958
+			match(CMinusEqualsMinus1Revision0Parser::DoubleColon,ctx);
+			setState(374);//958
+			match(CMinusEqualsMinus1Revision0Parser::Identifier,ctx);
+			setState(379);//806
 			_errHandler->sync(this, ctx);
-			alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 23, ctx);
+			_la = _input->LA(1);
 		}
 	 
 	}
@@ -3619,9 +4696,9 @@ CMinusEqualsMinus1Revision0Parser::ThrowExpressionContext* CMinusEqualsMinus1Rev
 	return getRuleContext<CMinusEqualsMinus1Revision0Parser::ThrowExpressionContext>(0);//1165
 }
 
-CMinusEqualsMinus1Revision0Parser::QualifiedIdentifierContext* CMinusEqualsMinus1Revision0Parser::ExpressionContext::qualifiedIdentifier()
+tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::ExpressionContext::Identifier()
 {
-	return getRuleContext<CMinusEqualsMinus1Revision0Parser::QualifiedIdentifierContext>(0);//1165
+	return getToken(CMinusEqualsMinus1Revision0Parser::Identifier, 0);
 }
 
 tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::ExpressionContext::ParamOpen()
@@ -3688,7 +4765,7 @@ CMinusEqualsMinus1Revision0Parser::ExpressionContext* CMinusEqualsMinus1Revision
 #endif
 	auto _localctx = std::make_unique<ExpressionContext>(parent, getState());//549
 	auto ctx = _localctx.get();//549
-	enterRule(std::move(_localctx), 56, CMinusEqualsMinus1Revision0Parser::RuleExpression);
+	enterRule(std::move(_localctx), 70, CMinusEqualsMinus1Revision0Parser::RuleExpression);
 
 	auto onExit = finally([=]
 {
@@ -3696,14 +4773,14 @@ CMinusEqualsMinus1Revision0Parser::ExpressionContext* CMinusEqualsMinus1Revision
 	});
 	try
 {
-		setState(287);//830
+		setState(387);//830
 		_errHandler->sync(this, ctx);
-		switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 24, ctx))
+		switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 37, ctx))
 		{
 		case 1:
 		{
 			enterOuterAlt(ctx, 1);
-			setState(280); //951
+			setState(380); //951
 			functionCall(ctx);
 			break;
 		}
@@ -3711,7 +4788,7 @@ CMinusEqualsMinus1Revision0Parser::ExpressionContext* CMinusEqualsMinus1Revision
 		case 2:
 		{
 			enterOuterAlt(ctx, 2);
-			setState(281); //951
+			setState(381); //951
 			throwExpression(ctx);
 			break;
 		}
@@ -3719,19 +4796,19 @@ CMinusEqualsMinus1Revision0Parser::ExpressionContext* CMinusEqualsMinus1Revision
 		case 3:
 		{
 			enterOuterAlt(ctx, 3);
-			setState(282); //951
-			qualifiedIdentifier(ctx);
+			setState(382);//958
+			match(CMinusEqualsMinus1Revision0Parser::Identifier,ctx);
 			break;
 		}
 
 		case 4:
 		{
 			enterOuterAlt(ctx, 4);
-			setState(283);//958
+			setState(383);//958
 			match(CMinusEqualsMinus1Revision0Parser::ParamOpen,ctx);
-			setState(284); //951
+			setState(384); //951
 			expression(ctx);
-			setState(285);//958
+			setState(385);//958
 			match(CMinusEqualsMinus1Revision0Parser::ParamClose,ctx);
 			break;
 		}
@@ -3770,9 +4847,9 @@ CMinusEqualsMinus1Revision0Parser::FunctionCallContext* CMinusEqualsMinus1Revisi
 	return getRuleContext<CMinusEqualsMinus1Revision0Parser::FunctionCallContext>(0);//1165
 }
 
-CMinusEqualsMinus1Revision0Parser::QualifiedIdentifierContext* CMinusEqualsMinus1Revision0Parser::ArithmeticExpressionContext::qualifiedIdentifier()
+tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::ArithmeticExpressionContext::Identifier()
 {
-	return getRuleContext<CMinusEqualsMinus1Revision0Parser::QualifiedIdentifierContext>(0);//1165
+	return getToken(CMinusEqualsMinus1Revision0Parser::Identifier, 0);
 }
 
 tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::ArithmeticExpressionContext::ArithmeticUnaryOperator()
@@ -3862,8 +4939,8 @@ CMinusEqualsMinus1Revision0Parser::ArithmeticExpressionContext* CMinusEqualsMinu
 	size_t parentState = getState();
 	auto _localctx = std::make_unique<ArithmeticExpressionContext>(parentContext, parentState);//610
 	auto ctx = _localctx.get();//609
-	size_t startState = 58;
-	enterRecursionRule(ctx, 58, CMinusEqualsMinus1Revision0Parser::RuleArithmeticExpression, precedence);
+	size_t startState = 72;
+	enterRecursionRule(ctx, 72, CMinusEqualsMinus1Revision0Parser::RuleArithmeticExpression, precedence);
 
 		
 
@@ -3875,52 +4952,52 @@ CMinusEqualsMinus1Revision0Parser::ArithmeticExpressionContext* CMinusEqualsMinu
 {
 		size_t alt;
 		enterOuterAlt(ctx, 1);
-		setState(296);//830
+		setState(396);//830
 		_errHandler->sync(this, ctx);
-		switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 25, ctx))
+		switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 38, ctx))
 		{
 		case 1:
 		{
-			setState(290); //951
+			setState(390); //951
 			functionCall(ctx);
 			break;
 		}
 
 		case 2:
 		{
-			setState(291); //951
-			qualifiedIdentifier(ctx);
+			setState(391);//958
+			match(CMinusEqualsMinus1Revision0Parser::Identifier,ctx);
 			break;
 		}
 
 		case 3:
 		{
-			setState(292);//958
+			setState(392);//958
 			match(CMinusEqualsMinus1Revision0Parser::ArithmeticUnaryOperator,ctx);
-			setState(293); //951
+			setState(393); //951
 			arithmeticExpression(3,ctx);
 			break;
 		}
 
 		case 4:
 		{
-			setState(294);//958
+			setState(394);//958
 			match(CMinusEqualsMinus1Revision0Parser::IntegerLiteral,ctx);
 			break;
 		}
 
 		case 5:
 		{
-			setState(295); //951
+			setState(395); //951
 			expression(ctx);
 			break;
 		}
 
 		}
 		ctx->stop = _input->LT(-1);
-		setState(303);//865
+		setState(403);//865
 		_errHandler->sync(this, ctx);
-		alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 26, ctx);
+		alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 39, ctx);
 		while (alt != 2 && alt != atn::ATN::INVALID_ALT_NUMBER)
 		{
 			if (alt == 1)
@@ -3932,17 +5009,17 @@ CMinusEqualsMinus1Revision0Parser::ArithmeticExpressionContext* CMinusEqualsMinu
 				pushNewRecursionContext(std::move(_localctx), tmpContext.get(), startState, RuleArithmeticExpression);//1240
 				_localctx = std::move(tmpContext);
 				ctx = _localctx.get();
-				setState(298);//1002
+				setState(398);//1002
 
 				if (!(precpred(nullptr, 6))) throw FailedPredicateException(this, "precpred(nullptr, 6)", ctx);
-				setState(299);//958
+				setState(399);//958
 				match(CMinusEqualsMinus1Revision0Parser::ArithmeticBinaryOperator,ctx);
-				setState(300); //951
+				setState(400); //951
 				arithmeticExpression(7,ctx); 
 			}
-			setState(305);//875
+			setState(405);//875
 			_errHandler->sync(this, ctx);
-			alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 26, ctx);
+			alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 39, ctx);
 		}
 	}
 	catch (RecognitionException &e)
@@ -3975,9 +5052,9 @@ CMinusEqualsMinus1Revision0Parser::FunctionCallContext* CMinusEqualsMinus1Revisi
 	return getRuleContext<CMinusEqualsMinus1Revision0Parser::FunctionCallContext>(0);//1165
 }
 
-CMinusEqualsMinus1Revision0Parser::QualifiedIdentifierContext* CMinusEqualsMinus1Revision0Parser::LogicalExpressionContext::qualifiedIdentifier()
+tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::LogicalExpressionContext::Identifier()
 {
-	return getRuleContext<CMinusEqualsMinus1Revision0Parser::QualifiedIdentifierContext>(0);//1165
+	return getToken(CMinusEqualsMinus1Revision0Parser::Identifier, 0);
 }
 
 tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::LogicalExpressionContext::LogicalUnaryOperator()
@@ -4067,8 +5144,8 @@ CMinusEqualsMinus1Revision0Parser::LogicalExpressionContext* CMinusEqualsMinus1R
 	size_t parentState = getState();
 	auto _localctx = std::make_unique<LogicalExpressionContext>(parentContext, parentState);//610
 	auto ctx = _localctx.get();//609
-	size_t startState = 60;
-	enterRecursionRule(ctx, 60, CMinusEqualsMinus1Revision0Parser::RuleLogicalExpression, precedence);
+	size_t startState = 74;
+	enterRecursionRule(ctx, 74, CMinusEqualsMinus1Revision0Parser::RuleLogicalExpression, precedence);
 
 		
 
@@ -4080,52 +5157,52 @@ CMinusEqualsMinus1Revision0Parser::LogicalExpressionContext* CMinusEqualsMinus1R
 {
 		size_t alt;
 		enterOuterAlt(ctx, 1);
-		setState(313);//830
+		setState(413);//830
 		_errHandler->sync(this, ctx);
-		switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 27, ctx))
+		switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 40, ctx))
 		{
 		case 1:
 		{
-			setState(307); //951
+			setState(407); //951
 			functionCall(ctx);
 			break;
 		}
 
 		case 2:
 		{
-			setState(308); //951
-			qualifiedIdentifier(ctx);
+			setState(408);//958
+			match(CMinusEqualsMinus1Revision0Parser::Identifier,ctx);
 			break;
 		}
 
 		case 3:
 		{
-			setState(309);//958
+			setState(409);//958
 			match(CMinusEqualsMinus1Revision0Parser::LogicalUnaryOperator,ctx);
-			setState(310); //951
+			setState(410); //951
 			logicalExpression(3,ctx);
 			break;
 		}
 
 		case 4:
 		{
-			setState(311); //951
+			setState(411); //951
 			comparisonExpression(ctx);
 			break;
 		}
 
 		case 5:
 		{
-			setState(312); //951
+			setState(412); //951
 			expression(ctx);
 			break;
 		}
 
 		}
 		ctx->stop = _input->LT(-1);
-		setState(320);//865
+		setState(420);//865
 		_errHandler->sync(this, ctx);
-		alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 28, ctx);
+		alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 41, ctx);
 		while (alt != 2 && alt != atn::ATN::INVALID_ALT_NUMBER)
 		{
 			if (alt == 1)
@@ -4137,17 +5214,17 @@ CMinusEqualsMinus1Revision0Parser::LogicalExpressionContext* CMinusEqualsMinus1R
 				pushNewRecursionContext(std::move(_localctx), tmpContext.get(), startState, RuleLogicalExpression);//1240
 				_localctx = std::move(tmpContext);
 				ctx = _localctx.get();
-				setState(315);//1002
+				setState(415);//1002
 
 				if (!(precpred(nullptr, 6))) throw FailedPredicateException(this, "precpred(nullptr, 6)", ctx);
-				setState(316);//958
+				setState(416);//958
 				match(CMinusEqualsMinus1Revision0Parser::LogicalBinaryOperator,ctx);
-				setState(317); //951
+				setState(417); //951
 				logicalExpression(7,ctx); 
 			}
-			setState(322);//875
+			setState(422);//875
 			_errHandler->sync(this, ctx);
-			alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 28, ctx);
+			alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 41, ctx);
 		}
 	}
 	catch (RecognitionException &e)
@@ -4239,7 +5316,7 @@ CMinusEqualsMinus1Revision0Parser::ComparisonExpressionContext* CMinusEqualsMinu
 #endif
 	auto _localctx = std::make_unique<ComparisonExpressionContext>(parent, getState());//549
 	auto ctx = _localctx.get();//549
-	enterRule(std::move(_localctx), 62, CMinusEqualsMinus1Revision0Parser::RuleComparisonExpression);
+	enterRule(std::move(_localctx), 76, CMinusEqualsMinus1Revision0Parser::RuleComparisonExpression);
 
 	auto onExit = finally([=]
 {
@@ -4248,11 +5325,11 @@ CMinusEqualsMinus1Revision0Parser::ComparisonExpressionContext* CMinusEqualsMinu
 	try
 {
 		enterOuterAlt(ctx, 1);
-		setState(323); //951
+		setState(423); //951
 		arithmeticExpression(0,ctx);
-		setState(324);//958
+		setState(424);//958
 		match(CMinusEqualsMinus1Revision0Parser::ComparsionOperator,ctx);
-		setState(325); //951
+		setState(425); //951
 		arithmeticExpression(0,ctx);
 	 
 	}
@@ -4356,7 +5433,7 @@ CMinusEqualsMinus1Revision0Parser::AssigmentStatementContext* CMinusEqualsMinus1
 #endif
 	auto _localctx = std::make_unique<AssigmentStatementContext>(parent, getState());//549
 	auto ctx = _localctx.get();//549
-	enterRule(std::move(_localctx), 64, CMinusEqualsMinus1Revision0Parser::RuleAssigmentStatement);
+	enterRule(std::move(_localctx), 78, CMinusEqualsMinus1Revision0Parser::RuleAssigmentStatement);
 
 	auto onExit = finally([=]
 {
@@ -4365,31 +5442,31 @@ CMinusEqualsMinus1Revision0Parser::AssigmentStatementContext* CMinusEqualsMinus1
 	try
 {
 		enterOuterAlt(ctx, 1);
-		setState(327); //951
+		setState(427); //951
 		lExpression(ctx);
-		setState(328);//958
+		setState(428);//958
 		match(CMinusEqualsMinus1Revision0Parser::Asssigment,ctx);
-		setState(332);//830
+		setState(432);//830
 		_errHandler->sync(this, ctx);
-		switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 29, ctx))
+		switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 42, ctx))
 		{
 		case 1:
 		{
-			setState(329); //951
+			setState(429); //951
 			expression(ctx);
 			break;
 		}
 
 		case 2:
 		{
-			setState(330); //951
+			setState(430); //951
 			arithmeticExpression(0,ctx);
 			break;
 		}
 
 		case 3:
 		{
-			setState(331); //951
+			setState(431); //951
 			logicalExpression(0,ctx);
 			break;
 		}
@@ -4423,9 +5500,9 @@ CMinusEqualsMinus1Revision0Parser::LExpressionContext::LExpressionContext(antlr4
 {
 }
 
-CMinusEqualsMinus1Revision0Parser::QualifiedIdentifierContext* CMinusEqualsMinus1Revision0Parser::LExpressionContext::qualifiedIdentifier()
+tree::TerminalNode* CMinusEqualsMinus1Revision0Parser::LExpressionContext::Identifier()
 {
-	return getRuleContext<CMinusEqualsMinus1Revision0Parser::QualifiedIdentifierContext>(0);//1165
+	return getToken(CMinusEqualsMinus1Revision0Parser::Identifier, 0);
 }
 
 
@@ -4477,7 +5554,7 @@ CMinusEqualsMinus1Revision0Parser::LExpressionContext* CMinusEqualsMinus1Revisio
 #endif
 	auto _localctx = std::make_unique<LExpressionContext>(parent, getState());//549
 	auto ctx = _localctx.get();//549
-	enterRule(std::move(_localctx), 66, CMinusEqualsMinus1Revision0Parser::RuleLExpression);
+	enterRule(std::move(_localctx), 80, CMinusEqualsMinus1Revision0Parser::RuleLExpression);
 
 	auto onExit = finally([=]
 {
@@ -4486,8 +5563,8 @@ CMinusEqualsMinus1Revision0Parser::LExpressionContext* CMinusEqualsMinus1Revisio
 	try
 {
 		enterOuterAlt(ctx, 1);
-		setState(334); //951
-		qualifiedIdentifier(ctx);
+		setState(434);//958
+		match(CMinusEqualsMinus1Revision0Parser::Identifier,ctx);
 	 
 	}
 	catch (RecognitionException &e)
@@ -4575,7 +5652,7 @@ CMinusEqualsMinus1Revision0Parser::ThrowExpressionContext* CMinusEqualsMinus1Rev
 #endif
 	auto _localctx = std::make_unique<ThrowExpressionContext>(parent, getState());//549
 	auto ctx = _localctx.get();//549
-	enterRule(std::move(_localctx), 68, CMinusEqualsMinus1Revision0Parser::RuleThrowExpression);
+	enterRule(std::move(_localctx), 82, CMinusEqualsMinus1Revision0Parser::RuleThrowExpression);
 
 	auto onExit = finally([=]
 {
@@ -4584,9 +5661,9 @@ CMinusEqualsMinus1Revision0Parser::ThrowExpressionContext* CMinusEqualsMinus1Rev
 	try
 {
 		enterOuterAlt(ctx, 1);
-		setState(336);//958
+		setState(436);//958
 		match(CMinusEqualsMinus1Revision0Parser::Throw,ctx);
-		setState(337); //951
+		setState(437); //951
 		expression(ctx);
 	 
 	}
@@ -4613,9 +5690,9 @@ bool CMinusEqualsMinus1Revision0Parser::sempred(RuleContext *context, size_t rul
 {
 	switch (ruleIndex)
 {
-		case 29: return arithmeticExpressionSempred(dynamic_cast<ArithmeticExpressionContext *>(context), predicateIndex);
+		case 36: return arithmeticExpressionSempred(dynamic_cast<ArithmeticExpressionContext *>(context), predicateIndex);
 
-		case 30: return logicalExpressionSempred(dynamic_cast<LogicalExpressionContext *>(context), predicateIndex);//430
+		case 37: return logicalExpressionSempred(dynamic_cast<LogicalExpressionContext *>(context), predicateIndex);//430
 
 	default:
 		break;
@@ -4658,7 +5735,9 @@ std::vector<uint16_t> CMinusEqualsMinus1Revision0Parser::_serializedATN;
 std::vector<std::string_view> CMinusEqualsMinus1Revision0Parser::_ruleNames =
 {
 	"compilationUnit", "languageStandardDeclaration", "declarationSequence", 
-	"declaration", "classDeclaration", "classContentSequence", "fieldDeclaration", 
+	"declaration", "attributeDeclaration", "attributeContentSequence", "importDeclaration", 
+	"classDeclaration", "interfaceDeclaration", "interfaceContentSequence", 
+	"structDeclaration", "structContentSequence", "classContentSequence", "fieldDeclaration", 
 	"implementedInterfacesSequence", "namespaceDeclaration", "functionDeclaration", 
 	"parameterList", "parameter", "functionBody", "compoundStatement", "statement", 
 	"ifStatement", "loopStatement", "rangeForStatement", "forStatement", "whileStatement", 
@@ -4670,30 +5749,31 @@ std::vector<std::string_view> CMinusEqualsMinus1Revision0Parser::_ruleNames =
 
 std::vector<std::string_view> CMinusEqualsMinus1Revision0Parser::_literalNames =
 {
-	"", "'standard'", "':'", "'namespace'", "'fn'", "'->'", "'if'", "'for'", 
+	"", "'standard'", "'att'", "'<'", "'type'", "'function'", "'>'", "'import'", 
+	"'from'", "':'", "'struct'", "'namespace'", "'fn'", "'->'", "'if'", "'for'", 
 	"'in'", "'do'", "'while'", "'loop'", "", "", "'{'", "'}'", "", "'\"'", 
 	"'''", "'('", "')'", "'['", "']'", "", "", "", "", "", "", "'::'", "';'", 
 	"','", "'.'", "", "'='", "", "'+'", "'-'", "'*'", "'+='", "'-='", "'*='", 
-	"'/='", "'>'", "'<'", "'>='", "'<='", "", "", "'||'", "'&&'", "'^^'", "", 
-	"'?'", "'^'", "'&'", "'class'", "'interface'", "'public'", "'private'", 
-	"'protected'", "'internal'", "'final'", "'virtual'", "'abstract'", "'override'", 
-	"", "'attribute'", "'throw'"
+	"'/='", "'>='", "'<='", "", "", "'||'", "'&&'", "'^^'", "", "'?'", "'^'", 
+	"'&'", "'class'", "'interface'", "'public'", "'private'", "'protected'", 
+	"'internal'", "'final'", "'virtual'", "'abstract'", "'override'", "", "'attribute'", 
+	"'throw'"
 };
 
 std::vector<std::string_view> CMinusEqualsMinus1Revision0Parser::_symbolicNames =
 {
-	"", "", "", "", "", "", "", "", "", "", "", "", "AccessSpecifier", "Identifier", 
-	"OpenBracket", "CloseBracket", "RAWSTRING", "DOUBLEQUOTE", "SINGLEQUOTE", 
-	"ParamOpen", "ParamClose", "ATTROBITEOPEN", "ATTROBITECLOSE", "ArithmeticBinaryOperator", 
-	"ArithmeticUnaryOperator", "ComparsionOperator", "LogicalBinaryOperator", 
-	"LogicalUnaryOperator", "Not", "DoubleColon", "SemiColon", "Comma", "Period", 
-	"Equals", "Asssigment", "NotEquals", "Plus", "Minus", "Star", "PlusEquals", 
-	"MinusEquals", "MultiplyEquals", "DivideEquals", "GreaterThan", "LessThan", 
-	"GreaterEqual", "LessEqual", "Equal", "NotEqual", "Or", "And", "Xor", "Strong", 
-	"Nullable", "Mutable", "Ref", "Class", "Interface", "Public", "Private", 
-	"Protected", "Internal", "Final", "Virtual", "Abstract", "Override", "DefaultSpecification", 
-	"Attribute", "Throw", "IntegerLiteral", "DIGIT", "LETTER", "Whitespace", 
-	"Newline", "BlockComment", "LineComment"
+	"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 
+	"", "", "AccessSpecifier", "Identifier", "OpenBracket", "CloseBracket", 
+	"RAWSTRING", "DOUBLEQUOTE", "SINGLEQUOTE", "ParamOpen", "ParamClose", "ATTROBITEOPEN", 
+	"ATTROBITECLOSE", "ArithmeticBinaryOperator", "ArithmeticUnaryOperator", 
+	"ComparsionOperator", "LogicalBinaryOperator", "LogicalUnaryOperator", 
+	"Not", "DoubleColon", "SemiColon", "Comma", "Period", "Equals", "Asssigment", 
+	"NotEquals", "Plus", "Minus", "Star", "PlusEquals", "MinusEquals", "MultiplyEquals", 
+	"DivideEquals", "GreaterEqual", "LessEqual", "Equal", "NotEqual", "Or", 
+	"And", "Xor", "Strong", "Nullable", "Mutable", "Ref", "Class", "Interface", 
+	"Public", "Private", "Protected", "Internal", "Final", "Virtual", "Abstract", 
+	"Override", "DefaultSpecification", "Attribute", "Throw", "IntegerLiteral", 
+	"DIGIT", "LETTER", "Whitespace", "Newline", "BlockComment", "LineComment"
 };
 
 dfa::Vocabulary CMinusEqualsMinus1Revision0Parser::_vocabulary(_literalNames, _symbolicNames);
@@ -4722,7 +5802,7 @@ CMinusEqualsMinus1Revision0Parser::Initializer::Initializer()
 	_serializedATN =
 	{
 		0x3, 0x608b, 0xa72a, 0x8133, 0xb9ed, 0x417c, 0x3be7, 0x7786, 0x5964, 0x3, 
-		0x4d, 0x156, 0x4, 0x2, 0x9, 0x2, 0x4, 0x3, 0x9, 0x3, 0x4, 0x4, 0x9, 0x4, 
+		0x53, 0x1ba, 0x4, 0x2, 0x9, 0x2, 0x4, 0x3, 0x9, 0x3, 0x4, 0x4, 0x9, 0x4, 
 		0x4, 0x5, 0x9, 0x5, 0x4, 0x6, 0x9, 0x6, 0x4, 0x7, 0x9, 0x7, 0x4, 0x8, 
 		0x9, 0x8, 0x4, 0x9, 0x9, 0x9, 0x4, 0xa, 0x9, 0xa, 0x4, 0xb, 0x9, 0xb, 
 		0x4, 0xc, 0x9, 0xc, 0x4, 0xd, 0x9, 0xd, 0x4, 0xe, 0x9, 0xe, 0x4, 0xf, 
@@ -4732,216 +5812,289 @@ CMinusEqualsMinus1Revision0Parser::Initializer::Initializer()
 		0x19, 0x9, 0x19, 0x4, 0x1a, 0x9, 0x1a, 0x4, 0x1b, 0x9, 0x1b, 0x4, 0x1c, 
 		0x9, 0x1c, 0x4, 0x1d, 0x9, 0x1d, 0x4, 0x1e, 0x9, 0x1e, 0x4, 0x1f, 0x9, 
 		0x1f, 0x4, 0x20, 0x9, 0x20, 0x4, 0x21, 0x9, 0x21, 0x4, 0x22, 0x9, 0x22, 
-		0x4, 0x23, 0x9, 0x23, 0x4, 0x24, 0x9, 0x24, 0x3, 0x2, 0x3, 0x2, 0x3, 0x2, 
-		0x3, 0x2, 0x3, 0x2, 0x5, 0x2, 0x4e, 0xa, 0x2, 0x3, 0x3, 0x3, 0x3, 0x3, 
-		0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x4, 0x6, 0x4, 0x56, 0xa, 0x4, 0xd, 0x4, 
-		0xe, 0x4, 0x57, 0x3, 0x5, 0x3, 0x5, 0x3, 0x6, 0x5, 0x6, 0x5d, 0xa, 0x6, 
-		0x3, 0x6, 0x3, 0x6, 0x3, 0x6, 0x3, 0x6, 0x3, 0x6, 0x3, 0x6, 0x3, 0x6, 
-		0x3, 0x6, 0x3, 0x7, 0x3, 0x7, 0x6, 0x7, 0x69, 0xa, 0x7, 0xd, 0x7, 0xe, 
-		0x7, 0x6a, 0x3, 0x8, 0x5, 0x8, 0x6e, 0xa, 0x8, 0x3, 0x8, 0x5, 0x8, 0x71, 
-		0xa, 0x8, 0x3, 0x8, 0x3, 0x8, 0x3, 0x8, 0x3, 0x9, 0x3, 0x9, 0x3, 0x9, 
-		0x3, 0x9, 0x6, 0x9, 0x7a, 0xa, 0x9, 0xd, 0x9, 0xe, 0x9, 0x7b, 0x3, 0x9, 
-		0x3, 0x9, 0x5, 0x9, 0x80, 0xa, 0x9, 0x3, 0xa, 0x3, 0xa, 0x3, 0xa, 0x3, 
-		0xa, 0x3, 0xa, 0x3, 0xa, 0x3, 0xb, 0x5, 0xb, 0x89, 0xa, 0xb, 0x3, 0xb, 
-		0x5, 0xb, 0x8c, 0xa, 0xb, 0x3, 0xb, 0x3, 0xb, 0x3, 0xb, 0x3, 0xb, 0x3, 
-		0xb, 0x3, 0xb, 0x3, 0xb, 0x3, 0xb, 0x3, 0xb, 0x3, 0xc, 0x3, 0xc, 0x3, 
-		0xc, 0x3, 0xc, 0x3, 0xc, 0x6, 0xc, 0x9c, 0xa, 0xc, 0xd, 0xc, 0xe, 0xc, 
-		0x9d, 0x3, 0xc, 0x3, 0xc, 0x5, 0xc, 0xa2, 0xa, 0xc, 0x3, 0xd, 0x5, 0xd, 
-		0xa5, 0xa, 0xd, 0x3, 0xd, 0x3, 0xd, 0x3, 0xd, 0x3, 0xe, 0x3, 0xe, 0x7, 
-		0xe, 0xac, 0xa, 0xe, 0xc, 0xe, 0xe, 0xe, 0xaf, 0xb, 0xe, 0x3, 0xe, 0x3, 
-		0xe, 0x3, 0xf, 0x3, 0xf, 0x7, 0xf, 0xb5, 0xa, 0xf, 0xc, 0xf, 0xe, 0xf, 
-		0xb8, 0xb, 0xf, 0x3, 0xf, 0x3, 0xf, 0x5, 0xf, 0xbc, 0xa, 0xf, 0x3, 0x10, 
-		0x3, 0x10, 0x3, 0x10, 0x3, 0x10, 0x3, 0x10, 0x3, 0x10, 0x3, 0x10, 0x3, 
-		0x10, 0x5, 0x10, 0xc6, 0xa, 0x10, 0x3, 0x11, 0x3, 0x11, 0x3, 0x11, 0x3, 
-		0x11, 0x3, 0x11, 0x3, 0x11, 0x3, 0x12, 0x3, 0x12, 0x3, 0x12, 0x3, 0x12, 
-		0x3, 0x12, 0x5, 0x12, 0xd3, 0xa, 0x12, 0x3, 0x13, 0x3, 0x13, 0x3, 0x13, 
-		0x3, 0x13, 0x3, 0x13, 0x3, 0x13, 0x3, 0x13, 0x3, 0x13, 0x3, 0x14, 0x3, 
-		0x14, 0x3, 0x14, 0x3, 0x14, 0x3, 0x14, 0x3, 0x14, 0x3, 0x14, 0x3, 0x14, 
-		0x3, 0x14, 0x3, 0x14, 0x3, 0x15, 0x3, 0x15, 0x3, 0x15, 0x3, 0x16, 0x3, 
-		0x16, 0x3, 0x16, 0x3, 0x16, 0x3, 0x16, 0x3, 0x17, 0x3, 0x17, 0x3, 0x17, 
-		0x3, 0x17, 0x3, 0x17, 0x3, 0x18, 0x3, 0x18, 0x3, 0x18, 0x3, 0x19, 0x3, 
-		0x19, 0x3, 0x19, 0x3, 0x19, 0x3, 0x19, 0x7, 0x19, 0xfc, 0xa, 0x19, 0xc, 
-		0x19, 0xe, 0x19, 0xff, 0xb, 0x19, 0x5, 0x19, 0x101, 0xa, 0x19, 0x3, 0x19, 
-		0x3, 0x19, 0x3, 0x1a, 0x3, 0x1a, 0x3, 0x1a, 0x5, 0x1a, 0x108, 0xa, 0x1a, 
-		0x3, 0x1b, 0x6, 0x1b, 0x10b, 0xa, 0x1b, 0xd, 0x1b, 0xe, 0x1b, 0x10c, 0x3, 
-		0x1c, 0x3, 0x1c, 0x3, 0x1c, 0x3, 0x1c, 0x3, 0x1d, 0x3, 0x1d, 0x3, 0x1d, 
-		0x7, 0x1d, 0x116, 0xa, 0x1d, 0xc, 0x1d, 0xe, 0x1d, 0x119, 0xb, 0x1d, 0x3, 
-		0x1e, 0x3, 0x1e, 0x3, 0x1e, 0x3, 0x1e, 0x3, 0x1e, 0x3, 0x1e, 0x3, 0x1e, 
-		0x5, 0x1e, 0x122, 0xa, 0x1e, 0x3, 0x1f, 0x3, 0x1f, 0x3, 0x1f, 0x3, 0x1f, 
-		0x3, 0x1f, 0x3, 0x1f, 0x3, 0x1f, 0x5, 0x1f, 0x12b, 0xa, 0x1f, 0x3, 0x1f, 
-		0x3, 0x1f, 0x3, 0x1f, 0x7, 0x1f, 0x130, 0xa, 0x1f, 0xc, 0x1f, 0xe, 0x1f, 
-		0x133, 0xb, 0x1f, 0x3, 0x20, 0x3, 0x20, 0x3, 0x20, 0x3, 0x20, 0x3, 0x20, 
-		0x3, 0x20, 0x3, 0x20, 0x5, 0x20, 0x13c, 0xa, 0x20, 0x3, 0x20, 0x3, 0x20, 
-		0x3, 0x20, 0x7, 0x20, 0x141, 0xa, 0x20, 0xc, 0x20, 0xe, 0x20, 0x144, 0xb, 
-		0x20, 0x3, 0x21, 0x3, 0x21, 0x3, 0x21, 0x3, 0x21, 0x3, 0x22, 0x3, 0x22, 
-		0x3, 0x22, 0x3, 0x22, 0x3, 0x22, 0x5, 0x22, 0x14f, 0xa, 0x22, 0x3, 0x23, 
-		0x3, 0x23, 0x3, 0x24, 0x3, 0x24, 0x3, 0x24, 0x3, 0x24, 0x2, 0x4, 0x3c, 
-		0x3e, 0x25, 0x2, 0x4, 0x6, 0x8, 0xa, 0xc, 0xe, 0x10, 0x12, 0x14, 0x16, 
-		0x18, 0x1a, 0x1c, 0x1e, 0x20, 0x22, 0x24, 0x26, 0x28, 0x2a, 0x2c, 0x2e, 
-		0x30, 0x32, 0x34, 0x36, 0x38, 0x3a, 0x3c, 0x3e, 0x40, 0x42, 0x44, 0x46, 
-		0x2, 0x2, 0x2, 0x160, 0x2, 0x4d, 0x3, 0x2, 0x2, 0x2, 0x4, 0x4f, 0x3, 0x2, 
-		0x2, 0x2, 0x6, 0x55, 0x3, 0x2, 0x2, 0x2, 0x8, 0x59, 0x3, 0x2, 0x2, 0x2, 
-		0xa, 0x5c, 0x3, 0x2, 0x2, 0x2, 0xc, 0x68, 0x3, 0x2, 0x2, 0x2, 0xe, 0x6d, 
-		0x3, 0x2, 0x2, 0x2, 0x10, 0x7f, 0x3, 0x2, 0x2, 0x2, 0x12, 0x81, 0x3, 0x2, 
-		0x2, 0x2, 0x14, 0x88, 0x3, 0x2, 0x2, 0x2, 0x16, 0xa1, 0x3, 0x2, 0x2, 0x2, 
-		0x18, 0xa4, 0x3, 0x2, 0x2, 0x2, 0x1a, 0xa9, 0x3, 0x2, 0x2, 0x2, 0x1c, 
-		0xbb, 0x3, 0x2, 0x2, 0x2, 0x1e, 0xc5, 0x3, 0x2, 0x2, 0x2, 0x20, 0xc7, 
-		0x3, 0x2, 0x2, 0x2, 0x22, 0xd2, 0x3, 0x2, 0x2, 0x2, 0x24, 0xd4, 0x3, 0x2, 
-		0x2, 0x2, 0x26, 0xdc, 0x3, 0x2, 0x2, 0x2, 0x28, 0xe6, 0x3, 0x2, 0x2, 0x2, 
-		0x2a, 0xe9, 0x3, 0x2, 0x2, 0x2, 0x2c, 0xee, 0x3, 0x2, 0x2, 0x2, 0x2e, 
-		0xf3, 0x3, 0x2, 0x2, 0x2, 0x30, 0xf6, 0x3, 0x2, 0x2, 0x2, 0x32, 0x107, 
-		0x3, 0x2, 0x2, 0x2, 0x34, 0x10a, 0x3, 0x2, 0x2, 0x2, 0x36, 0x10e, 0x3, 
-		0x2, 0x2, 0x2, 0x38, 0x112, 0x3, 0x2, 0x2, 0x2, 0x3a, 0x121, 0x3, 0x2, 
-		0x2, 0x2, 0x3c, 0x12a, 0x3, 0x2, 0x2, 0x2, 0x3e, 0x13b, 0x3, 0x2, 0x2, 
-		0x2, 0x40, 0x145, 0x3, 0x2, 0x2, 0x2, 0x42, 0x149, 0x3, 0x2, 0x2, 0x2, 
-		0x44, 0x150, 0x3, 0x2, 0x2, 0x2, 0x46, 0x152, 0x3, 0x2, 0x2, 0x2, 0x48, 
-		0x49, 0x5, 0x4, 0x3, 0x2, 0x49, 0x4a, 0x5, 0x6, 0x4, 0x2, 0x4a, 0x4b, 
-		0x7, 0x2, 0x2, 0x3, 0x4b, 0x4e, 0x3, 0x2, 0x2, 0x2, 0x4c, 0x4e, 0x5, 0x6, 
-		0x4, 0x2, 0x4d, 0x48, 0x3, 0x2, 0x2, 0x2, 0x4d, 0x4c, 0x3, 0x2, 0x2, 0x2, 
-		0x4e, 0x3, 0x3, 0x2, 0x2, 0x2, 0x4f, 0x50, 0x7, 0x3, 0x2, 0x2, 0x50, 0x51, 
-		0x7, 0x24, 0x2, 0x2, 0x51, 0x52, 0x7, 0x47, 0x2, 0x2, 0x52, 0x53, 0x7, 
-		0x20, 0x2, 0x2, 0x53, 0x5, 0x3, 0x2, 0x2, 0x2, 0x54, 0x56, 0x5, 0x8, 0x5, 
-		0x2, 0x55, 0x54, 0x3, 0x2, 0x2, 0x2, 0x56, 0x57, 0x3, 0x2, 0x2, 0x2, 0x57, 
-		0x55, 0x3, 0x2, 0x2, 0x2, 0x57, 0x58, 0x3, 0x2, 0x2, 0x2, 0x58, 0x7, 0x3, 
-		0x2, 0x2, 0x2, 0x59, 0x5a, 0x5, 0x14, 0xb, 0x2, 0x5a, 0x9, 0x3, 0x2, 0x2, 
-		0x2, 0x5b, 0x5d, 0x7, 0xe, 0x2, 0x2, 0x5c, 0x5b, 0x3, 0x2, 0x2, 0x2, 0x5c, 
-		0x5d, 0x3, 0x2, 0x2, 0x2, 0x5d, 0x5e, 0x3, 0x2, 0x2, 0x2, 0x5e, 0x5f, 
-		0x7, 0x3a, 0x2, 0x2, 0x5f, 0x60, 0x7, 0xf, 0x2, 0x2, 0x60, 0x61, 0x7, 
-		0x4, 0x2, 0x2, 0x61, 0x62, 0x5, 0x10, 0x9, 0x2, 0x62, 0x63, 0x7, 0x10, 
-		0x2, 0x2, 0x63, 0x64, 0x5, 0xc, 0x7, 0x2, 0x64, 0x65, 0x7, 0x11, 0x2, 
-		0x2, 0x65, 0xb, 0x3, 0x2, 0x2, 0x2, 0x66, 0x69, 0x5, 0x14, 0xb, 0x2, 0x67, 
-		0x69, 0x5, 0xe, 0x8, 0x2, 0x68, 0x66, 0x3, 0x2, 0x2, 0x2, 0x68, 0x67, 
-		0x3, 0x2, 0x2, 0x2, 0x69, 0x6a, 0x3, 0x2, 0x2, 0x2, 0x6a, 0x68, 0x3, 0x2, 
-		0x2, 0x2, 0x6a, 0x6b, 0x3, 0x2, 0x2, 0x2, 0x6b, 0xd, 0x3, 0x2, 0x2, 0x2, 
-		0x6c, 0x6e, 0x5, 0x34, 0x1b, 0x2, 0x6d, 0x6c, 0x3, 0x2, 0x2, 0x2, 0x6d, 
-		0x6e, 0x3, 0x2, 0x2, 0x2, 0x6e, 0x70, 0x3, 0x2, 0x2, 0x2, 0x6f, 0x71, 
-		0x7, 0xe, 0x2, 0x2, 0x70, 0x6f, 0x3, 0x2, 0x2, 0x2, 0x70, 0x71, 0x3, 0x2, 
-		0x2, 0x2, 0x71, 0x72, 0x3, 0x2, 0x2, 0x2, 0x72, 0x73, 0x5, 0x38, 0x1d, 
-		0x2, 0x73, 0x74, 0x7, 0xf, 0x2, 0x2, 0x74, 0xf, 0x3, 0x2, 0x2, 0x2, 0x75, 
-		0x80, 0x5, 0x38, 0x1d, 0x2, 0x76, 0x77, 0x5, 0x38, 0x1d, 0x2, 0x77, 0x78, 
-		0x7, 0x21, 0x2, 0x2, 0x78, 0x7a, 0x3, 0x2, 0x2, 0x2, 0x79, 0x76, 0x3, 
-		0x2, 0x2, 0x2, 0x7a, 0x7b, 0x3, 0x2, 0x2, 0x2, 0x7b, 0x79, 0x3, 0x2, 0x2, 
-		0x2, 0x7b, 0x7c, 0x3, 0x2, 0x2, 0x2, 0x7c, 0x7d, 0x3, 0x2, 0x2, 0x2, 0x7d, 
-		0x7e, 0x5, 0x38, 0x1d, 0x2, 0x7e, 0x80, 0x3, 0x2, 0x2, 0x2, 0x7f, 0x75, 
-		0x3, 0x2, 0x2, 0x2, 0x7f, 0x79, 0x3, 0x2, 0x2, 0x2, 0x80, 0x11, 0x3, 0x2, 
-		0x2, 0x2, 0x81, 0x82, 0x7, 0x5, 0x2, 0x2, 0x82, 0x83, 0x5, 0x38, 0x1d, 
-		0x2, 0x83, 0x84, 0x7, 0x10, 0x2, 0x2, 0x84, 0x85, 0x5, 0x6, 0x4, 0x2, 
-		0x85, 0x86, 0x7, 0x11, 0x2, 0x2, 0x86, 0x13, 0x3, 0x2, 0x2, 0x2, 0x87, 
-		0x89, 0x5, 0x34, 0x1b, 0x2, 0x88, 0x87, 0x3, 0x2, 0x2, 0x2, 0x88, 0x89, 
-		0x3, 0x2, 0x2, 0x2, 0x89, 0x8b, 0x3, 0x2, 0x2, 0x2, 0x8a, 0x8c, 0x7, 0xe, 
-		0x2, 0x2, 0x8b, 0x8a, 0x3, 0x2, 0x2, 0x2, 0x8b, 0x8c, 0x3, 0x2, 0x2, 0x2, 
-		0x8c, 0x8d, 0x3, 0x2, 0x2, 0x2, 0x8d, 0x8e, 0x7, 0x6, 0x2, 0x2, 0x8e, 
-		0x8f, 0x7, 0xf, 0x2, 0x2, 0x8f, 0x90, 0x7, 0x15, 0x2, 0x2, 0x90, 0x91, 
-		0x5, 0x16, 0xc, 0x2, 0x91, 0x92, 0x7, 0x16, 0x2, 0x2, 0x92, 0x93, 0x7, 
-		0x7, 0x2, 0x2, 0x93, 0x94, 0x5, 0x38, 0x1d, 0x2, 0x94, 0x95, 0x5, 0x1a, 
-		0xe, 0x2, 0x95, 0x15, 0x3, 0x2, 0x2, 0x2, 0x96, 0xa2, 0x3, 0x2, 0x2, 0x2, 
-		0x97, 0xa2, 0x5, 0x18, 0xd, 0x2, 0x98, 0x99, 0x5, 0x18, 0xd, 0x2, 0x99, 
-		0x9a, 0x7, 0x21, 0x2, 0x2, 0x9a, 0x9c, 0x3, 0x2, 0x2, 0x2, 0x9b, 0x98, 
-		0x3, 0x2, 0x2, 0x2, 0x9c, 0x9d, 0x3, 0x2, 0x2, 0x2, 0x9d, 0x9b, 0x3, 0x2, 
-		0x2, 0x2, 0x9d, 0x9e, 0x3, 0x2, 0x2, 0x2, 0x9e, 0x9f, 0x3, 0x2, 0x2, 0x2, 
-		0x9f, 0xa0, 0x5, 0x18, 0xd, 0x2, 0xa0, 0xa2, 0x3, 0x2, 0x2, 0x2, 0xa1, 
-		0x96, 0x3, 0x2, 0x2, 0x2, 0xa1, 0x97, 0x3, 0x2, 0x2, 0x2, 0xa1, 0x9b, 
-		0x3, 0x2, 0x2, 0x2, 0xa2, 0x17, 0x3, 0x2, 0x2, 0x2, 0xa3, 0xa5, 0x5, 0x34, 
-		0x1b, 0x2, 0xa4, 0xa3, 0x3, 0x2, 0x2, 0x2, 0xa4, 0xa5, 0x3, 0x2, 0x2, 
-		0x2, 0xa5, 0xa6, 0x3, 0x2, 0x2, 0x2, 0xa6, 0xa7, 0x5, 0x38, 0x1d, 0x2, 
-		0xa7, 0xa8, 0x7, 0xf, 0x2, 0x2, 0xa8, 0x19, 0x3, 0x2, 0x2, 0x2, 0xa9, 
-		0xad, 0x7, 0x10, 0x2, 0x2, 0xaa, 0xac, 0x5, 0x1e, 0x10, 0x2, 0xab, 0xaa, 
-		0x3, 0x2, 0x2, 0x2, 0xac, 0xaf, 0x3, 0x2, 0x2, 0x2, 0xad, 0xab, 0x3, 0x2, 
-		0x2, 0x2, 0xad, 0xae, 0x3, 0x2, 0x2, 0x2, 0xae, 0xb0, 0x3, 0x2, 0x2, 0x2, 
-		0xaf, 0xad, 0x3, 0x2, 0x2, 0x2, 0xb0, 0xb1, 0x7, 0x11, 0x2, 0x2, 0xb1, 
-		0x1b, 0x3, 0x2, 0x2, 0x2, 0xb2, 0xb6, 0x7, 0x10, 0x2, 0x2, 0xb3, 0xb5, 
-		0x5, 0x1e, 0x10, 0x2, 0xb4, 0xb3, 0x3, 0x2, 0x2, 0x2, 0xb5, 0xb8, 0x3, 
-		0x2, 0x2, 0x2, 0xb6, 0xb4, 0x3, 0x2, 0x2, 0x2, 0xb6, 0xb7, 0x3, 0x2, 0x2, 
-		0x2, 0xb7, 0xb9, 0x3, 0x2, 0x2, 0x2, 0xb8, 0xb6, 0x3, 0x2, 0x2, 0x2, 0xb9, 
-		0xbc, 0x7, 0x11, 0x2, 0x2, 0xba, 0xbc, 0x5, 0x1e, 0x10, 0x2, 0xbb, 0xb2, 
-		0x3, 0x2, 0x2, 0x2, 0xbb, 0xba, 0x3, 0x2, 0x2, 0x2, 0xbc, 0x1d, 0x3, 0x2, 
-		0x2, 0x2, 0xbd, 0xbe, 0x5, 0x3a, 0x1e, 0x2, 0xbe, 0xbf, 0x7, 0x20, 0x2, 
-		0x2, 0xbf, 0xc6, 0x3, 0x2, 0x2, 0x2, 0xc0, 0xc6, 0x5, 0x20, 0x11, 0x2, 
-		0xc1, 0xc6, 0x5, 0x22, 0x12, 0x2, 0xc2, 0xc3, 0x5, 0x42, 0x22, 0x2, 0xc3, 
-		0xc4, 0x7, 0x20, 0x2, 0x2, 0xc4, 0xc6, 0x3, 0x2, 0x2, 0x2, 0xc5, 0xbd, 
-		0x3, 0x2, 0x2, 0x2, 0xc5, 0xc0, 0x3, 0x2, 0x2, 0x2, 0xc5, 0xc1, 0x3, 0x2, 
-		0x2, 0x2, 0xc5, 0xc2, 0x3, 0x2, 0x2, 0x2, 0xc6, 0x1f, 0x3, 0x2, 0x2, 0x2, 
-		0xc7, 0xc8, 0x7, 0x8, 0x2, 0x2, 0xc8, 0xc9, 0x7, 0x15, 0x2, 0x2, 0xc9, 
-		0xca, 0x5, 0x3e, 0x20, 0x2, 0xca, 0xcb, 0x7, 0x16, 0x2, 0x2, 0xcb, 0xcc, 
-		0x5, 0x1c, 0xf, 0x2, 0xcc, 0x21, 0x3, 0x2, 0x2, 0x2, 0xcd, 0xd3, 0x5, 
-		0x24, 0x13, 0x2, 0xce, 0xd3, 0x5, 0x26, 0x14, 0x2, 0xcf, 0xd3, 0x5, 0x28, 
-		0x15, 0x2, 0xd0, 0xd3, 0x5, 0x2a, 0x16, 0x2, 0xd1, 0xd3, 0x5, 0x2e, 0x18, 
-		0x2, 0xd2, 0xcd, 0x3, 0x2, 0x2, 0x2, 0xd2, 0xce, 0x3, 0x2, 0x2, 0x2, 0xd2, 
-		0xcf, 0x3, 0x2, 0x2, 0x2, 0xd2, 0xd0, 0x3, 0x2, 0x2, 0x2, 0xd2, 0xd1, 
-		0x3, 0x2, 0x2, 0x2, 0xd3, 0x23, 0x3, 0x2, 0x2, 0x2, 0xd4, 0xd5, 0x7, 0x9, 
-		0x2, 0x2, 0xd5, 0xd6, 0x7, 0x15, 0x2, 0x2, 0xd6, 0xd7, 0x7, 0xf, 0x2, 
-		0x2, 0xd7, 0xd8, 0x7, 0xa, 0x2, 0x2, 0xd8, 0xd9, 0x5, 0x3a, 0x1e, 0x2, 
-		0xd9, 0xda, 0x7, 0x16, 0x2, 0x2, 0xda, 0xdb, 0x5, 0x1c, 0xf, 0x2, 0xdb, 
-		0x25, 0x3, 0x2, 0x2, 0x2, 0xdc, 0xdd, 0x7, 0x9, 0x2, 0x2, 0xdd, 0xde, 
-		0x7, 0x15, 0x2, 0x2, 0xde, 0xdf, 0x5, 0x3a, 0x1e, 0x2, 0xdf, 0xe0, 0x7, 
-		0x20, 0x2, 0x2, 0xe0, 0xe1, 0x5, 0x3e, 0x20, 0x2, 0xe1, 0xe2, 0x7, 0x20, 
-		0x2, 0x2, 0xe2, 0xe3, 0x5, 0x3a, 0x1e, 0x2, 0xe3, 0xe4, 0x7, 0x16, 0x2, 
-		0x2, 0xe4, 0xe5, 0x5, 0x1c, 0xf, 0x2, 0xe5, 0x27, 0x3, 0x2, 0x2, 0x2, 
-		0xe6, 0xe7, 0x5, 0x2c, 0x17, 0x2, 0xe7, 0xe8, 0x5, 0x1c, 0xf, 0x2, 0xe8, 
-		0x29, 0x3, 0x2, 0x2, 0x2, 0xe9, 0xea, 0x7, 0xb, 0x2, 0x2, 0xea, 0xeb, 
-		0x5, 0x1c, 0xf, 0x2, 0xeb, 0xec, 0x5, 0x2c, 0x17, 0x2, 0xec, 0xed, 0x7, 
-		0x20, 0x2, 0x2, 0xed, 0x2b, 0x3, 0x2, 0x2, 0x2, 0xee, 0xef, 0x7, 0xc, 
-		0x2, 0x2, 0xef, 0xf0, 0x7, 0x15, 0x2, 0x2, 0xf0, 0xf1, 0x5, 0x3e, 0x20, 
-		0x2, 0xf1, 0xf2, 0x7, 0x16, 0x2, 0x2, 0xf2, 0x2d, 0x3, 0x2, 0x2, 0x2, 
-		0xf3, 0xf4, 0x7, 0xd, 0x2, 0x2, 0xf4, 0xf5, 0x5, 0x1c, 0xf, 0x2, 0xf5, 
-		0x2f, 0x3, 0x2, 0x2, 0x2, 0xf6, 0xf7, 0x5, 0x38, 0x1d, 0x2, 0xf7, 0x100, 
-		0x7, 0x15, 0x2, 0x2, 0xf8, 0xfd, 0x5, 0x32, 0x1a, 0x2, 0xf9, 0xfa, 0x7, 
-		0x21, 0x2, 0x2, 0xfa, 0xfc, 0x5, 0x32, 0x1a, 0x2, 0xfb, 0xf9, 0x3, 0x2, 
-		0x2, 0x2, 0xfc, 0xff, 0x3, 0x2, 0x2, 0x2, 0xfd, 0xfb, 0x3, 0x2, 0x2, 0x2, 
-		0xfd, 0xfe, 0x3, 0x2, 0x2, 0x2, 0xfe, 0x101, 0x3, 0x2, 0x2, 0x2, 0xff, 
-		0xfd, 0x3, 0x2, 0x2, 0x2, 0x100, 0xf8, 0x3, 0x2, 0x2, 0x2, 0x100, 0x101, 
-		0x3, 0x2, 0x2, 0x2, 0x101, 0x102, 0x3, 0x2, 0x2, 0x2, 0x102, 0x103, 0x7, 
-		0x16, 0x2, 0x2, 0x103, 0x31, 0x3, 0x2, 0x2, 0x2, 0x104, 0x108, 0x5, 0x3a, 
-		0x1e, 0x2, 0x105, 0x108, 0x5, 0x3c, 0x1f, 0x2, 0x106, 0x108, 0x5, 0x3e, 
-		0x20, 0x2, 0x107, 0x104, 0x3, 0x2, 0x2, 0x2, 0x107, 0x105, 0x3, 0x2, 0x2, 
-		0x2, 0x107, 0x106, 0x3, 0x2, 0x2, 0x2, 0x108, 0x33, 0x3, 0x2, 0x2, 0x2, 
-		0x109, 0x10b, 0x5, 0x36, 0x1c, 0x2, 0x10a, 0x109, 0x3, 0x2, 0x2, 0x2, 
-		0x10b, 0x10c, 0x3, 0x2, 0x2, 0x2, 0x10c, 0x10a, 0x3, 0x2, 0x2, 0x2, 0x10c, 
-		0x10d, 0x3, 0x2, 0x2, 0x2, 0x10d, 0x35, 0x3, 0x2, 0x2, 0x2, 0x10e, 0x10f, 
-		0x7, 0x17, 0x2, 0x2, 0x10f, 0x110, 0x5, 0x30, 0x19, 0x2, 0x110, 0x111, 
-		0x7, 0x18, 0x2, 0x2, 0x111, 0x37, 0x3, 0x2, 0x2, 0x2, 0x112, 0x117, 0x7, 
-		0xf, 0x2, 0x2, 0x113, 0x114, 0x7, 0x1f, 0x2, 0x2, 0x114, 0x116, 0x7, 0xf, 
-		0x2, 0x2, 0x115, 0x113, 0x3, 0x2, 0x2, 0x2, 0x116, 0x119, 0x3, 0x2, 0x2, 
-		0x2, 0x117, 0x115, 0x3, 0x2, 0x2, 0x2, 0x117, 0x118, 0x3, 0x2, 0x2, 0x2, 
-		0x118, 0x39, 0x3, 0x2, 0x2, 0x2, 0x119, 0x117, 0x3, 0x2, 0x2, 0x2, 0x11a, 
-		0x122, 0x5, 0x30, 0x19, 0x2, 0x11b, 0x122, 0x5, 0x46, 0x24, 0x2, 0x11c, 
-		0x122, 0x5, 0x38, 0x1d, 0x2, 0x11d, 0x11e, 0x7, 0x15, 0x2, 0x2, 0x11e, 
-		0x11f, 0x5, 0x3a, 0x1e, 0x2, 0x11f, 0x120, 0x7, 0x16, 0x2, 0x2, 0x120, 
-		0x122, 0x3, 0x2, 0x2, 0x2, 0x121, 0x11a, 0x3, 0x2, 0x2, 0x2, 0x121, 0x11b, 
-		0x3, 0x2, 0x2, 0x2, 0x121, 0x11c, 0x3, 0x2, 0x2, 0x2, 0x121, 0x11d, 0x3, 
-		0x2, 0x2, 0x2, 0x122, 0x3b, 0x3, 0x2, 0x2, 0x2, 0x123, 0x124, 0x8, 0x1f, 
-		0x1, 0x2, 0x124, 0x12b, 0x5, 0x30, 0x19, 0x2, 0x125, 0x12b, 0x5, 0x38, 
-		0x1d, 0x2, 0x126, 0x127, 0x7, 0x1a, 0x2, 0x2, 0x127, 0x12b, 0x5, 0x3c, 
-		0x1f, 0x5, 0x128, 0x12b, 0x7, 0x47, 0x2, 0x2, 0x129, 0x12b, 0x5, 0x3a, 
-		0x1e, 0x2, 0x12a, 0x123, 0x3, 0x2, 0x2, 0x2, 0x12a, 0x125, 0x3, 0x2, 0x2, 
-		0x2, 0x12a, 0x126, 0x3, 0x2, 0x2, 0x2, 0x12a, 0x128, 0x3, 0x2, 0x2, 0x2, 
-		0x12a, 0x129, 0x3, 0x2, 0x2, 0x2, 0x12b, 0x131, 0x3, 0x2, 0x2, 0x2, 0x12c, 
-		0x12d, 0xc, 0x8, 0x2, 0x2, 0x12d, 0x12e, 0x7, 0x19, 0x2, 0x2, 0x12e, 0x130, 
-		0x5, 0x3c, 0x1f, 0x9, 0x12f, 0x12c, 0x3, 0x2, 0x2, 0x2, 0x130, 0x133, 
-		0x3, 0x2, 0x2, 0x2, 0x131, 0x12f, 0x3, 0x2, 0x2, 0x2, 0x131, 0x132, 0x3, 
-		0x2, 0x2, 0x2, 0x132, 0x3d, 0x3, 0x2, 0x2, 0x2, 0x133, 0x131, 0x3, 0x2, 
-		0x2, 0x2, 0x134, 0x135, 0x8, 0x20, 0x1, 0x2, 0x135, 0x13c, 0x5, 0x30, 
-		0x19, 0x2, 0x136, 0x13c, 0x5, 0x38, 0x1d, 0x2, 0x137, 0x138, 0x7, 0x1d, 
-		0x2, 0x2, 0x138, 0x13c, 0x5, 0x3e, 0x20, 0x5, 0x139, 0x13c, 0x5, 0x40, 
-		0x21, 0x2, 0x13a, 0x13c, 0x5, 0x3a, 0x1e, 0x2, 0x13b, 0x134, 0x3, 0x2, 
-		0x2, 0x2, 0x13b, 0x136, 0x3, 0x2, 0x2, 0x2, 0x13b, 0x137, 0x3, 0x2, 0x2, 
-		0x2, 0x13b, 0x139, 0x3, 0x2, 0x2, 0x2, 0x13b, 0x13a, 0x3, 0x2, 0x2, 0x2, 
-		0x13c, 0x142, 0x3, 0x2, 0x2, 0x2, 0x13d, 0x13e, 0xc, 0x8, 0x2, 0x2, 0x13e, 
-		0x13f, 0x7, 0x1c, 0x2, 0x2, 0x13f, 0x141, 0x5, 0x3e, 0x20, 0x9, 0x140, 
-		0x13d, 0x3, 0x2, 0x2, 0x2, 0x141, 0x144, 0x3, 0x2, 0x2, 0x2, 0x142, 0x140, 
-		0x3, 0x2, 0x2, 0x2, 0x142, 0x143, 0x3, 0x2, 0x2, 0x2, 0x143, 0x3f, 0x3, 
-		0x2, 0x2, 0x2, 0x144, 0x142, 0x3, 0x2, 0x2, 0x2, 0x145, 0x146, 0x5, 0x3c, 
-		0x1f, 0x2, 0x146, 0x147, 0x7, 0x1b, 0x2, 0x2, 0x147, 0x148, 0x5, 0x3c, 
-		0x1f, 0x2, 0x148, 0x41, 0x3, 0x2, 0x2, 0x2, 0x149, 0x14a, 0x5, 0x44, 0x23, 
-		0x2, 0x14a, 0x14e, 0x7, 0x24, 0x2, 0x2, 0x14b, 0x14f, 0x5, 0x3a, 0x1e, 
-		0x2, 0x14c, 0x14f, 0x5, 0x3c, 0x1f, 0x2, 0x14d, 0x14f, 0x5, 0x3e, 0x20, 
-		0x2, 0x14e, 0x14b, 0x3, 0x2, 0x2, 0x2, 0x14e, 0x14c, 0x3, 0x2, 0x2, 0x2, 
-		0x14e, 0x14d, 0x3, 0x2, 0x2, 0x2, 0x14f, 0x43, 0x3, 0x2, 0x2, 0x2, 0x150, 
-		0x151, 0x5, 0x38, 0x1d, 0x2, 0x151, 0x45, 0x3, 0x2, 0x2, 0x2, 0x152, 0x153, 
-		0x7, 0x46, 0x2, 0x2, 0x153, 0x154, 0x5, 0x3a, 0x1e, 0x2, 0x154, 0x47, 
-		0x3, 0x2, 0x2, 0x2, 0x20, 0x4d, 0x57, 0x5c, 0x68, 0x6a, 0x6d, 0x70, 0x7b, 
-		0x7f, 0x88, 0x8b, 0x9d, 0xa1, 0xa4, 0xad, 0xb6, 0xbb, 0xc5, 0xd2, 0xfd, 
-		0x100, 0x107, 0x10c, 0x117, 0x121, 0x12a, 0x131, 0x13b, 0x142, 0x14e, 
+		0x4, 0x23, 0x9, 0x23, 0x4, 0x24, 0x9, 0x24, 0x4, 0x25, 0x9, 0x25, 0x4, 
+		0x26, 0x9, 0x26, 0x4, 0x27, 0x9, 0x27, 0x4, 0x28, 0x9, 0x28, 0x4, 0x29, 
+		0x9, 0x29, 0x4, 0x2a, 0x9, 0x2a, 0x4, 0x2b, 0x9, 0x2b, 0x3, 0x2, 0x3, 
+		0x2, 0x3, 0x2, 0x3, 0x2, 0x3, 0x2, 0x5, 0x2, 0x5c, 0xa, 0x2, 0x3, 0x3, 
+		0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x4, 0x6, 0x4, 0x64, 0xa, 
+		0x4, 0xd, 0x4, 0xe, 0x4, 0x65, 0x3, 0x5, 0x3, 0x5, 0x3, 0x5, 0x3, 0x5, 
+		0x3, 0x5, 0x3, 0x5, 0x3, 0x5, 0x5, 0x5, 0x6f, 0xa, 0x5, 0x3, 0x6, 0x5, 
+		0x6, 0x72, 0xa, 0x6, 0x3, 0x6, 0x3, 0x6, 0x3, 0x6, 0x6, 0x6, 0x77, 0xa, 
+		0x6, 0xd, 0x6, 0xe, 0x6, 0x78, 0x3, 0x6, 0x3, 0x6, 0x3, 0x6, 0x3, 0x6, 
+		0x3, 0x6, 0x3, 0x6, 0x3, 0x7, 0x7, 0x7, 0x82, 0xa, 0x7, 0xc, 0x7, 0xe, 
+		0x7, 0x85, 0xb, 0x7, 0x3, 0x8, 0x3, 0x8, 0x3, 0x8, 0x6, 0x8, 0x8a, 0xa, 
+		0x8, 0xd, 0x8, 0xe, 0x8, 0x8b, 0x3, 0x8, 0x3, 0x8, 0x3, 0x8, 0x3, 0x8, 
+		0x3, 0x8, 0x3, 0x8, 0x3, 0x9, 0x5, 0x9, 0x95, 0xa, 0x9, 0x3, 0x9, 0x5, 
+		0x9, 0x98, 0xa, 0x9, 0x3, 0x9, 0x3, 0x9, 0x3, 0x9, 0x3, 0x9, 0x3, 0x9, 
+		0x3, 0x9, 0x3, 0x9, 0x3, 0x9, 0x3, 0xa, 0x5, 0xa, 0xa3, 0xa, 0xa, 0x3, 
+		0xa, 0x5, 0xa, 0xa6, 0xa, 0xa, 0x3, 0xa, 0x3, 0xa, 0x3, 0xa, 0x3, 0xa, 
+		0x3, 0xa, 0x3, 0xa, 0x3, 0xa, 0x3, 0xa, 0x3, 0xb, 0x7, 0xb, 0xb1, 0xa, 
+		0xb, 0xc, 0xb, 0xe, 0xb, 0xb4, 0xb, 0xb, 0x3, 0xc, 0x5, 0xc, 0xb7, 0xa, 
+		0xc, 0x3, 0xc, 0x5, 0xc, 0xba, 0xa, 0xc, 0x3, 0xc, 0x3, 0xc, 0x3, 0xc, 
+		0x3, 0xc, 0x3, 0xc, 0x3, 0xc, 0x3, 0xd, 0x7, 0xd, 0xc3, 0xa, 0xd, 0xc, 
+		0xd, 0xe, 0xd, 0xc6, 0xb, 0xd, 0x3, 0xe, 0x3, 0xe, 0x7, 0xe, 0xca, 0xa, 
+		0xe, 0xc, 0xe, 0xe, 0xe, 0xcd, 0xb, 0xe, 0x3, 0xf, 0x5, 0xf, 0xd0, 0xa, 
+		0xf, 0x3, 0xf, 0x5, 0xf, 0xd3, 0xa, 0xf, 0x3, 0xf, 0x3, 0xf, 0x3, 0xf, 
+		0x3, 0xf, 0x3, 0x10, 0x3, 0x10, 0x3, 0x10, 0x6, 0x10, 0xdc, 0xa, 0x10, 
+		0xd, 0x10, 0xe, 0x10, 0xdd, 0x3, 0x10, 0x5, 0x10, 0xe1, 0xa, 0x10, 0x3, 
+		0x11, 0x3, 0x11, 0x3, 0x11, 0x3, 0x11, 0x3, 0x11, 0x3, 0x11, 0x3, 0x12, 
+		0x5, 0x12, 0xea, 0xa, 0x12, 0x3, 0x12, 0x5, 0x12, 0xed, 0xa, 0x12, 0x3, 
+		0x12, 0x3, 0x12, 0x3, 0x12, 0x3, 0x12, 0x3, 0x12, 0x3, 0x12, 0x3, 0x12, 
+		0x5, 0x12, 0xf6, 0xa, 0x12, 0x3, 0x12, 0x3, 0x12, 0x3, 0x13, 0x3, 0x13, 
+		0x3, 0x13, 0x3, 0x13, 0x3, 0x13, 0x6, 0x13, 0xff, 0xa, 0x13, 0xd, 0x13, 
+		0xe, 0x13, 0x100, 0x3, 0x13, 0x3, 0x13, 0x5, 0x13, 0x105, 0xa, 0x13, 0x3, 
+		0x14, 0x5, 0x14, 0x108, 0xa, 0x14, 0x3, 0x14, 0x3, 0x14, 0x3, 0x14, 0x3, 
+		0x14, 0x3, 0x15, 0x3, 0x15, 0x7, 0x15, 0x110, 0xa, 0x15, 0xc, 0x15, 0xe, 
+		0x15, 0x113, 0xb, 0x15, 0x3, 0x15, 0x3, 0x15, 0x3, 0x16, 0x3, 0x16, 0x7, 
+		0x16, 0x119, 0xa, 0x16, 0xc, 0x16, 0xe, 0x16, 0x11c, 0xb, 0x16, 0x3, 0x16, 
+		0x3, 0x16, 0x5, 0x16, 0x120, 0xa, 0x16, 0x3, 0x17, 0x3, 0x17, 0x3, 0x17, 
+		0x3, 0x17, 0x3, 0x17, 0x3, 0x17, 0x3, 0x17, 0x3, 0x17, 0x5, 0x17, 0x12a, 
+		0xa, 0x17, 0x3, 0x18, 0x3, 0x18, 0x3, 0x18, 0x3, 0x18, 0x3, 0x18, 0x3, 
+		0x18, 0x3, 0x19, 0x3, 0x19, 0x3, 0x19, 0x3, 0x19, 0x3, 0x19, 0x5, 0x19, 
+		0x137, 0xa, 0x19, 0x3, 0x1a, 0x3, 0x1a, 0x3, 0x1a, 0x3, 0x1a, 0x3, 0x1a, 
+		0x3, 0x1a, 0x3, 0x1a, 0x3, 0x1a, 0x3, 0x1b, 0x3, 0x1b, 0x3, 0x1b, 0x3, 
+		0x1b, 0x3, 0x1b, 0x3, 0x1b, 0x3, 0x1b, 0x3, 0x1b, 0x3, 0x1b, 0x3, 0x1b, 
+		0x3, 0x1c, 0x3, 0x1c, 0x3, 0x1c, 0x3, 0x1d, 0x3, 0x1d, 0x3, 0x1d, 0x3, 
+		0x1d, 0x3, 0x1d, 0x3, 0x1e, 0x3, 0x1e, 0x3, 0x1e, 0x3, 0x1e, 0x3, 0x1e, 
+		0x3, 0x1f, 0x3, 0x1f, 0x3, 0x1f, 0x3, 0x20, 0x3, 0x20, 0x3, 0x20, 0x3, 
+		0x20, 0x3, 0x20, 0x7, 0x20, 0x160, 0xa, 0x20, 0xc, 0x20, 0xe, 0x20, 0x163, 
+		0xb, 0x20, 0x5, 0x20, 0x165, 0xa, 0x20, 0x3, 0x20, 0x3, 0x20, 0x3, 0x21, 
+		0x3, 0x21, 0x3, 0x21, 0x5, 0x21, 0x16c, 0xa, 0x21, 0x3, 0x22, 0x6, 0x22, 
+		0x16f, 0xa, 0x22, 0xd, 0x22, 0xe, 0x22, 0x170, 0x3, 0x23, 0x3, 0x23, 0x3, 
+		0x23, 0x3, 0x23, 0x3, 0x24, 0x3, 0x24, 0x3, 0x24, 0x7, 0x24, 0x17a, 0xa, 
+		0x24, 0xc, 0x24, 0xe, 0x24, 0x17d, 0xb, 0x24, 0x3, 0x25, 0x3, 0x25, 0x3, 
+		0x25, 0x3, 0x25, 0x3, 0x25, 0x3, 0x25, 0x3, 0x25, 0x5, 0x25, 0x186, 0xa, 
+		0x25, 0x3, 0x26, 0x3, 0x26, 0x3, 0x26, 0x3, 0x26, 0x3, 0x26, 0x3, 0x26, 
+		0x3, 0x26, 0x5, 0x26, 0x18f, 0xa, 0x26, 0x3, 0x26, 0x3, 0x26, 0x3, 0x26, 
+		0x7, 0x26, 0x194, 0xa, 0x26, 0xc, 0x26, 0xe, 0x26, 0x197, 0xb, 0x26, 0x3, 
+		0x27, 0x3, 0x27, 0x3, 0x27, 0x3, 0x27, 0x3, 0x27, 0x3, 0x27, 0x3, 0x27, 
+		0x5, 0x27, 0x1a0, 0xa, 0x27, 0x3, 0x27, 0x3, 0x27, 0x3, 0x27, 0x7, 0x27, 
+		0x1a5, 0xa, 0x27, 0xc, 0x27, 0xe, 0x27, 0x1a8, 0xb, 0x27, 0x3, 0x28, 0x3, 
+		0x28, 0x3, 0x28, 0x3, 0x28, 0x3, 0x29, 0x3, 0x29, 0x3, 0x29, 0x3, 0x29, 
+		0x3, 0x29, 0x5, 0x29, 0x1b3, 0xa, 0x29, 0x3, 0x2a, 0x3, 0x2a, 0x3, 0x2b, 
+		0x3, 0x2b, 0x3, 0x2b, 0x3, 0x2b, 0x2, 0x4, 0x4a, 0x4c, 0x2c, 0x2, 0x4, 
+		0x6, 0x8, 0xa, 0xc, 0xe, 0x10, 0x12, 0x14, 0x16, 0x18, 0x1a, 0x1c, 0x1e, 
+		0x20, 0x22, 0x24, 0x26, 0x28, 0x2a, 0x2c, 0x2e, 0x30, 0x32, 0x34, 0x36, 
+		0x38, 0x3a, 0x3c, 0x3e, 0x40, 0x42, 0x44, 0x46, 0x48, 0x4a, 0x4c, 0x4e, 
+		0x50, 0x52, 0x54, 0x2, 0x3, 0x4, 0x2, 0x6, 0x7, 0x41, 0x41, 0x2, 0x1cf, 
+		0x2, 0x5b, 0x3, 0x2, 0x2, 0x2, 0x4, 0x5d, 0x3, 0x2, 0x2, 0x2, 0x6, 0x63, 
+		0x3, 0x2, 0x2, 0x2, 0x8, 0x6e, 0x3, 0x2, 0x2, 0x2, 0xa, 0x71, 0x3, 0x2, 
+		0x2, 0x2, 0xc, 0x83, 0x3, 0x2, 0x2, 0x2, 0xe, 0x86, 0x3, 0x2, 0x2, 0x2, 
+		0x10, 0x94, 0x3, 0x2, 0x2, 0x2, 0x12, 0xa2, 0x3, 0x2, 0x2, 0x2, 0x14, 
+		0xb2, 0x3, 0x2, 0x2, 0x2, 0x16, 0xb6, 0x3, 0x2, 0x2, 0x2, 0x18, 0xc4, 
+		0x3, 0x2, 0x2, 0x2, 0x1a, 0xcb, 0x3, 0x2, 0x2, 0x2, 0x1c, 0xcf, 0x3, 0x2, 
+		0x2, 0x2, 0x1e, 0xe0, 0x3, 0x2, 0x2, 0x2, 0x20, 0xe2, 0x3, 0x2, 0x2, 0x2, 
+		0x22, 0xe9, 0x3, 0x2, 0x2, 0x2, 0x24, 0x104, 0x3, 0x2, 0x2, 0x2, 0x26, 
+		0x107, 0x3, 0x2, 0x2, 0x2, 0x28, 0x10d, 0x3, 0x2, 0x2, 0x2, 0x2a, 0x11f, 
+		0x3, 0x2, 0x2, 0x2, 0x2c, 0x129, 0x3, 0x2, 0x2, 0x2, 0x2e, 0x12b, 0x3, 
+		0x2, 0x2, 0x2, 0x30, 0x136, 0x3, 0x2, 0x2, 0x2, 0x32, 0x138, 0x3, 0x2, 
+		0x2, 0x2, 0x34, 0x140, 0x3, 0x2, 0x2, 0x2, 0x36, 0x14a, 0x3, 0x2, 0x2, 
+		0x2, 0x38, 0x14d, 0x3, 0x2, 0x2, 0x2, 0x3a, 0x152, 0x3, 0x2, 0x2, 0x2, 
+		0x3c, 0x157, 0x3, 0x2, 0x2, 0x2, 0x3e, 0x15a, 0x3, 0x2, 0x2, 0x2, 0x40, 
+		0x16b, 0x3, 0x2, 0x2, 0x2, 0x42, 0x16e, 0x3, 0x2, 0x2, 0x2, 0x44, 0x172, 
+		0x3, 0x2, 0x2, 0x2, 0x46, 0x176, 0x3, 0x2, 0x2, 0x2, 0x48, 0x185, 0x3, 
+		0x2, 0x2, 0x2, 0x4a, 0x18e, 0x3, 0x2, 0x2, 0x2, 0x4c, 0x19f, 0x3, 0x2, 
+		0x2, 0x2, 0x4e, 0x1a9, 0x3, 0x2, 0x2, 0x2, 0x50, 0x1ad, 0x3, 0x2, 0x2, 
+		0x2, 0x52, 0x1b4, 0x3, 0x2, 0x2, 0x2, 0x54, 0x1b6, 0x3, 0x2, 0x2, 0x2, 
+		0x56, 0x57, 0x5, 0x4, 0x3, 0x2, 0x57, 0x58, 0x5, 0x6, 0x4, 0x2, 0x58, 
+		0x59, 0x7, 0x2, 0x2, 0x3, 0x59, 0x5c, 0x3, 0x2, 0x2, 0x2, 0x5a, 0x5c, 
+		0x5, 0x6, 0x4, 0x2, 0x5b, 0x56, 0x3, 0x2, 0x2, 0x2, 0x5b, 0x5a, 0x3, 0x2, 
+		0x2, 0x2, 0x5c, 0x3, 0x3, 0x2, 0x2, 0x2, 0x5d, 0x5e, 0x7, 0x3, 0x2, 0x2, 
+		0x5e, 0x5f, 0x7, 0x2c, 0x2, 0x2, 0x5f, 0x60, 0x7, 0x4d, 0x2, 0x2, 0x60, 
+		0x61, 0x7, 0x28, 0x2, 0x2, 0x61, 0x5, 0x3, 0x2, 0x2, 0x2, 0x62, 0x64, 
+		0x5, 0x8, 0x5, 0x2, 0x63, 0x62, 0x3, 0x2, 0x2, 0x2, 0x64, 0x65, 0x3, 0x2, 
+		0x2, 0x2, 0x65, 0x63, 0x3, 0x2, 0x2, 0x2, 0x65, 0x66, 0x3, 0x2, 0x2, 0x2, 
+		0x66, 0x7, 0x3, 0x2, 0x2, 0x2, 0x67, 0x6f, 0x5, 0x22, 0x12, 0x2, 0x68, 
+		0x6f, 0x5, 0x10, 0x9, 0x2, 0x69, 0x6f, 0x5, 0x12, 0xa, 0x2, 0x6a, 0x6f, 
+		0x5, 0x16, 0xc, 0x2, 0x6b, 0x6f, 0x5, 0x20, 0x11, 0x2, 0x6c, 0x6f, 0x5, 
+		0xe, 0x8, 0x2, 0x6d, 0x6f, 0x5, 0xa, 0x6, 0x2, 0x6e, 0x67, 0x3, 0x2, 0x2, 
+		0x2, 0x6e, 0x68, 0x3, 0x2, 0x2, 0x2, 0x6e, 0x69, 0x3, 0x2, 0x2, 0x2, 0x6e, 
+		0x6a, 0x3, 0x2, 0x2, 0x2, 0x6e, 0x6b, 0x3, 0x2, 0x2, 0x2, 0x6e, 0x6c, 
+		0x3, 0x2, 0x2, 0x2, 0x6e, 0x6d, 0x3, 0x2, 0x2, 0x2, 0x6f, 0x9, 0x3, 0x2, 
+		0x2, 0x2, 0x70, 0x72, 0x7, 0x16, 0x2, 0x2, 0x71, 0x70, 0x3, 0x2, 0x2, 
+		0x2, 0x71, 0x72, 0x3, 0x2, 0x2, 0x2, 0x72, 0x73, 0x3, 0x2, 0x2, 0x2, 0x73, 
+		0x74, 0x7, 0x4, 0x2, 0x2, 0x74, 0x76, 0x7, 0x5, 0x2, 0x2, 0x75, 0x77, 
+		0x9, 0x2, 0x2, 0x2, 0x76, 0x75, 0x3, 0x2, 0x2, 0x2, 0x77, 0x78, 0x3, 0x2, 
+		0x2, 0x2, 0x78, 0x76, 0x3, 0x2, 0x2, 0x2, 0x78, 0x79, 0x3, 0x2, 0x2, 0x2, 
+		0x79, 0x7a, 0x3, 0x2, 0x2, 0x2, 0x7a, 0x7b, 0x7, 0x8, 0x2, 0x2, 0x7b, 
+		0x7c, 0x7, 0x17, 0x2, 0x2, 0x7c, 0x7d, 0x7, 0x18, 0x2, 0x2, 0x7d, 0x7e, 
+		0x5, 0xc, 0x7, 0x2, 0x7e, 0x7f, 0x7, 0x19, 0x2, 0x2, 0x7f, 0xb, 0x3, 0x2, 
+		0x2, 0x2, 0x80, 0x82, 0x5, 0x22, 0x12, 0x2, 0x81, 0x80, 0x3, 0x2, 0x2, 
+		0x2, 0x82, 0x85, 0x3, 0x2, 0x2, 0x2, 0x83, 0x81, 0x3, 0x2, 0x2, 0x2, 0x83, 
+		0x84, 0x3, 0x2, 0x2, 0x2, 0x84, 0xd, 0x3, 0x2, 0x2, 0x2, 0x85, 0x83, 0x3, 
+		0x2, 0x2, 0x2, 0x86, 0x87, 0x7, 0x9, 0x2, 0x2, 0x87, 0x89, 0x7, 0x18, 
+		0x2, 0x2, 0x88, 0x8a, 0x7, 0x17, 0x2, 0x2, 0x89, 0x88, 0x3, 0x2, 0x2, 
+		0x2, 0x8a, 0x8b, 0x3, 0x2, 0x2, 0x2, 0x8b, 0x89, 0x3, 0x2, 0x2, 0x2, 0x8b, 
+		0x8c, 0x3, 0x2, 0x2, 0x2, 0x8c, 0x8d, 0x3, 0x2, 0x2, 0x2, 0x8d, 0x8e, 
+		0x7, 0x19, 0x2, 0x2, 0x8e, 0x8f, 0x7, 0xa, 0x2, 0x2, 0x8f, 0x90, 0x7, 
+		0x18, 0x2, 0x2, 0x90, 0x91, 0x5, 0x46, 0x24, 0x2, 0x91, 0x92, 0x7, 0x19, 
+		0x2, 0x2, 0x92, 0xf, 0x3, 0x2, 0x2, 0x2, 0x93, 0x95, 0x5, 0x42, 0x22, 
+		0x2, 0x94, 0x93, 0x3, 0x2, 0x2, 0x2, 0x94, 0x95, 0x3, 0x2, 0x2, 0x2, 0x95, 
+		0x97, 0x3, 0x2, 0x2, 0x2, 0x96, 0x98, 0x7, 0x16, 0x2, 0x2, 0x97, 0x96, 
+		0x3, 0x2, 0x2, 0x2, 0x97, 0x98, 0x3, 0x2, 0x2, 0x2, 0x98, 0x99, 0x3, 0x2, 
+		0x2, 0x2, 0x99, 0x9a, 0x7, 0x40, 0x2, 0x2, 0x9a, 0x9b, 0x7, 0x17, 0x2, 
+		0x2, 0x9b, 0x9c, 0x7, 0xb, 0x2, 0x2, 0x9c, 0x9d, 0x5, 0x1e, 0x10, 0x2, 
+		0x9d, 0x9e, 0x7, 0x18, 0x2, 0x2, 0x9e, 0x9f, 0x5, 0x1a, 0xe, 0x2, 0x9f, 
+		0xa0, 0x7, 0x19, 0x2, 0x2, 0xa0, 0x11, 0x3, 0x2, 0x2, 0x2, 0xa1, 0xa3, 
+		0x5, 0x42, 0x22, 0x2, 0xa2, 0xa1, 0x3, 0x2, 0x2, 0x2, 0xa2, 0xa3, 0x3, 
+		0x2, 0x2, 0x2, 0xa3, 0xa5, 0x3, 0x2, 0x2, 0x2, 0xa4, 0xa6, 0x7, 0x16, 
+		0x2, 0x2, 0xa5, 0xa4, 0x3, 0x2, 0x2, 0x2, 0xa5, 0xa6, 0x3, 0x2, 0x2, 0x2, 
+		0xa6, 0xa7, 0x3, 0x2, 0x2, 0x2, 0xa7, 0xa8, 0x7, 0x41, 0x2, 0x2, 0xa8, 
+		0xa9, 0x7, 0x17, 0x2, 0x2, 0xa9, 0xaa, 0x7, 0xb, 0x2, 0x2, 0xaa, 0xab, 
+		0x5, 0x1e, 0x10, 0x2, 0xab, 0xac, 0x7, 0x18, 0x2, 0x2, 0xac, 0xad, 0x5, 
+		0x14, 0xb, 0x2, 0xad, 0xae, 0x7, 0x19, 0x2, 0x2, 0xae, 0x13, 0x3, 0x2, 
+		0x2, 0x2, 0xaf, 0xb1, 0x5, 0x22, 0x12, 0x2, 0xb0, 0xaf, 0x3, 0x2, 0x2, 
+		0x2, 0xb1, 0xb4, 0x3, 0x2, 0x2, 0x2, 0xb2, 0xb0, 0x3, 0x2, 0x2, 0x2, 0xb2, 
+		0xb3, 0x3, 0x2, 0x2, 0x2, 0xb3, 0x15, 0x3, 0x2, 0x2, 0x2, 0xb4, 0xb2, 
+		0x3, 0x2, 0x2, 0x2, 0xb5, 0xb7, 0x5, 0x42, 0x22, 0x2, 0xb6, 0xb5, 0x3, 
+		0x2, 0x2, 0x2, 0xb6, 0xb7, 0x3, 0x2, 0x2, 0x2, 0xb7, 0xb9, 0x3, 0x2, 0x2, 
+		0x2, 0xb8, 0xba, 0x7, 0x16, 0x2, 0x2, 0xb9, 0xb8, 0x3, 0x2, 0x2, 0x2, 
+		0xb9, 0xba, 0x3, 0x2, 0x2, 0x2, 0xba, 0xbb, 0x3, 0x2, 0x2, 0x2, 0xbb, 
+		0xbc, 0x7, 0xc, 0x2, 0x2, 0xbc, 0xbd, 0x7, 0x17, 0x2, 0x2, 0xbd, 0xbe, 
+		0x7, 0x18, 0x2, 0x2, 0xbe, 0xbf, 0x5, 0x18, 0xd, 0x2, 0xbf, 0xc0, 0x7, 
+		0x19, 0x2, 0x2, 0xc0, 0x17, 0x3, 0x2, 0x2, 0x2, 0xc1, 0xc3, 0x5, 0x1c, 
+		0xf, 0x2, 0xc2, 0xc1, 0x3, 0x2, 0x2, 0x2, 0xc3, 0xc6, 0x3, 0x2, 0x2, 0x2, 
+		0xc4, 0xc2, 0x3, 0x2, 0x2, 0x2, 0xc4, 0xc5, 0x3, 0x2, 0x2, 0x2, 0xc5, 
+		0x19, 0x3, 0x2, 0x2, 0x2, 0xc6, 0xc4, 0x3, 0x2, 0x2, 0x2, 0xc7, 0xca, 
+		0x5, 0x22, 0x12, 0x2, 0xc8, 0xca, 0x5, 0x1c, 0xf, 0x2, 0xc9, 0xc7, 0x3, 
+		0x2, 0x2, 0x2, 0xc9, 0xc8, 0x3, 0x2, 0x2, 0x2, 0xca, 0xcd, 0x3, 0x2, 0x2, 
+		0x2, 0xcb, 0xc9, 0x3, 0x2, 0x2, 0x2, 0xcb, 0xcc, 0x3, 0x2, 0x2, 0x2, 0xcc, 
+		0x1b, 0x3, 0x2, 0x2, 0x2, 0xcd, 0xcb, 0x3, 0x2, 0x2, 0x2, 0xce, 0xd0, 
+		0x5, 0x42, 0x22, 0x2, 0xcf, 0xce, 0x3, 0x2, 0x2, 0x2, 0xcf, 0xd0, 0x3, 
+		0x2, 0x2, 0x2, 0xd0, 0xd2, 0x3, 0x2, 0x2, 0x2, 0xd1, 0xd3, 0x7, 0x16, 
+		0x2, 0x2, 0xd2, 0xd1, 0x3, 0x2, 0x2, 0x2, 0xd2, 0xd3, 0x3, 0x2, 0x2, 0x2, 
+		0xd3, 0xd4, 0x3, 0x2, 0x2, 0x2, 0xd4, 0xd5, 0x7, 0x17, 0x2, 0x2, 0xd5, 
+		0xd6, 0x7, 0xb, 0x2, 0x2, 0xd6, 0xd7, 0x7, 0x17, 0x2, 0x2, 0xd7, 0x1d, 
+		0x3, 0x2, 0x2, 0x2, 0xd8, 0xe1, 0x7, 0x17, 0x2, 0x2, 0xd9, 0xda, 0x7, 
+		0x17, 0x2, 0x2, 0xda, 0xdc, 0x7, 0x29, 0x2, 0x2, 0xdb, 0xd9, 0x3, 0x2, 
+		0x2, 0x2, 0xdc, 0xdd, 0x3, 0x2, 0x2, 0x2, 0xdd, 0xdb, 0x3, 0x2, 0x2, 0x2, 
+		0xdd, 0xde, 0x3, 0x2, 0x2, 0x2, 0xde, 0xdf, 0x3, 0x2, 0x2, 0x2, 0xdf, 
+		0xe1, 0x7, 0x17, 0x2, 0x2, 0xe0, 0xd8, 0x3, 0x2, 0x2, 0x2, 0xe0, 0xdb, 
+		0x3, 0x2, 0x2, 0x2, 0xe1, 0x1f, 0x3, 0x2, 0x2, 0x2, 0xe2, 0xe3, 0x7, 0xd, 
+		0x2, 0x2, 0xe3, 0xe4, 0x5, 0x46, 0x24, 0x2, 0xe4, 0xe5, 0x7, 0x18, 0x2, 
+		0x2, 0xe5, 0xe6, 0x5, 0x6, 0x4, 0x2, 0xe6, 0xe7, 0x7, 0x19, 0x2, 0x2, 
+		0xe7, 0x21, 0x3, 0x2, 0x2, 0x2, 0xe8, 0xea, 0x5, 0x42, 0x22, 0x2, 0xe9, 
+		0xe8, 0x3, 0x2, 0x2, 0x2, 0xe9, 0xea, 0x3, 0x2, 0x2, 0x2, 0xea, 0xec, 
+		0x3, 0x2, 0x2, 0x2, 0xeb, 0xed, 0x7, 0x16, 0x2, 0x2, 0xec, 0xeb, 0x3, 
+		0x2, 0x2, 0x2, 0xec, 0xed, 0x3, 0x2, 0x2, 0x2, 0xed, 0xee, 0x3, 0x2, 0x2, 
+		0x2, 0xee, 0xef, 0x7, 0xe, 0x2, 0x2, 0xef, 0xf0, 0x7, 0x17, 0x2, 0x2, 
+		0xf0, 0xf1, 0x7, 0x1d, 0x2, 0x2, 0xf1, 0xf2, 0x5, 0x24, 0x13, 0x2, 0xf2, 
+		0xf5, 0x7, 0x1e, 0x2, 0x2, 0xf3, 0xf4, 0x7, 0xf, 0x2, 0x2, 0xf4, 0xf6, 
+		0x7, 0x17, 0x2, 0x2, 0xf5, 0xf3, 0x3, 0x2, 0x2, 0x2, 0xf5, 0xf6, 0x3, 
+		0x2, 0x2, 0x2, 0xf6, 0xf7, 0x3, 0x2, 0x2, 0x2, 0xf7, 0xf8, 0x5, 0x28, 
+		0x15, 0x2, 0xf8, 0x23, 0x3, 0x2, 0x2, 0x2, 0xf9, 0x105, 0x3, 0x2, 0x2, 
+		0x2, 0xfa, 0x105, 0x5, 0x26, 0x14, 0x2, 0xfb, 0xfc, 0x5, 0x26, 0x14, 0x2, 
+		0xfc, 0xfd, 0x7, 0x29, 0x2, 0x2, 0xfd, 0xff, 0x3, 0x2, 0x2, 0x2, 0xfe, 
+		0xfb, 0x3, 0x2, 0x2, 0x2, 0xff, 0x100, 0x3, 0x2, 0x2, 0x2, 0x100, 0xfe, 
+		0x3, 0x2, 0x2, 0x2, 0x100, 0x101, 0x3, 0x2, 0x2, 0x2, 0x101, 0x102, 0x3, 
+		0x2, 0x2, 0x2, 0x102, 0x103, 0x5, 0x26, 0x14, 0x2, 0x103, 0x105, 0x3, 
+		0x2, 0x2, 0x2, 0x104, 0xf9, 0x3, 0x2, 0x2, 0x2, 0x104, 0xfa, 0x3, 0x2, 
+		0x2, 0x2, 0x104, 0xfe, 0x3, 0x2, 0x2, 0x2, 0x105, 0x25, 0x3, 0x2, 0x2, 
+		0x2, 0x106, 0x108, 0x5, 0x42, 0x22, 0x2, 0x107, 0x106, 0x3, 0x2, 0x2, 
+		0x2, 0x107, 0x108, 0x3, 0x2, 0x2, 0x2, 0x108, 0x109, 0x3, 0x2, 0x2, 0x2, 
+		0x109, 0x10a, 0x7, 0x17, 0x2, 0x2, 0x10a, 0x10b, 0x7, 0xb, 0x2, 0x2, 0x10b, 
+		0x10c, 0x7, 0x17, 0x2, 0x2, 0x10c, 0x27, 0x3, 0x2, 0x2, 0x2, 0x10d, 0x111, 
+		0x7, 0x18, 0x2, 0x2, 0x10e, 0x110, 0x5, 0x2c, 0x17, 0x2, 0x10f, 0x10e, 
+		0x3, 0x2, 0x2, 0x2, 0x110, 0x113, 0x3, 0x2, 0x2, 0x2, 0x111, 0x10f, 0x3, 
+		0x2, 0x2, 0x2, 0x111, 0x112, 0x3, 0x2, 0x2, 0x2, 0x112, 0x114, 0x3, 0x2, 
+		0x2, 0x2, 0x113, 0x111, 0x3, 0x2, 0x2, 0x2, 0x114, 0x115, 0x7, 0x19, 0x2, 
+		0x2, 0x115, 0x29, 0x3, 0x2, 0x2, 0x2, 0x116, 0x11a, 0x7, 0x18, 0x2, 0x2, 
+		0x117, 0x119, 0x5, 0x2c, 0x17, 0x2, 0x118, 0x117, 0x3, 0x2, 0x2, 0x2, 
+		0x119, 0x11c, 0x3, 0x2, 0x2, 0x2, 0x11a, 0x118, 0x3, 0x2, 0x2, 0x2, 0x11a, 
+		0x11b, 0x3, 0x2, 0x2, 0x2, 0x11b, 0x11d, 0x3, 0x2, 0x2, 0x2, 0x11c, 0x11a, 
+		0x3, 0x2, 0x2, 0x2, 0x11d, 0x120, 0x7, 0x19, 0x2, 0x2, 0x11e, 0x120, 0x5, 
+		0x2c, 0x17, 0x2, 0x11f, 0x116, 0x3, 0x2, 0x2, 0x2, 0x11f, 0x11e, 0x3, 
+		0x2, 0x2, 0x2, 0x120, 0x2b, 0x3, 0x2, 0x2, 0x2, 0x121, 0x122, 0x5, 0x48, 
+		0x25, 0x2, 0x122, 0x123, 0x7, 0x28, 0x2, 0x2, 0x123, 0x12a, 0x3, 0x2, 
+		0x2, 0x2, 0x124, 0x12a, 0x5, 0x2e, 0x18, 0x2, 0x125, 0x12a, 0x5, 0x30, 
+		0x19, 0x2, 0x126, 0x127, 0x5, 0x50, 0x29, 0x2, 0x127, 0x128, 0x7, 0x28, 
+		0x2, 0x2, 0x128, 0x12a, 0x3, 0x2, 0x2, 0x2, 0x129, 0x121, 0x3, 0x2, 0x2, 
+		0x2, 0x129, 0x124, 0x3, 0x2, 0x2, 0x2, 0x129, 0x125, 0x3, 0x2, 0x2, 0x2, 
+		0x129, 0x126, 0x3, 0x2, 0x2, 0x2, 0x12a, 0x2d, 0x3, 0x2, 0x2, 0x2, 0x12b, 
+		0x12c, 0x7, 0x10, 0x2, 0x2, 0x12c, 0x12d, 0x7, 0x1d, 0x2, 0x2, 0x12d, 
+		0x12e, 0x5, 0x4c, 0x27, 0x2, 0x12e, 0x12f, 0x7, 0x1e, 0x2, 0x2, 0x12f, 
+		0x130, 0x5, 0x2a, 0x16, 0x2, 0x130, 0x2f, 0x3, 0x2, 0x2, 0x2, 0x131, 0x137, 
+		0x5, 0x32, 0x1a, 0x2, 0x132, 0x137, 0x5, 0x34, 0x1b, 0x2, 0x133, 0x137, 
+		0x5, 0x36, 0x1c, 0x2, 0x134, 0x137, 0x5, 0x38, 0x1d, 0x2, 0x135, 0x137, 
+		0x5, 0x3c, 0x1f, 0x2, 0x136, 0x131, 0x3, 0x2, 0x2, 0x2, 0x136, 0x132, 
+		0x3, 0x2, 0x2, 0x2, 0x136, 0x133, 0x3, 0x2, 0x2, 0x2, 0x136, 0x134, 0x3, 
+		0x2, 0x2, 0x2, 0x136, 0x135, 0x3, 0x2, 0x2, 0x2, 0x137, 0x31, 0x3, 0x2, 
+		0x2, 0x2, 0x138, 0x139, 0x7, 0x11, 0x2, 0x2, 0x139, 0x13a, 0x7, 0x1d, 
+		0x2, 0x2, 0x13a, 0x13b, 0x7, 0x17, 0x2, 0x2, 0x13b, 0x13c, 0x7, 0x12, 
+		0x2, 0x2, 0x13c, 0x13d, 0x5, 0x48, 0x25, 0x2, 0x13d, 0x13e, 0x7, 0x1e, 
+		0x2, 0x2, 0x13e, 0x13f, 0x5, 0x2a, 0x16, 0x2, 0x13f, 0x33, 0x3, 0x2, 0x2, 
+		0x2, 0x140, 0x141, 0x7, 0x11, 0x2, 0x2, 0x141, 0x142, 0x7, 0x1d, 0x2, 
+		0x2, 0x142, 0x143, 0x5, 0x48, 0x25, 0x2, 0x143, 0x144, 0x7, 0x28, 0x2, 
+		0x2, 0x144, 0x145, 0x5, 0x4c, 0x27, 0x2, 0x145, 0x146, 0x7, 0x28, 0x2, 
+		0x2, 0x146, 0x147, 0x5, 0x48, 0x25, 0x2, 0x147, 0x148, 0x7, 0x1e, 0x2, 
+		0x2, 0x148, 0x149, 0x5, 0x2a, 0x16, 0x2, 0x149, 0x35, 0x3, 0x2, 0x2, 0x2, 
+		0x14a, 0x14b, 0x5, 0x3a, 0x1e, 0x2, 0x14b, 0x14c, 0x5, 0x2a, 0x16, 0x2, 
+		0x14c, 0x37, 0x3, 0x2, 0x2, 0x2, 0x14d, 0x14e, 0x7, 0x13, 0x2, 0x2, 0x14e, 
+		0x14f, 0x5, 0x2a, 0x16, 0x2, 0x14f, 0x150, 0x5, 0x3a, 0x1e, 0x2, 0x150, 
+		0x151, 0x7, 0x28, 0x2, 0x2, 0x151, 0x39, 0x3, 0x2, 0x2, 0x2, 0x152, 0x153, 
+		0x7, 0x14, 0x2, 0x2, 0x153, 0x154, 0x7, 0x1d, 0x2, 0x2, 0x154, 0x155, 
+		0x5, 0x4c, 0x27, 0x2, 0x155, 0x156, 0x7, 0x1e, 0x2, 0x2, 0x156, 0x3b, 
+		0x3, 0x2, 0x2, 0x2, 0x157, 0x158, 0x7, 0x15, 0x2, 0x2, 0x158, 0x159, 0x5, 
+		0x2a, 0x16, 0x2, 0x159, 0x3d, 0x3, 0x2, 0x2, 0x2, 0x15a, 0x15b, 0x7, 0x17, 
+		0x2, 0x2, 0x15b, 0x164, 0x7, 0x1d, 0x2, 0x2, 0x15c, 0x161, 0x5, 0x40, 
+		0x21, 0x2, 0x15d, 0x15e, 0x7, 0x29, 0x2, 0x2, 0x15e, 0x160, 0x5, 0x40, 
+		0x21, 0x2, 0x15f, 0x15d, 0x3, 0x2, 0x2, 0x2, 0x160, 0x163, 0x3, 0x2, 0x2, 
+		0x2, 0x161, 0x15f, 0x3, 0x2, 0x2, 0x2, 0x161, 0x162, 0x3, 0x2, 0x2, 0x2, 
+		0x162, 0x165, 0x3, 0x2, 0x2, 0x2, 0x163, 0x161, 0x3, 0x2, 0x2, 0x2, 0x164, 
+		0x15c, 0x3, 0x2, 0x2, 0x2, 0x164, 0x165, 0x3, 0x2, 0x2, 0x2, 0x165, 0x166, 
+		0x3, 0x2, 0x2, 0x2, 0x166, 0x167, 0x7, 0x1e, 0x2, 0x2, 0x167, 0x3f, 0x3, 
+		0x2, 0x2, 0x2, 0x168, 0x16c, 0x5, 0x48, 0x25, 0x2, 0x169, 0x16c, 0x5, 
+		0x4a, 0x26, 0x2, 0x16a, 0x16c, 0x5, 0x4c, 0x27, 0x2, 0x16b, 0x168, 0x3, 
+		0x2, 0x2, 0x2, 0x16b, 0x169, 0x3, 0x2, 0x2, 0x2, 0x16b, 0x16a, 0x3, 0x2, 
+		0x2, 0x2, 0x16c, 0x41, 0x3, 0x2, 0x2, 0x2, 0x16d, 0x16f, 0x5, 0x44, 0x23, 
+		0x2, 0x16e, 0x16d, 0x3, 0x2, 0x2, 0x2, 0x16f, 0x170, 0x3, 0x2, 0x2, 0x2, 
+		0x170, 0x16e, 0x3, 0x2, 0x2, 0x2, 0x170, 0x171, 0x3, 0x2, 0x2, 0x2, 0x171, 
+		0x43, 0x3, 0x2, 0x2, 0x2, 0x172, 0x173, 0x7, 0x1f, 0x2, 0x2, 0x173, 0x174, 
+		0x5, 0x3e, 0x20, 0x2, 0x174, 0x175, 0x7, 0x20, 0x2, 0x2, 0x175, 0x45, 
+		0x3, 0x2, 0x2, 0x2, 0x176, 0x17b, 0x7, 0x17, 0x2, 0x2, 0x177, 0x178, 0x7, 
+		0x27, 0x2, 0x2, 0x178, 0x17a, 0x7, 0x17, 0x2, 0x2, 0x179, 0x177, 0x3, 
+		0x2, 0x2, 0x2, 0x17a, 0x17d, 0x3, 0x2, 0x2, 0x2, 0x17b, 0x179, 0x3, 0x2, 
+		0x2, 0x2, 0x17b, 0x17c, 0x3, 0x2, 0x2, 0x2, 0x17c, 0x47, 0x3, 0x2, 0x2, 
+		0x2, 0x17d, 0x17b, 0x3, 0x2, 0x2, 0x2, 0x17e, 0x186, 0x5, 0x3e, 0x20, 
+		0x2, 0x17f, 0x186, 0x5, 0x54, 0x2b, 0x2, 0x180, 0x186, 0x7, 0x17, 0x2, 
+		0x2, 0x181, 0x182, 0x7, 0x1d, 0x2, 0x2, 0x182, 0x183, 0x5, 0x48, 0x25, 
+		0x2, 0x183, 0x184, 0x7, 0x1e, 0x2, 0x2, 0x184, 0x186, 0x3, 0x2, 0x2, 0x2, 
+		0x185, 0x17e, 0x3, 0x2, 0x2, 0x2, 0x185, 0x17f, 0x3, 0x2, 0x2, 0x2, 0x185, 
+		0x180, 0x3, 0x2, 0x2, 0x2, 0x185, 0x181, 0x3, 0x2, 0x2, 0x2, 0x186, 0x49, 
+		0x3, 0x2, 0x2, 0x2, 0x187, 0x188, 0x8, 0x26, 0x1, 0x2, 0x188, 0x18f, 0x5, 
+		0x3e, 0x20, 0x2, 0x189, 0x18f, 0x7, 0x17, 0x2, 0x2, 0x18a, 0x18b, 0x7, 
+		0x22, 0x2, 0x2, 0x18b, 0x18f, 0x5, 0x4a, 0x26, 0x5, 0x18c, 0x18f, 0x7, 
+		0x4d, 0x2, 0x2, 0x18d, 0x18f, 0x5, 0x48, 0x25, 0x2, 0x18e, 0x187, 0x3, 
+		0x2, 0x2, 0x2, 0x18e, 0x189, 0x3, 0x2, 0x2, 0x2, 0x18e, 0x18a, 0x3, 0x2, 
+		0x2, 0x2, 0x18e, 0x18c, 0x3, 0x2, 0x2, 0x2, 0x18e, 0x18d, 0x3, 0x2, 0x2, 
+		0x2, 0x18f, 0x195, 0x3, 0x2, 0x2, 0x2, 0x190, 0x191, 0xc, 0x8, 0x2, 0x2, 
+		0x191, 0x192, 0x7, 0x21, 0x2, 0x2, 0x192, 0x194, 0x5, 0x4a, 0x26, 0x9, 
+		0x193, 0x190, 0x3, 0x2, 0x2, 0x2, 0x194, 0x197, 0x3, 0x2, 0x2, 0x2, 0x195, 
+		0x193, 0x3, 0x2, 0x2, 0x2, 0x195, 0x196, 0x3, 0x2, 0x2, 0x2, 0x196, 0x4b, 
+		0x3, 0x2, 0x2, 0x2, 0x197, 0x195, 0x3, 0x2, 0x2, 0x2, 0x198, 0x199, 0x8, 
+		0x27, 0x1, 0x2, 0x199, 0x1a0, 0x5, 0x3e, 0x20, 0x2, 0x19a, 0x1a0, 0x7, 
+		0x17, 0x2, 0x2, 0x19b, 0x19c, 0x7, 0x25, 0x2, 0x2, 0x19c, 0x1a0, 0x5, 
+		0x4c, 0x27, 0x5, 0x19d, 0x1a0, 0x5, 0x4e, 0x28, 0x2, 0x19e, 0x1a0, 0x5, 
+		0x48, 0x25, 0x2, 0x19f, 0x198, 0x3, 0x2, 0x2, 0x2, 0x19f, 0x19a, 0x3, 
+		0x2, 0x2, 0x2, 0x19f, 0x19b, 0x3, 0x2, 0x2, 0x2, 0x19f, 0x19d, 0x3, 0x2, 
+		0x2, 0x2, 0x19f, 0x19e, 0x3, 0x2, 0x2, 0x2, 0x1a0, 0x1a6, 0x3, 0x2, 0x2, 
+		0x2, 0x1a1, 0x1a2, 0xc, 0x8, 0x2, 0x2, 0x1a2, 0x1a3, 0x7, 0x24, 0x2, 0x2, 
+		0x1a3, 0x1a5, 0x5, 0x4c, 0x27, 0x9, 0x1a4, 0x1a1, 0x3, 0x2, 0x2, 0x2, 
+		0x1a5, 0x1a8, 0x3, 0x2, 0x2, 0x2, 0x1a6, 0x1a4, 0x3, 0x2, 0x2, 0x2, 0x1a6, 
+		0x1a7, 0x3, 0x2, 0x2, 0x2, 0x1a7, 0x4d, 0x3, 0x2, 0x2, 0x2, 0x1a8, 0x1a6, 
+		0x3, 0x2, 0x2, 0x2, 0x1a9, 0x1aa, 0x5, 0x4a, 0x26, 0x2, 0x1aa, 0x1ab, 
+		0x7, 0x23, 0x2, 0x2, 0x1ab, 0x1ac, 0x5, 0x4a, 0x26, 0x2, 0x1ac, 0x4f, 
+		0x3, 0x2, 0x2, 0x2, 0x1ad, 0x1ae, 0x5, 0x52, 0x2a, 0x2, 0x1ae, 0x1b2, 
+		0x7, 0x2c, 0x2, 0x2, 0x1af, 0x1b3, 0x5, 0x48, 0x25, 0x2, 0x1b0, 0x1b3, 
+		0x5, 0x4a, 0x26, 0x2, 0x1b1, 0x1b3, 0x5, 0x4c, 0x27, 0x2, 0x1b2, 0x1af, 
+		0x3, 0x2, 0x2, 0x2, 0x1b2, 0x1b0, 0x3, 0x2, 0x2, 0x2, 0x1b2, 0x1b1, 0x3, 
+		0x2, 0x2, 0x2, 0x1b3, 0x51, 0x3, 0x2, 0x2, 0x2, 0x1b4, 0x1b5, 0x7, 0x17, 
+		0x2, 0x2, 0x1b5, 0x53, 0x3, 0x2, 0x2, 0x2, 0x1b6, 0x1b7, 0x7, 0x4c, 0x2, 
+		0x2, 0x1b7, 0x1b8, 0x5, 0x48, 0x25, 0x2, 0x1b8, 0x55, 0x3, 0x2, 0x2, 0x2, 
+		0x2d, 0x5b, 0x65, 0x6e, 0x71, 0x78, 0x83, 0x8b, 0x94, 0x97, 0xa2, 0xa5, 
+		0xb2, 0xb6, 0xb9, 0xc4, 0xc9, 0xcb, 0xcf, 0xd2, 0xdd, 0xe0, 0xe9, 0xec, 
+		0xf5, 0x100, 0x104, 0x107, 0x111, 0x11a, 0x11f, 0x129, 0x136, 0x161, 0x164, 
+		0x16b, 0x170, 0x17b, 0x185, 0x18e, 0x195, 0x19f, 0x1a6, 0x1b2, 
 	};
 
 	atn::ATNDeserializer deserializer;

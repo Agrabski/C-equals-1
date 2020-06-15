@@ -9,32 +9,44 @@ languageStandardDeclaration:
 
 declarationSequence: declaration+;
 
-declaration: functionDeclaration;
-//| classDeclaration | interfaceDeclaration | structDeclaration | namespaceDeclaration;
+declaration: functionDeclaration | classDeclaration | interfaceDeclaration | structDeclaration | namespaceDeclaration | importDeclaration | attributeDeclaration;
+
+attributeDeclaration : (AccessSpecifier)? 'att' '<'('type' | Interface | 'function')+ '>' Identifier OpenBracket attributeContentSequence CloseBracket;
+
+attributeContentSequence:functionDeclaration*;
+
+importDeclaration : 'import' '{' Identifier+ '}' 'from' '{' qualifiedIdentifier '}';
 
 classDeclaration:
-	AccessSpecifier? Class Identifier ':' implementedInterfacesSequence OpenBracket
+	(attributeSequence)? AccessSpecifier? Class Identifier ':' implementedInterfacesSequence OpenBracket
 		classContentSequence CloseBracket;
+interfaceDeclaration: attributeSequence? AccessSpecifier? Interface Identifier ':' implementedInterfacesSequence OpenBracket interfaceContentSequence CloseBracket;
 
-classContentSequence: (functionDeclaration | fieldDeclaration)+;
+interfaceContentSequence:functionDeclaration*;
+
+structDeclaration : (attributeSequence)? (AccessSpecifier)? 'struct' Identifier OpenBracket structContentSequence CloseBracket;
+
+structContentSequence : fieldDeclaration*;
+
+classContentSequence: (functionDeclaration | fieldDeclaration)*;
 
 fieldDeclaration:
-	attributeSequence? AccessSpecifier? qualifiedIdentifier Identifier;
+	attributeSequence? AccessSpecifier? Identifier ':' Identifier;
 
 implementedInterfacesSequence:
-	qualifiedIdentifier
-	| (qualifiedIdentifier ',')+ qualifiedIdentifier;
+	Identifier
+	| (Identifier ',')+ Identifier;
 
 namespaceDeclaration:
 	'namespace' qualifiedIdentifier OpenBracket declarationSequence CloseBracket;
 
 functionDeclaration:
-	(attributeSequence)? AccessSpecifier? 'fn' Identifier ParamOpen parameterList ParamClose '->'
-		qualifiedIdentifier functionBody;
+	(attributeSequence)? AccessSpecifier? 'fn' Identifier ParamOpen parameterList ParamClose ('->'
+		Identifier)? functionBody;
 
 parameterList: | parameter | (parameter ',')+ parameter;
 
-parameter: attributeSequence? qualifiedIdentifier Identifier;
+parameter: attributeSequence? Identifier ':' Identifier;
 
 functionBody: OpenBracket statement* CloseBracket;
 
@@ -72,7 +84,7 @@ whileHeader: 'while' ParamOpen logicalExpression ParamClose;
 infiniteLoopStatement: 'loop' compoundStatement;
 
 functionCall:
-	qualifiedIdentifier ParamOpen (
+	Identifier ParamOpen (
 		functionCallParameter (Comma functionCallParameter)*
 	)? ParamClose;
 functionCallParameter:
@@ -88,13 +100,13 @@ qualifiedIdentifier: Identifier (DoubleColon Identifier)*;
 expression:
 	functionCall
 	| throwExpression
-	| qualifiedIdentifier
+	| Identifier
 	| ParamOpen expression ParamClose;
 
 arithmeticExpression:
 	arithmeticExpression ArithmeticBinaryOperator arithmeticExpression
 	| functionCall
-	| qualifiedIdentifier
+	| Identifier
 	| ArithmeticUnaryOperator arithmeticExpression
 	| IntegerLiteral
 	| expression;
@@ -102,7 +114,7 @@ arithmeticExpression:
 logicalExpression:
 	logicalExpression LogicalBinaryOperator logicalExpression
 	| functionCall
-	| qualifiedIdentifier
+	| Identifier
 	| LogicalUnaryOperator logicalExpression
 	| comparisonExpression
 	| expression;
@@ -117,7 +129,7 @@ assigmentStatement:
 		| logicalExpression
 	);
 
-lExpression: qualifiedIdentifier;
+lExpression: Identifier;
 
 throwExpression: Throw expression;
 
@@ -146,8 +158,8 @@ ArithmeticBinaryOperator:
 ArithmeticUnaryOperator: Plus | Minus;
 
 ComparsionOperator:
-	GreaterThan
-	| LessThan
+	'>'
+	| '<'
 	| GreaterEqual
 	| LessEqual
 	| Equal
@@ -172,8 +184,6 @@ PlusEquals: '+=';
 MinusEquals: '-=';
 MultiplyEquals: '*=';
 DivideEquals: '/=';
-GreaterThan: '>';
-LessThan: '<';
 GreaterEqual: '>=';
 LessEqual: '<=';
 Equal: '==';
@@ -198,6 +208,8 @@ Override: 'override';
 DefaultSpecification: '=' 'default';
 Attribute: 'attribute';
 Throw: 'throw';
+
+
 
 IntegerLiteral: (DIGIT)+;
 

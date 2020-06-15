@@ -15,37 +15,39 @@ public:
 	enum
 {
 		T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, 
-		T__7 = 8, T__8 = 9, T__9 = 10, T__10 = 11, AccessSpecifier = 12, Identifier = 13, 
-		OpenBracket = 14, CloseBracket = 15, RAWSTRING = 16, DOUBLEQUOTE = 17, 
-		SINGLEQUOTE = 18, ParamOpen = 19, ParamClose = 20, ATTROBITEOPEN = 21, 
-		ATTROBITECLOSE = 22, ArithmeticBinaryOperator = 23, ArithmeticUnaryOperator = 24, 
-		ComparsionOperator = 25, LogicalBinaryOperator = 26, LogicalUnaryOperator = 27, 
-		Not = 28, DoubleColon = 29, SemiColon = 30, Comma = 31, Period = 32, Equals = 33, 
-		Asssigment = 34, NotEquals = 35, Plus = 36, Minus = 37, Star = 38, PlusEquals = 39, 
-		MinusEquals = 40, MultiplyEquals = 41, DivideEquals = 42, GreaterThan = 43, 
-		LessThan = 44, GreaterEqual = 45, LessEqual = 46, Equal = 47, NotEqual = 48, 
-		Or = 49, And = 50, Xor = 51, Strong = 52, Nullable = 53, Mutable = 54, 
-		Ref = 55, Class = 56, Interface = 57, Public = 58, Private = 59, Protected = 60, 
-		Internal = 61, Final = 62, Virtual = 63, Abstract = 64, Override = 65, 
-		DefaultSpecification = 66, Attribute = 67, Throw = 68, IntegerLiteral = 69, 
-		DIGIT = 70, LETTER = 71, Whitespace = 72, Newline = 73, BlockComment = 74, 
-		LineComment = 75
+		T__7 = 8, T__8 = 9, T__9 = 10, T__10 = 11, T__11 = 12, T__12 = 13, T__13 = 14, 
+		T__14 = 15, T__15 = 16, T__16 = 17, T__17 = 18, T__18 = 19, AccessSpecifier = 20, 
+		Identifier = 21, OpenBracket = 22, CloseBracket = 23, RAWSTRING = 24, 
+		DOUBLEQUOTE = 25, SINGLEQUOTE = 26, ParamOpen = 27, ParamClose = 28, ATTROBITEOPEN = 29, 
+		ATTROBITECLOSE = 30, ArithmeticBinaryOperator = 31, ArithmeticUnaryOperator = 32, 
+		ComparsionOperator = 33, LogicalBinaryOperator = 34, LogicalUnaryOperator = 35, 
+		Not = 36, DoubleColon = 37, SemiColon = 38, Comma = 39, Period = 40, Equals = 41, 
+		Asssigment = 42, NotEquals = 43, Plus = 44, Minus = 45, Star = 46, PlusEquals = 47, 
+		MinusEquals = 48, MultiplyEquals = 49, DivideEquals = 50, GreaterEqual = 51, 
+		LessEqual = 52, Equal = 53, NotEqual = 54, Or = 55, And = 56, Xor = 57, 
+		Strong = 58, Nullable = 59, Mutable = 60, Ref = 61, Class = 62, Interface = 63, 
+		Public = 64, Private = 65, Protected = 66, Internal = 67, Final = 68, 
+		Virtual = 69, Abstract = 70, Override = 71, DefaultSpecification = 72, 
+		Attribute = 73, Throw = 74, IntegerLiteral = 75, DIGIT = 76, LETTER = 77, 
+		Whitespace = 78, Newline = 79, BlockComment = 80, LineComment = 81
 	};
 
 	enum
 {
 		RuleCompilationUnit = 0, RuleLanguageStandardDeclaration = 1, RuleDeclarationSequence = 2, 
-		RuleDeclaration = 3, RuleClassDeclaration = 4, RuleClassContentSequence = 5, 
-		RuleFieldDeclaration = 6, RuleImplementedInterfacesSequence = 7, RuleNamespaceDeclaration = 8, 
-		RuleFunctionDeclaration = 9, RuleParameterList = 10, RuleParameter = 11, 
-		RuleFunctionBody = 12, RuleCompoundStatement = 13, RuleStatement = 14, 
-		RuleIfStatement = 15, RuleLoopStatement = 16, RuleRangeForStatement = 17, 
-		RuleForStatement = 18, RuleWhileStatement = 19, RuleDoWhileStatement = 20, 
-		RuleWhileHeader = 21, RuleInfiniteLoopStatement = 22, RuleFunctionCall = 23, 
-		RuleFunctionCallParameter = 24, RuleAttributeSequence = 25, RuleAttribute = 26, 
-		RuleQualifiedIdentifier = 27, RuleExpression = 28, RuleArithmeticExpression = 29, 
-		RuleLogicalExpression = 30, RuleComparisonExpression = 31, RuleAssigmentStatement = 32, 
-		RuleLExpression = 33, RuleThrowExpression = 34
+		RuleDeclaration = 3, RuleAttributeDeclaration = 4, RuleAttributeContentSequence = 5, 
+		RuleImportDeclaration = 6, RuleClassDeclaration = 7, RuleInterfaceDeclaration = 8, 
+		RuleInterfaceContentSequence = 9, RuleStructDeclaration = 10, RuleStructContentSequence = 11, 
+		RuleClassContentSequence = 12, RuleFieldDeclaration = 13, RuleImplementedInterfacesSequence = 14, 
+		RuleNamespaceDeclaration = 15, RuleFunctionDeclaration = 16, RuleParameterList = 17, 
+		RuleParameter = 18, RuleFunctionBody = 19, RuleCompoundStatement = 20, 
+		RuleStatement = 21, RuleIfStatement = 22, RuleLoopStatement = 23, RuleRangeForStatement = 24, 
+		RuleForStatement = 25, RuleWhileStatement = 26, RuleDoWhileStatement = 27, 
+		RuleWhileHeader = 28, RuleInfiniteLoopStatement = 29, RuleFunctionCall = 30, 
+		RuleFunctionCallParameter = 31, RuleAttributeSequence = 32, RuleAttribute = 33, 
+		RuleQualifiedIdentifier = 34, RuleExpression = 35, RuleArithmeticExpression = 36, 
+		RuleLogicalExpression = 37, RuleComparisonExpression = 38, RuleAssigmentStatement = 39, 
+		RuleLExpression = 40, RuleThrowExpression = 41
 	};
 
 	CMinusEqualsMinus1Revision0Parser(antlr4::TokenStream *input);
@@ -63,7 +65,14 @@ public:
 	class LanguageStandardDeclarationContext;
 	class DeclarationSequenceContext;
 	class DeclarationContext;
+	class AttributeDeclarationContext;
+	class AttributeContentSequenceContext;
+	class ImportDeclarationContext;
 	class ClassDeclarationContext;
+	class InterfaceDeclarationContext;
+	class InterfaceContentSequenceContext;
+	class StructDeclarationContext;
+	class StructContentSequenceContext;
 	class ClassContentSequenceContext;
 	class FieldDeclarationContext;
 	class ImplementedInterfacesSequenceContext;
@@ -177,6 +186,12 @@ public:
 
 		size_t getRuleIndex() const final;
 		FunctionDeclarationContext *functionDeclaration();
+		ClassDeclarationContext *classDeclaration();
+		InterfaceDeclarationContext *interfaceDeclaration();
+		StructDeclarationContext *structDeclaration();
+		NamespaceDeclarationContext *namespaceDeclaration();
+		ImportDeclarationContext *importDeclaration();
+		AttributeDeclarationContext *attributeDeclaration();
 
 		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
 		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
@@ -187,6 +202,85 @@ public:
 
 	DeclarationContext* declaration(antlr4::ParserRuleContext *parent = nullptr);
 	std::unique_ptr<DeclarationContext> parsedeclaration();
+
+	class  AttributeDeclarationContext : public antlr4::ParserRuleContext
+	{
+	public:
+		std::unique_ptr<ParseTree> clone(ParseTree* parent) const override;
+		AttributeDeclarationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+		AttributeDeclarationContext() = default;
+		void copyFrom(AttributeDeclarationContext *context);
+		using antlr4::ParserRuleContext::copyFrom;
+
+		size_t getRuleIndex() const final;
+		antlr4::tree::TerminalNode *Identifier();
+		antlr4::tree::TerminalNode *OpenBracket();
+		AttributeContentSequenceContext *attributeContentSequence();
+		antlr4::tree::TerminalNode *CloseBracket();
+		antlr4::tree::TerminalNode *AccessSpecifier();
+		std::vector<antlr4::tree::TerminalNode *> Interface();
+		antlr4::tree::TerminalNode* Interface(size_t i);
+
+		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
+		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
+
+		antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) final;
+	 
+	};
+
+	AttributeDeclarationContext* attributeDeclaration(antlr4::ParserRuleContext *parent = nullptr);
+	std::unique_ptr<AttributeDeclarationContext> parseattributeDeclaration();
+
+	class  AttributeContentSequenceContext : public antlr4::ParserRuleContext
+	{
+	public:
+		std::unique_ptr<ParseTree> clone(ParseTree* parent) const override;
+		AttributeContentSequenceContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+		AttributeContentSequenceContext() = default;
+		void copyFrom(AttributeContentSequenceContext *context);
+		using antlr4::ParserRuleContext::copyFrom;
+
+		size_t getRuleIndex() const final;
+		std::vector<FunctionDeclarationContext *> functionDeclaration();
+		FunctionDeclarationContext* functionDeclaration(size_t i);
+
+		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
+		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
+
+		antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) final;
+	 
+	};
+
+	AttributeContentSequenceContext* attributeContentSequence(antlr4::ParserRuleContext *parent = nullptr);
+	std::unique_ptr<AttributeContentSequenceContext> parseattributeContentSequence();
+
+	class  ImportDeclarationContext : public antlr4::ParserRuleContext
+	{
+	public:
+		std::unique_ptr<ParseTree> clone(ParseTree* parent) const override;
+		ImportDeclarationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+		ImportDeclarationContext() = default;
+		void copyFrom(ImportDeclarationContext *context);
+		using antlr4::ParserRuleContext::copyFrom;
+
+		size_t getRuleIndex() const final;
+		std::vector<antlr4::tree::TerminalNode *> OpenBracket();
+		antlr4::tree::TerminalNode* OpenBracket(size_t i);
+		std::vector<antlr4::tree::TerminalNode *> CloseBracket();
+		antlr4::tree::TerminalNode* CloseBracket(size_t i);
+		QualifiedIdentifierContext *qualifiedIdentifier();
+		std::vector<antlr4::tree::TerminalNode *> Identifier();
+		antlr4::tree::TerminalNode* Identifier(size_t i);
+
+		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
+		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
+
+		antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) final;
+	 
+	};
+
+	ImportDeclarationContext* importDeclaration(antlr4::ParserRuleContext *parent = nullptr);
+	std::unique_ptr<ImportDeclarationContext> parseimportDeclaration();
 
 	class  ClassDeclarationContext : public antlr4::ParserRuleContext
 	{
@@ -204,6 +298,7 @@ public:
 		antlr4::tree::TerminalNode *OpenBracket();
 		ClassContentSequenceContext *classContentSequence();
 		antlr4::tree::TerminalNode *CloseBracket();
+		AttributeSequenceContext *attributeSequence();
 		antlr4::tree::TerminalNode *AccessSpecifier();
 
 		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
@@ -215,6 +310,108 @@ public:
 
 	ClassDeclarationContext* classDeclaration(antlr4::ParserRuleContext *parent = nullptr);
 	std::unique_ptr<ClassDeclarationContext> parseclassDeclaration();
+
+	class  InterfaceDeclarationContext : public antlr4::ParserRuleContext
+	{
+	public:
+		std::unique_ptr<ParseTree> clone(ParseTree* parent) const override;
+		InterfaceDeclarationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+		InterfaceDeclarationContext() = default;
+		void copyFrom(InterfaceDeclarationContext *context);
+		using antlr4::ParserRuleContext::copyFrom;
+
+		size_t getRuleIndex() const final;
+		antlr4::tree::TerminalNode *Interface();
+		antlr4::tree::TerminalNode *Identifier();
+		ImplementedInterfacesSequenceContext *implementedInterfacesSequence();
+		antlr4::tree::TerminalNode *OpenBracket();
+		InterfaceContentSequenceContext *interfaceContentSequence();
+		antlr4::tree::TerminalNode *CloseBracket();
+		AttributeSequenceContext *attributeSequence();
+		antlr4::tree::TerminalNode *AccessSpecifier();
+
+		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
+		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
+
+		antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) final;
+	 
+	};
+
+	InterfaceDeclarationContext* interfaceDeclaration(antlr4::ParserRuleContext *parent = nullptr);
+	std::unique_ptr<InterfaceDeclarationContext> parseinterfaceDeclaration();
+
+	class  InterfaceContentSequenceContext : public antlr4::ParserRuleContext
+	{
+	public:
+		std::unique_ptr<ParseTree> clone(ParseTree* parent) const override;
+		InterfaceContentSequenceContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+		InterfaceContentSequenceContext() = default;
+		void copyFrom(InterfaceContentSequenceContext *context);
+		using antlr4::ParserRuleContext::copyFrom;
+
+		size_t getRuleIndex() const final;
+		std::vector<FunctionDeclarationContext *> functionDeclaration();
+		FunctionDeclarationContext* functionDeclaration(size_t i);
+
+		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
+		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
+
+		antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) final;
+	 
+	};
+
+	InterfaceContentSequenceContext* interfaceContentSequence(antlr4::ParserRuleContext *parent = nullptr);
+	std::unique_ptr<InterfaceContentSequenceContext> parseinterfaceContentSequence();
+
+	class  StructDeclarationContext : public antlr4::ParserRuleContext
+	{
+	public:
+		std::unique_ptr<ParseTree> clone(ParseTree* parent) const override;
+		StructDeclarationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+		StructDeclarationContext() = default;
+		void copyFrom(StructDeclarationContext *context);
+		using antlr4::ParserRuleContext::copyFrom;
+
+		size_t getRuleIndex() const final;
+		antlr4::tree::TerminalNode *Identifier();
+		antlr4::tree::TerminalNode *OpenBracket();
+		StructContentSequenceContext *structContentSequence();
+		antlr4::tree::TerminalNode *CloseBracket();
+		AttributeSequenceContext *attributeSequence();
+		antlr4::tree::TerminalNode *AccessSpecifier();
+
+		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
+		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
+
+		antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) final;
+	 
+	};
+
+	StructDeclarationContext* structDeclaration(antlr4::ParserRuleContext *parent = nullptr);
+	std::unique_ptr<StructDeclarationContext> parsestructDeclaration();
+
+	class  StructContentSequenceContext : public antlr4::ParserRuleContext
+	{
+	public:
+		std::unique_ptr<ParseTree> clone(ParseTree* parent) const override;
+		StructContentSequenceContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+		StructContentSequenceContext() = default;
+		void copyFrom(StructContentSequenceContext *context);
+		using antlr4::ParserRuleContext::copyFrom;
+
+		size_t getRuleIndex() const final;
+		std::vector<FieldDeclarationContext *> fieldDeclaration();
+		FieldDeclarationContext* fieldDeclaration(size_t i);
+
+		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
+		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
+
+		antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) final;
+	 
+	};
+
+	StructContentSequenceContext* structContentSequence(antlr4::ParserRuleContext *parent = nullptr);
+	std::unique_ptr<StructContentSequenceContext> parsestructContentSequence();
 
 	class  ClassContentSequenceContext : public antlr4::ParserRuleContext
 	{
@@ -251,8 +448,8 @@ public:
 		using antlr4::ParserRuleContext::copyFrom;
 
 		size_t getRuleIndex() const final;
-		QualifiedIdentifierContext *qualifiedIdentifier();
-		antlr4::tree::TerminalNode *Identifier();
+		std::vector<antlr4::tree::TerminalNode *> Identifier();
+		antlr4::tree::TerminalNode* Identifier(size_t i);
 		AttributeSequenceContext *attributeSequence();
 		antlr4::tree::TerminalNode *AccessSpecifier();
 
@@ -276,8 +473,8 @@ public:
 		using antlr4::ParserRuleContext::copyFrom;
 
 		size_t getRuleIndex() const final;
-		std::vector<QualifiedIdentifierContext *> qualifiedIdentifier();
-		QualifiedIdentifierContext* qualifiedIdentifier(size_t i);
+		std::vector<antlr4::tree::TerminalNode *> Identifier();
+		antlr4::tree::TerminalNode* Identifier(size_t i);
 		std::vector<antlr4::tree::TerminalNode *> Comma();
 		antlr4::tree::TerminalNode* Comma(size_t i);
 
@@ -326,11 +523,11 @@ public:
 		using antlr4::ParserRuleContext::copyFrom;
 
 		size_t getRuleIndex() const final;
-		antlr4::tree::TerminalNode *Identifier();
+		std::vector<antlr4::tree::TerminalNode *> Identifier();
+		antlr4::tree::TerminalNode* Identifier(size_t i);
 		antlr4::tree::TerminalNode *ParamOpen();
 		ParameterListContext *parameterList();
 		antlr4::tree::TerminalNode *ParamClose();
-		QualifiedIdentifierContext *qualifiedIdentifier();
 		FunctionBodyContext *functionBody();
 		AttributeSequenceContext *attributeSequence();
 		antlr4::tree::TerminalNode *AccessSpecifier();
@@ -380,8 +577,8 @@ public:
 		using antlr4::ParserRuleContext::copyFrom;
 
 		size_t getRuleIndex() const final;
-		QualifiedIdentifierContext *qualifiedIdentifier();
-		antlr4::tree::TerminalNode *Identifier();
+		std::vector<antlr4::tree::TerminalNode *> Identifier();
+		antlr4::tree::TerminalNode* Identifier(size_t i);
 		AttributeSequenceContext *attributeSequence();
 
 		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
@@ -679,7 +876,7 @@ public:
 		using antlr4::ParserRuleContext::copyFrom;
 
 		size_t getRuleIndex() const final;
-		QualifiedIdentifierContext *qualifiedIdentifier();
+		antlr4::tree::TerminalNode *Identifier();
 		antlr4::tree::TerminalNode *ParamOpen();
 		antlr4::tree::TerminalNode *ParamClose();
 		std::vector<FunctionCallParameterContext *> functionCallParameter();
@@ -805,7 +1002,7 @@ public:
 		size_t getRuleIndex() const final;
 		FunctionCallContext *functionCall();
 		ThrowExpressionContext *throwExpression();
-		QualifiedIdentifierContext *qualifiedIdentifier();
+		antlr4::tree::TerminalNode *Identifier();
 		antlr4::tree::TerminalNode *ParamOpen();
 		ExpressionContext *expression();
 		antlr4::tree::TerminalNode *ParamClose();
@@ -831,7 +1028,7 @@ public:
 
 		size_t getRuleIndex() const final;
 		FunctionCallContext *functionCall();
-		QualifiedIdentifierContext *qualifiedIdentifier();
+		antlr4::tree::TerminalNode *Identifier();
 		antlr4::tree::TerminalNode *ArithmeticUnaryOperator();
 		std::vector<ArithmeticExpressionContext *> arithmeticExpression();
 		ArithmeticExpressionContext* arithmeticExpression(size_t i);
@@ -860,7 +1057,7 @@ public:
 
 		size_t getRuleIndex() const final;
 		FunctionCallContext *functionCall();
-		QualifiedIdentifierContext *qualifiedIdentifier();
+		antlr4::tree::TerminalNode *Identifier();
 		antlr4::tree::TerminalNode *LogicalUnaryOperator();
 		std::vector<LogicalExpressionContext *> logicalExpression();
 		LogicalExpressionContext* logicalExpression(size_t i);
@@ -938,7 +1135,7 @@ public:
 		using antlr4::ParserRuleContext::copyFrom;
 
 		size_t getRuleIndex() const final;
-		QualifiedIdentifierContext *qualifiedIdentifier();
+		antlr4::tree::TerminalNode *Identifier();
 
 		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
 		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;

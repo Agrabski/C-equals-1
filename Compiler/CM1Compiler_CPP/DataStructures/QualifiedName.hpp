@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <ostream>
 
 namespace cMCompiler::dataStructures
 {
@@ -13,5 +14,15 @@ namespace cMCompiler::dataStructures
 		QualifiedName parent() const;
 		QualifiedName next() const;
 		std::string const& peek() const noexcept { return name_.front(); }
+		QualifiedName operator+(std::string& s)
+		{
+			auto result = *this;
+			result.name_.push_back(s);
+			return result;
+		}
+		QualifiedName() noexcept = default;
+		friend std::ostream& operator<<(std::ostream& os, QualifiedName const& name);
 	};
+
+	std::ostream& operator<<(std::ostream& os, QualifiedName const& name);
 }
