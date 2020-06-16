@@ -103,6 +103,10 @@ public:
 		return visitChildren(ctx);
 	}
 
+	antlrcpp::Any visitVariableDeclarationStatement(CMinusEqualsMinus1Revision0Parser::VariableDeclarationStatementContext *ctx) override {
+		return visitChildren(ctx);
+	}
+
 	antlrcpp::Any visitIfStatement(CMinusEqualsMinus1Revision0Parser::IfStatementContext *ctx) override {
 		return visitChildren(ctx);
 	}

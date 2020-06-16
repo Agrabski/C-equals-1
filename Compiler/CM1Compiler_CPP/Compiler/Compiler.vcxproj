@@ -34,11 +34,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CompilationUnitDatabaseBuilder.hpp" />
+    <ClInclude Include="ExpressionBuilder.hpp" />
+    <ClInclude Include="FunctionBodyBuilder.hpp" />
     <ClInclude Include="IntermidiateRepresentationEmmiter.hpp" />
     <ClInclude Include="Preprocessor.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CompilationUnitDatabaseBuilder.cpp" />
+    <ClCompile Include="ExpressionBuilder.cpp" />
+    <ClCompile Include="FunctionBodyBuilder.cpp" />
     <ClCompile Include="IntermidiateRepresentationEmmiter.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

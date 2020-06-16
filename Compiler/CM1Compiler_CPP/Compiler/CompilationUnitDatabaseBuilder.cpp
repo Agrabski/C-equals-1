@@ -2,6 +2,7 @@
 #include "../antlr_runtime/src/tree/ParseTreeWalker.h"
 #include "../LanguageLogic/NamespaceBuilder.hpp"
 #include "../DataStructures/Accessibility.hpp"
+#include "FunctionBodyBuilder.hpp"
 
 using namespace cMCompiler::dataStructures;
 
@@ -44,6 +45,8 @@ antlrcpp::Any cMCompiler::compiler::CompilationUnitDataBaseBuilder::visitFunctio
 		auto const var = function->appendVariable(variable->Identifier(0)->getText(), type);
 		// todo: attribute support
 	}
+	auto builder = FunctionBodyBuilder(function, nameResolver_, resolutionContext_);
+	ctx->functionBody()->accept(&builder);
 
 	return antlrcpp::Any();
 }

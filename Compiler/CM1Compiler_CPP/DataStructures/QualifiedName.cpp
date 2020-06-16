@@ -30,6 +30,12 @@ QualifiedName cMCompiler::dataStructures::QualifiedName::next() const
 	return result;
 }
 
+QualifiedName cMCompiler::dataStructures::operator+(const std::string& s, const QualifiedName& qn)
+{
+	QualifiedName result = qn;
+	result.name_.insert(result.name_.begin(), s);
+	return result;
+}
 std::ostream& cMCompiler::dataStructures::operator<<(std::ostream& os, QualifiedName const& name)
 {
 	for (auto& n : name.name_)

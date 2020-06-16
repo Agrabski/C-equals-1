@@ -63,6 +63,27 @@
     <ClInclude Include="IntermidiateRepresentation\IInstruction.hpp">
       <Filter>Header Files\IntermidiateRepresentation</Filter>
     </ClInclude>
+    <ClInclude Include="IntermidiateRepresentation\VariableDeclaration.hpp">
+      <Filter>Header Files\IntermidiateRepresentation</Filter>
+    </ClInclude>
+    <ClInclude Include="IntermidiateRepresentation\FunctionCall.hpp">
+      <Filter>Header Files\IntermidiateRepresentation</Filter>
+    </ClInclude>
+    <ClInclude Include="IntermidiateRepresentation\IExpression.hpp">
+      <Filter>Header Files\IntermidiateRepresentation</Filter>
+    </ClInclude>
+    <ClInclude Include="Field.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IntermidiateRepresentation\VariableReferenceExpression.hpp">
+      <Filter>Header Files\IntermidiateRepresentation</Filter>
+    </ClInclude>
+    <ClInclude Include="IntermidiateRepresentation\ScopeTermination.hpp">
+      <Filter>Header Files\IntermidiateRepresentation</Filter>
+    </ClInclude>
+    <ClInclude Include="IntermidiateRepresentation\IfElseStatement.hpp">
+      <Filter>Header Files\IntermidiateRepresentation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -84,6 +105,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AttributeTarget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IntermidiateRepresentation\VariableDeclaration.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IntermidiateRepresentation\ScopeTermination.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IntermidiateRepresentation\VariableReferenceExpression.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IntermidiateRepresentation\IfElseStatement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

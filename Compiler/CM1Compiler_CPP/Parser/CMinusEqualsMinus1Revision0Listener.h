@@ -80,6 +80,9 @@ public:
 	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::StatementContext *>) = 0;
 	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::StatementContext *>) = 0;
 
+	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::VariableDeclarationStatementContext *>) = 0;
+	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::VariableDeclarationStatementContext *>) = 0;
+
 	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::IfStatementContext *>) = 0;
 	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::IfStatementContext *>) = 0;
 

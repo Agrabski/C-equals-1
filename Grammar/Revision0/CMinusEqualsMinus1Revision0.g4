@@ -58,10 +58,13 @@ statement:
 	expression SemiColon
 	| ifStatement
 	| loopStatement
-	| assigmentStatement SemiColon;
+	| assigmentStatement SemiColon
+	| variableDeclarationStatement SemiColon;
+
+variableDeclarationStatement: attributeSequence? 'let' Identifier (':' Identifier)? ('=' functionCallParameter)?;
 
 ifStatement:
-	'if' ParamOpen logicalExpression ParamClose compoundStatement;
+	'if' ParamOpen logicalExpression ParamClose compoundStatement ('else' compoundStatement)?;
 
 loopStatement:
 	rangeForStatement
@@ -87,6 +90,7 @@ functionCall:
 	Identifier ParamOpen (
 		functionCallParameter (Comma functionCallParameter)*
 	)? ParamClose;
+
 functionCallParameter:
 	expression
 	| arithmeticExpression
@@ -129,7 +133,7 @@ assigmentStatement:
 		| logicalExpression
 	);
 
-lExpression: Identifier;
+lExpression: Identifier | Identifier ('.' Identifier)+;
 
 throwExpression: Throw expression;
 

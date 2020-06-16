@@ -1,0 +1,11 @@
+#include "ScopeTermination.hpp"
+
+void cMCompiler::dataStructures::ir::ScopeTermination::emmit(std::ostream& stream, std::function<std::string(dataStructures::Type*)> const& nameLookupFunction, unsigned int indentationLevel) const
+{
+	for (auto i = 0U; i < indentationLevel; i++)
+		stream << "\t";
+	stream << "{@finalize [";
+	for (auto var : variablesToFinalize_)
+		stream << var->name() << " ";
+	stream << "] }";
+}

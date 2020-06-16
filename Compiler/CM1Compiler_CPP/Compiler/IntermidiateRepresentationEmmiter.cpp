@@ -1,5 +1,6 @@
 #include "IntermidiateRepresentationEmmiter.hpp"
 #include <gsl.h>
+#include <sstream>
 
 using namespace cMCompiler::compiler;
 using namespace cMCompiler::dataStructures;
@@ -98,6 +99,34 @@ void emmitAttribute(std::ostream& stream, AttributeInstance& attribute)
 
 }
 
+class NameLookuper
+{
+	std::vector<std::pair<PackageDatabase*, std::vector<not_null<Type*>>>> types_;
+public:
+	NameLookuper(std::vector< not_null<PackageDatabase*>> packages)
+	{
+		for (auto package : packages)
+		{
+			types_.push_back({ package, getTypes(*package) });
+		}
+	}
+	std::string operator()(Type* t)
+	{
+		assert(t != nullptr);
+		std::stringstream stream;
+		PackageDatabase* package = nullptr;
+		for (auto& p : types_)
+			if (std::find(p.second.begin(), p.second.end(), t) != p.second.end())
+			{
+				package = p.first;
+				break;
+			}
+		if (package != nullptr)
+			stream << package->name();
+		stream << t->qualifiedName();
+		return stream.str();
+	}
+};
 
 void IntermidiateRepresentationEmmiter::emmit(std::ostream& stream, PackageDatabase& package, std::vector<not_null<PackageDatabase*>> dependencies)
 {
@@ -106,6 +135,7 @@ void IntermidiateRepresentationEmmiter::emmit(std::ostream& stream, PackageDatab
 		stream << "\'" << dependency->name() << "\' ";
 	stream << "]\r\n";
 
+	auto nl = NameLookuper(dependencies);
 	auto types = getTypes(package);
 	auto functions = getFunctions(package);
 	auto attributes = getAttributes(package);
@@ -175,6 +205,16 @@ void IntermidiateRepresentationEmmiter::emmit(std::ostream& stream, PackageDatab
 				else
 					stream << "void";
 				stream << "\r\n";
+
+				stream << "\t\tcode = \r\n\t\t[\r\n";
+				{
+					for (auto& instruction : function->code())
+					{
+						instruction->emmit(stream, nl, 3);
+						stream << "\r\n";
+					}
+				}
+				stream << "\t\t]\r\n";
 			}
 			stream << "\t}\r\n";
 		}

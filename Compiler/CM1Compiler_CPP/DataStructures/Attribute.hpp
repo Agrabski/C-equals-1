@@ -4,12 +4,14 @@
 #include "Function.hpp"
 #include "INamedObject.hpp"
 #include "ObjectWithAccessibility.hpp"
+#include "Field.hpp"
 
 namespace cMCompiler::dataStructures
 {
 	class Function;
 	class Attribute : public INamedObject, public ObjectWithAccessbility
 	{
+		std::vector<std::unique_ptr<Field>> fields_;
 		std::vector<std::unique_ptr<Function>> constructors_;
 		std::vector<std::unique_ptr<Function>> functions_;
 	public:
@@ -23,5 +25,6 @@ namespace cMCompiler::dataStructures
 				result.push_back((INamedObject*)f.get());
 			return result;
 		}
+
 	};
 }

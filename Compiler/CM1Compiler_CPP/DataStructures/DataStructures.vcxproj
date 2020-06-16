@@ -166,10 +166,17 @@
     <ClInclude Include="AttributeInstance.hpp" />
     <ClInclude Include="AttributeTarget.hpp" />
     <ClInclude Include="CompilationContext.hpp" />
+    <ClInclude Include="Field.hpp" />
     <ClInclude Include="Function.hpp" />
     <ClInclude Include="INamedObject.hpp" />
     <ClInclude Include="Interface.hpp" />
+    <ClInclude Include="IntermidiateRepresentation\IExpression.hpp" />
+    <ClInclude Include="IntermidiateRepresentation\FunctionCall.hpp" />
+    <ClInclude Include="IntermidiateRepresentation\IfElseStatement.hpp" />
     <ClInclude Include="IntermidiateRepresentation\IInstruction.hpp" />
+    <ClInclude Include="IntermidiateRepresentation\ScopeTermination.hpp" />
+    <ClInclude Include="IntermidiateRepresentation\VariableDeclaration.hpp" />
+    <ClInclude Include="IntermidiateRepresentation\VariableReferenceExpression.hpp" />
     <ClInclude Include="Namespace.hpp" />
     <ClInclude Include="ObjectWithAccessibility.hpp" />
     <ClInclude Include="PackageDatabase.hpp" />
@@ -185,6 +192,10 @@
     <ClCompile Include="AttributeTarget.cpp" />
     <ClCompile Include="Function.cpp" />
     <ClCompile Include="INamedObject.cpp" />
+    <ClCompile Include="IntermidiateRepresentation\IfElseStatement.cpp" />
+    <ClCompile Include="IntermidiateRepresentation\ScopeTermination.cpp" />
+    <ClCompile Include="IntermidiateRepresentation\VariableDeclaration.cpp" />
+    <ClCompile Include="IntermidiateRepresentation\VariableReferenceExpression.cpp" />
     <ClCompile Include="Namespace.cpp" />
     <ClCompile Include="QualifiedName.cpp" />
   </ItemGroup>

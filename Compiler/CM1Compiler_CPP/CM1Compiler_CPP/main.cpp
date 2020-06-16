@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
 		stream.open(context->file);
 		auto parseTree = adapter.parse(stream);
 		cMCompiler::dataStructures::PackageDatabase packageDatabase("test_package"s);
-		std::vector a = { cMCompiler::language::buildDefaultPackage() };
+		std::vector a = { cMCompiler::language::getDefaultPackage() };
 		cMCompiler::language::NameResolver nameResolver(a);
 		cMCompiler::compiler::CompilationUnitDataBaseBuilder dbBuilder(packageDatabase, nameResolver);
 		dbBuilder.buildDatabase(*parseTree);

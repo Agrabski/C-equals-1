@@ -16,20 +16,21 @@ public:
 {
 		T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, 
 		T__7 = 8, T__8 = 9, T__9 = 10, T__10 = 11, T__11 = 12, T__12 = 13, T__13 = 14, 
-		T__14 = 15, T__15 = 16, T__16 = 17, T__17 = 18, T__18 = 19, AccessSpecifier = 20, 
-		Identifier = 21, OpenBracket = 22, CloseBracket = 23, RAWSTRING = 24, 
-		DOUBLEQUOTE = 25, SINGLEQUOTE = 26, ParamOpen = 27, ParamClose = 28, ATTROBITEOPEN = 29, 
-		ATTROBITECLOSE = 30, ArithmeticBinaryOperator = 31, ArithmeticUnaryOperator = 32, 
-		ComparsionOperator = 33, LogicalBinaryOperator = 34, LogicalUnaryOperator = 35, 
-		Not = 36, DoubleColon = 37, SemiColon = 38, Comma = 39, Period = 40, Equals = 41, 
-		Asssigment = 42, NotEquals = 43, Plus = 44, Minus = 45, Star = 46, PlusEquals = 47, 
-		MinusEquals = 48, MultiplyEquals = 49, DivideEquals = 50, GreaterEqual = 51, 
-		LessEqual = 52, Equal = 53, NotEqual = 54, Or = 55, And = 56, Xor = 57, 
-		Strong = 58, Nullable = 59, Mutable = 60, Ref = 61, Class = 62, Interface = 63, 
-		Public = 64, Private = 65, Protected = 66, Internal = 67, Final = 68, 
-		Virtual = 69, Abstract = 70, Override = 71, DefaultSpecification = 72, 
-		Attribute = 73, Throw = 74, IntegerLiteral = 75, DIGIT = 76, LETTER = 77, 
-		Whitespace = 78, Newline = 79, BlockComment = 80, LineComment = 81
+		T__14 = 15, T__15 = 16, T__16 = 17, T__17 = 18, T__18 = 19, T__19 = 20, 
+		T__20 = 21, AccessSpecifier = 22, Identifier = 23, OpenBracket = 24, CloseBracket = 25, 
+		RAWSTRING = 26, DOUBLEQUOTE = 27, SINGLEQUOTE = 28, ParamOpen = 29, ParamClose = 30, 
+		ATTROBITEOPEN = 31, ATTROBITECLOSE = 32, ArithmeticBinaryOperator = 33, 
+		ArithmeticUnaryOperator = 34, ComparsionOperator = 35, LogicalBinaryOperator = 36, 
+		LogicalUnaryOperator = 37, Not = 38, DoubleColon = 39, SemiColon = 40, 
+		Comma = 41, Period = 42, Equals = 43, Asssigment = 44, NotEquals = 45, 
+		Plus = 46, Minus = 47, Star = 48, PlusEquals = 49, MinusEquals = 50, MultiplyEquals = 51, 
+		DivideEquals = 52, GreaterEqual = 53, LessEqual = 54, Equal = 55, NotEqual = 56, 
+		Or = 57, And = 58, Xor = 59, Strong = 60, Nullable = 61, Mutable = 62, 
+		Ref = 63, Class = 64, Interface = 65, Public = 66, Private = 67, Protected = 68, 
+		Internal = 69, Final = 70, Virtual = 71, Abstract = 72, Override = 73, 
+		DefaultSpecification = 74, Attribute = 75, Throw = 76, IntegerLiteral = 77, 
+		DIGIT = 78, LETTER = 79, Whitespace = 80, Newline = 81, BlockComment = 82, 
+		LineComment = 83
 	};
 
 	enum
@@ -41,13 +42,14 @@ public:
 		RuleClassContentSequence = 12, RuleFieldDeclaration = 13, RuleImplementedInterfacesSequence = 14, 
 		RuleNamespaceDeclaration = 15, RuleFunctionDeclaration = 16, RuleParameterList = 17, 
 		RuleParameter = 18, RuleFunctionBody = 19, RuleCompoundStatement = 20, 
-		RuleStatement = 21, RuleIfStatement = 22, RuleLoopStatement = 23, RuleRangeForStatement = 24, 
-		RuleForStatement = 25, RuleWhileStatement = 26, RuleDoWhileStatement = 27, 
-		RuleWhileHeader = 28, RuleInfiniteLoopStatement = 29, RuleFunctionCall = 30, 
-		RuleFunctionCallParameter = 31, RuleAttributeSequence = 32, RuleAttribute = 33, 
-		RuleQualifiedIdentifier = 34, RuleExpression = 35, RuleArithmeticExpression = 36, 
-		RuleLogicalExpression = 37, RuleComparisonExpression = 38, RuleAssigmentStatement = 39, 
-		RuleLExpression = 40, RuleThrowExpression = 41
+		RuleStatement = 21, RuleVariableDeclarationStatement = 22, RuleIfStatement = 23, 
+		RuleLoopStatement = 24, RuleRangeForStatement = 25, RuleForStatement = 26, 
+		RuleWhileStatement = 27, RuleDoWhileStatement = 28, RuleWhileHeader = 29, 
+		RuleInfiniteLoopStatement = 30, RuleFunctionCall = 31, RuleFunctionCallParameter = 32, 
+		RuleAttributeSequence = 33, RuleAttribute = 34, RuleQualifiedIdentifier = 35, 
+		RuleExpression = 36, RuleArithmeticExpression = 37, RuleLogicalExpression = 38, 
+		RuleComparisonExpression = 39, RuleAssigmentStatement = 40, RuleLExpression = 41, 
+		RuleThrowExpression = 42
 	};
 
 	CMinusEqualsMinus1Revision0Parser(antlr4::TokenStream *input);
@@ -83,6 +85,7 @@ public:
 	class FunctionBodyContext;
 	class CompoundStatementContext;
 	class StatementContext;
+	class VariableDeclarationStatementContext;
 	class IfStatementContext;
 	class LoopStatementContext;
 	class RangeForStatementContext;
@@ -656,6 +659,7 @@ public:
 		IfStatementContext *ifStatement();
 		LoopStatementContext *loopStatement();
 		AssigmentStatementContext *assigmentStatement();
+		VariableDeclarationStatementContext *variableDeclarationStatement();
 
 		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
 		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
@@ -666,6 +670,32 @@ public:
 
 	StatementContext* statement(antlr4::ParserRuleContext *parent = nullptr);
 	std::unique_ptr<StatementContext> parsestatement();
+
+	class  VariableDeclarationStatementContext : public antlr4::ParserRuleContext
+	{
+	public:
+		std::unique_ptr<ParseTree> clone(ParseTree* parent) const override;
+		VariableDeclarationStatementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+		VariableDeclarationStatementContext() = default;
+		void copyFrom(VariableDeclarationStatementContext *context);
+		using antlr4::ParserRuleContext::copyFrom;
+
+		size_t getRuleIndex() const final;
+		std::vector<antlr4::tree::TerminalNode *> Identifier();
+		antlr4::tree::TerminalNode* Identifier(size_t i);
+		AttributeSequenceContext *attributeSequence();
+		antlr4::tree::TerminalNode *Asssigment();
+		FunctionCallParameterContext *functionCallParameter();
+
+		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
+		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
+
+		antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) final;
+	 
+	};
+
+	VariableDeclarationStatementContext* variableDeclarationStatement(antlr4::ParserRuleContext *parent = nullptr);
+	std::unique_ptr<VariableDeclarationStatementContext> parsevariableDeclarationStatement();
 
 	class  IfStatementContext : public antlr4::ParserRuleContext
 	{
@@ -680,7 +710,8 @@ public:
 		antlr4::tree::TerminalNode *ParamOpen();
 		LogicalExpressionContext *logicalExpression();
 		antlr4::tree::TerminalNode *ParamClose();
-		CompoundStatementContext *compoundStatement();
+		std::vector<CompoundStatementContext *> compoundStatement();
+		CompoundStatementContext* compoundStatement(size_t i);
 
 		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
 		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
@@ -1135,7 +1166,10 @@ public:
 		using antlr4::ParserRuleContext::copyFrom;
 
 		size_t getRuleIndex() const final;
-		antlr4::tree::TerminalNode *Identifier();
+		std::vector<antlr4::tree::TerminalNode *> Identifier();
+		antlr4::tree::TerminalNode* Identifier(size_t i);
+		std::vector<antlr4::tree::TerminalNode *> Period();
+		antlr4::tree::TerminalNode* Period(size_t i);
 
 		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
 		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
