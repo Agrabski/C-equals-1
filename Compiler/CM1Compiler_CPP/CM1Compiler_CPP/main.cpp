@@ -1,11 +1,10 @@
 #include <iostream>
 #include <fstream>
 #include "CLIInterface.hpp"
-#include "../ParserAdapter/ParserAdapter.hpp"
-#include "../Compiler/CompilationUnitDatabaseBuilder.hpp"
-#include "../DataStructures/PackageDatabase.hpp"
-#include "../LanguageLogic/BuiltInPackageBuildUtility.hpp"
+#include "../Compiler/PackageBuildUtility.hpp"
 #include "../Compiler/IntermidiateRepresentationEmmiter.hpp"
+#include "../Compiler/PackageDiscoveryUtility.hpp"
+#include "../LanguageLogic/BuiltInPackageBuildUtility.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -14,17 +13,14 @@ int main(int argc, char* argv[])
 	auto context = cMCompiler::getCompilationContext(argc, argv, options);
 	if (context)
 	{
-		cMCompiler::Parser::ParserAdapter adapter;
-		std::ifstream stream;
-		stream.open(context->file);
-		auto parseTree = adapter.parse(stream);
-		cMCompiler::dataStructures::PackageDatabase packageDatabase("test_package"s);
-		std::vector a = { cMCompiler::language::getDefaultPackage() };
-		cMCompiler::language::NameResolver nameResolver(a);
-		cMCompiler::compiler::CompilationUnitDataBaseBuilder dbBuilder(packageDatabase, nameResolver);
-		dbBuilder.buildDatabase(*parseTree);
+		std::vector<std::unique_ptr<cMCompiler::dataStructures::PackageDatabase>> packages;
+		std::vector<std::filesystem::path> files;
+		std::vector<std::string> dependencyNames;
+		std::vector<gsl::not_null<cMCompiler::dataStructures::PackageDatabase*>> dependencies = { cMCompiler::language::getDefaultPackage() };
+		packages.push_back(cMCompiler::compiler::getPackageDefinitionAndFileSet(context->file, files, dependencyNames));
+		cMCompiler::compiler::buildAndFillPackage(*packages.back(), dependencies, files);
 		auto emiter = cMCompiler::compiler::IntermidiateRepresentationEmmiter();
-		emiter.emmit(std::cout, packageDatabase, a);
+		emiter.emmit(std::cout, *packages.back(), dependencies);
 	}
 	else
 		options.print(std::cout);

@@ -6,8 +6,6 @@
 
 namespace cMCompiler::language
 {
-	std::vector<std::unique_ptr<dataStructures::AttributeInstance>> getAttributes(
-		not_null<CMinusEqualsMinus1Revision0Parser::AttributeSequenceContext*> attributeSequence, 
-		dataStructures::INamedObject* context,
-		NameResolver&nr);
+	dataStructures::AttributeInstance* getAttribute(dataStructures::AttributeTarget& target, dataStructures::Attribute* attribute);
+	bool isCompileTime(dataStructures::Function& f);
 }

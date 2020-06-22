@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\CompileTimeFunctions">
+      <UniqueIdentifier>{381fd181-79ba-4a5e-9a09-451fb63ec4cf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NameResolver.hpp">
@@ -30,6 +33,24 @@
     <ClInclude Include="IntermidiateRepresentationBuilder.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="LiteralUtility.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CompileTimeFunctions\FunctionLibrary.hpp">
+      <Filter>Header Files\CompileTimeFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="CompileTimeFunctions\CompileTimeFunction.hpp">
+      <Filter>Header Files\CompileTimeFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="CompileTimeFunctions\Print.hpp">
+      <Filter>Header Files\CompileTimeFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="OverloadResolutionUtility.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SpecialFunctionUtility.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NameResolver.cpp">
@@ -42,6 +63,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BuiltInPackageBuildUtility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LiteralUtility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CompileTimeFunctions\FunctionLibrary.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CompileTimeFunctions\Print.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SpecialFunctionUtility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

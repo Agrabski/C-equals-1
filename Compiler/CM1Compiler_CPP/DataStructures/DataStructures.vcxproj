@@ -166,22 +166,31 @@
     <ClInclude Include="AttributeInstance.hpp" />
     <ClInclude Include="AttributeTarget.hpp" />
     <ClInclude Include="CompilationContext.hpp" />
+    <ClInclude Include="execution\IRuntimeValue.h" />
+    <ClInclude Include="execution\IntegerValue.hpp" />
+    <ClInclude Include="execution\RuntimeTypeDescriptor.hpp" />
     <ClInclude Include="Field.hpp" />
     <ClInclude Include="Function.hpp" />
     <ClInclude Include="INamedObject.hpp" />
-    <ClInclude Include="Interface.hpp" />
+    <ClInclude Include="IntermidiateRepresentation\ExecutionContext.hpp" />
     <ClInclude Include="IntermidiateRepresentation\IExpression.hpp" />
     <ClInclude Include="IntermidiateRepresentation\FunctionCall.hpp" />
     <ClInclude Include="IntermidiateRepresentation\IfElseStatement.hpp" />
     <ClInclude Include="IntermidiateRepresentation\IInstruction.hpp" />
+    <ClInclude Include="IntermidiateRepresentation\INameGetter.hpp" />
     <ClInclude Include="IntermidiateRepresentation\ScopeTermination.hpp" />
+    <ClInclude Include="IntermidiateRepresentation\ValueLiteralExpression.hpp" />
     <ClInclude Include="IntermidiateRepresentation\VariableDeclaration.hpp" />
     <ClInclude Include="IntermidiateRepresentation\VariableReferenceExpression.hpp" />
     <ClInclude Include="Namespace.hpp" />
     <ClInclude Include="ObjectWithAccessibility.hpp" />
     <ClInclude Include="PackageDatabase.hpp" />
     <ClInclude Include="QualifiedName.hpp" />
+    <ClInclude Include="Target.hpp" />
     <ClInclude Include="Type.hpp" />
+    <ClInclude Include="TypeClassifier.hpp" />
+    <ClInclude Include="Validation\ValidationError.hpp" />
+    <ClInclude Include="Validation\ValidationUtility.hpp" />
     <ClInclude Include="Variable.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -190,14 +199,21 @@
   <ItemGroup>
     <ClCompile Include="Accessibility.cpp" />
     <ClCompile Include="AttributeTarget.cpp" />
+    <ClCompile Include="execution\IntegerValue.cpp" />
+    <ClCompile Include="execution\RuntimeTypeDescriptor.cpp" />
     <ClCompile Include="Function.cpp" />
     <ClCompile Include="INamedObject.cpp" />
+    <ClCompile Include="IntermidiateRepresentation\FunctionCall.cpp" />
     <ClCompile Include="IntermidiateRepresentation\IfElseStatement.cpp" />
     <ClCompile Include="IntermidiateRepresentation\ScopeTermination.cpp" />
+    <ClCompile Include="IntermidiateRepresentation\ValueLiteralExpression.cpp" />
     <ClCompile Include="IntermidiateRepresentation\VariableDeclaration.cpp" />
     <ClCompile Include="IntermidiateRepresentation\VariableReferenceExpression.cpp" />
     <ClCompile Include="Namespace.cpp" />
     <ClCompile Include="QualifiedName.cpp" />
+    <ClCompile Include="Type.cpp" />
+    <ClCompile Include="Validation\ValidationError.cpp" />
+    <ClCompile Include="Validation\ValidationUtility.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

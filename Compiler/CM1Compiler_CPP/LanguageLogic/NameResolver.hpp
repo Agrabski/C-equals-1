@@ -4,6 +4,7 @@
 #include "../DataStructures/PackageDatabase.hpp"
 #include "../DataStructures/QualifiedName.hpp"
 #include "../DataStructures/INamedObject.hpp"
+#include "../DataStructures/Function.hpp"
 
 namespace cMCompiler::dataStructures
 {
@@ -16,8 +17,9 @@ namespace cMCompiler::language
 {
 	struct NameResolutionContext
 	{
-		std::map<std::string, dataStructures::INamedObject*> objectMap_;
+		std::map<std::string, std::vector<dataStructures::INamedObject*>> objectMap_;
 		std::map<std::string, dataStructures::Namespace*> unconfirmedNames_;
+		std::vector<dataStructures::Namespace*> namespaceStack_;
 	};
 
 	class NameResolver
@@ -32,16 +34,16 @@ namespace cMCompiler::language
 			return nullptr;
 		}
 	public:
-		NameResolver(std::vector<gsl::not_null<dataStructures::PackageDatabase*>>& dependencies) :
+		NameResolver(std::vector<gsl::not_null<dataStructures::PackageDatabase*>>const& dependencies) :
 			dependencies_(dependencies) {}
 
 		template<typename T>
-		T* resolve(std::string name, NameResolutionContext& context)
+		T* resolve(std::string const& name, NameResolutionContext& context)
 		{
 			auto res = context.objectMap_.find(name);
 			if (res != context.objectMap_.end())
 			{
-				auto result = dynamic_cast<T*>(res->second);
+				auto result = dynamic_cast<T*>(res->second.front());
 				if (result != nullptr)
 					return result;
 			}
@@ -54,9 +56,38 @@ namespace cMCompiler::language
 			return nullptr;
 		}
 
-		void addImport(std::string name, dataStructures::QualifiedName ns, dataStructures::PackageDatabase* currentPackage, NameResolutionContext& context)
+		std::vector<dataStructures::Function*> resolveOverloadSet(std::string const& name, NameResolutionContext& context)
 		{
-			dataStructures::PackageDatabase* package;
+			//todo: fucking disgusting
+			auto r = context.objectMap_.find(name);
+			auto functions = std::vector<dataStructures::Function*>();
+			if (r != context.objectMap_.end()) //packages or other namespaces
+			{
+				auto objects = r->second;
+				for (auto o : objects)
+				{
+					auto f = dynamic_cast<dataStructures::Function*>(o);
+					if (f != nullptr)
+						functions.push_back(f);
+				}
+			}
+			else //local function
+			{
+				auto ns = context.namespaceStack_.back();
+				auto objects = ns->children();
+				for (auto o : objects)
+				{
+					auto f = dynamic_cast<dataStructures::Function*>(o);
+					if (f != nullptr && f->name() == name)
+						functions.push_back(f);
+				}
+			}
+			return functions;
+		}
+
+		void addImport(std::string const& name, dataStructures::QualifiedName ns, dataStructures::PackageDatabase* currentPackage, NameResolutionContext& context)
+		{
+			dataStructures::PackageDatabase* package = nullptr;
 			auto found = std::find_if(dependencies_.begin(), dependencies_.end(), [&](auto const& e) noexcept {return e->name() == ns.peek(); });
 			if (found != dependencies_.end())
 			{
@@ -79,11 +110,13 @@ namespace cMCompiler::language
 			}
 			if (ns.size() != 0)
 			{
-
+				//todo: report error
 			}
+			context.objectMap_[name];
 			auto children = current->children();
-			context.objectMap_[name] = *std::find_if(children.begin(), children.end(), [&](auto const& e) noexcept {return e->name() == name; });
-
+			for (auto child : children)
+				if (child->name() == name)
+					context.objectMap_[name].push_back(child);
 		}
 	};
 

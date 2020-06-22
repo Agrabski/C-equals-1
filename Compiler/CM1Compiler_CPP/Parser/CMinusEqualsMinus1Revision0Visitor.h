@@ -33,9 +33,11 @@ public:
 
 		virtual antlrcpp::Any visitImportDeclaration(CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext *context) = 0;
 
-		virtual antlrcpp::Any visitClassDeclaration(CMinusEqualsMinus1Revision0Parser::ClassDeclarationContext *context) = 0;
+		virtual antlrcpp::Any visitTypeDeclaration(CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext *context) = 0;
 
 		virtual antlrcpp::Any visitInterfaceDeclaration(CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext *context) = 0;
+
+		virtual antlrcpp::Any visitClassTypeSpecifier(CMinusEqualsMinus1Revision0Parser::ClassTypeSpecifierContext *context) = 0;
 
 		virtual antlrcpp::Any visitInterfaceContentSequence(CMinusEqualsMinus1Revision0Parser::InterfaceContentSequenceContext *context) = 0;
 

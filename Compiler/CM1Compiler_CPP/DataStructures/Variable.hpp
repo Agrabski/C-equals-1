@@ -6,6 +6,7 @@
 #include "Type.hpp"
 #include "IntermidiateRepresentation/VariableDeclaration.hpp"
 #include "IntermidiateRepresentation/ScopeTermination.hpp"
+#include "Target.hpp"
 
 namespace cMCompiler::dataStructures
 {
@@ -31,7 +32,7 @@ namespace cMCompiler::dataStructures
 		{
 			scopeStart_ = scopeStart;
 		}
-		Variable(std::string name, Type* type) : type_(type), name_(name) {}
+		Variable(std::string name, Type* type) : AttributeTarget(Target::Variable), type_(type), name_(name) {}
 		Type* type() noexcept { return type_; }
 		std::string const& name() const noexcept { return name_; }
 	};

@@ -9,7 +9,7 @@ namespace cMCompiler::dataStructures::ir
 		Variable* variable_;
 	public:
 		VariableReferenceExpression(Variable* variable) noexcept : variable_(variable) {}
-		void emmit(std::ostream& stream, std::function<QualifiedName(Type*)> nameLookupFunction) const final;
+		void emmit(std::ostream& stream, INameGetter const& nameLookupFunction) const final;
 		bool compileTimeExecutable() const noexcept final { return true; }
 		Type* evaluateType() const noexcept final { return variable_->type(); }
 	};

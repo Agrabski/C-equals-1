@@ -2,6 +2,7 @@
 #include <memory>
 #include "IInstruction.hpp"
 #include "IExpression.hpp"
+#include "INameGetter.hpp"
 #include "../Type.hpp"
 
 namespace cMCompiler::dataStructures::ir
@@ -16,7 +17,7 @@ namespace cMCompiler::dataStructures::ir
 	public:
 		VariableDeclaration(std::string name, std::unique_ptr<IExpression>&& exp, Type* type);
 		bool compileTimeExecutable() const noexcept final;
-		void emmit(std::ostream& stream, std::function<std::string(Type*)>const& nameLookupFunction, unsigned int indentationLevel) const final;
+		void emmit(std::ostream& stream, INameGetter const& nameLookupFunction, unsigned int indentationLevel) const final;
 	};
 }
 

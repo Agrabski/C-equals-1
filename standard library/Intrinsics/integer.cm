@@ -1,7 +1,9 @@
-import { integer } from {.}
+import { integer } from { }
 
 [integer(1, true)]
 public struct i8 {}
 
 [integer(1, false)]
 public struct u8 {}
+
+

@@ -37,11 +37,14 @@ public:
 	void enter(not_null<CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext*> ) override { }
 	void exit(not_null<CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext*>) override { }
 
-	void enter(not_null<CMinusEqualsMinus1Revision0Parser::ClassDeclarationContext*> ) override { }
-	void exit(not_null<CMinusEqualsMinus1Revision0Parser::ClassDeclarationContext*>) override { }
+	void enter(not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*> ) override { }
+	void exit(not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*>) override { }
 
 	void enter(not_null<CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext*> ) override { }
 	void exit(not_null<CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext*>) override { }
+
+	void enter(not_null<CMinusEqualsMinus1Revision0Parser::ClassTypeSpecifierContext*> ) override { }
+	void exit(not_null<CMinusEqualsMinus1Revision0Parser::ClassTypeSpecifierContext*>) override { }
 
 	void enter(not_null<CMinusEqualsMinus1Revision0Parser::InterfaceContentSequenceContext*> ) override { }
 	void exit(not_null<CMinusEqualsMinus1Revision0Parser::InterfaceContentSequenceContext*>) override { }

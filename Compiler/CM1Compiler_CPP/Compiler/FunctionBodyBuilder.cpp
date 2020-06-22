@@ -24,7 +24,7 @@ cMCompiler::compiler::ExpressionBuilder cMCompiler::compiler::FunctionBodyBuilde
 	{
 		for (auto& scope : variables_)
 		{
-			auto var = std::find_if(scope.begin(), scope.end(), [&](const auto& v) {return v->name() == e; });
+			auto var = std::find_if(scope.begin(), scope.end(), [&](const auto& v) noexcept {return v->name() == e; });
 			if (var != scope.end())
 				return *var;
 		}
@@ -37,10 +37,10 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitVariableDeclaratio
 	//todo: attributes
 	std::unique_ptr<dataStructures::ir::IExpression> expression;
 	dataStructures::Type* type = nullptr;
-	if (ctx->Identifier().size() != 1)
-		// type annotation present
+	auto typeAnnotationPresent = (ctx->Identifier().size() != 1);
+	if (typeAnnotationPresent)
 		type = nr_.resolve<dataStructures::Type>(ctx->Identifier(1)->getText(), context_);
-	else
+	if(!typeAnnotationPresent || ctx->functionCallParameter())
 		expression = getBuilder().buildExpression(ctx->functionCallParameter());
 
 	auto name = ctx->Identifier(0)->getText();
@@ -87,5 +87,10 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitIfStatement(CMinus
 	}
 	instructionAppenders.back()(std::move(conditional));
 
+	return antlrcpp::Any();
+}
+
+antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitFunctionCall(CMinusEqualsMinus1Revision0Parser::FunctionCallContext* ctx)
+{
 	return antlrcpp::Any();
 }

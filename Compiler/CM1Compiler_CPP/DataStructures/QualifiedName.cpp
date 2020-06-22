@@ -30,6 +30,13 @@ QualifiedName cMCompiler::dataStructures::QualifiedName::next() const
 	return result;
 }
 
+cMCompiler::dataStructures::QualifiedName::operator std::string() const
+{
+	std::stringstream result;
+	result << *this;
+	return result.str();
+}
+
 QualifiedName cMCompiler::dataStructures::operator+(const std::string& s, const QualifiedName& qn)
 {
 	QualifiedName result = qn;

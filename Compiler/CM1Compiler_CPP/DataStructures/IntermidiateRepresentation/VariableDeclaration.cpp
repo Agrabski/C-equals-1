@@ -14,12 +14,12 @@ bool cMCompiler::dataStructures::ir::VariableDeclaration::compileTimeExecutable(
 	return expression_->compileTimeExecutable();
 }
 
-void cMCompiler::dataStructures::ir::VariableDeclaration::emmit(std::ostream& stream, std::function<std::string(Type*)> const& nameLookupFunction, unsigned int indentationLevel) const
+void cMCompiler::dataStructures::ir::VariableDeclaration::emmit(std::ostream& stream, INameGetter const& nameLookupFunction, unsigned int indentationLevel) const
 {
 	for (auto i = 0U; i < indentationLevel; i++)
 		stream << "\t";
 	stream << "{@declare " << variableName_;
-	stream << " | " << nameLookupFunction(type_);
+	stream << " | " << nameLookupFunction.get(type_);
 	stream << ", expression = ";
 	if (expression_ != nullptr)
 		expression_->emmit(stream, nameLookupFunction);

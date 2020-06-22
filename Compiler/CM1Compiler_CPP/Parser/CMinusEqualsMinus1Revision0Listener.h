@@ -35,11 +35,14 @@ public:
 	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext *>) = 0;
 	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext *>) = 0;
 
-	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::ClassDeclarationContext *>) = 0;
-	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::ClassDeclarationContext *>) = 0;
+	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext *>) = 0;
+	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext *>) = 0;
 
 	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext *>) = 0;
 	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext *>) = 0;
+
+	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::ClassTypeSpecifierContext *>) = 0;
+	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::ClassTypeSpecifierContext *>) = 0;
 
 	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::InterfaceContentSequenceContext *>) = 0;
 	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::InterfaceContentSequenceContext *>) = 0;

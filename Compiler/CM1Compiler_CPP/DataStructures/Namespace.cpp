@@ -20,3 +20,8 @@ std::vector<INamedObject*> Namespace::children()
 		result.push_back(t.get());
 	return result;
 }
+
+std::vector<validation::ValidationError> cMCompiler::dataStructures::Namespace::validateContent() const
+{
+	return std::vector<validation::ValidationError>();
+}

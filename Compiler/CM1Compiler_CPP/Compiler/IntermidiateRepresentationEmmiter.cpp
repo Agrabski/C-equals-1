@@ -1,6 +1,7 @@
 #include "IntermidiateRepresentationEmmiter.hpp"
 #include <gsl.h>
 #include <sstream>
+#include "../DataStructures/IntermidiateRepresentation/INameGetter.hpp"
 
 using namespace cMCompiler::compiler;
 using namespace cMCompiler::dataStructures;
@@ -99,9 +100,25 @@ void emmitAttribute(std::ostream& stream, AttributeInstance& attribute)
 
 }
 
-class NameLookuper
+class NameLookuper : public cMCompiler::dataStructures::ir::INameGetter
 {
 	std::vector<std::pair<PackageDatabase*, std::vector<not_null<Type*>>>> types_;
+	std::vector<std::pair<PackageDatabase*, std::vector<not_null<Function*>>>> functions_;
+	std::vector<std::pair<PackageDatabase*, std::vector<not_null<Attribute*>>>> attributes_;
+	std::string packageName(gsl::not_null<Type const*> t) const
+	{
+		for (auto& p : types_)
+			if (std::find(p.second.begin(), p.second.end(), t) != p.second.end())
+				return p.first->name();
+		return "";
+	}
+	std::string packageName(gsl::not_null<Function const*> t) const
+	{
+		for (auto& p : functions_)
+			if (std::find(p.second.begin(), p.second.end(), t) != p.second.end())
+				return p.first->name();
+		return "";
+	}
 public:
 	NameLookuper(std::vector< not_null<PackageDatabase*>> packages)
 	{
@@ -110,19 +127,20 @@ public:
 			types_.push_back({ package, getTypes(*package) });
 		}
 	}
-	std::string operator()(Type* t)
+
+	std::string get(cMCompiler::dataStructures::Type const* t) const final
 	{
 		assert(t != nullptr);
 		std::stringstream stream;
-		PackageDatabase* package = nullptr;
-		for (auto& p : types_)
-			if (std::find(p.second.begin(), p.second.end(), t) != p.second.end())
-			{
-				package = p.first;
-				break;
-			}
-		if (package != nullptr)
-			stream << package->name();
+		stream << packageName(t);
+		stream << t->qualifiedName();
+		return stream.str();
+	}
+	std::string get(cMCompiler::dataStructures::Function const* t) const final
+	{
+		assert(t != nullptr);
+		std::stringstream stream;
+		stream << packageName(t);
 		stream << t->qualifiedName();
 		return stream.str();
 	}
@@ -174,7 +192,7 @@ void IntermidiateRepresentationEmmiter::emmit(std::ostream& stream, PackageDatab
 				stream << "\t\t'" << function->qualifiedName() << "'\r\n";
 
 				stream << "\t\tattributes = \r\n\t\t[\r\n";
-				for (auto attribute : function->attributes())
+				for (not_null<AttributeInstance*> attribute : function->attributes())
 					emmitAttribute(stream, *attribute);
 				stream << "\t\t]\r\n";
 
@@ -183,7 +201,7 @@ void IntermidiateRepresentationEmmiter::emmit(std::ostream& stream, PackageDatab
 				{
 					stream << "\t\t\t{";
 					stream << parameter->name() << ", ";
-					auto const package = findPackage(dependencies, parameter->type());
+					auto const* const package = findPackage(dependencies, parameter->type());
 					if (package != nullptr)
 						stream << package->name();
 					stream << parameter->type()->qualifiedName() << ", ";
@@ -197,7 +215,7 @@ void IntermidiateRepresentationEmmiter::emmit(std::ostream& stream, PackageDatab
 				stream << "\t\treturn_type = ";
 				if (returnType != nullptr)
 				{
-					auto const package = findPackage(dependencies, returnType);
+					auto const* const package = findPackage(dependencies, returnType);
 					if (package != nullptr)
 						stream << package->name();
 					stream << returnType->qualifiedName();

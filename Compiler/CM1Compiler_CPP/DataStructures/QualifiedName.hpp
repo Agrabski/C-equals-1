@@ -24,6 +24,7 @@ namespace cMCompiler::dataStructures
 		
 		friend std::ostream& operator<<(std::ostream& os, QualifiedName const& name);
 		friend QualifiedName operator+(const std::string& s, const QualifiedName& qn);
+		explicit operator std::string() const;
 	};
 
 	QualifiedName operator+(const std::string& s, const QualifiedName& qn);

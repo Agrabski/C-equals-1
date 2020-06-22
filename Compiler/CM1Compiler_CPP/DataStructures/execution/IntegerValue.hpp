@@ -1,0 +1,37 @@
+#pragma once
+#include <cstddef>
+#include <ostream>
+#include <string>
+#include "IRuntimeValue.h"
+#include "../IntermidiateRepresentation/INameGetter.hpp"
+
+namespace cMCompiler::dataStructures::execution
+{
+	using number_component = unsigned char;
+	using usize = unsigned long long int;
+
+	/// <summary>
+	/// arbitrary sized integer. if signed: it is a 2's compliment intiger otherwise it is natural binary
+	/// </summary>
+	class IntegerValue : public IRuntimeValue
+	{
+		std::vector<number_component> number_;
+		bool isSigned_;
+	public:
+		IntegerValue operator+(IntegerValue& lhs);
+		IntegerValue operator-(IntegerValue& lhs);
+		IntegerValue operator*(IntegerValue& lhs);
+		IntegerValue operator/(IntegerValue& lhs);
+		void emmit(std::ostream& stream, ir::INameGetter const& nameLookupFunction) const final;
+		static IntegerValue negotiateSize(IntegerValue& l, IntegerValue& r);
+		void setValue(usize componentIndex, number_component value);
+		void fromString(std::string const& s);
+		IntegerValue(usize size, bool isSigned, Type* type) : IRuntimeValue(type), isSigned_(isSigned)
+		{
+			number_.resize(size, number_component(0));
+		}
+
+		// Inherited via IRuntimeValue
+		virtual std::string toString() const override;
+	};
+}

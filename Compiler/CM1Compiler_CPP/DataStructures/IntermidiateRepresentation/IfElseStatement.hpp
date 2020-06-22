@@ -5,7 +5,7 @@
 
 namespace cMCompiler::dataStructures::ir
 {
-	class IfElseStatement: public IInstruction
+	class IfElseStatement : public IInstruction
 	{
 		std::vector<std::unique_ptr<IInstruction>> if_;
 		std::vector<std::unique_ptr<IInstruction>> else_;
@@ -13,14 +13,15 @@ namespace cMCompiler::dataStructures::ir
 	public:
 		IfElseStatement(std::unique_ptr<IExpression>&& expression)
 		{
-			if (expression->evaluateType() != language::getBool())
+			auto const type = expression->evaluateType();
+			if (type != language::getBool())
 				//todo: better exception
 				throw std::exception();
 			expression_ = std::move(expression);
 		}
 		void pushIf(std::unique_ptr<IInstruction>&& instruction);
 		void pushElse(std::unique_ptr<IInstruction>&& instruction);
-		void emmit(std::ostream& stream, std::function<std::string(dataStructures::Type*)> const& nameLookupFunction, unsigned int indentationLevel) const final;
+		void emmit(std::ostream& stream, INameGetter const& nameLookupFunction, unsigned int indentationLevel) const final;
 		bool compileTimeExecutable() const noexcept final;
 	};
 }

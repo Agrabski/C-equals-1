@@ -1,4 +1,5 @@
 #include "AttributeUtility.hpp"
+#include "BuiltInPackageBuildUtility.hpp"
 
 using namespace cMCompiler::language;
 using namespace cMCompiler::dataStructures;
@@ -13,4 +14,18 @@ std::vector<std::unique_ptr<AttributeInstance>> getAttributes(not_null<CMinusEqu
 		auto attribute = nr.resolve<Attribute>(functionCall->Identifier()->getText(), context);
 	}
 	return result;
+}
+
+AttributeInstance* cMCompiler::language::getAttribute(AttributeTarget& target, Attribute* attribute)
+{
+	auto attributes = target.attributes();
+	auto result = std::find_if(attributes.begin(), attributes.end(), [&](const auto e) {return e->basedOn() == attribute; });
+	if (result != attributes.end())
+		return *result;
+	return nullptr;
+}
+
+bool cMCompiler::language::isCompileTime(dataStructures::Function& f)
+{
+	return getAttribute(f, getCompileTimeAttribute()) != nullptr;
 }

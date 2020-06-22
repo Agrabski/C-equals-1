@@ -75,5 +75,9 @@ namespace cMCompiler::dataStructures
 
 		}
 
+
+		// Inherited via INamedObject
+		virtual std::vector<validation::ValidationError> validateContent() const override;
+
 	};
 }

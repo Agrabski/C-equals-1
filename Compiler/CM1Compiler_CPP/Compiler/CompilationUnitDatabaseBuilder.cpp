@@ -3,6 +3,7 @@
 #include "../LanguageLogic/NamespaceBuilder.hpp"
 #include "../DataStructures/Accessibility.hpp"
 #include "FunctionBodyBuilder.hpp"
+#include "FunctionUtility.hpp"
 
 using namespace cMCompiler::dataStructures;
 
@@ -13,7 +14,8 @@ void cMCompiler::compiler::CompilationUnitDataBaseBuilder::processDeclaration(CM
 
 void cMCompiler::compiler::CompilationUnitDataBaseBuilder::buildDatabase(Parser::CompilationUnit& compilationUnit)
 {
-	namespaceStack_.push_back(database_.rootNamespace());
+	resolutionContext_ = language::NameResolutionContext();
+	resolutionContext_.namespaceStack_.push_back(database_.rootNamespace());
 	for (auto declaration : compilationUnit.declarationSequence()->declaration())
 		processDeclaration(declaration);
 }
@@ -22,32 +24,32 @@ antlrcpp::Any cMCompiler::compiler::CompilationUnitDataBaseBuilder::visitNamespa
 {
 	assert(context != nullptr);
 	auto name = QualifiedName(context->qualifiedIdentifier()->getText());
-	auto newNamespace = language::NamespaceBuilder::buildNamespace(name, namespaceStack_.back());
-	namespaceStack_.push_back(newNamespace);
+	auto newNamespace = language::NamespaceBuilder::buildNamespace(name, resolutionContext_.namespaceStack_.back());
+	resolutionContext_.namespaceStack_.push_back(newNamespace);
 	for (auto declaration : context->declarationSequence()->declaration())
 		processDeclaration(declaration);
-	namespaceStack_.pop_back();
+	resolutionContext_.namespaceStack_.pop_back();
 	return antlrcpp::Any();
 }
 
 antlrcpp::Any cMCompiler::compiler::CompilationUnitDataBaseBuilder::visitFunctionDeclaration(CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext* ctx)
 {
 	assert(ctx != nullptr);
-	dataStructures::Accessibility accessibility = Accessibility::Private;
-	if (ctx->AccessSpecifier() != nullptr)
-		accessibility = parse(ctx->AccessSpecifier()->getText());
-	not_null function = namespaceStack_.back()->append<Function>(ctx->Identifier(0)->getText());
-	function->setAccessibility(accessibility);
-
-	for (not_null<CMinusEqualsMinus1Revision0Parser::ParameterContext*> variable : ctx->parameterList()->parameter())
+	switch (state_)
 	{
-		auto const type = nameResolver_.resolve<Type>(variable->Identifier(1)->getText(), resolutionContext_);
-		auto const var = function->appendVariable(variable->Identifier(0)->getText(), type);
-		// todo: attribute support
+	case cMCompiler::compiler::Create:
+		createFunction(resolutionContext_.namespaceStack_.back(), ctx);
+		break;
+	case cMCompiler::compiler::Confirm:
+		confirmFunction(nameResolver_, resolutionContext_, ctx);
+		break;
+	case cMCompiler::compiler::Finalize:
+		finalizeFunction(nameResolver_, resolutionContext_, ctx);
+		break;
+	default:
+		std::terminate();
+		break;
 	}
-	auto builder = FunctionBodyBuilder(function, nameResolver_, resolutionContext_);
-	ctx->functionBody()->accept(&builder);
-
 	return antlrcpp::Any();
 }
 

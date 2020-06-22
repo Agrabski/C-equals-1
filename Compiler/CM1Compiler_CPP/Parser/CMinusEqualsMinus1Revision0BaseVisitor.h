@@ -43,11 +43,15 @@ public:
 		return visitChildren(ctx);
 	}
 
-	antlrcpp::Any visitClassDeclaration(CMinusEqualsMinus1Revision0Parser::ClassDeclarationContext *ctx) override {
+	antlrcpp::Any visitTypeDeclaration(CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext *ctx) override {
 		return visitChildren(ctx);
 	}
 
 	antlrcpp::Any visitInterfaceDeclaration(CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext *ctx) override {
+		return visitChildren(ctx);
+	}
+
+	antlrcpp::Any visitClassTypeSpecifier(CMinusEqualsMinus1Revision0Parser::ClassTypeSpecifierContext *ctx) override {
 		return visitChildren(ctx);
 	}
 

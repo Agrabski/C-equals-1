@@ -8,16 +8,24 @@
 
 namespace cMCompiler::compiler
 {
+	enum DatabaseBuildingState { Create = 0, Confirm = 1, Finalize = 2 };
 	class CompilationUnitDataBaseBuilder : CMinusEqualsMinus1Revision0BaseVisitor
 	{
 		language::NameResolutionContext resolutionContext_;
-		std::vector<dataStructures::Namespace*> namespaceStack_;
 		dataStructures::PackageDatabase& database_;
 		language::NameResolver& nameResolver_;
 		void processDeclaration(CMinusEqualsMinus1Revision0Parser::DeclarationContext* declaration);
+		DatabaseBuildingState state_ = DatabaseBuildingState::Create;
 	public:
-		CompilationUnitDataBaseBuilder(dataStructures::PackageDatabase& database, language::NameResolver& nameResolver) noexcept : 
-			database_(database), nameResolver_(nameResolver){}
+		bool advance() noexcept 
+		{
+			if (state_ == Finalize)
+				return false;
+			state_ = (DatabaseBuildingState)(state_ + 1);
+			return true;
+		}
+		CompilationUnitDataBaseBuilder(dataStructures::PackageDatabase& database, language::NameResolver& nameResolver) noexcept :
+			database_(database), nameResolver_(nameResolver) {}
 		void buildDatabase(Parser::CompilationUnit& compilationUnit);
 		antlrcpp::Any visitNamespaceDeclaration(CMinusEqualsMinus1Revision0Parser::NamespaceDeclarationContext* context) final;
 		antlrcpp::Any visitFunctionDeclaration(CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext* ctx) final;

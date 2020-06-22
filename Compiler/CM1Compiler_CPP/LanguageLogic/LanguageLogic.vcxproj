@@ -21,9 +21,15 @@
   <ItemGroup>
     <ClInclude Include="AttributeUtility.hpp" />
     <ClInclude Include="BuiltInPackageBuildUtility.hpp" />
+    <ClInclude Include="CompileTimeFunctions\CompileTimeFunction.hpp" />
+    <ClInclude Include="CompileTimeFunctions\FunctionLibrary.hpp" />
+    <ClInclude Include="CompileTimeFunctions\Print.hpp" />
     <ClInclude Include="IntermidiateRepresentationBuilder.hpp" />
+    <ClInclude Include="LiteralUtility.hpp" />
     <ClInclude Include="NameResolver.hpp" />
     <ClInclude Include="NamespaceBuilder.hpp" />
+    <ClInclude Include="OverloadResolutionUtility.hpp" />
+    <ClInclude Include="SpecialFunctionUtility.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataStructures\DataStructures.vcxproj">
@@ -33,8 +39,12 @@
   <ItemGroup>
     <ClCompile Include="AttributeUtility.cpp" />
     <ClCompile Include="BuiltInPackageBuildUtility.cpp" />
+    <ClCompile Include="CompileTimeFunctions\FunctionLibrary.cpp" />
+    <ClCompile Include="CompileTimeFunctions\Print.cpp" />
+    <ClCompile Include="LiteralUtility.cpp" />
     <ClCompile Include="NameResolver.cpp" />
     <ClCompile Include="NamespaceBuilder.cpp" />
+    <ClCompile Include="SpecialFunctionUtility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

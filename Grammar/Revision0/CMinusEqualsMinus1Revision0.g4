@@ -9,7 +9,7 @@ languageStandardDeclaration:
 
 declarationSequence: declaration+;
 
-declaration: functionDeclaration | classDeclaration | interfaceDeclaration | structDeclaration | namespaceDeclaration | importDeclaration | attributeDeclaration;
+declaration: functionDeclaration | typeDeclaration | interfaceDeclaration | structDeclaration | namespaceDeclaration | importDeclaration | attributeDeclaration;
 
 attributeDeclaration : (AccessSpecifier)? 'att' '<'('type' | Interface | 'function')+ '>' Identifier OpenBracket attributeContentSequence CloseBracket;
 
@@ -17,10 +17,12 @@ attributeContentSequence:functionDeclaration*;
 
 importDeclaration : 'import' '{' Identifier+ '}' 'from' '{' qualifiedIdentifier '}';
 
-classDeclaration:
-	(attributeSequence)? AccessSpecifier? Class Identifier ':' implementedInterfacesSequence OpenBracket
+typeDeclaration:
+	(attributeSequence)? AccessSpecifier? classTypeSpecifier Identifier ':' implementedInterfacesSequence OpenBracket
 		classContentSequence CloseBracket;
 interfaceDeclaration: attributeSequence? AccessSpecifier? Interface Identifier ':' implementedInterfacesSequence OpenBracket interfaceContentSequence CloseBracket;
+
+classTypeSpecifier: (Class| Interface | 'struct');
 
 interfaceContentSequence:functionDeclaration*;
 

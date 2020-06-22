@@ -2,7 +2,7 @@
 
 void indent(std::ostream& stream, unsigned int level)
 {
-	for (int i = 0U; i < level; i++)
+	for (auto i = 0U; i < level; i++)
 		stream << "\t";
 }
 
@@ -16,7 +16,7 @@ void cMCompiler::dataStructures::ir::IfElseStatement::pushElse(std::unique_ptr<I
 	else_.push_back(std::move(instruction));
 }
 
-void cMCompiler::dataStructures::ir::IfElseStatement::emmit(std::ostream& stream, std::function<std::string(dataStructures::Type*)> const& nameLookupFunction, unsigned int indentationLevel) const
+void cMCompiler::dataStructures::ir::IfElseStatement::emmit(std::ostream& stream, INameGetter const& nameLookupFunction, unsigned int indentationLevel) const
 {
 	indent(stream, indentationLevel);
 	stream << "{@if expression =";

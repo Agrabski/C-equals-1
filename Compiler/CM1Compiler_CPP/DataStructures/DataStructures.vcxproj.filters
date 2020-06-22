@@ -16,6 +16,12 @@
     <Filter Include="Header Files\IntermidiateRepresentation">
       <UniqueIdentifier>{96dcdd7d-5b07-4e6d-a182-8f92b76ef04c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Execution">
+      <UniqueIdentifier>{6358459d-f663-476d-9e8d-c128ee2c560f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Validation">
+      <UniqueIdentifier>{53542dc8-3cba-4432-84c7-48a4e954bf8a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CompilationContext.hpp">
@@ -31,9 +37,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Function.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Interface.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="QualifiedName.hpp">
@@ -84,6 +87,36 @@
     <ClInclude Include="IntermidiateRepresentation\IfElseStatement.hpp">
       <Filter>Header Files\IntermidiateRepresentation</Filter>
     </ClInclude>
+    <ClInclude Include="Target.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="execution\IntegerValue.hpp">
+      <Filter>Header Files\Execution</Filter>
+    </ClInclude>
+    <ClInclude Include="execution\IRuntimeValue.h">
+      <Filter>Header Files\Execution</Filter>
+    </ClInclude>
+    <ClInclude Include="IntermidiateRepresentation\ValueLiteralExpression.hpp">
+      <Filter>Header Files\IntermidiateRepresentation</Filter>
+    </ClInclude>
+    <ClInclude Include="execution\RuntimeTypeDescriptor.hpp">
+      <Filter>Header Files\Execution</Filter>
+    </ClInclude>
+    <ClInclude Include="IntermidiateRepresentation\ExecutionContext.hpp">
+      <Filter>Header Files\IntermidiateRepresentation</Filter>
+    </ClInclude>
+    <ClInclude Include="IntermidiateRepresentation\INameGetter.hpp">
+      <Filter>Header Files\IntermidiateRepresentation</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeClassifier.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Validation\ValidationError.hpp">
+      <Filter>Header Files\Validation</Filter>
+    </ClInclude>
+    <ClInclude Include="Validation\ValidationUtility.hpp">
+      <Filter>Header Files\Validation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -117,6 +150,27 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="IntermidiateRepresentation\IfElseStatement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="execution\IntegerValue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IntermidiateRepresentation\ValueLiteralExpression.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="execution\RuntimeTypeDescriptor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IntermidiateRepresentation\FunctionCall.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Validation\ValidationUtility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Type.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Validation\ValidationError.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

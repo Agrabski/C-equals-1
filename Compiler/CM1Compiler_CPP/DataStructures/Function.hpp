@@ -6,6 +6,7 @@
 #include "INamedObject.hpp"
 #include "Accessibility.hpp"
 #include "ObjectWithAccessibility.hpp"
+#include "Target.hpp"
 
 namespace cMCompiler::ir
 {
@@ -22,7 +23,7 @@ namespace cMCompiler::dataStructures
 		Type* returnType_;
 	public:
 		virtual ~Function() = default;
-		Function(std::string name, INamedObject* parent) : INamedObject(name, parent) {}
+		Function(std::string name, INamedObject* parent) : AttributeTarget(Target::Function), INamedObject(name, parent) {}
 		Variable* appendVariable(std::string name, Type* type);
 		Variable* appendLocalVariable(std::string name, Type* type);
 		std::vector<Variable*> parameters();
@@ -37,5 +38,8 @@ namespace cMCompiler::dataStructures
 		{
 			intermidiateRepresentation_.push_back(std::move(instruction));
 		}
+
+		// Inherited via INamedObject
+		std::vector<validation::ValidationError> validateContent() const final;
 	};
 }
