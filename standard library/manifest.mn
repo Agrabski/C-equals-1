@@ -1,0 +1,5 @@
+{
+	name = "std",
+	guid = "542abdc4-fb04-4298-ac3c-a1e4f5c758a2",
+	dependencies = [cm1mLang]
+}

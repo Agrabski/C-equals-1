@@ -1,0 +1,11 @@
+import { TypeMapsTo } from { std::compiler }
+
+namespace std
+{
+	[TypeMapsTo("signed_8_bit_integer")]
+	public struct i8 {}
+
+	[TypeMapsTo("unsigned_8_bit_integer")]
+	public struct u8 {}
+}
+

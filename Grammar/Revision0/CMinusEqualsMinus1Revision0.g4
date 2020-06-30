@@ -11,7 +11,7 @@ declarationSequence: declaration+;
 
 declaration: functionDeclaration | typeDeclaration | interfaceDeclaration | structDeclaration | namespaceDeclaration | importDeclaration | attributeDeclaration;
 
-attributeDeclaration : (AccessSpecifier)? 'att' '<'('type' | Interface | 'function')+ '>' Identifier OpenBracket attributeContentSequence CloseBracket;
+attributeDeclaration : (AccessSpecifier)? 'att' '<'('type' | Interface | 'function')+ '>' Identifier OpenBracket classContentSequence CloseBracket;
 
 attributeContentSequence:functionDeclaration*;
 
@@ -33,7 +33,7 @@ structContentSequence : fieldDeclaration*;
 classContentSequence: (functionDeclaration | fieldDeclaration)*;
 
 fieldDeclaration:
-	attributeSequence? AccessSpecifier? Identifier ':' Identifier;
+	attributeSequence? AccessSpecifier? Identifier ':' Identifier SemiColon;
 
 implementedInterfacesSequence:
 	Identifier
@@ -103,8 +103,9 @@ attribute: ATTROBITEOPEN functionCall ATTROBITECLOSE;
 
 qualifiedIdentifier: Identifier (DoubleColon Identifier)*;
 
-expression:
-	functionCall
+expression
+    : STRING
+	| functionCall
 	| throwExpression
 	| Identifier
 	| ParamOpen expression ParamClose;
@@ -145,7 +146,6 @@ Identifier: LETTER (LETTER | DIGIT)*;
 
 OpenBracket: '{';
 CloseBracket: '}';
-RAWSTRING: '"' .*? '(' .*? ')' .*? '"';
 DOUBLEQUOTE: '"';
 SINGLEQUOTE: '\'';
 ParamOpen: '(';
@@ -218,11 +218,11 @@ Throw: 'throw';
 
 
 IntegerLiteral: (DIGIT)+;
-
 DIGIT: [0-9];
-
-LETTER: [a-zA-Z];
-
+fragment ESC : '\\"' | '\\\\' ;
+STRING: '"' ( ESC | ~[\\"\r\n] )* '"';
+AnyCharacter:('\\"');
+LETTER: [a-zA-Z_];
 Whitespace: [ \t]+ -> skip;
 Newline: ('\r' '\n'? | '\n') -> skip;
 BlockComment: '/*' .*? '*/' -> skip;

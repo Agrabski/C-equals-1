@@ -1,4 +1,0 @@
-attribute<Type> integer
-{
-	public integer(size: usize, signed: bool);
-}

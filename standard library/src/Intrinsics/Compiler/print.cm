@@ -1,0 +1,6 @@
+import {i8} from {std}
+namespace std::compiler 
+{
+	[functionMapsTo("print")]
+	public fn print(value: i8){}
+}

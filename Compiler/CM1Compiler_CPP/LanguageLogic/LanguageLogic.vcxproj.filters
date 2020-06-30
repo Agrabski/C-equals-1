@@ -16,6 +16,9 @@
     <Filter Include="Header Files\CompileTimeFunctions">
       <UniqueIdentifier>{381fd181-79ba-4a5e-9a09-451fb63ec4cf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\SpecialTypes">
+      <UniqueIdentifier>{dada72ac-9fc7-457f-ac26-d460d25ec8c2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NameResolver.hpp">
@@ -51,6 +54,18 @@
     <ClInclude Include="SpecialFunctionUtility.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CompileTimeFunctions\CompileTimeFunctionDictionary.hpp">
+      <Filter>Header Files\CompileTimeFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="CompileTimeFunctions\ReplaceWithCompilerFunction.hpp">
+      <Filter>Header Files\CompileTimeFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="SpecialTypes\SpecialTypeLibrary.hpp">
+      <Filter>Header Files\SpecialTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="CompileTimeFunctions\ReplaceWithCompilerType.hpp">
+      <Filter>Header Files\CompileTimeFunctions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NameResolver.cpp">
@@ -75,6 +90,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SpecialFunctionUtility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CompileTimeFunctions\CompileTimeFunctionDictionary.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CompileTimeFunctions\ReplaceWithCompilerFunction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CompileTimeFunctions\ReplaceWithCompilerType.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

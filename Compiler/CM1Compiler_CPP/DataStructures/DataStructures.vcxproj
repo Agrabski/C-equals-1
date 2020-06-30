@@ -168,7 +168,9 @@
     <ClInclude Include="CompilationContext.hpp" />
     <ClInclude Include="execution\IRuntimeValue.h" />
     <ClInclude Include="execution\IntegerValue.hpp" />
+    <ClInclude Include="execution\RuntimeFunctionDescriptor.hpp" />
     <ClInclude Include="execution\RuntimeTypeDescriptor.hpp" />
+    <ClInclude Include="execution\StringValue.hpp" />
     <ClInclude Include="Field.hpp" />
     <ClInclude Include="Function.hpp" />
     <ClInclude Include="INamedObject.hpp" />
@@ -200,7 +202,9 @@
     <ClCompile Include="Accessibility.cpp" />
     <ClCompile Include="AttributeTarget.cpp" />
     <ClCompile Include="execution\IntegerValue.cpp" />
+    <ClCompile Include="execution\RuntimeFunctionDescriptor.cpp" />
     <ClCompile Include="execution\RuntimeTypeDescriptor.cpp" />
+    <ClCompile Include="execution\StringValue.cpp" />
     <ClCompile Include="Function.cpp" />
     <ClCompile Include="INamedObject.cpp" />
     <ClCompile Include="IntermidiateRepresentation\FunctionCall.cpp" />
@@ -212,6 +216,7 @@
     <ClCompile Include="Namespace.cpp" />
     <ClCompile Include="QualifiedName.cpp" />
     <ClCompile Include="Type.cpp" />
+    <ClCompile Include="TypeClassifier.cpp" />
     <ClCompile Include="Validation\ValidationError.cpp" />
     <ClCompile Include="Validation\ValidationUtility.cpp" />
   </ItemGroup>

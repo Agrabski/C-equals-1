@@ -117,6 +117,12 @@
     <ClInclude Include="Validation\ValidationUtility.hpp">
       <Filter>Header Files\Validation</Filter>
     </ClInclude>
+    <ClInclude Include="execution\StringValue.hpp">
+      <Filter>Header Files\Execution</Filter>
+    </ClInclude>
+    <ClInclude Include="execution\RuntimeFunctionDescriptor.hpp">
+      <Filter>Header Files\Execution</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -171,6 +177,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Validation\ValidationError.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TypeClassifier.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="execution\StringValue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="execution\RuntimeFunctionDescriptor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

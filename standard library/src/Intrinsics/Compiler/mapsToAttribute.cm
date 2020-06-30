@@ -1,0 +1,32 @@
+import {functionDescriptor typeDescriptor replaceWithCompilerFunction replaceWithCompilerType} from {cm1mLang::compiler}
+
+namespace std::compiler 
+{
+	public att<type> TypeMapsTo
+	{
+		private _typename: string;
+		public fn construct(typename: string)
+		{
+			_typename = typename;
+		}
+
+		public fn onAttached(t: typeDescriptor)
+		{
+			replaceWithCompilerType(t, _typename);
+		}
+	}
+
+	public att<function> FunctionMapsTo
+	{
+		private _functionName: string;
+		public fn construct(functionName: string)
+		{
+			_functionName = functionName;
+		}
+
+		public fn onAttached(f: functionDescriptor)
+		{
+			replaceWithCompilerFunction(f, _functionName);
+		}
+	}
+}

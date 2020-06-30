@@ -4,6 +4,7 @@
 #include "../DataStructures/Accessibility.hpp"
 #include "FunctionBodyBuilder.hpp"
 #include "FunctionUtility.hpp"
+#include "TypeUtility.hpp"
 
 using namespace cMCompiler::dataStructures;
 
@@ -57,9 +58,30 @@ antlrcpp::Any cMCompiler::compiler::CompilationUnitDataBaseBuilder::visitImportD
 {
 	assert(ctx != nullptr);
 	QualifiedName newNamespace = ctx->qualifiedIdentifier()->getText();
-	for (not_null<antlr4::tree::TerminalNode*> unconfirmedName : ctx->Identifier())
+	for (not_null unconfirmedName : ctx->Identifier())
 	{
 		nameResolver_.addImport(unconfirmedName->getText(), newNamespace, &database_, resolutionContext_);
+	}
+	return antlrcpp::Any();
+}
+
+antlrcpp::Any cMCompiler::compiler::CompilationUnitDataBaseBuilder::visitTypeDeclaration(CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext* ctx)
+{
+	assert(ctx != nullptr);
+	switch (state_)
+	{
+	case cMCompiler::compiler::Create:
+		createType(resolutionContext_.namespaceStack_.back(), nameResolver_, resolutionContext_, ctx);
+		break;
+	case cMCompiler::compiler::Confirm:
+		confirmType(nameResolver_, resolutionContext_, ctx);
+		break;
+	case cMCompiler::compiler::Finalize:
+		finalizeType(nameResolver_, resolutionContext_, ctx);
+		break;
+	default:
+		std::terminate();
+		break;
 	}
 	return antlrcpp::Any();
 }

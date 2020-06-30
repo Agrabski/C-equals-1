@@ -1,4 +1,5 @@
 #pragma once
+#include <optional>
 #include "../Parser/CMinusEqualsMinus1Revision0Parser.h"
 #include "../DataStructures/Function.hpp"
 #include "../DataStructures/Accessibility.hpp"
@@ -8,7 +9,7 @@ namespace cMCompiler::compiler
 {
 	std::string getName(gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx);
 
-	std::string returnType(gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx);
+	std::optional<std::string> returnType(gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx);
 
 	dataStructures::Function* getCompatibleFunction(
 		std::string const& name,
@@ -18,6 +19,7 @@ namespace cMCompiler::compiler
 		dataStructures::ObjectState state);
 
 	std::vector<dataStructures::Type*> getParameterTypes(language::NameResolver& resolver, language::NameResolutionContext& context, gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx);
+	bool compatible(dataStructures::Function* definition, std::vector<dataStructures::Type*> parametrTypes);
 
 	template<typename T>
 	void createFunction(T* target, gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx)
@@ -33,6 +35,26 @@ namespace cMCompiler::compiler
 		function->setAccessibility(accessibility);
 	}
 
-	void confirmFunction(language::NameResolver& resolver, language::NameResolutionContext& context, gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx);
-	void finalizeFunction(language::NameResolver& resolver, language::NameResolutionContext& context, gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx);
+	void confirmFunction(
+		language::NameResolver& resolver,
+		language::NameResolutionContext& context,
+		gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx);
+
+	void confirmFunction(
+		language::NameResolver& resolver,
+		language::NameResolutionContext& context,
+		gsl::not_null<dataStructures::Function*> f,
+		gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx);
+
+	void finalizeFunction(
+		language::NameResolver& resolver,
+		language::NameResolutionContext& context,
+		gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx);
+
+	void finalizeFunction(
+		language::NameResolver& resolver,
+		language::NameResolutionContext& context,
+		gsl::not_null<dataStructures::Function*> f,
+		gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx);
+
 }

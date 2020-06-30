@@ -11,9 +11,11 @@
 namespace cMCompiler::dataStructures
 {
 	class Namespace;
+	class Field;
 	class Type : public INamedObject, public ObjectWithAccessbility, public AttributeTarget
 	{
 		std::vector<std::unique_ptr<Function>> methods_;
+		std::vector<std::unique_ptr<Field>> fields_;
 		std::vector<Type*> implementedInterfaces_;
 		TypeClassifier typeClassification_ = TypeClassifier::None;
 	public:
@@ -33,6 +35,13 @@ namespace cMCompiler::dataStructures
 			return result;
 		}
 
+		template<typename T>
+		T* append(std::string n)
+		{
+			methods_.push_back(std::make_unique<T>(n, this));
+			return methods_.back().get();
+		}
+
 		Type* setTypeClassifier(TypeClassifier t)
 		{
 			Expects(t != TypeClassifier::None);
@@ -48,6 +57,17 @@ namespace cMCompiler::dataStructures
 			//for (auto& c : methods_)
 			//	result.push_back(c.get());
 			return result;
+		}
+
+		void appendInterface(Type*t)
+		{
+			implementedInterfaces_.push_back(t);
+		}
+
+		Field* appendField(std::string const& name, Type* type)
+		{
+			fields_.push_back(std::make_unique<Field>(name, type));
+			return fields_.back().get();
 		}
 
 		// Inherited via INamedObject

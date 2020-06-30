@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -42,6 +42,7 @@
     <ClInclude Include="PackageBuildUtility.hpp" />
     <ClInclude Include="PackageDiscoveryUtility.hpp" />
     <ClInclude Include="Preprocessor.hpp" />
+    <ClInclude Include="TypeUtility.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CompilationUnitDatabaseBuilder.cpp" />
@@ -52,6 +53,7 @@
     <ClCompile Include="IntermidiateRepresentationEmmiter.cpp" />
     <ClCompile Include="PackageBuildUtility.cpp" />
     <ClCompile Include="PackageDiscoveryUtility.cpp" />
+    <ClCompile Include="TypeUtility.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

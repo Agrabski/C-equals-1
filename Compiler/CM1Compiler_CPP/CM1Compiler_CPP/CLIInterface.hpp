@@ -14,7 +14,7 @@ namespace cMCompiler
 		result.add_options()
 			("help", "print program help")
 			("operation", value<std::string>())
-			("path", value<std::filesystem::path>());
+			("path", value<std::string>());
 		return result;
 	}
 
@@ -27,7 +27,7 @@ namespace cMCompiler
 		if (vm.contains("help"))
 			return std::optional<dataStructures::CompilationContext>();
 
-		result.file = vm["path"].as<std::filesystem::path>();
+		result.file = vm["path"].as<std::string>();
 
 		return result;
 	}
