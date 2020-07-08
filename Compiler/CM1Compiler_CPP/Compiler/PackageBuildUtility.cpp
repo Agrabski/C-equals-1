@@ -1,7 +1,8 @@
 #include "PackageBuildUtility.hpp"
+#include "CompilationUnitDatabaseBuilder.hpp"
+#include "Preprocessor.hpp"
 #include "../LanguageLogic/NameResolver.hpp"
 #include "../ParserAdapter/ParserAdapter.hpp"
-#include "CompilationUnitDatabaseBuilder.hpp"
 
 std::unique_ptr<cMCompiler::Parser::CompilationUnit> parse(std::filesystem::path const& path)
 {
@@ -23,4 +24,10 @@ void cMCompiler::compiler::buildAndFillPackage(dataStructures::PackageDatabase& 
 			dbBuilder.buildDatabase(*parseTree);
 		}
 	while (dbBuilder.advance());
+	auto preprocessor = Preprocessor(package, nameResolver);
+	for (auto file : files)
+	{
+		auto parseTree = parse(file);
+		preprocessor.preprocess(*parseTree);
+	}
 }

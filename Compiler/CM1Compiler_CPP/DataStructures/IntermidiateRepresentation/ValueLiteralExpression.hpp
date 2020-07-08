@@ -13,5 +13,9 @@ namespace cMCompiler::dataStructures::ir
 		void emmit(std::ostream& stream, INameGetter const& nameLookupFunction) const final;
 		bool compileTimeExecutable() const noexcept final;
 		Type* evaluateType() const noexcept final;
+		std::unique_ptr<execution::IRuntimeValue> value();
+
+		// Inherited via IExpression
+		virtual void accept(IExpressionVisitor& visitor) override;
 	};
 }

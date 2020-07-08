@@ -66,6 +66,9 @@
     <ClInclude Include="CompileTimeFunctions\ReplaceWithCompilerType.hpp">
       <Filter>Header Files\CompileTimeFunctions</Filter>
     </ClInclude>
+    <ClInclude Include="MetatypeUility.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NameResolver.cpp">
@@ -99,6 +102,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CompileTimeFunctions\ReplaceWithCompilerType.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MetatypeUility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OverloadResolutionUtility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

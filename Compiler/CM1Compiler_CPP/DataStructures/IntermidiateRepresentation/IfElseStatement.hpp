@@ -11,9 +11,12 @@ namespace cMCompiler::dataStructures::ir
 		std::vector<std::unique_ptr<IInstruction>> else_;
 		std::unique_ptr<IExpression> expression_;
 	public:
+		std::vector<not_null<IInstruction*>> ifBranch() const;
+		std::vector<not_null<IInstruction*>> elseBranch() const;
+		IExpression* expression() const noexcept { return expression_.get(); }
 		IfElseStatement(std::unique_ptr<IExpression>&& expression)
 		{
-			auto const type = expression->evaluateType();
+			auto * const type = expression->evaluateType();
 			if (type != language::getBool())
 				//todo: better exception
 				throw std::exception();
@@ -23,5 +26,7 @@ namespace cMCompiler::dataStructures::ir
 		void pushElse(std::unique_ptr<IInstruction>&& instruction);
 		void emmit(std::ostream& stream, INameGetter const& nameLookupFunction, unsigned int indentationLevel) const final;
 		bool compileTimeExecutable() const noexcept final;
+		void accept(IInstructionVisitor& visitor) final;
+
 	};
 }

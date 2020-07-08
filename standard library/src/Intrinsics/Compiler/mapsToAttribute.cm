@@ -7,12 +7,12 @@ namespace std::compiler
 		private _typename: string;
 		public fn construct(typename: string)
 		{
-			_typename = typename;
+			self._typename = typename;
 		}
 
 		public fn onAttached(t: typeDescriptor)
 		{
-			replaceWithCompilerType(t, _typename);
+			replaceWithCompilerType(t, self._typename);
 		}
 	}
 
@@ -21,12 +21,12 @@ namespace std::compiler
 		private _functionName: string;
 		public fn construct(functionName: string)
 		{
-			_functionName = functionName;
+			self._functionName = functionName;
 		}
 
 		public fn onAttached(f: functionDescriptor)
 		{
-			replaceWithCompilerFunction(f, _functionName);
+			replaceWithCompilerFunction(f, self._functionName);
 		}
 	}
 }

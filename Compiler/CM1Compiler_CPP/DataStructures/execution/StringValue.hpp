@@ -15,5 +15,8 @@ namespace cMCompiler::dataStructures::execution
 		StringValue(Type* type) noexcept : IRuntimeValue(type) {}
 		std::string const& value() const noexcept { return value_; }
 		void setValue(std::string const& value) { value_ = value; }
+
+		// Inherited via IRuntimeValue
+		virtual std::unique_ptr<IRuntimeValue> copy() const override;
 	};
 };

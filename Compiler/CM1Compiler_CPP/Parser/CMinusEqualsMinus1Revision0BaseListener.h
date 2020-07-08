@@ -31,6 +31,9 @@ public:
 	void enter(not_null<CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext*> ) override { }
 	void exit(not_null<CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext*>) override { }
 
+	void enter(not_null<CMinusEqualsMinus1Revision0Parser::AttributeTargetContext*> ) override { }
+	void exit(not_null<CMinusEqualsMinus1Revision0Parser::AttributeTargetContext*>) override { }
+
 	void enter(not_null<CMinusEqualsMinus1Revision0Parser::AttributeContentSequenceContext*> ) override { }
 	void exit(not_null<CMinusEqualsMinus1Revision0Parser::AttributeContentSequenceContext*>) override { }
 
@@ -40,20 +43,8 @@ public:
 	void enter(not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*> ) override { }
 	void exit(not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*>) override { }
 
-	void enter(not_null<CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext*> ) override { }
-	void exit(not_null<CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext*>) override { }
-
 	void enter(not_null<CMinusEqualsMinus1Revision0Parser::ClassTypeSpecifierContext*> ) override { }
 	void exit(not_null<CMinusEqualsMinus1Revision0Parser::ClassTypeSpecifierContext*>) override { }
-
-	void enter(not_null<CMinusEqualsMinus1Revision0Parser::InterfaceContentSequenceContext*> ) override { }
-	void exit(not_null<CMinusEqualsMinus1Revision0Parser::InterfaceContentSequenceContext*>) override { }
-
-	void enter(not_null<CMinusEqualsMinus1Revision0Parser::StructDeclarationContext*> ) override { }
-	void exit(not_null<CMinusEqualsMinus1Revision0Parser::StructDeclarationContext*>) override { }
-
-	void enter(not_null<CMinusEqualsMinus1Revision0Parser::StructContentSequenceContext*> ) override { }
-	void exit(not_null<CMinusEqualsMinus1Revision0Parser::StructContentSequenceContext*>) override { }
 
 	void enter(not_null<CMinusEqualsMinus1Revision0Parser::ClassContentSequenceContext*> ) override { }
 	void exit(not_null<CMinusEqualsMinus1Revision0Parser::ClassContentSequenceContext*>) override { }

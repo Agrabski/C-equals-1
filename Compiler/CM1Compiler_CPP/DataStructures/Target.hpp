@@ -1,4 +1,6 @@
 #pragma once
+#include <string>
+#include <vector>
 #include <type_traits>
 
 namespace cMCompiler::dataStructures
@@ -29,6 +31,8 @@ namespace cMCompiler::dataStructures
 		lhs = lhs | rhs;
 		return lhs;
 	}
+
+	Target parseTarget(std::vector<std::string> const& text);
 
 
 }

@@ -33,6 +33,10 @@ namespace cMCompiler::compiler
 			accessibility = parse(ctx->AccessSpecifier()->getText());
 		not_null function = target->append<Function>(name);
 		function->setAccessibility(accessibility);
+		if (std::is_same<T, dataStructures::Type>::value)
+		{
+			function->appendVariable("self", (dataStructures::Type*)target);
+		}
 	}
 
 	void confirmFunction(

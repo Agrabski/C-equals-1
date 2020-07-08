@@ -15,9 +15,12 @@ namespace cMCompiler::dataStructures::ir
 		std::string variableName_;
 		Type* type_;
 	public:
+		IExpression* expression() const noexcept { return expression_.get(); }
+		std::string const& name() { return variableName_; }
 		VariableDeclaration(std::string name, std::unique_ptr<IExpression>&& exp, Type* type);
 		bool compileTimeExecutable() const noexcept final;
 		void emmit(std::ostream& stream, INameGetter const& nameLookupFunction, unsigned int indentationLevel) const final;
+		void accept(IInstructionVisitor& visitor) final;
 	};
 }
 

@@ -19,6 +19,7 @@ namespace cMCompiler::dataStructures::execution
 		Type* type() const noexcept { return type_; }
 		virtual void emmit(std::ostream& stream, ir::INameGetter const& nameLookupFunction) const = 0;
 		virtual std::string toString() const = 0;
+		virtual std::unique_ptr<IRuntimeValue> copy() const = 0;
 
 	};
 }

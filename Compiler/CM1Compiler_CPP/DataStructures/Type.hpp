@@ -1,12 +1,15 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <gsl.h>
 #include "INamedObject.hpp"
 #include "Namespace.hpp"
 #include "Function.hpp"
 #include "ObjectWithAccessibility.hpp"
 #include "AttributeTarget.hpp"
 #include "TypeClassifier.hpp"
+
+using gsl::not_null;
 
 namespace cMCompiler::dataStructures
 {
@@ -27,9 +30,10 @@ namespace cMCompiler::dataStructures
 			INamedObject(name, (INamedObject*)parent),
 			AttributeTarget(Target::Class)
 		{}
-		std::vector<Function*> methods()
+
+		std::vector<not_null<Function*>> methods()
 		{
-			auto result = std::vector<Function*>();
+			auto result = std::vector<gsl::not_null<Function*>>();
 			for (auto& c : methods_)
 				result.push_back(c.get());
 			return result;
@@ -68,6 +72,14 @@ namespace cMCompiler::dataStructures
 		{
 			fields_.push_back(std::make_unique<Field>(name, type));
 			return fields_.back().get();
+		}
+
+		std::vector<gsl::not_null<Field*>> fields()
+		{
+			auto result = std::vector<gsl::not_null<Field*>>();
+			for (auto& c : fields_)
+				result.push_back(c.get());
+			return result;
 		}
 
 		// Inherited via INamedObject

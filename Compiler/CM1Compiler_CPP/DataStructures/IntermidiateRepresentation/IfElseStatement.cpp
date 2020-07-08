@@ -1,9 +1,26 @@
 #include "IfElseStatement.hpp"
+#include "IInstructionVisitor.hpp"
 
 void indent(std::ostream& stream, unsigned int level)
 {
 	for (auto i = 0U; i < level; i++)
 		stream << "\t";
+}
+
+std::vector<not_null<cMCompiler::dataStructures::ir::IInstruction*>> cMCompiler::dataStructures::ir::IfElseStatement::ifBranch() const
+{
+	auto result = std::vector<not_null<cMCompiler::dataStructures::ir::IInstruction*>>();
+	for (auto const& i : if_)
+		result.push_back(i.get());
+	return result;
+}
+
+std::vector<not_null<cMCompiler::dataStructures::ir::IInstruction*>> cMCompiler::dataStructures::ir::IfElseStatement::elseBranch() const
+{
+	auto result = std::vector<not_null<cMCompiler::dataStructures::ir::IInstruction*>>();
+	for (auto const& i : else_)
+		result.push_back(i.get());
+	return result;
 }
 
 void cMCompiler::dataStructures::ir::IfElseStatement::pushIf(std::unique_ptr<IInstruction>&& instruction)
@@ -59,4 +76,9 @@ bool cMCompiler::dataStructures::ir::IfElseStatement::compileTimeExecutable() co
 		if (!exp->compileTimeExecutable())
 			return false;
 	return true;
+}
+
+void cMCompiler::dataStructures::ir::IfElseStatement::accept(IInstructionVisitor& visitor)
+{
+	visitor.visit(*this);
 }

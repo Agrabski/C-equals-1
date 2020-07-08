@@ -2,6 +2,7 @@
 #include "../DataStructures/IntermidiateRepresentation/VariableDeclaration.hpp"
 #include "ExpressionBuilder.hpp"
 #include "../DataStructures/IntermidiateRepresentation/IfElseStatement.hpp"
+#include "../DataStructures/IntermidiateRepresentation/AssigmentStatement.hpp"
 
 void cMCompiler::compiler::FunctionBodyBuilder::enterScope()
 {
@@ -92,5 +93,13 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitIfStatement(CMinus
 
 antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitFunctionCall(CMinusEqualsMinus1Revision0Parser::FunctionCallContext* ctx)
 {
+	return antlrcpp::Any();
+}
+
+antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitAssigmentStatement(CMinusEqualsMinus1Revision0Parser::AssigmentStatementContext* ctx)
+{
+	auto rexpression = getBuilder().buildExpression(ctx->expression());
+	auto lexpression = getBuilder().buildExpression(ctx->lExpression());
+	instructionAppenders.back()(std::make_unique<dataStructures::ir::AssigmentStatement>(std::move(lexpression), std::move(rexpression)));
 	return antlrcpp::Any();
 }

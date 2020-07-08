@@ -32,6 +32,9 @@ namespace cMCompiler::dataStructures::execution
 		}
 
 		// Inherited via IRuntimeValue
-		virtual std::string toString() const override;
+		std::string toString() const final;
+
+		// Inherited via IRuntimeValue
+		std::unique_ptr<IRuntimeValue> copy() const final;
 	};
 }

@@ -6,7 +6,7 @@
 
 namespace cMCompiler::dataStructures::ir
 {
-	class FunctionCall : IInstruction, IExpression
+	class FunctionCall : public IInstruction, public IExpression
 	{
 		Function* runtimeFunction_;
 		Function* compiletimeFunction_;

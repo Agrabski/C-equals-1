@@ -29,6 +29,9 @@ public:
 	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext *>) = 0;
 	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext *>) = 0;
 
+	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::AttributeTargetContext *>) = 0;
+	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::AttributeTargetContext *>) = 0;
+
 	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::AttributeContentSequenceContext *>) = 0;
 	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::AttributeContentSequenceContext *>) = 0;
 
@@ -38,20 +41,8 @@ public:
 	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext *>) = 0;
 	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext *>) = 0;
 
-	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext *>) = 0;
-	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext *>) = 0;
-
 	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::ClassTypeSpecifierContext *>) = 0;
 	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::ClassTypeSpecifierContext *>) = 0;
-
-	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::InterfaceContentSequenceContext *>) = 0;
-	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::InterfaceContentSequenceContext *>) = 0;
-
-	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::StructDeclarationContext *>) = 0;
-	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::StructDeclarationContext *>) = 0;
-
-	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::StructContentSequenceContext *>) = 0;
-	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::StructContentSequenceContext *>) = 0;
 
 	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::ClassContentSequenceContext *>) = 0;
 	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::ClassContentSequenceContext *>) = 0;

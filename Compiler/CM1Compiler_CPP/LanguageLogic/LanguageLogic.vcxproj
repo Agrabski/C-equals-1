@@ -29,6 +29,7 @@
     <ClInclude Include="CompileTimeFunctions\ReplaceWithCompilerType.hpp" />
     <ClInclude Include="IntermidiateRepresentationBuilder.hpp" />
     <ClInclude Include="LiteralUtility.hpp" />
+    <ClInclude Include="MetatypeUility.hpp" />
     <ClInclude Include="NameResolver.hpp" />
     <ClInclude Include="NamespaceBuilder.hpp" />
     <ClInclude Include="OverloadResolutionUtility.hpp" />
@@ -49,8 +50,10 @@
     <ClCompile Include="CompileTimeFunctions\ReplaceWithCompilerFunction.cpp" />
     <ClCompile Include="CompileTimeFunctions\ReplaceWithCompilerType.cpp" />
     <ClCompile Include="LiteralUtility.cpp" />
+    <ClCompile Include="MetatypeUility.cpp" />
     <ClCompile Include="NameResolver.cpp" />
     <ClCompile Include="NamespaceBuilder.cpp" />
+    <ClCompile Include="OverloadResolutionUtility.cpp" />
     <ClCompile Include="SpecialFunctionUtility.cpp" />
   </ItemGroup>
   <ItemGroup>

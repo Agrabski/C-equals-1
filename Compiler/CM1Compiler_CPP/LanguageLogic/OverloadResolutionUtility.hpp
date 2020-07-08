@@ -6,6 +6,6 @@ namespace cMCompiler::language
 {
 	dataStructures::Function* resolveOverload(
 		std::vector<gsl::not_null<dataStructures::Function*>> const& candidates,
-		std::vector<gsl::not_null<dataStructures::Variable*>> const& parameters,
+		std::vector<dataStructures::execution::IRuntimeValue*> const& parameters,
 		bool forceCompileTime = false, bool allowCompileTimeOnly = false);
 }

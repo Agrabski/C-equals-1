@@ -9,26 +9,21 @@ languageStandardDeclaration:
 
 declarationSequence: declaration+;
 
-declaration: functionDeclaration | typeDeclaration | interfaceDeclaration | structDeclaration | namespaceDeclaration | importDeclaration | attributeDeclaration;
+declaration: functionDeclaration | typeDeclaration | namespaceDeclaration | importDeclaration | attributeDeclaration;
 
-attributeDeclaration : (AccessSpecifier)? 'att' '<'('type' | Interface | 'function')+ '>' Identifier OpenBracket classContentSequence CloseBracket;
+attributeDeclaration : (AccessSpecifier)? 'att' '<'attributeTarget+ '>' Identifier OpenBracket classContentSequence CloseBracket;
+
+attributeTarget: ('type' | 'variable' | 'function');
 
 attributeContentSequence:functionDeclaration*;
 
 importDeclaration : 'import' '{' Identifier+ '}' 'from' '{' qualifiedIdentifier '}';
 
 typeDeclaration:
-	(attributeSequence)? AccessSpecifier? classTypeSpecifier Identifier ':' implementedInterfacesSequence OpenBracket
+	(attributeSequence)? AccessSpecifier? classTypeSpecifier Identifier (':' implementedInterfacesSequence)? OpenBracket
 		classContentSequence CloseBracket;
-interfaceDeclaration: attributeSequence? AccessSpecifier? Interface Identifier ':' implementedInterfacesSequence OpenBracket interfaceContentSequence CloseBracket;
 
 classTypeSpecifier: (Class| Interface | 'struct');
-
-interfaceContentSequence:functionDeclaration*;
-
-structDeclaration : (attributeSequence)? (AccessSpecifier)? 'struct' Identifier OpenBracket structContentSequence CloseBracket;
-
-structContentSequence : fieldDeclaration*;
 
 classContentSequence: (functionDeclaration | fieldDeclaration)*;
 

@@ -5,12 +5,14 @@
 #include "FunctionBodyBuilder.hpp"
 #include "FunctionUtility.hpp"
 #include "TypeUtility.hpp"
+#include "AttributeUtility.hpp"
 
 using namespace cMCompiler::dataStructures;
 
 void cMCompiler::compiler::CompilationUnitDataBaseBuilder::processDeclaration(CMinusEqualsMinus1Revision0Parser::DeclarationContext* declaration)
 {
-	declaration->children.front()->accept(this);
+	for (auto const& c : declaration->children)
+		c->accept(this);
 }
 
 void cMCompiler::compiler::CompilationUnitDataBaseBuilder::buildDatabase(Parser::CompilationUnit& compilationUnit)
@@ -81,6 +83,26 @@ antlrcpp::Any cMCompiler::compiler::CompilationUnitDataBaseBuilder::visitTypeDec
 		break;
 	default:
 		std::terminate();
+		break;
+	}
+	return antlrcpp::Any();
+}
+
+antlrcpp::Any cMCompiler::compiler::CompilationUnitDataBaseBuilder::visitAttributeDeclaration(CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext* ctx)
+{
+	not_null parent = resolutionContext_.namespaceStack_.back();
+	switch (state_)
+	{
+	case cMCompiler::compiler::Create:
+		createAttribute(ctx, parent);
+		break;
+	case cMCompiler::compiler::Confirm:
+		confirmAttribute(ctx, parent, nameResolver_, resolutionContext_);
+		break;
+	case cMCompiler::compiler::Finalize:
+		finalizeAttribute(ctx, parent, nameResolver_, resolutionContext_);
+		break;
+	default:
 		break;
 	}
 	return antlrcpp::Any();

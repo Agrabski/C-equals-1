@@ -1,4 +1,5 @@
 #include "VariableDeclaration.hpp"
+#include "IInstructionVisitor.hpp"
 
 cMCompiler::dataStructures::ir::VariableDeclaration::VariableDeclaration(std::string name, std::unique_ptr<IExpression>&& exp, Type* type) :
 	variableName_(name), expression_(std::move(exp)), type_(type)
@@ -26,4 +27,9 @@ void cMCompiler::dataStructures::ir::VariableDeclaration::emmit(std::ostream& st
 	else
 		stream << "{}";
 	stream << "}";
+}
+
+void cMCompiler::dataStructures::ir::VariableDeclaration::accept(IInstructionVisitor& visitor)
+{
+	visitor.visit(*this);
 }

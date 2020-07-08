@@ -7,54 +7,11 @@ using namespace cMCompiler::compiler;
 using namespace cMCompiler::dataStructures;
 using gsl::not_null;
 
-void getTypes(Namespace* ns, std::vector<gsl::not_null<Type*>>& result)
-{
-	for (auto child : ns->get<Namespace>())
-		getTypes(child, result);
-	for (auto t : ns->get<Type>())
-		result.push_back(t);
-}
-
-
-std::vector<gsl::not_null<Type*>> getTypes(PackageDatabase& package)
-{
-	auto result = std::vector<gsl::not_null<Type*>>();
-	getTypes(package.rootNamespace(), result);
-	return result;
-}
-
-void getFunctions(Type* ns, std::vector<gsl::not_null<Function*>>& result)
-{
-	for (auto t : ns->children())
-	{
-		auto x = dynamic_cast<Function*>(t);
-		if (x != nullptr)
-			result.push_back(not_null(x));
-	}
-}
-
-void getFunctions(Namespace* ns, std::vector<gsl::not_null<Function*>>& result)
-{
-	for (auto child : ns->get<Namespace>())
-		getFunctions(child, result);
-	for (auto t : ns->get<Type>())
-		getFunctions(t, result);
-	for (auto f : ns->get<Function>())
-		result.push_back(f);
-}
-
-std::vector<gsl::not_null<Function*>> getFunctions(PackageDatabase& package)
-{
-	auto result = std::vector<gsl::not_null<Function*>>();
-	getFunctions(package.rootNamespace(), result);
-	return result;
-}
-
 PackageDatabase* findPackage(std::vector<not_null<PackageDatabase*>>& packages, Type* type)
 {
 	for (auto package : packages)
 	{
-		auto types = getTypes(*package);
+		auto types = package->getAllTypes();
 		auto found = std::find(types.begin(), types.end(), type);
 		if (found != types.end())
 			return package;
@@ -124,7 +81,7 @@ public:
 	{
 		for (auto package : packages)
 		{
-			types_.push_back({ package, getTypes(*package) });
+			types_.push_back({ package, package->getAllTypes() });
 		}
 	}
 
@@ -154,8 +111,8 @@ void IntermidiateRepresentationEmmiter::emmit(std::ostream& stream, PackageDatab
 	stream << "]\r\n";
 
 	auto nl = NameLookuper(dependencies);
-	auto types = getTypes(package);
-	auto functions = getFunctions(package);
+	auto types = package.getAllTypes();
+	auto functions = package.getAllFunctions();
 	auto attributes = getAttributes(package);
 
 	stream << "headers = [\r\n";

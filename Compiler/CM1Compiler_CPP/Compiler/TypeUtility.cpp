@@ -31,21 +31,22 @@ void cMCompiler::compiler::confirmType(
 {
 	assert(ctx != nullptr);
 	auto name = ::name(ctx);
-	auto type = resolver.resolve<dataStructures::Type>(name, context);
+	auto type = context.namespaceStack_.back()->get<dataStructures::Type>(name);
 	assert(type != nullptr);
 
-	for (not_null interface : ctx->implementedInterfacesSequence()->Identifier())
-	{
-		auto implementedType = resolver.resolve<dataStructures::Type>(interface->getText(), context);
-		if (implementedType == nullptr)
-			std::terminate(); //todo: report error
-		type->appendInterface(implementedType);
-	}
+	if (ctx->implementedInterfacesSequence() != nullptr)
+		for (not_null interface : ctx->implementedInterfacesSequence()->Identifier())
+		{
+			auto implementedType = resolver.resolve<dataStructures::Type>(interface->getText(), context);
+			if (implementedType == nullptr)
+				std::terminate(); //todo: report error
+			type->appendInterface(implementedType);
+		}
 
 	for (not_null<CMinusEqualsMinus1Revision0Parser::FieldDeclarationContext*> member : ctx->classContentSequence()->fieldDeclaration())
 	{
-		auto type = resolver.resolve<dataStructures::Type>(member->Identifier(1)->getText(), context);
-		auto var = type->appendField(member->Identifier(0)->getText(), type);
+		auto t = resolver.resolve<dataStructures::Type>(member->Identifier(1)->getText(), context);
+		auto var = type->appendField(member->Identifier(0)->getText(), t);
 		auto access = dataStructures::parse(member->AccessSpecifier()->getText());
 		var->setAccessibility(access);
 	}
@@ -54,7 +55,7 @@ void cMCompiler::compiler::confirmType(
 	auto functions = type->methods();
 	for (not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> member : ctx->classContentSequence()->functionDeclaration())
 	{
-		not_null f = *std::find_if(functions.begin(), functions.end(), [&](const auto f)
+		not_null f = *std::find_if(functions.begin(), functions.end(), [&](const auto f) noexcept
 		{
 			return f->state() == dataStructures::ObjectState::Cretated;
 		});
@@ -70,7 +71,7 @@ void cMCompiler::compiler::finalizeType(
 {
 	assert(ctx != nullptr);
 	auto name = ::name(ctx);
-	auto type = resolver.resolve<dataStructures::Type>(name, context);
+	auto type = context.namespaceStack_.back()->get<dataStructures::Type>(name);
 	assert(type != nullptr);
 
 	auto functions = type->methods();
@@ -78,7 +79,7 @@ void cMCompiler::compiler::finalizeType(
 	{
 		not_null f = *std::find_if(functions.begin(), functions.end(), [&](const auto f)
 		{
-			return f->state() == dataStructures::ObjectState::Cretated;
+			return f->state() == dataStructures::ObjectState::Confirmed;
 		});
 		finalizeFunction(resolver, context, f, member);
 	}

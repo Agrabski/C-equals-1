@@ -29,21 +29,15 @@ public:
 
 		virtual antlrcpp::Any visitAttributeDeclaration(CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext *context) = 0;
 
+		virtual antlrcpp::Any visitAttributeTarget(CMinusEqualsMinus1Revision0Parser::AttributeTargetContext *context) = 0;
+
 		virtual antlrcpp::Any visitAttributeContentSequence(CMinusEqualsMinus1Revision0Parser::AttributeContentSequenceContext *context) = 0;
 
 		virtual antlrcpp::Any visitImportDeclaration(CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext *context) = 0;
 
 		virtual antlrcpp::Any visitTypeDeclaration(CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext *context) = 0;
 
-		virtual antlrcpp::Any visitInterfaceDeclaration(CMinusEqualsMinus1Revision0Parser::InterfaceDeclarationContext *context) = 0;
-
 		virtual antlrcpp::Any visitClassTypeSpecifier(CMinusEqualsMinus1Revision0Parser::ClassTypeSpecifierContext *context) = 0;
-
-		virtual antlrcpp::Any visitInterfaceContentSequence(CMinusEqualsMinus1Revision0Parser::InterfaceContentSequenceContext *context) = 0;
-
-		virtual antlrcpp::Any visitStructDeclaration(CMinusEqualsMinus1Revision0Parser::StructDeclarationContext *context) = 0;
-
-		virtual antlrcpp::Any visitStructContentSequence(CMinusEqualsMinus1Revision0Parser::StructContentSequenceContext *context) = 0;
 
 		virtual antlrcpp::Any visitClassContentSequence(CMinusEqualsMinus1Revision0Parser::ClassContentSequenceContext *context) = 0;
 

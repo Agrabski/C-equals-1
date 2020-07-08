@@ -9,9 +9,9 @@ AttributeInstance* AttributeTarget::appendAttribute(std::unique_ptr<AttributeIns
 	return result;
 }
 
-std::vector<AttributeInstance*> cMCompiler::dataStructures::AttributeTarget::attributes()
+std::vector<gsl::not_null<AttributeInstance*>> cMCompiler::dataStructures::AttributeTarget::attributes()
 {
-	auto result = std::vector<AttributeInstance*>();
+	auto result = std::vector<gsl::not_null<AttributeInstance*>>();
 	for (auto& att : attributes_)
 		result.push_back(att.get());
 	return result;

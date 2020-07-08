@@ -16,7 +16,7 @@ namespace cMCompiler::compiler
 		std::vector<std::vector<dataStructures::Variable*>> variables_;
 		std::vector<std::function<void(instruction_pointer&&)>> instructionAppenders;
 		void enterScope();
-		_NODISCARD
+		[[nodiscard]]
 		std::unique_ptr< cMCompiler::dataStructures::ir::ScopeTermination>  leaveScope();
 		ExpressionBuilder getBuilder();
 
@@ -24,6 +24,7 @@ namespace cMCompiler::compiler
 		antlrcpp::Any visitFunctionBody(CMinusEqualsMinus1Revision0Parser::FunctionBodyContext* ctx) final;
 		antlrcpp::Any visitIfStatement(CMinusEqualsMinus1Revision0Parser::IfStatementContext* ctx) final;
 		antlrcpp::Any visitFunctionCall(CMinusEqualsMinus1Revision0Parser::FunctionCallContext* ctx) final;
+		antlrcpp::Any visitAssigmentStatement(CMinusEqualsMinus1Revision0Parser::AssigmentStatementContext* ctx) final;
 	public:
 		FunctionBodyBuilder(dataStructures::Function* function, language::NameResolver& nr, language::NameResolutionContext& context) noexcept :
 			function_(function), nr_(nr), context_(context) {}

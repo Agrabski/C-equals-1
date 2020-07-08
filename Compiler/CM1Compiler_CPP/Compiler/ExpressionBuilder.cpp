@@ -35,7 +35,16 @@ std::unique_ptr<IExpression> cMCompiler::compiler::ExpressionBuilder::buildExpre
 			variableLookupFunction_(ctx->Identifier()->getText())
 			);
 	}
-	return nullptr;
+	if (ctx->STRING())
+	{
+		auto text = ctx->STRING()->getText();
+		text.erase(text.begin());
+		text.erase(text.end());
+		auto value = language::buildStringValue();
+		value->setValue(text);
+		return std::make_unique<dataStructures::ir::ValueLiteralExpression>(std::move(value));
+	}
+	std::terminate();
 }
 
 std::unique_ptr<IExpression> cMCompiler::compiler::ExpressionBuilder::buildExpression(CMinusEqualsMinus1Revision0Parser::ArithmeticExpressionContext* ctx, dataStructures::Type* requestedType)

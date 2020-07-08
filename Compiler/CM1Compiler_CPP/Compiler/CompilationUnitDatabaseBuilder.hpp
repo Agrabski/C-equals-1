@@ -31,6 +31,6 @@ namespace cMCompiler::compiler
 		antlrcpp::Any visitFunctionDeclaration(CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext* ctx) final;
 		antlrcpp::Any visitImportDeclaration(CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext* ctx) final;
 		antlrcpp::Any visitTypeDeclaration(CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext* ctx) final;
-
+		antlrcpp::Any visitAttributeDeclaration(CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext* ctx) final;
 	};
 }

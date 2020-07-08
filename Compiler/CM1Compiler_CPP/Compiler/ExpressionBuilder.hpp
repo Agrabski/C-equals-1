@@ -16,5 +16,6 @@ namespace cMCompiler::compiler
 		std::unique_ptr<dataStructures::ir::IExpression> buildExpression(CMinusEqualsMinus1Revision0Parser::ExpressionContext* ctx);
 		std::unique_ptr<dataStructures::ir::IExpression> buildExpression(CMinusEqualsMinus1Revision0Parser::ArithmeticExpressionContext* ctx, dataStructures::Type* requestedType);
 		std::unique_ptr<dataStructures::ir::IExpression> buildExpression(CMinusEqualsMinus1Revision0Parser::FunctionCallContext* ctx, dataStructures::Type* requestedType);
+		std::unique_ptr<dataStructures::ir::IExpression> buildExpression(CMinusEqualsMinus1Revision0Parser::LExpressionContext *ctx);
 	};
 }

@@ -33,8 +33,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AttributeUtility.hpp" />
     <ClInclude Include="CompilationUnitDatabaseBuilder.hpp" />
     <ClInclude Include="ExpressionBuilder.hpp" />
+    <ClInclude Include="ExpressionEvaluator.hpp" />
     <ClInclude Include="FunctionBodyBuilder.hpp" />
     <ClInclude Include="FunctionExecutionUtility.hpp" />
     <ClInclude Include="FunctionUtility.hpp" />
@@ -42,17 +44,22 @@
     <ClInclude Include="PackageBuildUtility.hpp" />
     <ClInclude Include="PackageDiscoveryUtility.hpp" />
     <ClInclude Include="Preprocessor.hpp" />
+    <ClInclude Include="StatementEvaluator.hpp" />
     <ClInclude Include="TypeUtility.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AttributeUtility.cpp" />
     <ClCompile Include="CompilationUnitDatabaseBuilder.cpp" />
     <ClCompile Include="ExpressionBuilder.cpp" />
+    <ClCompile Include="ExpressionEvaluator.cpp" />
     <ClCompile Include="FunctionBodyBuilder.cpp" />
     <ClCompile Include="FunctionExecutionUtility.cpp" />
     <ClCompile Include="FunctionUtility.cpp" />
     <ClCompile Include="IntermidiateRepresentationEmmiter.cpp" />
     <ClCompile Include="PackageBuildUtility.cpp" />
     <ClCompile Include="PackageDiscoveryUtility.cpp" />
+    <ClCompile Include="Preprocessor.cpp" />
+    <ClCompile Include="StatementEvaluator.cpp" />
     <ClCompile Include="TypeUtility.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

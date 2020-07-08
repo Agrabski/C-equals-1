@@ -79,3 +79,10 @@ std::string cMCompiler::dataStructures::execution::IntegerValue::toString() cons
 		}
 	std::terminate();
 }
+
+std::unique_ptr<IRuntimeValue> cMCompiler::dataStructures::execution::IntegerValue::copy() const
+{
+	auto result = std::make_unique<IntegerValue>(number_.size(), isSigned_, type());
+	result->number_ = number_;
+	return result;
+}

@@ -69,3 +69,18 @@ gsl::not_null<Type*> cMCompiler::language::getString()
 	return defaultPackage__->rootNamespace()->get<Type>("string");
 }
 
+gsl::not_null<Type*> cMCompiler::language::getTypeDescriptor()
+{
+	return defaultPackage__->rootNamespace()->get<Namespace>("compiler")->get<Type>("typeDescriptor");
+}
+
+gsl::not_null<Type*> cMCompiler::language::getFunctionDescriptor()
+{
+	return defaultPackage__->rootNamespace()->get<Namespace>("compiler")->get<Type>("functionDescriptor");
+}
+
+gsl::not_null<Type*> cMCompiler::language::getFieldDescriptor()
+{
+	return defaultPackage__->rootNamespace()->get<Namespace>("compiler")->get<Type>("fieldDescriptor");
+}
+

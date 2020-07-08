@@ -18,6 +18,8 @@ std::vector<INamedObject*> Namespace::children()
 		result.push_back(ns.get());
 	for (auto& t : types_)
 		result.push_back(t.get());
+	for (auto& t : attributes_)
+		result.push_back(t.get());
 	return result;
 }
 

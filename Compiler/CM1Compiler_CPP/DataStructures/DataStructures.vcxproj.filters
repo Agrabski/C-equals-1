@@ -123,6 +123,27 @@
     <ClInclude Include="execution\RuntimeFunctionDescriptor.hpp">
       <Filter>Header Files\Execution</Filter>
     </ClInclude>
+    <ClInclude Include="execution\ObjectValue.hpp">
+      <Filter>Header Files\Execution</Filter>
+    </ClInclude>
+    <ClInclude Include="IntermidiateRepresentation\IExpressionVisitor.hpp">
+      <Filter>Header Files\IntermidiateRepresentation</Filter>
+    </ClInclude>
+    <ClInclude Include="execution\RuntimeFieldDescriptor.hpp">
+      <Filter>Header Files\Execution</Filter>
+    </ClInclude>
+    <ClInclude Include="IntermidiateRepresentation\IInstructionVisitor.hpp">
+      <Filter>Header Files\IntermidiateRepresentation</Filter>
+    </ClInclude>
+    <ClInclude Include="execution\BooleanValue.hpp">
+      <Filter>Header Files\Execution</Filter>
+    </ClInclude>
+    <ClInclude Include="IntermidiateRepresentation\AssigmentStatement.hpp">
+      <Filter>Header Files\IntermidiateRepresentation</Filter>
+    </ClInclude>
+    <ClInclude Include="execution\ReferenceValue.hpp">
+      <Filter>Header Files\Execution</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -186,6 +207,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="execution\RuntimeFunctionDescriptor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Target.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="execution\ObjectValue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="execution\RuntimeFieldDescriptor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IntermidiateRepresentation\AssigmentStatement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="execution\ReferenceValue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

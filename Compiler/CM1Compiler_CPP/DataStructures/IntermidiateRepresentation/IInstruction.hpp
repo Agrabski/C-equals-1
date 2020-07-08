@@ -11,10 +11,12 @@ namespace cMCompiler::dataStructures
 
 namespace cMCompiler::dataStructures::ir
 {
+	class IInstructionVisitor;
 	class IInstruction
 	{
 	public:
 		virtual void emmit(std::ostream& stream, INameGetter const& nameLookupFunction, unsigned int indentationLevel) const = 0;
 		virtual bool compileTimeExecutable() const noexcept = 0;
+		virtual void accept(IInstructionVisitor& visitor) = 0;
 	};
 }
