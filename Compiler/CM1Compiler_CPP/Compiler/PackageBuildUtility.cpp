@@ -30,4 +30,5 @@ void cMCompiler::compiler::buildAndFillPackage(dataStructures::PackageDatabase& 
 		auto parseTree = parse(file);
 		preprocessor.preprocess(*parseTree);
 	}
+	preprocessor.evaluateCompiletimeCode();
 }

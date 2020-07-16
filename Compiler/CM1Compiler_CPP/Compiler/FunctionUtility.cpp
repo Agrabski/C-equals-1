@@ -71,6 +71,38 @@ void cMCompiler::compiler::confirmFunction(
 	f->confirm();
 }
 
+using namespace cMCompiler;
+
+void cMCompiler::compiler::appendSpecialVariable(not_null<dataStructures::Type*> target, not_null<dataStructures::Function*> f)
+{
+	f->appendVariable("self", target);
+}
+
+dataStructures::Function* cMCompiler::compiler::createFunction(not_null<dataStructures::Type*> target, std::string const& name)
+{
+	return target->append<dataStructures::Function>(name);
+}
+
+dataStructures::Function* cMCompiler::compiler::createFunction(not_null<dataStructures::Namespace*> target, std::string const& name)
+{
+	return target->append<dataStructures::Function>(name);
+}
+
+dataStructures::Function* cMCompiler::compiler::createFunction(not_null<dataStructures::Attribute*> target, std::string const& name)
+{
+	return target->appendFunction(name);
+}
+
+
+void cMCompiler::compiler::appendSpecialVariable(not_null<dataStructures::Attribute*> target, not_null<dataStructures::Function*> f)
+{
+	f->appendVariable("self", target->describingType());
+}
+
+void cMCompiler::compiler::appendSpecialVariable(not_null<dataStructures::Namespace*> target, not_null<dataStructures::Function*> f)
+{
+}
+
 void cMCompiler::compiler::confirmFunction(
 	language::NameResolver& resolver,
 	language::NameResolutionContext& context,
@@ -109,6 +141,6 @@ void cMCompiler::compiler::finalizeFunction(
 	}
 	//todo: function attributes
 	auto builder = FunctionBodyBuilder(f, resolver, context);
-	ctx->accept(&builder);
+	ctx->functionBody()->accept(&builder);
 	f->finalize();
 }

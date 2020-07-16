@@ -38,8 +38,9 @@ void cMCompiler::compiler::StatementEvaluator::visit(dataStructures::ir::ScopeTe
 		auto* const finalizer = language::getFinalizer(type->methods());
 		if (finalizer != nullptr)
 		{
-			auto value = std::vector{ variables_[variable->name()].get() };
-			execute(finalizer, value, resolver_, context_);
+			auto value = std::vector<std::unique_ptr<dataStructures::execution::IRuntimeValue>>();
+			value.push_back(std::move(variables_[variable->name()]));
+			execute(finalizer, std::move(value), resolver_, context_);
 		}
 		variables_.erase(variable->name());
 	}
@@ -52,5 +53,8 @@ void cMCompiler::compiler::StatementEvaluator::visit(dataStructures::ir::IInstru
 
 void cMCompiler::compiler::StatementEvaluator::visit(dataStructures::ir::AssigmentStatement& statement)
 {
-	ev_.evaluateLValue(statement.lexpression())->performAssigment(ev_.evaluate(statement.rexpression()));
+	auto value = ev_.evaluate(statement.rexpression());
+	if (dynamic_cast<dataStructures::execution::ReferenceValue*>(value.get()))
+		value = (*dynamic_cast<dataStructures::execution::ReferenceValue*>(value.get())->value())->copy();
+	ev_.evaluateLValue(statement.lexpression())->performAssigment(std::move(value));
 }

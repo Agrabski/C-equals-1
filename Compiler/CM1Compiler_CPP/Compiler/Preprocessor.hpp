@@ -15,8 +15,9 @@ namespace cMCompiler::compiler
 		antlrcpp::Any visitImportDeclaration(CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext* context) final;
 		antlrcpp::Any visitNamespaceDeclaration(CMinusEqualsMinus1Revision0Parser::NamespaceDeclarationContext* context) final;
 		antlrcpp::Any visitTypeDeclaration(CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext* ctx) final;
-		void evaluateCompiletimeCode();
+		antlrcpp::Any visitFunctionDeclaration(CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext* ctx) final;
 	public:
+		void evaluateCompiletimeCode();
 		Preprocessor(dataStructures::PackageDatabase& database, language::NameResolver& nameResolver) noexcept :
 			database_(database), nameResolver_(nameResolver) 
 		{

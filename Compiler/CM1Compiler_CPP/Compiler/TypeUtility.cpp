@@ -20,7 +20,7 @@ void cMCompiler::compiler::createType(
 		type = target->append<dataStructures::Type>(name);
 
 	for (not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> member : ctx->classContentSequence()->functionDeclaration())
-		createFunction(type, member);
+		createFunction(not_null(type), member);
 	type->setTypeClassifier(dataStructures::parseType(ctx->classTypeSpecifier()->getText()));
 }
 

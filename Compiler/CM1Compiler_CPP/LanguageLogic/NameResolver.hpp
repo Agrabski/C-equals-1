@@ -19,7 +19,7 @@ namespace cMCompiler::language
 	{
 		std::map<std::string, std::vector<dataStructures::INamedObject*>> objectMap_;
 		std::map<std::string, dataStructures::Namespace*> unconfirmedNames_;
-		std::vector<dataStructures::Namespace*> namespaceStack_;
+		std::vector<not_null<dataStructures::Namespace*>> namespaceStack_;
 	};
 
 	class NameResolver
@@ -53,14 +53,16 @@ namespace cMCompiler::language
 				auto result = unconfirmedResult->second->append<T>(name);
 				return result;
 			}
-			return nullptr;
+
+			auto const& currentNamespace = context.namespaceStack_.back();
+			return currentNamespace->get<T>(name);
 		}
 
-		std::vector<dataStructures::Function*> resolveOverloadSet(std::string const& name, NameResolutionContext& context)
+		std::vector<not_null<dataStructures::Function*>> resolveOverloadSet(std::string const& name, NameResolutionContext& context)
 		{
 			//todo: fucking disgusting
 			auto r = context.objectMap_.find(name);
-			auto functions = std::vector<dataStructures::Function*>();
+			auto functions = std::vector<not_null<dataStructures::Function*>>();
 			if (r != context.objectMap_.end()) //packages or other namespaces
 			{
 				auto objects = r->second;

@@ -30,15 +30,16 @@ gsl::not_null<cMCompiler::dataStructures::Function*> cMCompiler::language::getAt
 		{dataStructures::Target::Function, getFunctionDescriptor()},
 		{dataStructures::Target::Variable, nullptr}
 	};
+	auto allowedTarget = target->allowedTarget();
 	dataStructures::Type* descriptor = nullptr;
 	for (auto const& kv : targetMap)
-		if ((kv.first | target->allowedTarget()) != dataStructures::Target::None)
+		if ((kv.first & allowedTarget) != dataStructures::Target::None)
 		{
 			descriptor = kv.second;
 			break;
 		}
 	for (auto f : attribute->basedOn()->methods())
-		if (f->name() == attachment_function_name__ && f->parameters().size() == 1 && f->parameters().front()->type() == descriptor)
+		if (f->name() == attachment_function_name__ && f->parameters().size() == 2 && f->parameters().back()->type() == descriptor)
 			return f;
 	std::terminate();
 }

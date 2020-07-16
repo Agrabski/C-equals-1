@@ -14,7 +14,7 @@ namespace cMCompiler::dataStructures
 	public:
 		AttributeInstance(gsl::not_null<Attribute*> base, std::unique_ptr<execution::IRuntimeValue>&& instanceObject) :
 			basedOn_(base), instanceObject_(std::move(instanceObject)) {}
-		execution::IRuntimeValue* objectInstance() noexcept { return instanceObject_.get(); }
+		std::unique_ptr<execution::IRuntimeValue>& objectInstance() noexcept { return instanceObject_; }
 
 		Attribute* basedOn() noexcept { return basedOn_; }
 	};

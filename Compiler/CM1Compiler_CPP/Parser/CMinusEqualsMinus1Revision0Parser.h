@@ -976,6 +976,7 @@ public:
 		antlr4::tree::TerminalNode *ParamOpen();
 		ExpressionContext *expression();
 		antlr4::tree::TerminalNode *ParamClose();
+		LExpressionContext *lExpression();
 
 		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
 		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;

@@ -17,11 +17,12 @@ namespace cMCompiler::dataStructures::execution
 		{
 		}
 
-		IRuntimeValue* getMemberValue(std::string const& name)
+		std::unique_ptr<IRuntimeValue>& getMemberValue(std::string const& name)
 		{
-			assert(values_.contains(name));
-			return values_[name].get();
+			return values_[name];
 		}
+
+		Type* getMemberType(std::string const& name);
 
 		void setValue(std::string const& name, std::unique_ptr<IRuntimeValue>&& value)
 		{

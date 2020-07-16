@@ -2,7 +2,7 @@
 
 void cMCompiler::dataStructures::execution::StringValue::emmit(std::ostream& stream, ir::INameGetter const& nameLookupFunction) const
 {
-	stream << "{@integer_literal type = ";
+	stream << "{@string_literal type = ";
 	stream << nameLookupFunction.get(type());
 	stream << " value = \'" << value_ << "\'}";
 }

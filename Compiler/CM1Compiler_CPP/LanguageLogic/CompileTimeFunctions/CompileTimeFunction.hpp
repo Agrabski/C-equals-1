@@ -9,7 +9,7 @@ namespace cMCompiler::language::compileTimeFunctions
 		std::function <
 		std::unique_ptr<dataStructures::execution::IRuntimeValue>
 		(
-			std::map<std::string, dataStructures::execution::IRuntimeValue*> valueMap
+			std::map<std::string, std::unique_ptr<dataStructures::execution::IRuntimeValue>>&& valueMap
 		)
 		>;
 }

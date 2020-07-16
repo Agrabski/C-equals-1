@@ -3,6 +3,8 @@
 #include "ExpressionBuilder.hpp"
 #include "../DataStructures/IntermidiateRepresentation/IfElseStatement.hpp"
 #include "../DataStructures/IntermidiateRepresentation/AssigmentStatement.hpp"
+#include "../DataStructures/IntermidiateRepresentation/FunctionCall.hpp"
+#include "../LanguageLogic/OverloadResolutionUtility.hpp"
 
 void cMCompiler::compiler::FunctionBodyBuilder::enterScope()
 {
@@ -23,12 +25,17 @@ cMCompiler::compiler::ExpressionBuilder cMCompiler::compiler::FunctionBodyBuilde
 {
 	return ExpressionBuilder([this](auto const& e) -> dataStructures::Variable*
 	{
+		auto varFinder = [&](const auto& v) noexcept {return v->name() == e; };
 		for (auto& scope : variables_)
 		{
-			auto var = std::find_if(scope.begin(), scope.end(), [&](const auto& v) noexcept {return v->name() == e; });
+			auto var = std::find_if(scope.begin(), scope.end(), varFinder);
 			if (var != scope.end())
 				return *var;
 		}
+		auto const& params = function_->parameters();
+		auto var = std::find_if(params.begin(), params.end(), varFinder);
+		if (var != params.end())
+			return *var;
 		return nullptr;
 	});
 }
@@ -41,7 +48,7 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitVariableDeclaratio
 	auto typeAnnotationPresent = (ctx->Identifier().size() != 1);
 	if (typeAnnotationPresent)
 		type = nr_.resolve<dataStructures::Type>(ctx->Identifier(1)->getText(), context_);
-	if(!typeAnnotationPresent || ctx->functionCallParameter())
+	if (!typeAnnotationPresent || ctx->functionCallParameter())
 		expression = getBuilder().buildExpression(ctx->functionCallParameter());
 
 	auto name = ctx->Identifier(0)->getText();
@@ -93,6 +100,13 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitIfStatement(CMinus
 
 antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitFunctionCall(CMinusEqualsMinus1Revision0Parser::FunctionCallContext* ctx)
 {
+	auto functions = nr_.resolveOverloadSet(ctx->Identifier()->getText(), context_);
+	auto params = std::vector<std::unique_ptr<dataStructures::ir::IExpression>>();
+	for (auto parameter : ctx->functionCallParameter())
+		params.push_back(getBuilder().buildExpression(parameter));
+	auto f = language::resolveOverload(functions, params); //todo: resolve for runtime and compile-time
+	instructionAppenders.back()(std::make_unique<dataStructures::ir::FunctionCall>(std::move(params), f, f));
+
 	return antlrcpp::Any();
 }
 

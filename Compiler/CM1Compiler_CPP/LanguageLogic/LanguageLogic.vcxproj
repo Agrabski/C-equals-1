@@ -55,6 +55,7 @@
     <ClCompile Include="NamespaceBuilder.cpp" />
     <ClCompile Include="OverloadResolutionUtility.cpp" />
     <ClCompile Include="SpecialFunctionUtility.cpp" />
+    <ClCompile Include="SpecialTypes\SpecialTypeLibrary.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

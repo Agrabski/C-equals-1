@@ -14,17 +14,18 @@ namespace cMCompiler::compiler
 		language::NameResolver& resolver_;
 		language::NameResolutionContext& context_;
 		std::unique_ptr<dataStructures::execution::IRuntimeValue> value_;
-		std::function<dataStructures::execution::IRuntimeValue* (std::string const&)> variableLookupFunction_;
-		void visit(cMCompiler::dataStructures::ir::ValueLiteralExpression& expression) final;
-		void visit(cMCompiler::dataStructures::ir::VariableReferenceExpression& expression) final;
+		std::function<std::unique_ptr<dataStructures::execution::IRuntimeValue>& (std::string const&)> variableLookupFunction_;
+		void visit(dataStructures::ir::ValueLiteralExpression& expression) final;
+		void visit(dataStructures::ir::VariableReferenceExpression& expression) final;
+		void visit(dataStructures::ir::MemberAccessExpression& expression) final;
+		void visit(dataStructures::ir::FunctionCall& expression) final;
 	public:
 		ExpressionEvaluator(
 			language::NameResolver& resolver,
 			language::NameResolutionContext& context,
-			std::function<dataStructures::execution::IRuntimeValue* (std::string const&)> variableLookupFunction) :
+			std::function<std::unique_ptr<dataStructures::execution::IRuntimeValue>& (std::string const&)> variableLookupFunction) :
 			resolver_(resolver), context_(context), variableLookupFunction_(variableLookupFunction) {}
 		std::unique_ptr<dataStructures::execution::IRuntimeValue> evaluate(gsl::not_null<dataStructures::ir::IExpression*> expression);
 		std::unique_ptr<dataStructures::execution::ReferenceValue> evaluateLValue(gsl::not_null<dataStructures::ir::IExpression*> expression);
-
 	};
 }

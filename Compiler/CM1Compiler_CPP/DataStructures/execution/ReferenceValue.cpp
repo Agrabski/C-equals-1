@@ -7,7 +7,7 @@ void cMCompiler::dataStructures::execution::ReferenceValue::emmit(std::ostream& 
 
 std::string cMCompiler::dataStructures::execution::ReferenceValue::toString() const
 {
-	return value_->toString();
+	return (*value_)->toString();
 }
 
 std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler::dataStructures::execution::ReferenceValue::copy() const
@@ -17,5 +17,5 @@ std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler
 
 void cMCompiler::dataStructures::execution::ReferenceValue::performAssigment(std::unique_ptr<IRuntimeValue>&& newValue)
 {
-	value_ = std::move(newValue);
+	*value_ = std::move(newValue);
 }

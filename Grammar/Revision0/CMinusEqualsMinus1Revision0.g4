@@ -103,7 +103,8 @@ expression
 	| functionCall
 	| throwExpression
 	| Identifier
-	| ParamOpen expression ParamClose;
+	| ParamOpen expression ParamClose
+	| lExpression;
 
 arithmeticExpression:
 	arithmeticExpression ArithmeticBinaryOperator arithmeticExpression

@@ -110,6 +110,9 @@
     <ClCompile Include="OverloadResolutionUtility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SpecialTypes\SpecialTypeLibrary.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

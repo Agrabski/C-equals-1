@@ -2,6 +2,8 @@
 #include "FunctionUtility.hpp"
 #include "FunctionExecutionUtility.hpp"
 #include "../DataStructures/Accessibility.hpp"
+#include "../DataStructures/execution/ObjectValue.hpp"
+#include "../DataStructures/execution/ReferenceValue.hpp"
 #include "../LanguageLogic/OverloadResolutionUtility.hpp"
 #include "../LanguageLogic/SpecialFunctionUtility.hpp"
 
@@ -78,14 +80,17 @@ std::unique_ptr<dataStructures::AttributeInstance> cMCompiler::compiler::createA
 (
 	dataStructures::AttributeTarget& target,
 	gsl::not_null<dataStructures::Attribute*> attribute,
-	std::vector<dataStructures::execution::IRuntimeValue*> values,
+	std::vector<std::unique_ptr<dataStructures::execution::IRuntimeValue>>&& values,
 	language::NameResolver& resolver,
 	language::NameResolutionContext& context
 )
 {
+	auto t = std::make_unique<dataStructures::execution::ObjectValue>(attribute->describingType());
+	std::unique_ptr<dataStructures::execution::IRuntimeValue> self = std::move(t);
+	values.insert(values.begin(), std::make_unique<dataStructures::execution::ReferenceValue>(&self, self->type()));
 	auto function = language::resolveOverload(language::getConstructors(attribute->methods()), values, true, true);
-	auto value = execute(function, values, resolver, context);
+	execute(function, std::move(values), resolver, context);
 
-	return std::make_unique<dataStructures::AttributeInstance>(attribute, std::move(value));
+	return std::make_unique<dataStructures::AttributeInstance>(attribute, std::move(self));
 }
 

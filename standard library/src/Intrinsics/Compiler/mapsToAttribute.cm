@@ -10,9 +10,10 @@ namespace std::compiler
 			self._typename = typename;
 		}
 
-		public fn onAttached(t: typeDescriptor)
+		public fn attach(t: typeDescriptor)
 		{
 			replaceWithCompilerType(t, self._typename);
+			print(self._typename);
 		}
 	}
 
@@ -24,7 +25,7 @@ namespace std::compiler
 			self._functionName = functionName;
 		}
 
-		public fn onAttached(f: functionDescriptor)
+		public fn attach(f: functionDescriptor)
 		{
 			replaceWithCompilerFunction(f, self._functionName);
 		}

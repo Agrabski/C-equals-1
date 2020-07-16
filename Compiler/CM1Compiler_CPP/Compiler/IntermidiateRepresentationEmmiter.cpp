@@ -52,9 +52,11 @@ std::vector<gsl::not_null<Attribute*>> getAttributes(PackageDatabase& package)
 	return result;
 }
 
-void emmitAttribute(std::ostream& stream, AttributeInstance& attribute)
+void emmitAttribute(std::ostream& stream, AttributeInstance& attribute, cMCompiler::dataStructures::ir::INameGetter& nameGetter)
 {
-
+	stream << "{@attribute type = " << attribute.basedOn()->qualifiedName() << " instance = ";
+	attribute.objectInstance()->emmit(stream, nameGetter); 
+	stream << " }";
 }
 
 class NameLookuper : public cMCompiler::dataStructures::ir::INameGetter
@@ -136,7 +138,29 @@ void IntermidiateRepresentationEmmiter::emmit(std::ostream& stream, PackageDatab
 
 	stream << "types = [\r\n";
 	{
+		for (auto type : package.getAllTypes())
+		{
+			stream << "\t{\r\n";
+			{
+				stream << "\t\t'" << type->qualifiedName() << "'\r\n";
+				stream << "\t\tattributes = \r\n\t\t[";
+				for (not_null<AttributeInstance*> attribute : type->attributes())
+				{
+					stream << "\r\n\t\t\t";
+					emmitAttribute(stream, *attribute, nl);
+				}
+				stream << "\r\n\t\t]\r\n";
+				stream << "\t\tfields = \r\n\t\t[";
+				for (auto field : type->fields())
+				{
+					stream << "\r\n\t\t\t";
+					emmitField(stream, *field, nl);
+				}
+				stream << "\r\n\t\t]\r\n";
 
+			}
+			stream << "\t}\r\n";
+		}
 	}
 	stream << "]\r\n";
 
@@ -148,10 +172,13 @@ void IntermidiateRepresentationEmmiter::emmit(std::ostream& stream, PackageDatab
 			{
 				stream << "\t\t'" << function->qualifiedName() << "'\r\n";
 
-				stream << "\t\tattributes = \r\n\t\t[\r\n";
+				stream << "\t\tattributes = \r\n\t\t[";
 				for (not_null<AttributeInstance*> attribute : function->attributes())
-					emmitAttribute(stream, *attribute);
-				stream << "\t\t]\r\n";
+				{
+					stream << "\r\n\t\t\t";
+					emmitAttribute(stream, *attribute, nl);
+				}
+				stream << "\r\n\t\t]\r\n";
 
 				stream << "\t\tparametrs = \r\n\t\t[\r\n";
 				for (auto parameter : function->parameters())
@@ -164,7 +191,7 @@ void IntermidiateRepresentationEmmiter::emmit(std::ostream& stream, PackageDatab
 					stream << parameter->type()->qualifiedName() << ", ";
 					stream << "attributes = [";
 					for (auto attribute : parameter->attributes())
-						emmitAttribute(stream, *attribute);
+						emmitAttribute(stream, *attribute, nl);
 					stream << "] }\r\n";
 				}
 				stream << "\t\t]\r\n";

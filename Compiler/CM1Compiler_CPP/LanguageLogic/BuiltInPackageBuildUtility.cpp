@@ -3,6 +3,7 @@
 #include "CompileTimeFunctions/FunctionLibrary.hpp"
 #include "CompileTimeFunctions/Print.hpp"
 #include "CompileTimeFunctions/ReplaceWithCompilerFunction.hpp"
+#include "CompileTimeFunctions/ReplaceWithCompilerType.hpp"
 
 
 using namespace cMCompiler::dataStructures;
@@ -31,6 +32,15 @@ void buildCompilerLibrary(gsl::not_null<Namespace*> rootNamespace)
 			replace, cMCompiler::language::compileTimeFunctions::replaceWithCompilerFunction
 		);
 	}
+	{
+		auto replace = ns->append<Function>("replaceWithCompilerType");
+		replace->setAccessibility(Accessibility::Public);
+		replace->appendVariable("type", type);
+		replace->appendVariable("name", cMCompiler::language::getString());
+		cMCompiler::language::compileTimeFunctions::FuntionLibrary::instance().addFunctionDefinition(
+			replace, cMCompiler::language::compileTimeFunctions::replaceWithCompilerType
+		);
+	}
 }
 
 void buildPackage()
@@ -51,6 +61,7 @@ gsl::not_null<PackageDatabase*> cMCompiler::language::getDefaultPackage()
 	static bool built = false;
 	if (!built)
 		buildPackage();
+	built = true;
 	return defaultPackage__.get();
 }
 

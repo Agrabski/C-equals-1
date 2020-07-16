@@ -144,6 +144,9 @@
     <ClInclude Include="execution\ReferenceValue.hpp">
       <Filter>Header Files\Execution</Filter>
     </ClInclude>
+    <ClInclude Include="IntermidiateRepresentation\MemberAccessExpression.hpp">
+      <Filter>Header Files\IntermidiateRepresentation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -222,6 +225,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="execution\ReferenceValue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IntermidiateRepresentation\MemberAccessExpression.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Attribute.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

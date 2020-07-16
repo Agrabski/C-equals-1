@@ -2,6 +2,7 @@
 #include "../DataStructures/IntermidiateRepresentation/VariableReferenceExpression.hpp"
 #include "../DataStructures/IntermidiateRepresentation/ValueLiteralExpression.hpp"
 #include "../DataStructures/execution/IntegerValue.hpp"
+#include "../DataStructures/IntermidiateRepresentation/MemberAccessExpression.hpp"
 #include "../LanguageLogic/BuiltInPackageBuildUtility.hpp"
 #include "../LanguageLogic/LiteralUtility.hpp"
 #include "../LanguageLogic/OverloadResolutionUtility.hpp"
@@ -39,10 +40,14 @@ std::unique_ptr<IExpression> cMCompiler::compiler::ExpressionBuilder::buildExpre
 	{
 		auto text = ctx->STRING()->getText();
 		text.erase(text.begin());
-		text.erase(text.end());
+		text.erase(text.end() - 1);
 		auto value = language::buildStringValue();
 		value->setValue(text);
 		return std::make_unique<dataStructures::ir::ValueLiteralExpression>(std::move(value));
+	}
+	if (ctx->lExpression())
+	{
+		return buildExpression(ctx->lExpression());
 	}
 	std::terminate();
 }
@@ -57,4 +62,19 @@ std::unique_ptr<IExpression> cMCompiler::compiler::ExpressionBuilder::buildExpre
 		auto result = std::make_unique<ValueLiteralExpression>(std::move(lit));
 		return std::move(result);
 	}
+}
+
+std::unique_ptr<cMCompiler::dataStructures::ir::IExpression> cMCompiler::compiler::ExpressionBuilder::buildExpression(CMinusEqualsMinus1Revision0Parser::LExpressionContext* ctx)
+{
+	using namespace cMCompiler::dataStructures::ir;
+	auto const identifierChain = ctx->Identifier();
+	auto variableAccess = std::make_unique<VariableReferenceExpression>(
+			variableLookupFunction_(identifierChain[0]->getText())
+			);
+	auto strings = std::vector<std::string>();
+	for (not_null id : identifierChain)
+		strings.push_back(id->getText());
+	strings.erase(strings.begin());
+	return std::make_unique<MemberAccessExpression>(std::move(variableAccess), strings);
+	return std::unique_ptr<dataStructures::ir::IExpression>();
 }

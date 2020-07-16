@@ -21,8 +21,17 @@ namespace cMCompiler::compiler
 	std::vector<dataStructures::Type*> getParameterTypes(language::NameResolver& resolver, language::NameResolutionContext& context, gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx);
 	bool compatible(dataStructures::Function* definition, std::vector<dataStructures::Type*> parametrTypes);
 
+
+	void appendSpecialVariable(not_null<dataStructures::Type*> target, not_null<dataStructures::Function*>f);
+	void appendSpecialVariable(not_null<dataStructures::Attribute*> target, not_null<dataStructures::Function*>f);
+	void appendSpecialVariable(not_null<dataStructures::Namespace*> target, not_null<dataStructures::Function*>f);
+
+	dataStructures::Function* createFunction(not_null<dataStructures::Type*> target, std::string const& name);
+	dataStructures::Function* createFunction(not_null<dataStructures::Attribute*> target, std::string const& name);
+	dataStructures::Function* createFunction(not_null<dataStructures::Namespace*> target, std::string const& name);
+
 	template<typename T>
-	void createFunction(T* target, gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx)
+	void createFunction(not_null<T*> target, gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx)
 	{
 		using dataStructures::Function;
 		using dataStructures::Accessibility;
@@ -31,13 +40,11 @@ namespace cMCompiler::compiler
 		dataStructures::Accessibility accessibility = Accessibility::Private;
 		if (ctx->AccessSpecifier() != nullptr)
 			accessibility = parse(ctx->AccessSpecifier()->getText());
-		not_null function = target->append<Function>(name);
+		not_null function = createFunction(target, name);
 		function->setAccessibility(accessibility);
-		if (std::is_same<T, dataStructures::Type>::value)
-		{
-			function->appendVariable("self", (dataStructures::Type*)target);
-		}
+		appendSpecialVariable(target, function);
 	}
+
 
 	void confirmFunction(
 		language::NameResolver& resolver,
