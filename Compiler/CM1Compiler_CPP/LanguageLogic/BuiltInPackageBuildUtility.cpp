@@ -4,6 +4,7 @@
 #include "CompileTimeFunctions/Print.hpp"
 #include "CompileTimeFunctions/ReplaceWithCompilerFunction.hpp"
 #include "CompileTimeFunctions/ReplaceWithCompilerType.hpp"
+#include "CompileTimeFunctions/MarkCompileTimeOnly.hpp"
 
 
 using namespace cMCompiler::dataStructures;
@@ -39,6 +40,14 @@ void buildCompilerLibrary(gsl::not_null<Namespace*> rootNamespace)
 		replace->appendVariable("name", cMCompiler::language::getString());
 		cMCompiler::language::compileTimeFunctions::FuntionLibrary::instance().addFunctionDefinition(
 			replace, cMCompiler::language::compileTimeFunctions::replaceWithCompilerType
+		);
+	}
+	{
+		auto replace = ns->append<Function>("markCompileTimeOnly");
+		replace->setAccessibility(Accessibility::Public);
+		replace->appendVariable("function", function);
+		cMCompiler::language::compileTimeFunctions::FuntionLibrary::instance().addFunctionDefinition(
+			replace, cMCompiler::language::compileTimeFunctions::markCompileTimeOnly
 		);
 	}
 }

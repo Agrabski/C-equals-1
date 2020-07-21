@@ -7,6 +7,7 @@
 #include "Accessibility.hpp"
 #include "ObjectWithAccessibility.hpp"
 #include "Target.hpp"
+#include "ObjectWithMetadata.hpp"
 
 namespace cMCompiler::ir
 {
@@ -15,7 +16,28 @@ namespace cMCompiler::ir
 
 namespace cMCompiler::dataStructures
 {
-	class Function : public INamedObject, public AttributeTarget, public ObjectWithAccessbility
+	enum class FunctionFlags
+	{
+		None = 0b0000000000000,
+		ExcludeAtCompileTime = 0b0000000000001,
+		ExcludeAtRuntimeTime = 0b0000000000010,
+	};
+
+	FunctionFlags operator|(FunctionFlags lhs, FunctionFlags rhs)
+	{
+		return static_cast<FunctionFlags>(static_cast<char>(lhs) | static_cast<char>(rhs));
+	}
+	FunctionFlags operator&(FunctionFlags lhs, FunctionFlags rhs)
+	{
+		return static_cast<FunctionFlags>(static_cast<char>(lhs) & static_cast<char>(rhs));
+	}
+
+	struct FunctionMetadata
+	{
+		FunctionFlags flags_ = FunctionFlags::None;
+	};
+
+	class Function : public INamedObject, public AttributeTarget, public ObjectWithAccessbility, public ObjectWithMetadata<FunctionMetadata>
 	{
 		std::vector<std::unique_ptr<ir::IInstruction>> intermidiateRepresentation_;
 		std::vector<std::unique_ptr<Variable>> parameters_;

@@ -7,6 +7,14 @@ using namespace cMCompiler::compiler;
 using namespace cMCompiler::dataStructures;
 using gsl::not_null;
 
+
+void emmitAttribute(std::ostream& stream, AttributeInstance& attribute, cMCompiler::dataStructures::ir::INameGetter& nameGetter)
+{
+	stream << "{@attribute type = " << attribute.basedOn()->qualifiedName() << " instance = ";
+	attribute.objectInstance()->emmit(stream, nameGetter);
+	stream << " }";
+}
+
 PackageDatabase* findPackage(std::vector<not_null<PackageDatabase*>>& packages, Type* type)
 {
 	for (auto package : packages)
@@ -26,6 +34,15 @@ void emmitFunctionParameter(std::ostream& s, Variable& v, std::vector<not_null<P
 	if (package != nullptr)
 		s << package->name();
 	s << v.type()->qualifiedName() << "} ";
+}
+
+void emmitField(std::ostream& s, Field& v, cMCompiler::dataStructures::ir::INameGetter& ng)
+{
+	s << '{' << v.name() << "| ";
+	s << ng.get(v.type()) << " attributes = [ ";
+	for (auto a : v.attributes())
+		emmitAttribute(s, *a, ng);
+	s << "] }";
 }
 
 void emmitFunctionHeader(std::ostream& stream, Function& function, std::vector<not_null<PackageDatabase*>>& dependencies)
@@ -50,13 +67,6 @@ std::vector<gsl::not_null<Attribute*>> getAttributes(PackageDatabase& package)
 	auto result = std::vector<gsl::not_null<Attribute*>>();
 	getAttributes(package.rootNamespace(), result);
 	return result;
-}
-
-void emmitAttribute(std::ostream& stream, AttributeInstance& attribute, cMCompiler::dataStructures::ir::INameGetter& nameGetter)
-{
-	stream << "{@attribute type = " << attribute.basedOn()->qualifiedName() << " instance = ";
-	attribute.objectInstance()->emmit(stream, nameGetter); 
-	stream << " }";
 }
 
 class NameLookuper : public cMCompiler::dataStructures::ir::INameGetter
@@ -104,6 +114,93 @@ public:
 		return stream.str();
 	}
 };
+
+void indent(std::ostream& stream, int n)
+{
+	while (n-- > 0)
+		stream << '\t';
+}
+
+
+void emmitFunctions(
+	std::vector<gsl::not_null<Function*>> const& functions,
+	std::ostream& stream, cMCompiler::dataStructures::ir::INameGetter& ng,
+	int indentationLevel)
+{
+	indent(stream, indentationLevel);
+	stream << "functions = \r\n";
+	indent(stream, indentationLevel);
+	stream << "[\r\n";
+	{
+		for (auto function : functions)
+		{
+			indent(stream, indentationLevel + 1);
+			stream << "{\r\n";
+			{
+				indent(stream, indentationLevel + 2);
+				stream << "'" << function->qualifiedName() << "'\r\n";
+
+				indent(stream, indentationLevel + 2);
+				stream << "attributes = \r\n";
+				indent(stream, indentationLevel + 2);
+				stream << '[';
+				for (not_null<AttributeInstance*> attribute : function->attributes())
+				{
+					stream << "\r\n";
+					indent(stream, indentationLevel + 3);
+					emmitAttribute(stream, *attribute, ng);
+				}
+				stream << "\r\n";
+				indent(stream, indentationLevel + 2);
+				stream << "]\r\n";
+
+				indent(stream, indentationLevel + 2);
+				stream << "parametrs = \r\n";
+				indent(stream, indentationLevel + 2);
+				stream << "[\r\n";
+				for (auto parameter : function->parameters())
+				{
+					indent(stream, indentationLevel + 3);
+					stream << "{";
+					stream << ng.get(parameter->type()) << ", ";
+					stream << "attributes = [";
+					for (auto attribute : parameter->attributes())
+						emmitAttribute(stream, *attribute, ng);
+					stream << "] }\r\n";
+				}
+				indent(stream, indentationLevel + 2);
+				stream << "]\r\n";
+				auto const * const returnType = function->returnType();
+				indent(stream, indentationLevel + 2);
+				stream << "return_type = ";
+				if (returnType != nullptr)
+					stream << ng.get(returnType);
+				else
+					stream << "void";
+				stream << "\r\n";
+
+				indent(stream, indentationLevel + 2);
+				stream << "code = \r\n";
+				indent(stream, indentationLevel + 2);
+				stream << "[\r\n";
+				{
+					for (auto& instruction : function->code())
+					{
+						instruction->emmit(stream, ng, 3);
+						stream << "\r\n";
+					}
+				}
+				indent(stream, indentationLevel + 2);
+				stream << "]\r\n";
+			}
+			indent(stream, indentationLevel + 1);
+			stream << "}\r\n";
+		}
+	}
+	indent(stream, indentationLevel);
+	stream << "]\r\n";
+
+}
 
 void IntermidiateRepresentationEmmiter::emmit(std::ostream& stream, PackageDatabase& package, std::vector<not_null<PackageDatabase*>> dependencies)
 {
@@ -157,69 +254,12 @@ void IntermidiateRepresentationEmmiter::emmit(std::ostream& stream, PackageDatab
 					emmitField(stream, *field, nl);
 				}
 				stream << "\r\n\t\t]\r\n";
+				emmitFunctions(type->methods(), stream, nl, 2);
 
 			}
 			stream << "\t}\r\n";
 		}
 	}
 	stream << "]\r\n";
-
-	stream << "functions = [\r\n";
-	{
-		for (auto function : functions)
-		{
-			stream << "\t{\r\n";
-			{
-				stream << "\t\t'" << function->qualifiedName() << "'\r\n";
-
-				stream << "\t\tattributes = \r\n\t\t[";
-				for (not_null<AttributeInstance*> attribute : function->attributes())
-				{
-					stream << "\r\n\t\t\t";
-					emmitAttribute(stream, *attribute, nl);
-				}
-				stream << "\r\n\t\t]\r\n";
-
-				stream << "\t\tparametrs = \r\n\t\t[\r\n";
-				for (auto parameter : function->parameters())
-				{
-					stream << "\t\t\t{";
-					stream << parameter->name() << ", ";
-					auto const* const package = findPackage(dependencies, parameter->type());
-					if (package != nullptr)
-						stream << package->name();
-					stream << parameter->type()->qualifiedName() << ", ";
-					stream << "attributes = [";
-					for (auto attribute : parameter->attributes())
-						emmitAttribute(stream, *attribute, nl);
-					stream << "] }\r\n";
-				}
-				stream << "\t\t]\r\n";
-				auto returnType = function->returnType();
-				stream << "\t\treturn_type = ";
-				if (returnType != nullptr)
-				{
-					auto const* const package = findPackage(dependencies, returnType);
-					if (package != nullptr)
-						stream << package->name();
-					stream << returnType->qualifiedName();
-				}
-				else
-					stream << "void";
-				stream << "\r\n";
-
-				stream << "\t\tcode = \r\n\t\t[\r\n";
-				{
-					for (auto& instruction : function->code())
-					{
-						instruction->emmit(stream, nl, 3);
-						stream << "\r\n";
-					}
-				}
-				stream << "\t\t]\r\n";
-			}
-			stream << "\t}\r\n";
-		}
-	}
-	stream << "]\r\n";
+	emmitFunctions(functions, stream, nl, 0);
 }

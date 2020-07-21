@@ -8,7 +8,7 @@ namespace cMCompiler::dataStructures::execution
 		std::unique_ptr<IRuntimeValue>* value_;
 	public:
 		ReferenceValue(std::unique_ptr<IRuntimeValue>* value, Type* type) : IRuntimeValue(type), value_(value) {}
-		std::unique_ptr<IRuntimeValue>* value() const { return value_; }
+		std::unique_ptr<IRuntimeValue>* value() const noexcept { return value_; }
 
 
 		// Inherited via IRuntimeValue

@@ -194,6 +194,7 @@
     <ClInclude Include="IntermidiateRepresentation\VariableReferenceExpression.hpp" />
     <ClInclude Include="Namespace.hpp" />
     <ClInclude Include="ObjectWithAccessibility.hpp" />
+    <ClInclude Include="ObjectWithMetadata.hpp" />
     <ClInclude Include="PackageDatabase.hpp" />
     <ClInclude Include="QualifiedName.hpp" />
     <ClInclude Include="Target.hpp" />

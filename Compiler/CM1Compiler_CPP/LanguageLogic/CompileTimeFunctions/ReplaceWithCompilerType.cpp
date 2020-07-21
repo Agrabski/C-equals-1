@@ -5,7 +5,8 @@
 std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue>
 cMCompiler::language::compileTimeFunctions::replaceWithCompilerType
 (
-	std::map<std::string, std::unique_ptr<dataStructures::execution::IRuntimeValue>>&& valueMap
+	std::map<std::string, std::unique_ptr<dataStructures::execution::IRuntimeValue>>&& valueMap,
+	std::map<std::string, not_null<dataStructures::Type*>> genericParameters
 )
 {
 	auto& name = valueMap["name"];

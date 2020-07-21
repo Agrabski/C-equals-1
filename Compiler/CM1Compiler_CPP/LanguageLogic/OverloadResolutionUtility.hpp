@@ -13,4 +13,7 @@ namespace cMCompiler::language
 		std::vector<gsl::not_null<dataStructures::Function*>> const& candidates,
 		std::vector<std::unique_ptr<dataStructures::ir::IExpression>> const& parameters,
 		bool forceCompileTime = false, bool allowCompileTimeOnly = false);
+
+	bool isCompiletimeExecutable(dataStructures::Function* function);
+	bool isRuntimeExecutable(dataStructures::Function* function);
 }

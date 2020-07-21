@@ -1,13 +1,16 @@
 #pragma once
+#include <memory>
 #include <map>
+#include <gsl.h>
 #include "../../DataStructures/execution/IRuntimeValue.h"
-#include "../../DataStructures/Type.hpp"
+
+
 
 namespace cMCompiler::language::compileTimeFunctions
 {
-	std::unique_ptr<dataStructures::execution::IRuntimeValue> replaceWithCompilerType
+	std::unique_ptr<dataStructures::execution::IRuntimeValue> compileTimeAllocate
 	(
 		std::map<std::string, std::unique_ptr<dataStructures::execution::IRuntimeValue>>&& valueMap,
-		std::map<std::string, not_null<dataStructures::Type*>> genericParameters
+		std::map<std::string, gsl::not_null<dataStructures::Type*>> genericParameters
 	);
 }

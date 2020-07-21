@@ -19,6 +19,9 @@
     <Filter Include="Header Files\SpecialTypes">
       <UniqueIdentifier>{dada72ac-9fc7-457f-ac26-d460d25ec8c2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\CompileTimeInfrastrucutre">
+      <UniqueIdentifier>{a8469a1d-c623-4521-8f36-a7b32d65c182}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NameResolver.hpp">
@@ -69,11 +72,20 @@
     <ClInclude Include="MetatypeUility.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CompileTimeFunctions\CompileTimeAllocate.hpp">
+      <Filter>Header Files\CompileTimeFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="CompileTimeInfrastrucutre\CompileTimeHeap.hpp">
+      <Filter>Header Files\CompileTimeInfrastrucutre</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeInstantiationUtility.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CompileTimeFunctions\MarkCompileTimeOnly.hpp">
+      <Filter>Header Files\CompileTimeFunctions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="NameResolver.cpp">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
     <ClCompile Include="NamespaceBuilder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -111,6 +123,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SpecialTypes\SpecialTypeLibrary.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CompileTimeInfrastrucutre\CompileTimeHeap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CompileTimeFunctions\CompileTimeAllocate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CompileTimeFunctions\MarkCompileTimeOnly.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NameResolver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

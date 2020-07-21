@@ -16,3 +16,18 @@ cMCompiler::dataStructures::Function* cMCompiler::language::resolveOverload(std:
 	if (candidates.size() == 1)
 		return candidates.front();
 }
+
+bool cMCompiler::language::isCompiletimeExecutable(dataStructures::Function* function)
+{
+	return
+		(function->metadata().flags_ & dataStructures::FunctionFlags::ExcludeAtCompileTime)
+		== dataStructures::FunctionFlags::None;
+}
+
+bool cMCompiler::language::isRuntimeExecutable(dataStructures::Function* function)
+{
+	return
+		(function->metadata().flags_ & dataStructures::FunctionFlags::ExcludeAtRuntimeTime)
+		== dataStructures::FunctionFlags::None;
+
+}
