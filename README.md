@@ -1,2 +1,2 @@
 ﻿# C -=- 1
- A language based on explicitly declaring lifetime and mutablity of objects
+ A language designed to fully support compile-time meta programming without creating a "shadow language"
