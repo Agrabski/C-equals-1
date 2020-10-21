@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <gsl.h>
 #include <string>
 #include <memory>
 #include "AttributeTarget.hpp"
@@ -7,6 +8,9 @@
 #include "IntermidiateRepresentation/VariableDeclaration.hpp"
 #include "IntermidiateRepresentation/ScopeTermination.hpp"
 #include "Target.hpp"
+#include <variant>
+
+using gsl::not_null;
 
 namespace cMCompiler::dataStructures
 {
@@ -19,21 +23,21 @@ namespace cMCompiler::dataStructures
 	class AttributeTarget;
 	class Variable : public AttributeTarget
 	{
-		Type* const type_;
+		not_null<Type*> type_;
 		std::string name_;
 		ir::ScopeTermination* scopeTermination_;
 		ir::VariableDeclaration* scopeStart_;
 	public:
-		void provideScope(ir::ScopeTermination* scopeTermination)
+		void provideScope(not_null<ir::ScopeTermination*> scopeTermination) noexcept
 		{
 			scopeTermination_ = scopeTermination;
 		}
-		void provideScope(ir::VariableDeclaration* scopeStart)
+		void provideScope(not_null<ir::VariableDeclaration*> scopeStart) noexcept
 		{
 			scopeStart_ = scopeStart;
 		}
-		Variable(std::string name, Type* type) : AttributeTarget(Target::Variable), type_(type), name_(name) {}
-		Type* type() noexcept { return type_; }
+		Variable(std::string name, not_null<Type*> type) : AttributeTarget(Target::Variable), type_(type), name_(name) {}
+		not_null<Type*> type() noexcept;
 		std::string const& name() const noexcept { return name_; }
 	};
 

@@ -19,6 +19,10 @@ namespace cMCompiler::compiler
 		void visit(dataStructures::ir::VariableReferenceExpression& expression) final;
 		void visit(dataStructures::ir::MemberAccessExpression& expression) final;
 		void visit(dataStructures::ir::FunctionCall& expression) final;
+		ExpressionEvaluator(ExpressionEvaluator const& e) : resolver_(e.resolver_), context_(e.context_), variableLookupFunction_(e.variableLookupFunction_)
+		{
+
+		}
 	public:
 		ExpressionEvaluator(
 			language::NameResolver& resolver,

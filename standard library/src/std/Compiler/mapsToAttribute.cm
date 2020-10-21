@@ -1,4 +1,6 @@
 import {functionDescriptor typeDescriptor replaceWithCompilerFunction replaceWithCompilerType} from {cm1mLang::compiler}
+import {string} from {cm1mLang}
+import {print} from {std}
 
 namespace std::compiler 
 {
@@ -13,7 +15,6 @@ namespace std::compiler
 		public fn attach(t: typeDescriptor)
 		{
 			replaceWithCompilerType(t, self._typename);
-			print(self._typename);
 		}
 	}
 

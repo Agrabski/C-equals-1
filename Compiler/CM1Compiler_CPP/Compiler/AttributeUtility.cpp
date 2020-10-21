@@ -6,6 +6,7 @@
 #include "../DataStructures/execution/ReferenceValue.hpp"
 #include "../LanguageLogic/OverloadResolutionUtility.hpp"
 #include "../LanguageLogic/SpecialFunctionUtility.hpp"
+#include "../LanguageLogic/TypeInstantiationUtility.hpp"
 
 using namespace cMCompiler;
 
@@ -36,8 +37,8 @@ void cMCompiler::compiler::confirmAttribute(
 	not_null attribute = parent->get<dataStructures::Attribute>(ctx->Identifier()->getText());
 	for (not_null<CMinusEqualsMinus1Revision0Parser::FieldDeclarationContext*> member : ctx->classContentSequence()->fieldDeclaration())
 	{
-		auto type = resolver.resolve<dataStructures::Type>(member->Identifier(1)->getText(), context);
-		auto var = attribute->appendField(member->Identifier(0)->getText(), type);
+		auto type = resolver.resolve<dataStructures::Type>(member->typeSpecifier()->Identifier()->getText(), context);
+		auto var = attribute->appendField(member->Identifier()->getText(), type);
 		auto access = dataStructures::parse(member->AccessSpecifier()->getText());
 		var->setAccessibility(access);
 	}
@@ -85,11 +86,15 @@ std::unique_ptr<dataStructures::AttributeInstance> cMCompiler::compiler::createA
 	language::NameResolutionContext& context
 )
 {
-	auto t = std::make_unique<dataStructures::execution::ObjectValue>(attribute->describingType());
+	auto t = language::instantiate(attribute->describingType());
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> self = std::move(t);
 	values.insert(values.begin(), std::make_unique<dataStructures::execution::ReferenceValue>(&self, self->type()));
-	auto function = language::resolveOverload(language::getConstructors(attribute->methods()), values, true, true);
-	execute(function, std::move(values), resolver, context);
+	auto constructors = language::getConstructors(attribute->methods());
+	if (constructors.size() != 0)
+	{
+		auto function = language::resolveOverload(constructors, values, true, true);
+		execute(function, std::move(values), resolver, context);
+	}
 
 	return std::make_unique<dataStructures::AttributeInstance>(attribute, std::move(self));
 }

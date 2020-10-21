@@ -9,7 +9,7 @@ namespace cMCompiler::dataStructures
 	{
 		Public,
 		Private,
-		Protected
+		Internal
 	};
 
 	using namespace std::literals;

@@ -14,6 +14,6 @@ cMCompiler::language::compileTimeFunctions::markCompileTimeOnly
 	assert(genericParameters.size() == 0);
 	assert(valueMap.size() == 1);
 	auto function = dynamic_cast<RuntimeFunctionDescriptor*>(valueMap["function"].get());
-	function->value()->metadata().flags_ =
-		function->value()->metadata().flags_ | dataStructures::FunctionFlags::ExcludeAtCompileTime;
+	function->value()->metadata().appendFlag(dataStructures::FunctionFlags::ExcludeAtCompileTime);
+	return nullptr;
 }

@@ -18,7 +18,7 @@ namespace cMCompiler::compiler
 		antlrcpp::Any visitFunctionDeclaration(CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext* ctx) final;
 	public:
 		void evaluateCompiletimeCode();
-		Preprocessor(dataStructures::PackageDatabase& database, language::NameResolver& nameResolver) noexcept :
+		Preprocessor(dataStructures::PackageDatabase& database, language::NameResolver& nameResolver) :
 			database_(database), nameResolver_(nameResolver) 
 		{
 			context_.namespaceStack_.push_back(database.rootNamespace());

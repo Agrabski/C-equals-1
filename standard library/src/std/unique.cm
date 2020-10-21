@@ -1,0 +1,23 @@
+namespace std
+{
+	class unique<T>
+	{
+		private _allocated : T&;
+
+		public fn finalize()
+		{
+			delete(_allocated);
+		}
+
+		public fn move(other: unique<T>)
+		{
+			other._allocated = _allocated;
+			_allocated = null;
+		}
+
+		internal fn construct(value: T&)
+		{
+			_allocated = value;
+		}
+	}
+}

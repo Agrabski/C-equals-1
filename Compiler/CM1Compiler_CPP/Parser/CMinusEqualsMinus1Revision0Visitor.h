@@ -31,8 +31,6 @@ public:
 
 		virtual antlrcpp::Any visitAttributeTarget(CMinusEqualsMinus1Revision0Parser::AttributeTargetContext *context) = 0;
 
-		virtual antlrcpp::Any visitAttributeContentSequence(CMinusEqualsMinus1Revision0Parser::AttributeContentSequenceContext *context) = 0;
-
 		virtual antlrcpp::Any visitImportDeclaration(CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext *context) = 0;
 
 		virtual antlrcpp::Any visitTypeDeclaration(CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext *context) = 0;
@@ -43,6 +41,8 @@ public:
 
 		virtual antlrcpp::Any visitFieldDeclaration(CMinusEqualsMinus1Revision0Parser::FieldDeclarationContext *context) = 0;
 
+		virtual antlrcpp::Any visitGenericSpecifier(CMinusEqualsMinus1Revision0Parser::GenericSpecifierContext *context) = 0;
+
 		virtual antlrcpp::Any visitImplementedInterfacesSequence(CMinusEqualsMinus1Revision0Parser::ImplementedInterfacesSequenceContext *context) = 0;
 
 		virtual antlrcpp::Any visitNamespaceDeclaration(CMinusEqualsMinus1Revision0Parser::NamespaceDeclarationContext *context) = 0;
@@ -52,6 +52,8 @@ public:
 		virtual antlrcpp::Any visitParameterList(CMinusEqualsMinus1Revision0Parser::ParameterListContext *context) = 0;
 
 		virtual antlrcpp::Any visitParameter(CMinusEqualsMinus1Revision0Parser::ParameterContext *context) = 0;
+
+		virtual antlrcpp::Any visitTypeSpecifier(CMinusEqualsMinus1Revision0Parser::TypeSpecifierContext *context) = 0;
 
 		virtual antlrcpp::Any visitFunctionBody(CMinusEqualsMinus1Revision0Parser::FunctionBodyContext *context) = 0;
 

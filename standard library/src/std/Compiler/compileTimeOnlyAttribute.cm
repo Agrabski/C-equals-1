@@ -2,7 +2,7 @@ import {markCompileTimeOnly functionDescriptor} from {cm1mLang::compiler}
 
 namespace std::compiler 
 {
-	public att<function> TypeMapsTo
+	public att<function> CompileTimeOnly
 	{
 		public fn attach(f: functionDescriptor)
 		{

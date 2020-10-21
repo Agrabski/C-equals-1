@@ -17,3 +17,18 @@ std::unique_ptr<IRuntimeValue> RuntimeTypeDescriptor::copy() const
 	auto result = std::make_unique<RuntimeTypeDescriptor>(type(), value_);
 	return result;
 }
+
+std::unique_ptr<ReferenceValue> cMCompiler::dataStructures::execution::RuntimeTypeDescriptor::getMemberValue(std::string const& name)
+{
+	return value_->object()->getMemberValue(name);
+}
+
+cMCompiler::dataStructures::Type* cMCompiler::dataStructures::execution::RuntimeTypeDescriptor::getMemberType(std::string const& name)
+{
+	return value_->object()->getMemberType(name);
+}
+
+void cMCompiler::dataStructures::execution::RuntimeTypeDescriptor::setValue(std::string const& name, std::unique_ptr<IRuntimeValue>&& value)
+{
+	std::terminate(); // todo: report error
+}

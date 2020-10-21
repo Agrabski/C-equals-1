@@ -29,7 +29,7 @@ PackageDatabase* findPackage(std::vector<not_null<PackageDatabase*>>& packages, 
 
 void emmitFunctionParameter(std::ostream& s, Variable& v, std::vector<not_null<PackageDatabase*>>& dependencies)
 {
-	auto package = findPackage(dependencies, v.type());
+	auto const* const package = findPackage(dependencies, v.type());
 	s << '{' << v.name() << "| ";
 	if (package != nullptr)
 		s << package->name();
@@ -48,7 +48,7 @@ void emmitField(std::ostream& s, Field& v, cMCompiler::dataStructures::ir::IName
 void emmitFunctionHeader(std::ostream& stream, Function& function, std::vector<not_null<PackageDatabase*>>& dependencies)
 {
 	stream << '{' << function.qualifiedName() << ", " << (int)function.accessibility() << ", parameters = [";
-	for (auto parameter : function.parameters())
+	for (not_null parameter : function.parameters())
 		emmitFunctionParameter(stream, *parameter, dependencies);
 	stream << "]" << "} ";
 }

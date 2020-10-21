@@ -1,0 +1,8 @@
+import {FunctionMapsTo CompileTimeOnly} from {std::compiler}
+
+namespace std 
+{
+	[CompileTimeOnly()]
+	[FunctionMapsTo("print")]
+	public fn print(value: i8){}
+}

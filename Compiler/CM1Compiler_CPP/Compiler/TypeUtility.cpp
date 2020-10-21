@@ -45,8 +45,8 @@ void cMCompiler::compiler::confirmType(
 
 	for (not_null<CMinusEqualsMinus1Revision0Parser::FieldDeclarationContext*> member : ctx->classContentSequence()->fieldDeclaration())
 	{
-		auto t = resolver.resolve<dataStructures::Type>(member->Identifier(1)->getText(), context);
-		auto var = type->appendField(member->Identifier(0)->getText(), t);
+		auto t = resolver.resolve<dataStructures::Type>(member->typeSpecifier()->Identifier()->getText(), context);
+		auto var = type->appendField(member->Identifier()->getText(), t);
 		auto access = dataStructures::parse(member->AccessSpecifier()->getText());
 		var->setAccessibility(access);
 	}
@@ -77,7 +77,7 @@ void cMCompiler::compiler::finalizeType(
 	auto functions = type->methods();
 	for (not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> member : ctx->classContentSequence()->functionDeclaration())
 	{
-		not_null f = *std::find_if(functions.begin(), functions.end(), [&](const auto f)
+		not_null f = *std::find_if(functions.begin(), functions.end(), [&](const auto f) noexcept
 		{
 			return f->state() == dataStructures::ObjectState::Confirmed;
 		});

@@ -21,6 +21,8 @@ void buildCompilerLibrary(gsl::not_null<Namespace*> rootNamespace)
 	auto type = ns->append<Type>("typeDescriptor");
 	type->setTypeClassifier(TypeClassifier::Class);
 	type->setAccessibility(Accessibility::Public);
+	type->appendField("name", cMCompiler::language::getString())->setAccessibility(Accessibility::Public);
+	type->appendField("qualifiedName", cMCompiler::language::getString())->setAccessibility(Accessibility::Public);
 	auto function = ns->append<Type>("functionDescriptor");
 	function->setTypeClassifier(TypeClassifier::Class);
 	function->setAccessibility(Accessibility::Public);

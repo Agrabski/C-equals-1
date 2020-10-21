@@ -1,0 +1,21 @@
+import {usize} from {cm1mLang}
+namespace std
+{
+	public fn new_array<T>(size: usize) -> unique<T[]>
+	{
+		let result = unsafe_cast<T&>(unsafe_new(sizeof<T>() * size));
+		return unique<T[]>(result);
+	}
+
+	public fn new<T>() -> unique<T>
+	{
+		let result = unsafe_cast<T&>(unsafe_new(sizeof<T>()));
+		return unique<T>(result);
+	}
+
+	private fn unsafe_new(size: usize) -> char[]
+	{}
+
+	internal fn delete<T>(val: T&)
+	{}
+}

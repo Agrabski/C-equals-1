@@ -16,7 +16,7 @@ namespace cMCompiler::dataStructures::ir
 		IExpression* expression() const noexcept { return expression_.get(); }
 		IfElseStatement(std::unique_ptr<IExpression>&& expression)
 		{
-			auto * const type = expression->evaluateType();
+			auto const * const type = expression->evaluateType();
 			if (type != language::getBool())
 				//todo: better exception
 				throw std::exception();

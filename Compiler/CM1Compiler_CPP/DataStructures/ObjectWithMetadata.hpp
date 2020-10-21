@@ -1,6 +1,5 @@
 #pragma once
 
-
 namespace cMCompiler::dataStructures
 {
 	template <typename T>

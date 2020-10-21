@@ -21,7 +21,7 @@ antlrcpp::Any cMCompiler::compiler::Preprocessor::visitNamespaceDeclaration(CMin
 	auto name = QualifiedName(context->qualifiedIdentifier()->getText());
 	auto newNamespace = language::NamespaceBuilder::buildNamespace(name, context_.namespaceStack_.back());
 	context_.namespaceStack_.push_back(newNamespace);
-	for (auto declaration : context->declarationSequence()->declaration())
+	for (not_null declaration : context->declarationSequence()->declaration())
 		declaration->accept(this);
 	context_.namespaceStack_.pop_back();
 	return antlrcpp::Any();

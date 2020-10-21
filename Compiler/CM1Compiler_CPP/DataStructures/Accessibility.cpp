@@ -8,7 +8,7 @@ Accessibility cMCompiler::dataStructures::parse(std::string const& text)
 	{
 		{"public", Accessibility::Public},
 		{"private", Accessibility::Private},
-		{"protected", Accessibility::Protected},
+		{"internal", Accessibility::Internal},
 		{"", Accessibility::Private}
 	};
 	auto result = accesibilityMap.find(text);

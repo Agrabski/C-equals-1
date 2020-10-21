@@ -24,7 +24,7 @@ namespace cMCompiler::compiler
 
 	void appendSpecialVariable(not_null<dataStructures::Type*> target, not_null<dataStructures::Function*>f);
 	void appendSpecialVariable(not_null<dataStructures::Attribute*> target, not_null<dataStructures::Function*>f);
-	void appendSpecialVariable(not_null<dataStructures::Namespace*> target, not_null<dataStructures::Function*>f);
+	void appendSpecialVariable(not_null<dataStructures::Namespace*> target, not_null<dataStructures::Function*>f) noexcept;
 
 	dataStructures::Function* createFunction(not_null<dataStructures::Type*> target, std::string const& name);
 	dataStructures::Function* createFunction(not_null<dataStructures::Attribute*> target, std::string const& name);
@@ -42,6 +42,11 @@ namespace cMCompiler::compiler
 			accessibility = parse(ctx->AccessSpecifier()->getText());
 		not_null function = createFunction(target, name);
 		function->setAccessibility(accessibility);
+		//todo: generics
+		/*auto generic = ctx->genericSpecifier();
+		if (generic != nullptr)
+			for (not_null param : generic->Identifier())
+				function->pushParameter(param->getText());*/
 		appendSpecialVariable(target, function);
 	}
 

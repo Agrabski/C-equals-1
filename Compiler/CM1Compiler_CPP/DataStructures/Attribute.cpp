@@ -14,7 +14,7 @@ std::vector<cMCompiler::dataStructures::INamedObject*> cMCompiler::dataStructure
 	return result;
 }
 
-Field* cMCompiler::dataStructures::Attribute::appendField(std::string const& name, Type* type)
+not_null<Field*> cMCompiler::dataStructures::Attribute::appendField(std::string const& name, Type* type)
 {
 	return describingType_->appendField(name, type);
 }

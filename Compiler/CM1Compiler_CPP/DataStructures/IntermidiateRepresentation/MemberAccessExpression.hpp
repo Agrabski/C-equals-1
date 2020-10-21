@@ -14,7 +14,7 @@ namespace cMCompiler::dataStructures::ir
 	public:
 		MemberAccessExpression(std::unique_ptr<IExpression>&& initial, std::vector<std::string> members) :
 			initialExpression_(std::move(initial)), memberChain_(members) {}
-		IExpression* initialExpression() const { return initialExpression_.get(); }
-		std::vector<std::string> const& memberChain() const { return memberChain_; }
+		IExpression* initialExpression() const noexcept { return initialExpression_.get(); }
+		std::vector<std::string> const& memberChain() const noexcept { return memberChain_; }
 	};
 }

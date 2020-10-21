@@ -32,9 +32,6 @@ public:
 	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::AttributeTargetContext *>) = 0;
 	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::AttributeTargetContext *>) = 0;
 
-	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::AttributeContentSequenceContext *>) = 0;
-	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::AttributeContentSequenceContext *>) = 0;
-
 	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext *>) = 0;
 	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext *>) = 0;
 
@@ -50,6 +47,9 @@ public:
 	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::FieldDeclarationContext *>) = 0;
 	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::FieldDeclarationContext *>) = 0;
 
+	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::GenericSpecifierContext *>) = 0;
+	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::GenericSpecifierContext *>) = 0;
+
 	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::ImplementedInterfacesSequenceContext *>) = 0;
 	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::ImplementedInterfacesSequenceContext *>) = 0;
 
@@ -64,6 +64,9 @@ public:
 
 	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::ParameterContext *>) = 0;
 	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::ParameterContext *>) = 0;
+
+	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::TypeSpecifierContext *>) = 0;
+	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::TypeSpecifierContext *>) = 0;
 
 	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::FunctionBodyContext *>) = 0;
 	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::FunctionBodyContext *>) = 0;

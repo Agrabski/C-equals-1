@@ -166,9 +166,11 @@
     <ClInclude Include="AttributeInstance.hpp" />
     <ClInclude Include="AttributeTarget.hpp" />
     <ClInclude Include="CompilationContext.hpp" />
+    <ClInclude Include="Enum.hpp" />
     <ClInclude Include="execution\BooleanValue.hpp" />
     <ClInclude Include="execution\IRuntimeValue.h" />
     <ClInclude Include="execution\IntegerValue.hpp" />
+    <ClInclude Include="execution\IComplexRuntimeValue.hpp" />
     <ClInclude Include="execution\ObjectValue.hpp" />
     <ClInclude Include="execution\ReferenceValue.hpp" />
     <ClInclude Include="execution\RuntimeFieldDescriptor.hpp" />
@@ -177,6 +179,11 @@
     <ClInclude Include="execution\StringValue.hpp" />
     <ClInclude Include="Field.hpp" />
     <ClInclude Include="Function.hpp" />
+    <ClInclude Include="Generic\GenericFunction.hpp" />
+    <ClInclude Include="Generic\GenericObject.hpp" />
+    <ClInclude Include="Generic\GenericParameter.hpp" />
+    <ClInclude Include="Generic\GenericVariable.hpp" />
+    <ClInclude Include="Generic\TypePointer.hpp" />
     <ClInclude Include="INamedObject.hpp" />
     <ClInclude Include="IntermidiateRepresentation\AssigmentStatement.hpp" />
     <ClInclude Include="IntermidiateRepresentation\ExecutionContext.hpp" />
@@ -192,6 +199,7 @@
     <ClInclude Include="IntermidiateRepresentation\ValueLiteralExpression.hpp" />
     <ClInclude Include="IntermidiateRepresentation\VariableDeclaration.hpp" />
     <ClInclude Include="IntermidiateRepresentation\VariableReferenceExpression.hpp" />
+    <ClInclude Include="MetadataObject.hpp" />
     <ClInclude Include="Namespace.hpp" />
     <ClInclude Include="ObjectWithAccessibility.hpp" />
     <ClInclude Include="ObjectWithMetadata.hpp" />
@@ -219,6 +227,7 @@
     <ClCompile Include="execution\RuntimeTypeDescriptor.cpp" />
     <ClCompile Include="execution\StringValue.cpp" />
     <ClCompile Include="Function.cpp" />
+    <ClCompile Include="Generic\GenericObject.cpp" />
     <ClCompile Include="INamedObject.cpp" />
     <ClCompile Include="IntermidiateRepresentation\AssigmentStatement.cpp" />
     <ClCompile Include="IntermidiateRepresentation\FunctionCall.cpp" />
@@ -235,6 +244,7 @@
     <ClCompile Include="TypeClassifier.cpp" />
     <ClCompile Include="Validation\ValidationError.cpp" />
     <ClCompile Include="Validation\ValidationUtility.cpp" />
+    <ClCompile Include="Variable.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

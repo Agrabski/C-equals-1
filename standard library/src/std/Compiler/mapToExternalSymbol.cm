@@ -1,0 +1,27 @@
+import {functionDescriptor typeDescriptor replaceWithSymbol} from {cm1mLang::compiler}
+import {string} from {cm1mLang}
+
+namespace std::compiler
+{
+	public att<function type> mapToExternalSymbol
+	{
+		private _symbolName : string;
+		private _assemblyName : string;
+		public fn construct(symbolName: string, assemblyName: string)
+		{
+			_symbolName = symbolName;
+			_assemblyName = assemblyName;
+		}
+
+		public fn attach(f: functionDescriptor)
+		{
+			replaceWithSymbol(f, _symbolName, _assemblyName)
+		}
+
+		
+		public fn attach(t: typeDescriptor)
+		{
+			replaceWithSymbol(t, _symbolName, _assemblyName)
+		}
+	}
+}

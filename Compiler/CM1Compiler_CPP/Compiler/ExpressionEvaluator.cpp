@@ -19,22 +19,22 @@ std::unique_ptr<dataStructures::execution::ReferenceValue> cMCompiler::compiler:
 
 void cMCompiler::compiler::ExpressionEvaluator::visit(dataStructures::ir::MemberAccessExpression& expression)
 {
-	auto initialValue = evaluate(expression.initialExpression());
+	auto evaluator = ExpressionEvaluator(*this);
+	evaluator.makeReference_ = true;
+	auto initialValue = evaluator.evaluate(expression.initialExpression());
 	not_null reference = dynamic_cast<ReferenceValue*>(initialValue.get());
-	auto members = expression.memberChain();
+	auto &members = expression.memberChain();
 	IRuntimeValue* tmp = reference->value()->get();
 	for (auto s = members.begin(); s + 1 != members.end(); s++)
 	{
-		not_null object = dynamic_cast<ObjectValue*>(tmp);
+		not_null object = dynamic_cast<IComplexRuntimeValue*>(tmp);
 		tmp = object->getMemberValue(*s).get();
 	}
-	not_null object = dynamic_cast<ObjectValue*>(tmp);
+	not_null object = dynamic_cast<IComplexRuntimeValue*>(tmp);
 	if (makeReference_)
-		value_ = std::make_unique<ReferenceValue>(
-			&(object->getMemberValue(members.back())),
-			object->getMemberType(members.back()));
+		value_ = object->getMemberValue(members.back());
 	else
-		value_ = object->getMemberValue(members.back())->copy();
+		value_ = (*object->getMemberValue(members.back())->value())->copy();
 }
 
 void cMCompiler::compiler::ExpressionEvaluator::visit(dataStructures::ir::FunctionCall& expression)

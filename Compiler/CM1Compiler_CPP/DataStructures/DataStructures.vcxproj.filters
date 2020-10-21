@@ -22,6 +22,9 @@
     <Filter Include="Header Files\Validation">
       <UniqueIdentifier>{53542dc8-3cba-4432-84c7-48a4e954bf8a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Generics">
+      <UniqueIdentifier>{77530882-5f33-464c-a4d3-ace2bbceeffb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CompilationContext.hpp">
@@ -150,6 +153,30 @@
     <ClInclude Include="ObjectWithMetadata.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MetadataObject.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Generic\GenericObject.hpp">
+      <Filter>Header Files\Generics</Filter>
+    </ClInclude>
+    <ClInclude Include="Generic\GenericParameter.hpp">
+      <Filter>Header Files\Generics</Filter>
+    </ClInclude>
+    <ClInclude Include="Generic\GenericVariable.hpp">
+      <Filter>Header Files\Generics</Filter>
+    </ClInclude>
+    <ClInclude Include="Generic\GenericFunction.hpp">
+      <Filter>Header Files\Generics</Filter>
+    </ClInclude>
+    <ClInclude Include="Generic\TypePointer.hpp">
+      <Filter>Header Files\Generics</Filter>
+    </ClInclude>
+    <ClInclude Include="execution\IComplexRuntimeValue.hpp">
+      <Filter>Header Files\Execution</Filter>
+    </ClInclude>
+    <ClInclude Include="Enum.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -234,6 +261,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Attribute.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Variable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Generic\GenericObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

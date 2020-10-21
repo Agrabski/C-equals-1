@@ -63,6 +63,7 @@
     <ClCompile Include="OverloadResolutionUtility.cpp" />
     <ClCompile Include="SpecialFunctionUtility.cpp" />
     <ClCompile Include="SpecialTypes\SpecialTypeLibrary.cpp" />
+    <ClCompile Include="TypeInstantiationUtility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

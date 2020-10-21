@@ -16,3 +16,10 @@ std::unique_ptr<execution::StringValue> cMCompiler::language::buildStringValue()
 	auto string = getDefaultPackage()->rootNamespace()->get<Type>("string");
 	return std::make_unique<execution::StringValue>(string);
 }
+
+std::unique_ptr<execution::StringValue> cMCompiler::language::buildStringValue(std::string const& value)
+{
+	auto result = buildStringValue();
+	result->setValue(value);
+	return result;
+}

@@ -8,7 +8,7 @@ std::string cMCompiler::compiler::getName(gsl::not_null<CMinusEqualsMinus1Revisi
 
 std::optional<std::string> cMCompiler::compiler::returnType(gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx)
 {
-	auto id = ctx->Identifier(1);
+	auto const * const id = ctx->Identifier(1);
 	if(id!=nullptr)
 		return ctx->Identifier(1)->getText();
 	return std::optional<std::string>();
@@ -47,7 +47,7 @@ std::vector<cMCompiler::dataStructures::Type*> cMCompiler::compiler::getParamete
 {
 	auto result = std::vector<cMCompiler::dataStructures::Type*>();
 	for (not_null<CMinusEqualsMinus1Revision0Parser::ParameterContext*> variable : ctx->parameterList()->parameter())
-		result.push_back(resolver.resolve<dataStructures::Type>(variable->Identifier(1)->getText(), context));
+		result.push_back(resolver.resolve<dataStructures::Type>(variable->typeSpecifier()->Identifier()->getText(), context));
 	return result;
 }
 
@@ -60,8 +60,8 @@ void cMCompiler::compiler::confirmFunction(
 {
 	for (not_null<CMinusEqualsMinus1Revision0Parser::ParameterContext*> variable : ctx->parameterList()->parameter())
 	{
-		auto const type = resolver.resolve<dataStructures::Type>(variable->Identifier(1)->getText(), context);
-		f->appendVariable(variable->Identifier(0)->getText(), type);
+		not_null const type = resolver.resolve<dataStructures::Type>(variable->typeSpecifier()->Identifier()->getText(), context);
+		f->appendVariable(variable->Identifier()->getText(), type);
 	}
 	auto type = returnType(ctx);
 	if (type)
@@ -99,7 +99,7 @@ void cMCompiler::compiler::appendSpecialVariable(not_null<dataStructures::Attrib
 	f->appendVariable("self", target->describingType());
 }
 
-void cMCompiler::compiler::appendSpecialVariable(not_null<dataStructures::Namespace*> target, not_null<dataStructures::Function*> f)
+void cMCompiler::compiler::appendSpecialVariable(not_null<dataStructures::Namespace*> target, not_null<dataStructures::Function*> f) noexcept
 {
 }
 
@@ -135,7 +135,7 @@ void cMCompiler::compiler::finalizeFunction(
 	auto parametrs = f->parameters();
 	for (not_null<CMinusEqualsMinus1Revision0Parser::ParameterContext*> variable : ctx->parameterList()->parameter())
 	{
-		auto param = std::find_if(parametrs.begin(), parametrs.end(), [=](const auto p) {return p->name() == variable->Identifier(0)->getText(); });
+		auto param = std::find_if(parametrs.begin(), parametrs.end(), [=](const auto p) {return p->name() == variable->Identifier()->getText(); });
 		assert(param != parametrs.end());
 		//todo: attributes
 	}

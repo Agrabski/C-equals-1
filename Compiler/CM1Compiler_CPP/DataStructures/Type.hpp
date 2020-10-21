@@ -63,7 +63,7 @@ namespace cMCompiler::dataStructures
 			return result;
 		}
 
-		void appendInterface(Type*t)
+		void appendInterface(Type* t)
 		{
 			implementedInterfaces_.push_back(t);
 		}

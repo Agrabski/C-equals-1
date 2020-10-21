@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <memory>
+#include <gsl.h>
 #include "Type.hpp"
 #include "Function.hpp"
 #include "INamedObject.hpp"
@@ -8,6 +9,9 @@
 #include "Field.hpp"
 #include "Target.hpp"
 #include "Namespace.hpp"
+#include "execution/ObjectValue.hpp"
+
+using gsl::not_null;
 
 namespace cMCompiler::dataStructures
 {
@@ -21,8 +25,8 @@ namespace cMCompiler::dataStructures
 		Target attributeTarget_;
 	public:
 		Attribute(std::string name, Namespace* parent);
-		void addAttributeTarget(Target t) { attributeTarget_ = attributeTarget_ | t; }
-		bool targetValid(Target t) { return (attributeTarget_ & t) != Target::None; }
+		void addAttributeTarget(Target t) noexcept { attributeTarget_ = attributeTarget_ | t; }
+		bool targetValid(Target t) noexcept { return (attributeTarget_ & t) != Target::None; }
 		std::vector<INamedObject*> children() final;
 
 		std::vector<validation::ValidationError> validateContent() const final
@@ -30,7 +34,7 @@ namespace cMCompiler::dataStructures
 			return std::vector<validation::ValidationError>();
 		}
 
-		Field* appendField(std::string const& name, Type* type);
+		not_null<Field*> appendField(std::string const& name, Type* type);
 		Function* appendFunction(std::string const& name);
 
 		std::vector<gsl::not_null<Function*>> methods();

@@ -2,7 +2,7 @@
 
 
 using namespace cMCompiler::dataStructures;
-Variable* Function::appendVariable(std::string name, Type* type)
+Variable* Function::appendVariable(std::string name, not_null<Type*> type)
 {
 	auto tmp = std::make_unique<Variable>(name, type);
 	auto result = tmp.get();
@@ -10,7 +10,7 @@ Variable* Function::appendVariable(std::string name, Type* type)
 	return result;
 }
 
-Variable* cMCompiler::dataStructures::Function::appendLocalVariable(std::string name, Type* type)
+Variable* cMCompiler::dataStructures::Function::appendLocalVariable(std::string name, not_null<Type*> type)
 {
 	auto tmp = std::make_unique<Variable>(name, type);
 	auto result = tmp.get();
@@ -37,4 +37,27 @@ std::vector<ir::IInstruction*> cMCompiler::dataStructures::Function::code()
 std::vector<validation::ValidationError> cMCompiler::dataStructures::Function::validateContent() const
 {
 	return std::vector<validation::ValidationError>();
+}
+
+FunctionFlags cMCompiler::dataStructures::operator|(FunctionFlags lhs, FunctionFlags rhs)
+{
+	return static_cast<FunctionFlags>(static_cast<char>(lhs) | static_cast<char>(rhs));
+}
+
+FunctionFlags cMCompiler::dataStructures::operator&(FunctionFlags lhs, FunctionFlags rhs)
+{
+	return static_cast<FunctionFlags>(static_cast<char>(lhs) & static_cast<char>(rhs));
+}
+
+std::ostream& cMCompiler::dataStructures::operator<<(std::ostream& stream, FunctionFlags flags)
+{
+	return stream << static_cast<unsigned long long>(flags);
+}
+
+std::istream& cMCompiler::dataStructures::operator>>(std::istream& stream, FunctionFlags& flags)
+{
+	unsigned long long tmp = 0;
+	stream >> tmp;
+	flags = static_cast<FunctionFlags>(tmp);
+	return stream;
 }

@@ -26,7 +26,7 @@ std::unique_ptr<IRuntimeValue> cMCompiler::compiler::execute(
 	{
 		auto values = std::map<std::string, std::unique_ptr<dataStructures::execution::IRuntimeValue>>();
 		int i = 0;
-		for (auto var : functionDefinition->parameters())
+		for (not_null const var : functionDefinition->parameters())
 			values[var->name()] = std::move(valueMap[i++]);
 		return (*f)(std::move(values), std::map<std::string, not_null<dataStructures::Type*>>());
 	}

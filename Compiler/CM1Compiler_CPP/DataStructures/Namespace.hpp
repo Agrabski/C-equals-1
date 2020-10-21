@@ -6,44 +6,54 @@
 #include "Function.hpp"
 #include "Accessibility.hpp"
 #include "Attribute.hpp"
+#include "Enum.hpp"
 
 namespace cMCompiler::dataStructures
 {
 	class Type;
 	class Function;
 	class Attribute;
+	class Enum;
 	class Namespace : public INamedObject
 	{
 		std::vector<std::unique_ptr<Type>> types_;
 		std::vector<std::unique_ptr<Function>> functions_;
 		std::vector<std::unique_ptr<Namespace>> namespaces_;
 		std::vector<std::unique_ptr<Attribute>> attributes_;
+		std::vector<std::unique_ptr<Enum>> enums_;
 #pragma region Bulshit
-		template<typename T, typename std::enable_if<std::is_same<typename T,typename Type>::value,int>::type = 0>
-		std::vector<std::unique_ptr<T>>& getAppropriate()
+		template<typename T, typename std::enable_if<std::is_same<typename T, typename Type>::value, int>::type = 0>
+		std::vector<std::unique_ptr<T>>& getAppropriate() noexcept
 		{
 			return types_;
 		}
 		template<typename T, typename std::enable_if<std::is_same<typename T, typename Function>::value, int>::type = 0>
-		std::vector<std::unique_ptr<T>>& getAppropriate()
+		std::vector<std::unique_ptr<T>>& getAppropriate() noexcept
 		{
 			return functions_;
 		}
 		template<typename T, typename std::enable_if<std::is_same<typename T, typename Namespace>::value, int>::type = 0>
-		std::vector<std::unique_ptr<T>>& getAppropriate()
+		std::vector<std::unique_ptr<T>>& getAppropriate()noexcept
 		{
 			return namespaces_;
 		}
 		template<typename T, typename std::enable_if<std::is_same<typename T, typename Attribute>::value, int>::type = 0>
-		std::vector<std::unique_ptr<T>>& getAppropriate()
+		std::vector<std::unique_ptr<T>>& getAppropriate()noexcept
 		{
 			return attributes_;
+		}
+
+		template<typename T, typename std::enable_if<std::is_same<typename T, typename Enum>::value, int>::type = 0>
+		std::vector<std::unique_ptr<T>>& getAppropriate()noexcept
+		{
+			return enums_;
 		}
 #pragma endregion
 
 	public:
 		std::vector<Namespace*> namespaces();
-		Namespace(std::string name, Namespace*parent) : INamedObject(name, parent) {}
+		Namespace(std::string name, Namespace* parent)
+			: INamedObject(name, parent) {}
 		std::vector<INamedObject*> children() final;
 		template<typename T>
 		T* append(std::string name)

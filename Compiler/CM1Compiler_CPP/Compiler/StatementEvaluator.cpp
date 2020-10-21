@@ -18,7 +18,7 @@ void cMCompiler::compiler::StatementEvaluator::visit(dataStructures::ir::Variabl
 void cMCompiler::compiler::StatementEvaluator::visit(dataStructures::ir::IfElseStatement& statemnt)
 {
 	auto expressionValue = ev_.evaluate(statemnt.expression());
-	auto* const boolean = dynamic_cast<dataStructures::execution::BooleanValue*>(expressionValue.get());
+	auto const* const boolean = dynamic_cast<dataStructures::execution::BooleanValue*>(expressionValue.get());
 	assert(boolean != nullptr);
 	if (boolean->value())
 		for (auto instruction : statemnt.ifBranch())
@@ -34,7 +34,7 @@ void cMCompiler::compiler::StatementEvaluator::visit(dataStructures::ir::ScopeTe
 	auto const& variables = instruction.variablesToFinalize();
 	for (not_null<Variable*> variable : variables)
 	{
-		auto* const type = variable->type();
+		auto const type = variable->type();
 		auto* const finalizer = language::getFinalizer(type->methods());
 		if (finalizer != nullptr)
 		{

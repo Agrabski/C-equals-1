@@ -50,7 +50,7 @@ namespace cMCompiler::language
 			auto unconfirmedResult = context.unconfirmedNames_.find(name);
 			if (unconfirmedResult != context.unconfirmedNames_.end())
 			{
-				auto result = unconfirmedResult->second->append<T>(name);
+				auto result = nullptr;// unconfirmedResult->second->append<T>(name);
 				return result;
 			}
 
@@ -116,7 +116,7 @@ namespace cMCompiler::language
 			}
 			context.objectMap_[name];
 			auto children = current->children();
-			for (auto child : children)
+			for (not_null const child : children)
 				if (child->name() == name)
 					context.objectMap_[name].push_back(child);
 		}

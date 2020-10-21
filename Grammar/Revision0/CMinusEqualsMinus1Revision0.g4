@@ -15,8 +15,6 @@ attributeDeclaration : (AccessSpecifier)? 'att' '<'attributeTarget+ '>' Identifi
 
 attributeTarget: ('type' | 'variable' | 'function');
 
-attributeContentSequence:functionDeclaration*;
-
 importDeclaration : 'import' '{' Identifier+ '}' 'from' '{' qualifiedIdentifier '}';
 
 typeDeclaration:
@@ -28,7 +26,9 @@ classTypeSpecifier: (Class| Interface | 'struct');
 classContentSequence: (functionDeclaration | fieldDeclaration)*;
 
 fieldDeclaration:
-	attributeSequence? AccessSpecifier? Identifier ':' Identifier SemiColon;
+	attributeSequence? AccessSpecifier? Identifier ':' typeSpecifier SemiColon;
+
+genericSpecifier: '<' Identifier (',' Identifier)* '>';
 
 implementedInterfacesSequence:
 	Identifier
@@ -38,17 +38,19 @@ namespaceDeclaration:
 	'namespace' qualifiedIdentifier OpenBracket declarationSequence CloseBracket;
 
 functionDeclaration:
-	(attributeSequence)? AccessSpecifier? 'fn' Identifier ParamOpen parameterList ParamClose ('->'
+	(attributeSequence)? AccessSpecifier? 'fn' Identifier genericSpecifier? ParamOpen parameterList ParamClose ('->'
 		Identifier)? functionBody;
 
 parameterList: | parameter | (parameter ',')+ parameter;
 
-parameter: attributeSequence? Identifier ':' Identifier;
+parameter: attributeSequence? Identifier ':' typeSpecifier;
+
+typeSpecifier: Identifier Ref? (Array)?;
 
 functionBody: OpenBracket statement* CloseBracket;
 
 compoundStatement:
-	OpenBracket statement* CloseBracket
+	Unsafe? OpenBracket statement* CloseBracket
 	| statement;
 
 statement:
@@ -84,7 +86,7 @@ whileHeader: 'while' ParamOpen logicalExpression ParamClose;
 infiniteLoopStatement: 'loop' compoundStatement;
 
 functionCall:
-	Identifier ParamOpen (
+	Identifier genericSpecifier? ParamOpen (
 		functionCallParameter (Comma functionCallParameter)*
 	)? ParamClose;
 
@@ -114,6 +116,9 @@ arithmeticExpression:
 	| IntegerLiteral
 	| expression;
 
+Unique: 'unique';
+Shared: 'shared';
+
 logicalExpression:
 	logicalExpression LogicalBinaryOperator logicalExpression
 	| functionCall
@@ -136,7 +141,7 @@ lExpression: Identifier | Identifier ('.' Identifier)+;
 
 throwExpression: Throw expression;
 
-AccessSpecifier: Public | Private | Protected;
+AccessSpecifier: Public | Private | Internal;
 
 Identifier: LETTER (LETTER | DIGIT)*;
 
@@ -148,6 +153,7 @@ ParamOpen: '(';
 ParamClose: ')';
 ATTROBITEOPEN: '[';
 ATTROBITECLOSE: ']';
+Array: '['']';
 
 ArithmeticBinaryOperator:
 	| Plus
@@ -168,6 +174,8 @@ ComparsionOperator:
 	| NotEqual;
 
 LogicalBinaryOperator: Or | And | Xor;
+
+Unsafe: 'unsafe';
 
 LogicalUnaryOperator: Not;
 
@@ -201,7 +209,6 @@ Class: 'class';
 Interface: 'interface';
 Public: 'public';
 Private: 'private';
-Protected: 'protected';
 Internal: 'internal';
 Final: 'final';
 Virtual: 'virtual';
