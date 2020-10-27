@@ -194,6 +194,7 @@
     <ClInclude Include="IntermidiateRepresentation\IfElseStatement.hpp" />
     <ClInclude Include="IntermidiateRepresentation\IInstruction.hpp" />
     <ClInclude Include="IntermidiateRepresentation\IInstructionVisitor.hpp" />
+    <ClInclude Include="IntermidiateRepresentation\IIRElement.hpp" />
     <ClInclude Include="IntermidiateRepresentation\INameGetter.hpp" />
     <ClInclude Include="IntermidiateRepresentation\MemberAccessExpression.hpp" />
     <ClInclude Include="IntermidiateRepresentation\ScopeTermination.hpp" />
@@ -235,6 +236,7 @@
     <ClCompile Include="IntermidiateRepresentation\AssigmentStatement.cpp" />
     <ClCompile Include="IntermidiateRepresentation\FunctionCall.cpp" />
     <ClCompile Include="IntermidiateRepresentation\IfElseStatement.cpp" />
+    <ClCompile Include="IntermidiateRepresentation\IIRElement.cpp" />
     <ClCompile Include="IntermidiateRepresentation\MemberAccessExpression.cpp" />
     <ClCompile Include="IntermidiateRepresentation\ScopeTermination.cpp" />
     <ClCompile Include="IntermidiateRepresentation\ValueLiteralExpression.cpp" />

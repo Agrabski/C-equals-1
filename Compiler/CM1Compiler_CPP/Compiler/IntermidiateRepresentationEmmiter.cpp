@@ -120,7 +120,53 @@ void indent(std::ostream& stream, int n)
 	while (n-- > 0)
 		stream << '\t';
 }
+void emmitFunctions(
+	std::vector<gsl::not_null<Function*>> const& functions,
+	std::ostream& stream, cMCompiler::dataStructures::ir::INameGetter& ng,
+	int indentationLevel);
 
+void emmitType(
+	gsl::not_null<Type*> type,
+	std::ostream& stream, cMCompiler::dataStructures::ir::INameGetter& ng,
+	int indentationLevel)
+{
+	indent(stream, indentationLevel);
+	stream << "{\r\n";
+	{
+		indent(stream, indentationLevel + 1);
+		stream << "'" << type->qualifiedName() << "'\r\n";
+		indent(stream, indentationLevel + 1);
+		stream << "attributes = \r\n";
+		indent(stream, indentationLevel + 1);
+		stream << "[";
+		for (not_null<AttributeInstance*> attribute : type->attributes())
+		{
+			stream << "\r\n";
+			indent(stream, indentationLevel + 2);
+			emmitAttribute(stream, *attribute, ng);
+		}
+		stream << "\r\n";
+		indent(stream, indentationLevel + 1);
+		stream << "]\r\n";
+		indent(stream, indentationLevel + 1);
+		stream << "fields = \r\n";
+		indent(stream, indentationLevel + 1);
+		stream << "[";
+		for (auto field : type->fields())
+		{
+			stream << "\r\n";
+			indent(stream, indentationLevel + 2);
+			emmitField(stream, *field, ng);
+		}
+		stream << "\r\n";
+		indent(stream, indentationLevel + 1);
+		stream << "]\r\n";
+		emmitFunctions(type->methods(), stream, ng, indentationLevel + 1);
+
+	}
+	indent(stream, indentationLevel);
+	stream << "]\r\n";
+}
 
 void emmitFunctions(
 	std::vector<gsl::not_null<Function*>> const& functions,
@@ -170,7 +216,7 @@ void emmitFunctions(
 				}
 				indent(stream, indentationLevel + 2);
 				stream << "]\r\n";
-				auto const * const returnType = function->returnType();
+				auto const* const returnType = function->returnType();
 				indent(stream, indentationLevel + 2);
 				stream << "return_type = ";
 				if (returnType != nullptr)
@@ -186,7 +232,7 @@ void emmitFunctions(
 				{
 					for (auto& instruction : function->code())
 					{
-						instruction->emmit(stream, ng, 3);
+						instruction->emmit(stream, ng, indentationLevel + 3);
 						stream << "\r\n";
 					}
 				}
@@ -236,26 +282,19 @@ void IntermidiateRepresentationEmmiter::emmit(std::ostream& stream, PackageDatab
 	stream << "types = [\r\n";
 	{
 		for (auto type : package.getAllTypes())
+			emmitType(type, stream, nl, 0);
+	}
+	stream << "]\r\n";
+
+	stream << "attributes = [\r\n";
+	{
+		for (not_null attribute : getAttributes(package))
 		{
 			stream << "\t{\r\n";
 			{
-				stream << "\t\t'" << type->qualifiedName() << "'\r\n";
-				stream << "\t\tattributes = \r\n\t\t[";
-				for (not_null<AttributeInstance*> attribute : type->attributes())
-				{
-					stream << "\r\n\t\t\t";
-					emmitAttribute(stream, *attribute, nl);
-				}
-				stream << "\r\n\t\t]\r\n";
-				stream << "\t\tfields = \r\n\t\t[";
-				for (auto field : type->fields())
-				{
-					stream << "\r\n\t\t\t";
-					emmitField(stream, *field, nl);
-				}
-				stream << "\r\n\t\t]\r\n";
-				emmitFunctions(type->methods(), stream, nl, 2);
-
+				stream << "\t\t'" << attribute->qualifiedName() << "'\r\n";
+				stream << "\t\tbacking_type = {\r\n";
+				emmitType(attribute->describingType(), stream, nl, 2);
 			}
 			stream << "\t}\r\n";
 		}

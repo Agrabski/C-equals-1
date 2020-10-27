@@ -22,6 +22,22 @@ std::unique_ptr<ObjectValue> cMCompiler::language::buildObjectFor(gsl::not_null<
 	return result;
 }
 
+void cMCompiler::language::supplyValueTo(gsl::not_null<dataStructures::ir::ScopeTermination*> st)
+{
+}
+void cMCompiler::language::supplyValueTo(gsl::not_null<dataStructures::ir::VariableDeclaration*> st)
+{
+}
+void cMCompiler::language::supplyValueTo(gsl::not_null<dataStructures::ir::IfElseStatement*> st)
+{
+}
+void cMCompiler::language::supplyValueTo(gsl::not_null<dataStructures::ir::FunctionCall*> st)
+{
+}
+void cMCompiler::language::supplyValueTo(gsl::not_null<dataStructures::ir::AssigmentStatement*> st)
+{
+}
+
 std::unique_ptr<ObjectValue> cMCompiler::language::buildObjectFor(gsl::not_null<Namespace*> ns)
 {
 	using namespace cMCompiler::language;

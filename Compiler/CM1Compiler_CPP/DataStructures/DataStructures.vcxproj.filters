@@ -183,6 +183,9 @@
     <ClInclude Include="execution\ArrayValue.hpp">
       <Filter>Header Files\Execution</Filter>
     </ClInclude>
+    <ClInclude Include="IntermidiateRepresentation\IIRElement.hpp">
+      <Filter>Header Files\IntermidiateRepresentation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -276,6 +279,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="execution\ArrayValue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IntermidiateRepresentation\IIRElement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

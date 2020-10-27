@@ -3,6 +3,8 @@
 
 void cMCompiler::dataStructures::ir::AssigmentStatement::emmit(std::ostream& stream, INameGetter const& nameLookupFunction, unsigned int indentationLevel) const
 {
+	while (indentationLevel-- > 0)
+		stream << '\t';
 	stream << "{@assign lvalue = ";
 	lexpression_->emmit(stream, nameLookupFunction);
 	stream << " rvalue = ";
