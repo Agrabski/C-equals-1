@@ -8,6 +8,11 @@ namespace cMCompiler::dataStructures::execution
 		std::unique_ptr<IRuntimeValue>* value_;
 	public:
 		ReferenceValue(std::unique_ptr<IRuntimeValue>* value, Type* type) noexcept : IRuntimeValue(type), value_(value) {}
+		template<typename T>
+		ReferenceValue(std::unique_ptr<T>* value, Type type) : IRuntimeValue(type)
+		{
+			value_ = static_cast<std::unique_ptr<IRuntimeValue>*>(value);
+		}
 		std::unique_ptr<IRuntimeValue>* value() const noexcept { return value_; }
 
 

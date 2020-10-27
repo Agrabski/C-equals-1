@@ -12,7 +12,9 @@ namespace cMCompiler::language
 	gsl::not_null<dataStructures::Type*> getString();
 	gsl::not_null<dataStructures::Type*> getTypeDescriptor();
 	gsl::not_null<dataStructures::Type*> getFunctionDescriptor();
+	gsl::not_null<dataStructures::Type*> getNamespaceDescriptor();
 	gsl::not_null<dataStructures::Type*> getFieldDescriptor();
+	gsl::not_null<dataStructures::Type*> getPointerToSource();
 	gsl::not_null<dataStructures::Attribute*> getCompileTimeAttribute();
 	
 

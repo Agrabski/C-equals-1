@@ -60,7 +60,8 @@ void cMCompiler::compiler::finalizeAttribute(
 	gsl::not_null<CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext*> ctx,
 	gsl::not_null<dataStructures::Namespace*> parent,
 	language::NameResolver resolver,
-	language::NameResolutionContext context)
+	language::NameResolutionContext context,
+	std::filesystem::path const& file)
 {
 	auto name = ctx->Identifier()->getText();
 	not_null attribute = parent->get<dataStructures::Attribute>(name);
@@ -72,7 +73,7 @@ void cMCompiler::compiler::finalizeAttribute(
 		{
 			return f->state() == dataStructures::ObjectState::Confirmed;
 		});
-		finalizeFunction(resolver, context, f, member);
+		finalizeFunction(resolver, context, f, member, file);
 	}
 	attribute->finalize();
 }

@@ -67,7 +67,8 @@ void cMCompiler::compiler::confirmType(
 void cMCompiler::compiler::finalizeType(
 	language::NameResolver& resolver,
 	language::NameResolutionContext& context,
-	gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*> ctx)
+	gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*> ctx,
+	std::filesystem::path const& file)
 {
 	assert(ctx != nullptr);
 	auto name = ::name(ctx);
@@ -81,7 +82,7 @@ void cMCompiler::compiler::finalizeType(
 		{
 			return f->state() == dataStructures::ObjectState::Confirmed;
 		});
-		finalizeFunction(resolver, context, f, member);
+		finalizeFunction(resolver, context, f, member, file);
 	}
 	type->finalize();
 }

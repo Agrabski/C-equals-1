@@ -14,7 +14,8 @@ namespace cMCompiler::dataStructures::ir
 		std::vector<not_null<IInstruction*>> ifBranch() const;
 		std::vector<not_null<IInstruction*>> elseBranch() const;
 		IExpression* expression() const noexcept { return expression_.get(); }
-		IfElseStatement(std::unique_ptr<IExpression>&& expression)
+		IfElseStatement(std::unique_ptr<IExpression>&& expression, std::unique_ptr<execution::IRuntimeValue>&& pointer)
+			: IInstruction(std::move(pointer))
 		{
 			auto const * const type = expression->evaluateType();
 			if (type != language::getBool())

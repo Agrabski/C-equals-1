@@ -15,6 +15,7 @@ namespace cMCompiler::compiler
 		gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*> ctx);
 	void finalizeType(language::NameResolver& resolver,
 		language::NameResolutionContext& context,
-		gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*> ctx);
+		gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*> ctx,
+		std::filesystem::path const& file);
 
 }

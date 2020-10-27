@@ -60,7 +60,8 @@ void cMCompiler::compiler::confirmFunction(
 {
 	for (not_null<CMinusEqualsMinus1Revision0Parser::ParameterContext*> variable : ctx->parameterList()->parameter())
 	{
-		not_null const type = resolver.resolve<dataStructures::Type>(variable->typeSpecifier()->Identifier()->getText(), context);
+		auto typeName = variable->typeSpecifier()->Identifier()->getText();
+		not_null const type = resolver.resolve<dataStructures::Type>(typeName, context);
 		f->appendVariable(variable->Identifier()->getText(), type);
 	}
 	auto type = returnType(ctx);
@@ -117,20 +118,25 @@ void cMCompiler::compiler::confirmFunction(
 	confirmFunction(resolver, context, function, ctx);
 }
 
-void cMCompiler::compiler::finalizeFunction(language::NameResolver& resolver, language::NameResolutionContext& context, gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx)
+void cMCompiler::compiler::finalizeFunction(
+	language::NameResolver& resolver,
+	language::NameResolutionContext& context,
+	gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx,
+	std::filesystem::path const& file)
 {
 	auto name = getName(ctx);
 	auto * const function = getCompatibleFunction(name, resolver, context, ctx, dataStructures::ObjectState::Confirmed);
 	if (function == nullptr)
 		std::terminate(); //todo: report error
-	finalizeFunction(resolver, context, function, ctx);
+	finalizeFunction(resolver, context, function, ctx, file);
 }
 
 void cMCompiler::compiler::finalizeFunction(
 	language::NameResolver& resolver,
 	language::NameResolutionContext& context,
 	gsl::not_null<dataStructures::Function*> f,
-	gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx)
+	gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx,
+	std::filesystem::path const& file)
 {
 	auto parametrs = f->parameters();
 	for (not_null<CMinusEqualsMinus1Revision0Parser::ParameterContext*> variable : ctx->parameterList()->parameter())
@@ -140,7 +146,7 @@ void cMCompiler::compiler::finalizeFunction(
 		//todo: attributes
 	}
 	//todo: function attributes
-	auto builder = FunctionBodyBuilder(f, resolver, context);
+	auto builder = FunctionBodyBuilder(f, resolver, context, file);
 	ctx->functionBody()->accept(&builder);
 	f->finalize();
 }

@@ -51,7 +51,7 @@ namespace cMCompiler::dataStructures
 		std::vector<std::unique_ptr<ir::IInstruction>> intermidiateRepresentation_;
 		std::vector<std::unique_ptr<Variable>> parameters_;
 		std::vector<std::unique_ptr<Variable>> localVariables_;
-		Type* returnType_;
+		Type* returnType_ = nullptr;
 	public:
 		virtual ~Function() = default;
 		Function(std::string name, INamedObject* parent)

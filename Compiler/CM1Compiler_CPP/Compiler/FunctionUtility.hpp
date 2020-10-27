@@ -1,5 +1,10 @@
 #pragma once
 #include <optional>
+#include <filesystem>
+#include <memory>
+#include <string>
+#include <vector>
+#include <gsl.h>
 #include "../Parser/CMinusEqualsMinus1Revision0Parser.h"
 #include "../DataStructures/Function.hpp"
 #include "../DataStructures/Accessibility.hpp"
@@ -65,12 +70,14 @@ namespace cMCompiler::compiler
 	void finalizeFunction(
 		language::NameResolver& resolver,
 		language::NameResolutionContext& context,
-		gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx);
+		gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx,
+		std::filesystem::path const& file);
 
 	void finalizeFunction(
 		language::NameResolver& resolver,
 		language::NameResolutionContext& context,
 		gsl::not_null<dataStructures::Function*> f,
-		gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx);
+		gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx,
+		std::filesystem::path const& file);
 
 }

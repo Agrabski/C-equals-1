@@ -12,8 +12,8 @@ namespace cMCompiler::dataStructures::ir
 		Function* compiletimeFunction_;
 		std::vector<std::unique_ptr<IExpression>> variables_;
 	public:
-		FunctionCall(std::vector<gsl::unique_ptr<IExpression>>&& variables, Function* compiletime, Function* runtime) noexcept :
-			runtimeFunction_(runtime), compiletimeFunction_(compiletime), variables_(std::move(variables))
+		FunctionCall(std::vector<gsl::unique_ptr<IExpression>>&& variables, Function* compiletime, Function* runtime, std::unique_ptr<execution::IRuntimeValue>&& pointer) noexcept :
+			IInstruction(std::move(pointer)), runtimeFunction_(runtime), compiletimeFunction_(compiletime), variables_(std::move(variables))
 		{
 			assert(compiletime != nullptr || runtime != nullptr);
 		}

@@ -84,6 +84,18 @@
     <ClInclude Include="CompileTimeFunctions\MarkCompileTimeOnly.hpp">
       <Filter>Header Files\CompileTimeFunctions</Filter>
     </ClInclude>
+    <ClInclude Include="CompileTimeFunctions\RaiseError.hpp">
+      <Filter>Header Files\CompileTimeFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="CompilerInterface.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RuntimeTypesConversionUtility.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CompileTimeFunctions\ReplaceWithExternalSymbol.hpp">
+      <Filter>Header Files\CompileTimeFunctions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NamespaceBuilder.cpp">
@@ -138,6 +150,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TypeInstantiationUtility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CompileTimeFunctions\RaiseError.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CompilerInterface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RuntimeTypesConversionUtility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CompileTimeFunctions\ReplaceWithExternalSymbol.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

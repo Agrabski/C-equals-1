@@ -1,4 +1,5 @@
 #pragma once
+#include <filesystem>
 #include "../Parser/CMinusEqualsMinus1Revision0BaseVisitor.h"
 #include "../DataStructures/IntermidiateRepresentation/IInstruction.hpp"
 #include "../DataStructures/Function.hpp"
@@ -17,8 +18,9 @@ namespace cMCompiler::compiler
 		std::vector<std::function<void(instruction_pointer&&)>> instructionAppenders;
 		void enterScope();
 		[[nodiscard]]
-		std::unique_ptr< cMCompiler::dataStructures::ir::ScopeTermination>  leaveScope();
+		std::unique_ptr< cMCompiler::dataStructures::ir::ScopeTermination>  leaveScope(unsigned long long line);
 		ExpressionBuilder getBuilder();
+		std::filesystem::path filePath_;
 
 		antlrcpp::Any visitVariableDeclarationStatement(CMinusEqualsMinus1Revision0Parser::VariableDeclarationStatementContext* ctx) final;
 		antlrcpp::Any visitFunctionBody(CMinusEqualsMinus1Revision0Parser::FunctionBodyContext* ctx) final;
@@ -26,8 +28,8 @@ namespace cMCompiler::compiler
 		antlrcpp::Any visitFunctionCall(CMinusEqualsMinus1Revision0Parser::FunctionCallContext* ctx) final;
 		antlrcpp::Any visitAssigmentStatement(CMinusEqualsMinus1Revision0Parser::AssigmentStatementContext* ctx) final;
 	public:
-		FunctionBodyBuilder(dataStructures::Function* function, language::NameResolver& nr, language::NameResolutionContext& context) noexcept :
-			function_(function), nr_(nr), context_(context) {}
+		FunctionBodyBuilder(dataStructures::Function* function, language::NameResolver& nr, language::NameResolutionContext& context, std::filesystem::path const& f) noexcept :
+			filePath_(f), function_(function), nr_(nr), context_(context) {}
 
 	};
 }

@@ -25,7 +25,8 @@ namespace cMCompiler::compiler
 		gsl::not_null<CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext*> ctx,
 		gsl::not_null<dataStructures::Namespace*> parent,
 		language::NameResolver resolver,
-		language::NameResolutionContext context);
+		language::NameResolutionContext context,
+		std::filesystem::path const& file);
 
 	std::unique_ptr<dataStructures::AttributeInstance> createAttributeInstance
 	(

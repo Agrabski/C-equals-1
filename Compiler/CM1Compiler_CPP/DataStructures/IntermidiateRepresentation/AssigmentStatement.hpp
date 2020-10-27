@@ -15,8 +15,8 @@ namespace cMCompiler::dataStructures::ir
 	public:
 		gsl::not_null<IExpression*> lexpression() noexcept { return lexpression_.get(); }
 		gsl::not_null<IExpression*> rexpression() noexcept { return rexpression_.get(); }
-		AssigmentStatement(std::unique_ptr<IExpression>&& lexpression, std::unique_ptr<IExpression>&& rexpression) noexcept
-			: lexpression_(std::move(lexpression)), rexpression_(std::move(rexpression)) {}
+		AssigmentStatement(std::unique_ptr<IExpression>&& lexpression, std::unique_ptr<IExpression>&& rexpression, std::unique_ptr<execution::IRuntimeValue>&& pointer) noexcept
+			: IInstruction(std::move(pointer)), lexpression_(std::move(lexpression)), rexpression_(std::move(rexpression)) {}
 
 	};
 }

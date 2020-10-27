@@ -56,7 +56,7 @@ namespace cMCompiler::dataStructures
 			: INamedObject(name, parent) {}
 		std::vector<INamedObject*> children() final;
 		template<typename T>
-		T* append(std::string name)
+		gsl::not_null<T*> append(std::string name)
 		{
 			auto tmp = std::make_unique<T>(name, this);
 			auto const result = tmp.get();

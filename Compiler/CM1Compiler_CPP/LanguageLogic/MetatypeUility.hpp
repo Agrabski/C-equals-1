@@ -14,4 +14,9 @@ namespace cMCompiler::language
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(gsl::not_null<dataStructures::Type*>);
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(gsl::not_null<dataStructures::Function*>);
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(gsl::not_null<dataStructures::Field*>);
+
+	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildPointerToSource(
+		std::string const& filename,
+		unsigned long long lineNumber
+	);
 }

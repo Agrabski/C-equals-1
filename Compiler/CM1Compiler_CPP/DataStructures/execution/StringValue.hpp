@@ -10,8 +10,8 @@ namespace cMCompiler::dataStructures::execution
 		std::string value_;
 		// Inherited via IRuntimeValue
 		void emmit(std::ostream& stream, ir::INameGetter const& nameLookupFunction) const final;
-		std::string toString() const final;
 	public:
+		std::string toString() const final;
 		StringValue(Type* type) noexcept : IRuntimeValue(type) {}
 		std::string const& value() const noexcept { return value_; }
 		void setValue(std::string const& value) { value_ = value; }

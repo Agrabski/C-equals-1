@@ -18,14 +18,15 @@ void cMCompiler::compiler::buildAndFillPackage(dataStructures::PackageDatabase& 
 	cMCompiler::language::NameResolver nameResolver(dependencies);
 	cMCompiler::compiler::CompilationUnitDataBaseBuilder dbBuilder(package, nameResolver);
 	do
-		for (auto file : files)
+		for (auto& file : files)
 		{
 			auto parseTree = parse(file);
+			dbBuilder.setFile(file);
 			dbBuilder.buildDatabase(*parseTree);
 		}
 	while (dbBuilder.advance());
 	auto preprocessor = Preprocessor(package, nameResolver);
-	for (auto file : files)
+	for (auto& file : files)
 	{
 		auto parseTree = parse(file);
 		preprocessor.preprocess(*parseTree);

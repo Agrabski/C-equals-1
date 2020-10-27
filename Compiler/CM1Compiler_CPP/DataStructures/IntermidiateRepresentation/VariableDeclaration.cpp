@@ -1,8 +1,8 @@
 #include "VariableDeclaration.hpp"
 #include "IInstructionVisitor.hpp"
 
-cMCompiler::dataStructures::ir::VariableDeclaration::VariableDeclaration(std::string name, std::unique_ptr<IExpression>&& exp, Type* type) :
-	variableName_(name), expression_(std::move(exp)), type_(type)
+cMCompiler::dataStructures::ir::VariableDeclaration::VariableDeclaration(std::string name, std::unique_ptr<IExpression>&& exp, Type* type, std::unique_ptr<execution::IRuntimeValue>&& pointer) :
+	IInstruction(std::move(pointer)), variableName_(name), expression_(std::move(exp)), type_(type)
 {
 	if (expression_ == nullptr && type == nullptr)
 		throw std::exception(); //todo: better exception

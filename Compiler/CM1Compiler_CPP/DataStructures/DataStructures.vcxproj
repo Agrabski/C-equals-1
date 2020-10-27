@@ -167,6 +167,7 @@
     <ClInclude Include="AttributeTarget.hpp" />
     <ClInclude Include="CompilationContext.hpp" />
     <ClInclude Include="Enum.hpp" />
+    <ClInclude Include="execution\ArrayValue.hpp" />
     <ClInclude Include="execution\BooleanValue.hpp" />
     <ClInclude Include="execution\IRuntimeValue.h" />
     <ClInclude Include="execution\IntegerValue.hpp" />
@@ -205,6 +206,7 @@
     <ClInclude Include="ObjectWithMetadata.hpp" />
     <ClInclude Include="PackageDatabase.hpp" />
     <ClInclude Include="QualifiedName.hpp" />
+    <ClInclude Include="SourcePointer.hpp" />
     <ClInclude Include="Target.hpp" />
     <ClInclude Include="Type.hpp" />
     <ClInclude Include="TypeClassifier.hpp" />
@@ -219,6 +221,7 @@
     <ClCompile Include="Accessibility.cpp" />
     <ClCompile Include="Attribute.cpp" />
     <ClCompile Include="AttributeTarget.cpp" />
+    <ClCompile Include="execution\ArrayValue.cpp" />
     <ClCompile Include="execution\IntegerValue.cpp" />
     <ClCompile Include="execution\ObjectValue.cpp" />
     <ClCompile Include="execution\ReferenceValue.cpp" />

@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <filesystem>
 #include "../DataStructures/Namespace.hpp"
 #include "../ParserAdapter/ParserAdapter.hpp"
 #include "../Parser/CMinusEqualsMinus1Revision0BaseVisitor.h"
@@ -16,6 +17,7 @@ namespace cMCompiler::compiler
 		language::NameResolver& nameResolver_;
 		void processDeclaration(CMinusEqualsMinus1Revision0Parser::DeclarationContext* declaration);
 		DatabaseBuildingState state_ = DatabaseBuildingState::Create;
+		std::filesystem::path file_;
 	public:
 		bool advance() noexcept 
 		{
@@ -27,6 +29,10 @@ namespace cMCompiler::compiler
 		CompilationUnitDataBaseBuilder(dataStructures::PackageDatabase& database, language::NameResolver& nameResolver) noexcept :
 			database_(database), nameResolver_(nameResolver) {}
 		void buildDatabase(Parser::CompilationUnit& compilationUnit);
+		void setFile(std::filesystem::path const& file)
+		{
+			file_ = file;
+		}
 		antlrcpp::Any visitNamespaceDeclaration(CMinusEqualsMinus1Revision0Parser::NamespaceDeclarationContext* context) final;
 		antlrcpp::Any visitFunctionDeclaration(CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext* ctx) final;
 		antlrcpp::Any visitImportDeclaration(CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext* ctx) final;

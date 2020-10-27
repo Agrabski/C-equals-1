@@ -47,7 +47,7 @@ antlrcpp::Any cMCompiler::compiler::CompilationUnitDataBaseBuilder::visitFunctio
 		confirmFunction(nameResolver_, resolutionContext_, ctx);
 		break;
 	case cMCompiler::compiler::Finalize:
-		finalizeFunction(nameResolver_, resolutionContext_, ctx);
+		finalizeFunction(nameResolver_, resolutionContext_, ctx, file_);
 		break;
 	default:
 		std::terminate();
@@ -79,7 +79,7 @@ antlrcpp::Any cMCompiler::compiler::CompilationUnitDataBaseBuilder::visitTypeDec
 		confirmType(nameResolver_, resolutionContext_, ctx);
 		break;
 	case cMCompiler::compiler::Finalize:
-		finalizeType(nameResolver_, resolutionContext_, ctx);
+		finalizeType(nameResolver_, resolutionContext_, ctx, file_);
 		break;
 	default:
 		std::terminate();
@@ -100,7 +100,7 @@ antlrcpp::Any cMCompiler::compiler::CompilationUnitDataBaseBuilder::visitAttribu
 		confirmAttribute(ctx, parent, nameResolver_, resolutionContext_);
 		break;
 	case cMCompiler::compiler::Finalize:
-		finalizeAttribute(ctx, parent, nameResolver_, resolutionContext_);
+		finalizeAttribute(ctx, parent, nameResolver_, resolutionContext_, file_);
 		break;
 	default:
 		break;

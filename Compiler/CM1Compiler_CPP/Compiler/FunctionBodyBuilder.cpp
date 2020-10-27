@@ -5,17 +5,19 @@
 #include "../DataStructures/IntermidiateRepresentation/AssigmentStatement.hpp"
 #include "../DataStructures/IntermidiateRepresentation/FunctionCall.hpp"
 #include "../LanguageLogic/OverloadResolutionUtility.hpp"
+#include "../LanguageLogic/MetatypeUility.hpp"
 
 void cMCompiler::compiler::FunctionBodyBuilder::enterScope()
 {
 	variables_.push_back({});
 }
 
-_NODISCARD
-std::unique_ptr< cMCompiler::dataStructures::ir::ScopeTermination> cMCompiler::compiler::FunctionBodyBuilder::leaveScope()
+[[nodiscard]]
+std::unique_ptr< cMCompiler::dataStructures::ir::ScopeTermination> cMCompiler::compiler::FunctionBodyBuilder::leaveScope(unsigned long long line)
 {
 	auto instruction = std::make_unique<dataStructures::ir::ScopeTermination>(
-		std::move(variables_.back())
+		std::move(variables_.back()),
+		language::buildPointerToSource(filePath_.filename().string(), line)
 		);
 	variables_.pop_back();
 	return instruction;
@@ -56,7 +58,8 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitVariableDeclaratio
 	auto instruction = std::make_unique<dataStructures::ir::VariableDeclaration>(
 		name,
 		std::move(expression),
-		type
+		type,
+		language::buildPointerToSource(filePath_.filename().string(), ctx->Identifier(0)->getSymbol()->getLine())
 		);
 	not_null variable = function_->appendLocalVariable(name, type);
 	variable->provideScope(instruction.get());
@@ -70,7 +73,7 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitFunctionBody(CMinu
 	enterScope();
 	instructionAppenders.push_back([&](auto&& e) {function_->pushInstruction(std::move(e)); });
 	auto r = visitChildren(ctx);
-	instructionAppenders.back()(leaveScope());
+	instructionAppenders.back()(leaveScope(ctx->CloseBracket()->getSymbol()->getLine()));
 	instructionAppenders.pop_back();
 	return r;
 }
@@ -78,11 +81,14 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitFunctionBody(CMinu
 antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitIfStatement(CMinusEqualsMinus1Revision0Parser::IfStatementContext* ctx)
 {
 	auto expression = getBuilder().buildExpression(ctx->logicalExpression());
-	auto conditional = std::make_unique<dataStructures::ir::IfElseStatement>(std::move(expression));
+	auto conditional = std::make_unique<dataStructures::ir::IfElseStatement>(
+		std::move(expression),
+		language::buildPointerToSource(filePath_.filename().string(), ctx->compoundStatement(0)->OpenBracket()->getSymbol()->getLine())
+		);
 	enterScope();
 	instructionAppenders.push_back([&](auto&& e) {conditional->pushIf(std::move(e)); });
 	ctx->compoundStatement(0)->accept(this);
-	conditional->pushIf(leaveScope());
+	conditional->pushIf(leaveScope(ctx->ParamOpen()->getSymbol()->getLine()));
 	instructionAppenders.pop_back();
 
 	if (ctx->compoundStatement(1) != nullptr)
@@ -90,7 +96,7 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitIfStatement(CMinus
 		enterScope();
 		instructionAppenders.push_back([&](auto&& e) {conditional->pushElse(std::move(e)); });
 		ctx->compoundStatement(1)->accept(this);
-		conditional->pushElse(leaveScope());
+		conditional->pushElse(leaveScope(ctx->compoundStatement(1)->CloseBracket()->getSymbol()->getLine()));
 		instructionAppenders.pop_back();
 	}
 	instructionAppenders.back()(std::move(conditional));
@@ -105,7 +111,12 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitFunctionCall(CMinu
 	for (auto parameter : ctx->functionCallParameter())
 		params.push_back(getBuilder().buildExpression(parameter));
 	auto f = language::resolveOverload(functions, params); //todo: resolve for runtime and compile-time
-	instructionAppenders.back()(std::make_unique<dataStructures::ir::FunctionCall>(std::move(params), f, f));
+	instructionAppenders.back()(std::make_unique<dataStructures::ir::FunctionCall>(
+		std::move(params),
+		f,
+		f,
+		language::buildPointerToSource(filePath_.filename().string(), ctx->Identifier()->getSymbol()->getLine())
+		));
 
 	return antlrcpp::Any();
 }
@@ -114,6 +125,9 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitAssigmentStatement
 {
 	auto rexpression = getBuilder().buildExpression(ctx->expression());
 	auto lexpression = getBuilder().buildExpression(ctx->lExpression());
-	instructionAppenders.back()(std::make_unique<dataStructures::ir::AssigmentStatement>(std::move(lexpression), std::move(rexpression)));
+	instructionAppenders.back()(std::make_unique<dataStructures::ir::AssigmentStatement>(
+		std::move(lexpression),
+		std::move(rexpression),
+		language::buildPointerToSource(filePath_.filename().string(), ctx->Asssigment()->getSymbol()->getLine())));
 	return antlrcpp::Any();
 }

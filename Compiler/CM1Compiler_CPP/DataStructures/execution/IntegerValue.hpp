@@ -2,6 +2,7 @@
 #include <cstddef>
 #include <ostream>
 #include <string>
+#include <gsl.h>
 #include "IRuntimeValue.h"
 #include "../IntermidiateRepresentation/INameGetter.hpp"
 
@@ -25,6 +26,7 @@ namespace cMCompiler::dataStructures::execution
 		void emmit(std::ostream& stream, ir::INameGetter const& nameLookupFunction) const final;
 		static IntegerValue negotiateSize(IntegerValue& l, IntegerValue& r);
 		void setValue(usize componentIndex, number_component value);
+		void setValue(number_component* value, size_t size);
 		void fromString(std::string const& s);
 		IntegerValue(usize size, bool isSigned, Type* type) : IRuntimeValue(type), isSigned_(isSigned)
 		{
@@ -36,5 +38,7 @@ namespace cMCompiler::dataStructures::execution
 
 		// Inherited via IRuntimeValue
 		std::unique_ptr<IRuntimeValue> copy() const final;
+
+		gsl::not_null<number_component*> rawNumber() { return number_.data(); }
 	};
 }

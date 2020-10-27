@@ -69,6 +69,13 @@ void cMCompiler::dataStructures::execution::IntegerValue::fromString(std::string
 		}
 }
 
+void cMCompiler::dataStructures::execution::IntegerValue::setValue(number_component* value, size_t size)
+{
+	number_.reserve(size);
+	for (auto i = 0; i < size; i++)
+		setValue(i, value[i]);
+}
+
 std::string cMCompiler::dataStructures::execution::IntegerValue::toString() const
 {
 	if (number_.size() == 8)
