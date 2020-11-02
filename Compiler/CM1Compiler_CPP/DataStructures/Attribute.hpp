@@ -9,6 +9,7 @@
 #include "Field.hpp"
 #include "Target.hpp"
 #include "Namespace.hpp"
+#include "Generic.hpp"
 #include "execution/ObjectValue.hpp"
 
 using gsl::not_null;
@@ -40,5 +41,11 @@ namespace cMCompiler::dataStructures
 		std::vector<gsl::not_null<Function*>> methods();
 
 		Type* describingType() noexcept { return describingType_.get(); }
+		template<typename T>
+		gsl::not_null<Generic<T>*> appendGeneric(std::vector<std::string>&& parameterNames, std::unique_ptr<antlr4::tree::ParseTree>&& parseTree, std::string name)
+		{
+			std::terminate();
+			throw 0;
+		}
 	};
 }

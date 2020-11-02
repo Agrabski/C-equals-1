@@ -3,14 +3,14 @@
 
 std::string cMCompiler::compiler::getName(gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx)
 {
-	return ctx->Identifier(0)->getText();
+	return ctx->Identifier()->getText();
 }
 
 std::optional<std::string> cMCompiler::compiler::returnType(gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx)
 {
-	auto const * const id = ctx->Identifier(1);
+	auto * const id = ctx->typeSpecifier();
 	if(id!=nullptr)
-		return ctx->Identifier(1)->getText();
+		return id->Identifier()->getText();
 	return std::optional<std::string>();
 }
 
@@ -19,13 +19,13 @@ cMCompiler::dataStructures::Function* cMCompiler::compiler::getCompatibleFunctio
 	language::NameResolver& resolver,
 	language::NameResolutionContext& context,
 	gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx,
-	dataStructures::ObjectState state)
+	std::optional<dataStructures::ObjectState> state)
 {
 	auto parameters = getParameterTypes(resolver, context, ctx);
 	auto allFunctions = resolver.resolveOverloadSet(name, context);
 	auto result = std::find_if(allFunctions.begin(), allFunctions.end(), [&](auto const f)
 	{
-		if (f->state() != state)
+		if (f->state() != *state && state)
 			return false;
 		auto params = f->parameters();
 		if (params.size() != parameters.size())
@@ -66,7 +66,7 @@ void cMCompiler::compiler::confirmFunction(
 	}
 	auto type = returnType(ctx);
 	if (type)
-		f->setReturnType(resolver.resolve<dataStructures::Type>(*type, context));
+		f->setReturnType(not_null(resolver.resolve<dataStructures::Type>(*type, context)));
 	else
 		f->setReturnType(nullptr);
 	f->confirm();
@@ -109,6 +109,8 @@ void cMCompiler::compiler::confirmFunction(
 	language::NameResolutionContext& context,
 	gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx)
 {
+	if (ctx->genericSpecifier() != nullptr)
+		return;
 	auto name = getName(ctx);
 	auto functions = resolver.resolveOverloadSet(name, context);
 	auto freeDeclaration = std::find_if(functions.begin(), functions.end(), [](auto const f) noexcept {return f->state() == dataStructures::ObjectState::Cretated; });
@@ -124,6 +126,8 @@ void cMCompiler::compiler::finalizeFunction(
 	gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx,
 	std::filesystem::path const& file)
 {
+	if (ctx->genericSpecifier() != nullptr)
+		return;
 	auto name = getName(ctx);
 	auto * const function = getCompatibleFunction(name, resolver, context, ctx, dataStructures::ObjectState::Confirmed);
 	if (function == nullptr)

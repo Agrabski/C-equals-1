@@ -24,10 +24,10 @@ bool ParseTree::operator == (const ParseTree& other) const {
 	return &other == this;
 }
 
-void antlr4::tree::ParseTree::cloneChildrenFrom(not_null< ParseTree*>parent, ParseTree const* copy)
+void antlr4::tree::ParseTree::cloneChildrenFrom(ParseTree* parent, ParseTree const* copy)
 {
 	for (auto const& c : copy->children)
 		children.push_back(c->clone(this));
-	this->parent = parent.get();
+	this->parent = parent;
 
 }

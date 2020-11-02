@@ -85,7 +85,7 @@ namespace antlr4
 
 
 		protected:
-			void cloneChildrenFrom(not_null< ParseTree *>parent, ParseTree const * copy);
+			void cloneChildrenFrom(ParseTree *parent, ParseTree const * copy);
 		};
 
 	} // namespace tree

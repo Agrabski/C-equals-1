@@ -39,13 +39,15 @@ namespaceDeclaration:
 
 functionDeclaration:
 	(attributeSequence)? AccessSpecifier? 'fn' Identifier genericSpecifier? ParamOpen parameterList ParamClose ('->'
-		Identifier)? functionBody;
+		typeSpecifier)? functionBody;
 
 parameterList: | parameter | (parameter ',')+ parameter;
 
 parameter: attributeSequence? Identifier ':' typeSpecifier;
 
-typeSpecifier: Identifier Ref? (Array)?;
+typeSpecifier: Identifier genericUsage? Ref? (Array)?;
+
+genericUsage: '<' typeSpecifier (',' typeSpecifier)* '>';
 
 functionBody: OpenBracket statement* CloseBracket;
 
@@ -58,7 +60,10 @@ statement:
 	| ifStatement
 	| loopStatement
 	| assigmentStatement SemiColon
-	| variableDeclarationStatement SemiColon;
+	| variableDeclarationStatement SemiColon
+	| returnStatement SemiColon;
+
+returnStatement: 'return' expression;
 
 variableDeclarationStatement: attributeSequence? 'let' Identifier (':' Identifier)? ('=' functionCallParameter)?;
 
@@ -86,7 +91,7 @@ whileHeader: 'while' ParamOpen logicalExpression ParamClose;
 infiniteLoopStatement: 'loop' compoundStatement;
 
 functionCall:
-	Identifier genericSpecifier? ParamOpen (
+	Identifier genericUsage? ParamOpen (
 		functionCallParameter (Comma functionCallParameter)*
 	)? ParamClose;
 
@@ -115,9 +120,6 @@ arithmeticExpression:
 	| ArithmeticUnaryOperator arithmeticExpression
 	| IntegerLiteral
 	| expression;
-
-Unique: 'unique';
-Shared: 'shared';
 
 logicalExpression:
 	logicalExpression LogicalBinaryOperator logicalExpression

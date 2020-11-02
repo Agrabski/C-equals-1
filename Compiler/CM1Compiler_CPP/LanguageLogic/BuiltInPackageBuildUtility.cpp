@@ -7,7 +7,9 @@
 #include "CompileTimeFunctions/RaiseError.hpp"
 #include "CompileTimeFunctions/ReplaceWithCompilerType.hpp"
 #include "CompileTimeFunctions/MarkCompileTimeOnly.hpp"
+#include "IRUtility.hpp"
 
+using namespace std::string_literals;
 using namespace cMCompiler::language;
 using namespace cMCompiler::dataStructures;
 auto const compiler_namespace__ = "compiler";
@@ -15,7 +17,6 @@ auto const compile_time_type_descriptor__ = "typeDescriptor";
 auto const compile_time_function_descriptor__ = "functionDescriptor";
 
 static auto defaultPackage__ = std::make_unique<PackageDatabase>("cm1mLang");
-
 
 gsl::not_null<Type*> buildTypeDescriptor(gsl::not_null<Namespace*> compilerNs)
 {
@@ -80,6 +81,7 @@ void buildCompilerLibrary(gsl::not_null<Namespace*> rootNamespace)
 	completeBuildingNamespace(nsDescriptor);
 	completeBuildingFunction(function);
 	buildPointerToSource(ns);
+	buildIrNamespace(ns);
 	{
 		auto replace = ns->append<Function>("replaceWithCompilerFunction");
 		replace->setAccessibility(Accessibility::Public);

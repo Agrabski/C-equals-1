@@ -1,0 +1,25 @@
+{
+    "name": "cm1-language-support",
+    "displayName": "Cm1-language-support",
+    "description": "provides grammar highlight for c-=-1",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.50.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "cm1",
+            "aliases": ["c-=-1", "cm1"],
+            "extensions": [".cm"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "cm1",
+            "scopeName": "source.cm1",
+            "path": "./syntaxes/cm1.tmLanguage.json"
+        }]
+    }
+}

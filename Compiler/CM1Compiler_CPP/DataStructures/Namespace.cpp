@@ -20,6 +20,10 @@ std::vector<INamedObject*> Namespace::children()
 		result.push_back(t.get());
 	for (auto& t : attributes_)
 		result.push_back(t.get());
+	for (auto& t : genericFunction_)
+		result.push_back(t.get());
+	for (auto& t : genericTypes_)
+		result.push_back(t.get());
 	return result;
 }
 

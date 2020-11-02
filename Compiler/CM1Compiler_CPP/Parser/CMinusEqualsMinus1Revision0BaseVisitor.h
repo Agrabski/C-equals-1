@@ -87,6 +87,10 @@ public:
 		return visitChildren(ctx);
 	}
 
+	antlrcpp::Any visitGenericUsage(CMinusEqualsMinus1Revision0Parser::GenericUsageContext *ctx) override {
+		return visitChildren(ctx);
+	}
+
 	antlrcpp::Any visitFunctionBody(CMinusEqualsMinus1Revision0Parser::FunctionBodyContext *ctx) override {
 		return visitChildren(ctx);
 	}
@@ -96,6 +100,10 @@ public:
 	}
 
 	antlrcpp::Any visitStatement(CMinusEqualsMinus1Revision0Parser::StatementContext *ctx) override {
+		return visitChildren(ctx);
+	}
+
+	antlrcpp::Any visitReturnStatement(CMinusEqualsMinus1Revision0Parser::ReturnStatementContext *ctx) override {
 		return visitChildren(ctx);
 	}
 

@@ -65,6 +65,11 @@ std::string CommonToken::getText() const
 	return _text;
 }
 
+std::string& antlr4::CommonToken::getText()
+{
+	return _text;
+}
+
 void CommonToken::setText(const std::string& text)
 {
 	_text = text;

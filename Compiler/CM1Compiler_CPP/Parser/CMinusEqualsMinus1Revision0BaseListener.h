@@ -70,6 +70,9 @@ public:
 	void enter(not_null<CMinusEqualsMinus1Revision0Parser::TypeSpecifierContext*> ) override { }
 	void exit(not_null<CMinusEqualsMinus1Revision0Parser::TypeSpecifierContext*>) override { }
 
+	void enter(not_null<CMinusEqualsMinus1Revision0Parser::GenericUsageContext*> ) override { }
+	void exit(not_null<CMinusEqualsMinus1Revision0Parser::GenericUsageContext*>) override { }
+
 	void enter(not_null<CMinusEqualsMinus1Revision0Parser::FunctionBodyContext*> ) override { }
 	void exit(not_null<CMinusEqualsMinus1Revision0Parser::FunctionBodyContext*>) override { }
 
@@ -78,6 +81,9 @@ public:
 
 	void enter(not_null<CMinusEqualsMinus1Revision0Parser::StatementContext*> ) override { }
 	void exit(not_null<CMinusEqualsMinus1Revision0Parser::StatementContext*>) override { }
+
+	void enter(not_null<CMinusEqualsMinus1Revision0Parser::ReturnStatementContext*> ) override { }
+	void exit(not_null<CMinusEqualsMinus1Revision0Parser::ReturnStatementContext*>) override { }
 
 	void enter(not_null<CMinusEqualsMinus1Revision0Parser::VariableDeclarationStatementContext*> ) override { }
 	void exit(not_null<CMinusEqualsMinus1Revision0Parser::VariableDeclarationStatementContext*>) override { }

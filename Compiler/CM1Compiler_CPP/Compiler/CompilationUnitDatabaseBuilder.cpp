@@ -6,6 +6,7 @@
 #include "FunctionUtility.hpp"
 #include "TypeUtility.hpp"
 #include "AttributeUtility.hpp"
+#include "Preprocessor.hpp"
 
 using namespace cMCompiler::dataStructures;
 
@@ -38,6 +39,8 @@ antlrcpp::Any cMCompiler::compiler::CompilationUnitDataBaseBuilder::visitNamespa
 antlrcpp::Any cMCompiler::compiler::CompilationUnitDataBaseBuilder::visitFunctionDeclaration(CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext* ctx)
 {
 	assert(ctx != nullptr);
+	if (processOnlyAttributes_)
+		return antlrcpp::Any();
 	switch (state_)
 	{
 	case cMCompiler::compiler::Create:
@@ -45,6 +48,7 @@ antlrcpp::Any cMCompiler::compiler::CompilationUnitDataBaseBuilder::visitFunctio
 		break;
 	case cMCompiler::compiler::Confirm:
 		confirmFunction(nameResolver_, resolutionContext_, ctx);
+		preprocessor_.visit(ctx);
 		break;
 	case cMCompiler::compiler::Finalize:
 		finalizeFunction(nameResolver_, resolutionContext_, ctx, file_);
@@ -70,6 +74,8 @@ antlrcpp::Any cMCompiler::compiler::CompilationUnitDataBaseBuilder::visitImportD
 antlrcpp::Any cMCompiler::compiler::CompilationUnitDataBaseBuilder::visitTypeDeclaration(CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext* ctx)
 {
 	assert(ctx != nullptr);
+	if (processOnlyAttributes_)
+		return antlrcpp::Any();
 	switch (state_)
 	{
 	case cMCompiler::compiler::Create:
@@ -77,6 +83,7 @@ antlrcpp::Any cMCompiler::compiler::CompilationUnitDataBaseBuilder::visitTypeDec
 		break;
 	case cMCompiler::compiler::Confirm:
 		confirmType(nameResolver_, resolutionContext_, ctx);
+		preprocessor_.visit(ctx);
 		break;
 	case cMCompiler::compiler::Finalize:
 		finalizeType(nameResolver_, resolutionContext_, ctx, file_);
@@ -90,6 +97,8 @@ antlrcpp::Any cMCompiler::compiler::CompilationUnitDataBaseBuilder::visitTypeDec
 
 antlrcpp::Any cMCompiler::compiler::CompilationUnitDataBaseBuilder::visitAttributeDeclaration(CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext* ctx)
 {
+	if (!processOnlyAttributes_)
+		return antlrcpp::Any();
 	not_null parent = resolutionContext_.namespaceStack_.back();
 	switch (state_)
 	{

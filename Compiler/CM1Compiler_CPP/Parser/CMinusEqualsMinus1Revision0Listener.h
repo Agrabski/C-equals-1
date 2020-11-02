@@ -68,6 +68,9 @@ public:
 	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::TypeSpecifierContext *>) = 0;
 	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::TypeSpecifierContext *>) = 0;
 
+	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::GenericUsageContext *>) = 0;
+	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::GenericUsageContext *>) = 0;
+
 	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::FunctionBodyContext *>) = 0;
 	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::FunctionBodyContext *>) = 0;
 
@@ -76,6 +79,9 @@ public:
 
 	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::StatementContext *>) = 0;
 	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::StatementContext *>) = 0;
+
+	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::ReturnStatementContext *>) = 0;
+	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::ReturnStatementContext *>) = 0;
 
 	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::VariableDeclarationStatementContext *>) = 0;
 	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::VariableDeclarationStatementContext *>) = 0;

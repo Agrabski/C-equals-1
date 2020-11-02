@@ -17,20 +17,20 @@ public:
 		T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, 
 		T__7 = 8, T__8 = 9, T__9 = 10, T__10 = 11, T__11 = 12, T__12 = 13, T__13 = 14, 
 		T__14 = 15, T__15 = 16, T__16 = 17, T__17 = 18, T__18 = 19, T__19 = 20, 
-		T__20 = 21, T__21 = 22, Unique = 23, Shared = 24, AccessSpecifier = 25, 
-		Identifier = 26, OpenBracket = 27, CloseBracket = 28, DOUBLEQUOTE = 29, 
-		SINGLEQUOTE = 30, ParamOpen = 31, ParamClose = 32, ATTROBITEOPEN = 33, 
-		ATTROBITECLOSE = 34, Array = 35, ArithmeticBinaryOperator = 36, ArithmeticUnaryOperator = 37, 
-		ComparsionOperator = 38, LogicalBinaryOperator = 39, Unsafe = 40, LogicalUnaryOperator = 41, 
-		Not = 42, DoubleColon = 43, SemiColon = 44, Comma = 45, Period = 46, Equals = 47, 
-		Asssigment = 48, NotEquals = 49, Plus = 50, Minus = 51, Star = 52, PlusEquals = 53, 
-		MinusEquals = 54, MultiplyEquals = 55, DivideEquals = 56, GreaterEqual = 57, 
-		LessEqual = 58, Equal = 59, NotEqual = 60, Or = 61, And = 62, Xor = 63, 
-		Strong = 64, Nullable = 65, Mutable = 66, Ref = 67, Class = 68, Interface = 69, 
-		Public = 70, Private = 71, Internal = 72, Final = 73, Virtual = 74, Abstract = 75, 
-		Override = 76, DefaultSpecification = 77, Attribute = 78, Throw = 79, 
-		IntegerLiteral = 80, DIGIT = 81, STRING = 82, AnyCharacter = 83, LETTER = 84, 
-		Whitespace = 85, Newline = 86, BlockComment = 87, LineComment = 88
+		T__20 = 21, T__21 = 22, T__22 = 23, AccessSpecifier = 24, Identifier = 25, 
+		OpenBracket = 26, CloseBracket = 27, DOUBLEQUOTE = 28, SINGLEQUOTE = 29, 
+		ParamOpen = 30, ParamClose = 31, ATTROBITEOPEN = 32, ATTROBITECLOSE = 33, 
+		Array = 34, ArithmeticBinaryOperator = 35, ArithmeticUnaryOperator = 36, 
+		ComparsionOperator = 37, LogicalBinaryOperator = 38, Unsafe = 39, LogicalUnaryOperator = 40, 
+		Not = 41, DoubleColon = 42, SemiColon = 43, Comma = 44, Period = 45, Equals = 46, 
+		Asssigment = 47, NotEquals = 48, Plus = 49, Minus = 50, Star = 51, PlusEquals = 52, 
+		MinusEquals = 53, MultiplyEquals = 54, DivideEquals = 55, GreaterEqual = 56, 
+		LessEqual = 57, Equal = 58, NotEqual = 59, Or = 60, And = 61, Xor = 62, 
+		Strong = 63, Nullable = 64, Mutable = 65, Ref = 66, Class = 67, Interface = 68, 
+		Public = 69, Private = 70, Internal = 71, Final = 72, Virtual = 73, Abstract = 74, 
+		Override = 75, DefaultSpecification = 76, Attribute = 77, Throw = 78, 
+		IntegerLiteral = 79, DIGIT = 80, STRING = 81, AnyCharacter = 82, LETTER = 83, 
+		Whitespace = 84, Newline = 85, BlockComment = 86, LineComment = 87
 	};
 
 	enum
@@ -41,15 +41,15 @@ public:
 		RuleClassContentSequence = 9, RuleFieldDeclaration = 10, RuleGenericSpecifier = 11, 
 		RuleImplementedInterfacesSequence = 12, RuleNamespaceDeclaration = 13, 
 		RuleFunctionDeclaration = 14, RuleParameterList = 15, RuleParameter = 16, 
-		RuleTypeSpecifier = 17, RuleFunctionBody = 18, RuleCompoundStatement = 19, 
-		RuleStatement = 20, RuleVariableDeclarationStatement = 21, RuleIfStatement = 22, 
-		RuleLoopStatement = 23, RuleRangeForStatement = 24, RuleForStatement = 25, 
-		RuleWhileStatement = 26, RuleDoWhileStatement = 27, RuleWhileHeader = 28, 
-		RuleInfiniteLoopStatement = 29, RuleFunctionCall = 30, RuleFunctionCallParameter = 31, 
-		RuleAttributeSequence = 32, RuleAttribute = 33, RuleQualifiedIdentifier = 34, 
-		RuleExpression = 35, RuleArithmeticExpression = 36, RuleLogicalExpression = 37, 
-		RuleComparisonExpression = 38, RuleAssigmentStatement = 39, RuleLExpression = 40, 
-		RuleThrowExpression = 41
+		RuleTypeSpecifier = 17, RuleGenericUsage = 18, RuleFunctionBody = 19, 
+		RuleCompoundStatement = 20, RuleStatement = 21, RuleReturnStatement = 22, 
+		RuleVariableDeclarationStatement = 23, RuleIfStatement = 24, RuleLoopStatement = 25, 
+		RuleRangeForStatement = 26, RuleForStatement = 27, RuleWhileStatement = 28, 
+		RuleDoWhileStatement = 29, RuleWhileHeader = 30, RuleInfiniteLoopStatement = 31, 
+		RuleFunctionCall = 32, RuleFunctionCallParameter = 33, RuleAttributeSequence = 34, 
+		RuleAttribute = 35, RuleQualifiedIdentifier = 36, RuleExpression = 37, 
+		RuleArithmeticExpression = 38, RuleLogicalExpression = 39, RuleComparisonExpression = 40, 
+		RuleAssigmentStatement = 41, RuleLExpression = 42, RuleThrowExpression = 43
 	};
 
 	CMinusEqualsMinus1Revision0Parser(antlr4::TokenStream *input);
@@ -81,9 +81,11 @@ public:
 	class ParameterListContext;
 	class ParameterContext;
 	class TypeSpecifierContext;
+	class GenericUsageContext;
 	class FunctionBodyContext;
 	class CompoundStatementContext;
 	class StatementContext;
+	class ReturnStatementContext;
 	class VariableDeclarationStatementContext;
 	class IfStatementContext;
 	class LoopStatementContext;
@@ -468,8 +470,7 @@ public:
 		using antlr4::ParserRuleContext::copyFrom;
 
 		size_t getRuleIndex() const final;
-		std::vector<antlr4::tree::TerminalNode *> Identifier();
-		antlr4::tree::TerminalNode* Identifier(size_t i);
+		antlr4::tree::TerminalNode *Identifier();
 		antlr4::tree::TerminalNode *ParamOpen();
 		ParameterListContext *parameterList();
 		antlr4::tree::TerminalNode *ParamClose();
@@ -477,6 +478,7 @@ public:
 		AttributeSequenceContext *attributeSequence();
 		antlr4::tree::TerminalNode *AccessSpecifier();
 		GenericSpecifierContext *genericSpecifier();
+		TypeSpecifierContext *typeSpecifier();
 
 		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
 		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
@@ -548,6 +550,7 @@ public:
 
 		size_t getRuleIndex() const final;
 		antlr4::tree::TerminalNode *Identifier();
+		GenericUsageContext *genericUsage();
 		antlr4::tree::TerminalNode *Ref();
 		antlr4::tree::TerminalNode *Array();
 
@@ -560,6 +563,31 @@ public:
 
 	TypeSpecifierContext* typeSpecifier(antlr4::ParserRuleContext *parent = nullptr);
 	std::unique_ptr<TypeSpecifierContext> parsetypeSpecifier();
+
+	class  GenericUsageContext : public antlr4::ParserRuleContext
+	{
+	public:
+		std::unique_ptr<ParseTree> clone(ParseTree* parent) const override;
+		GenericUsageContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+		GenericUsageContext() = default;
+		void copyFrom(GenericUsageContext *context);
+		using antlr4::ParserRuleContext::copyFrom;
+
+		size_t getRuleIndex() const final;
+		std::vector<TypeSpecifierContext *> typeSpecifier();
+		TypeSpecifierContext* typeSpecifier(size_t i);
+		std::vector<antlr4::tree::TerminalNode *> Comma();
+		antlr4::tree::TerminalNode* Comma(size_t i);
+
+		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
+		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
+
+		antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) final;
+	 
+	};
+
+	GenericUsageContext* genericUsage(antlr4::ParserRuleContext *parent = nullptr);
+	std::unique_ptr<GenericUsageContext> parsegenericUsage();
 
 	class  FunctionBodyContext : public antlr4::ParserRuleContext
 	{
@@ -628,6 +656,7 @@ public:
 		LoopStatementContext *loopStatement();
 		AssigmentStatementContext *assigmentStatement();
 		VariableDeclarationStatementContext *variableDeclarationStatement();
+		ReturnStatementContext *returnStatement();
 
 		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
 		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
@@ -638,6 +667,28 @@ public:
 
 	StatementContext* statement(antlr4::ParserRuleContext *parent = nullptr);
 	std::unique_ptr<StatementContext> parsestatement();
+
+	class  ReturnStatementContext : public antlr4::ParserRuleContext
+	{
+	public:
+		std::unique_ptr<ParseTree> clone(ParseTree* parent) const override;
+		ReturnStatementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+		ReturnStatementContext() = default;
+		void copyFrom(ReturnStatementContext *context);
+		using antlr4::ParserRuleContext::copyFrom;
+
+		size_t getRuleIndex() const final;
+		ExpressionContext *expression();
+
+		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
+		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
+
+		antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) final;
+	 
+	};
+
+	ReturnStatementContext* returnStatement(antlr4::ParserRuleContext *parent = nullptr);
+	std::unique_ptr<ReturnStatementContext> parsereturnStatement();
 
 	class  VariableDeclarationStatementContext : public antlr4::ParserRuleContext
 	{
@@ -878,7 +929,7 @@ public:
 		antlr4::tree::TerminalNode *Identifier();
 		antlr4::tree::TerminalNode *ParamOpen();
 		antlr4::tree::TerminalNode *ParamClose();
-		GenericSpecifierContext *genericSpecifier();
+		GenericUsageContext *genericUsage();
 		std::vector<FunctionCallParameterContext *> functionCallParameter();
 		FunctionCallParameterContext* functionCallParameter(size_t i);
 		std::vector<antlr4::tree::TerminalNode *> Comma();

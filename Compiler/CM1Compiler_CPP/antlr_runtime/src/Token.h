@@ -49,6 +49,7 @@ namespace antlr4 {
 
 		/// Get the text of the token.
 		virtual std::string getText() const = 0;
+		virtual std::string& getText() = 0;
 
 		/// Get the token type of the token
 		virtual size_t getType() const = 0;

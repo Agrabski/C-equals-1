@@ -96,6 +96,9 @@
     <ClInclude Include="CompileTimeFunctions\ReplaceWithExternalSymbol.hpp">
       <Filter>Header Files\CompileTimeFunctions</Filter>
     </ClInclude>
+    <ClInclude Include="IRUtility.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NamespaceBuilder.cpp">
@@ -162,6 +165,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CompileTimeFunctions\ReplaceWithExternalSymbol.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IRUtility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

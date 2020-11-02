@@ -107,6 +107,7 @@ namespace antlr4
 		 */
 		void setText(const std::string& text);
 		std::string getText() const override;
+		std::string& getText() final;
 
 		size_t getLine() const noexcept override;
 

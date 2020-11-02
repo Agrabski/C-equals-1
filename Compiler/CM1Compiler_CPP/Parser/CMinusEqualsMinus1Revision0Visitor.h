@@ -55,11 +55,15 @@ public:
 
 		virtual antlrcpp::Any visitTypeSpecifier(CMinusEqualsMinus1Revision0Parser::TypeSpecifierContext *context) = 0;
 
+		virtual antlrcpp::Any visitGenericUsage(CMinusEqualsMinus1Revision0Parser::GenericUsageContext *context) = 0;
+
 		virtual antlrcpp::Any visitFunctionBody(CMinusEqualsMinus1Revision0Parser::FunctionBodyContext *context) = 0;
 
 		virtual antlrcpp::Any visitCompoundStatement(CMinusEqualsMinus1Revision0Parser::CompoundStatementContext *context) = 0;
 
 		virtual antlrcpp::Any visitStatement(CMinusEqualsMinus1Revision0Parser::StatementContext *context) = 0;
+
+		virtual antlrcpp::Any visitReturnStatement(CMinusEqualsMinus1Revision0Parser::ReturnStatementContext *context) = 0;
 
 		virtual antlrcpp::Any visitVariableDeclarationStatement(CMinusEqualsMinus1Revision0Parser::VariableDeclarationStatementContext *context) = 0;
 

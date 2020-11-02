@@ -7,21 +7,19 @@
 
 namespace cMCompiler::compiler
 {
-	class Preprocessor : protected CMinusEqualsMinus1Revision0BaseVisitor
+	class Preprocessor : public CMinusEqualsMinus1Revision0BaseVisitor
 	{
 		dataStructures::PackageDatabase& database_;
 		language::NameResolver& nameResolver_;
-		language::NameResolutionContext context_;
-		antlrcpp::Any visitImportDeclaration(CMinusEqualsMinus1Revision0Parser::ImportDeclarationContext* context) final;
-		antlrcpp::Any visitNamespaceDeclaration(CMinusEqualsMinus1Revision0Parser::NamespaceDeclarationContext* context) final;
+		language::NameResolutionContext& context_;
 		antlrcpp::Any visitTypeDeclaration(CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext* ctx) final;
 		antlrcpp::Any visitFunctionDeclaration(CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext* ctx) final;
 	public:
-		void evaluateCompiletimeCode();
-		Preprocessor(dataStructures::PackageDatabase& database, language::NameResolver& nameResolver) :
-			database_(database), nameResolver_(nameResolver) 
+		void executeAttachmentFunctions();
+		void executeAttributeSpecialFunctions();
+		Preprocessor(dataStructures::PackageDatabase& database, language::NameResolver& nameResolver, language::NameResolutionContext& context) noexcept :
+			database_(database), nameResolver_(nameResolver), context_(context)
 		{
-			context_.namespaceStack_.push_back(database.rootNamespace());
 		}
 		void preprocess(Parser::CompilationUnit& compilationUnit);
 	};

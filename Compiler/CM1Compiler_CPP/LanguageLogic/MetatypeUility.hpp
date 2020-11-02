@@ -16,7 +16,12 @@ namespace cMCompiler::language
 	std::unique_ptr<dataStructures::execution::ObjectValue> buildObjectFor(gsl::not_null<dataStructures::Type*> type);
 	std::unique_ptr<dataStructures::execution::ObjectValue> buildObjectFor(gsl::not_null<dataStructures::Namespace*> ns);
 
-	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildObjectFor(gsl::not_null<dataStructures::ir::ScopeTermination*> st);
+	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildObjectFor(gsl::not_null<dataStructures::ir::ScopeTermination*>);
+	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildObjectFor(gsl::not_null<dataStructures::ir::VariableDeclaration*>);
+	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildObjectFor(gsl::not_null<dataStructures::ir::IfElseStatement*>);
+	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildObjectFor(gsl::not_null<dataStructures::ir::FunctionCall*>);
+	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildObjectFor(gsl::not_null<dataStructures::ir::AssigmentStatement*>);
+
 
 	void supplyValueTo(gsl::not_null<dataStructures::ir::ScopeTermination*> st);
 	void supplyValueTo(gsl::not_null<dataStructures::ir::VariableDeclaration*>);

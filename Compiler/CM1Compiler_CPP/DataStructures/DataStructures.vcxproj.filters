@@ -186,6 +186,9 @@
     <ClInclude Include="IntermidiateRepresentation\IIRElement.hpp">
       <Filter>Header Files\IntermidiateRepresentation</Filter>
     </ClInclude>
+    <ClInclude Include="Generic.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

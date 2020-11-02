@@ -9,10 +9,16 @@ namespace std
 			delete(_allocated);
 		}
 
-		public fn move(other: unique<T>)
+		public fn move() -> unique<T>
 		{
-			other._allocated = _allocated;
+			let result = unique<T>(_allocated);
 			_allocated = null;
+			return result;
+		}
+
+		public fn get() -> T&
+		{
+			return _allocated;
 		}
 
 		internal fn construct(value: T&)

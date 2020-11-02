@@ -21,7 +21,7 @@ namespace cMCompiler::compiler
 		language::NameResolver& resolver,
 		language::NameResolutionContext& context,
 		gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx,
-		dataStructures::ObjectState state);
+		std::optional<dataStructures::ObjectState> state = std::optional<dataStructures::ObjectState>());
 
 	std::vector<dataStructures::Type*> getParameterTypes(language::NameResolver& resolver, language::NameResolutionContext& context, gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx);
 	bool compatible(dataStructures::Function* definition, std::vector<dataStructures::Type*> parametrTypes);
@@ -41,18 +41,25 @@ namespace cMCompiler::compiler
 		using dataStructures::Function;
 		using dataStructures::Accessibility;
 		using dataStructures::parse;
-		auto name = getName(ctx);
-		dataStructures::Accessibility accessibility = Accessibility::Private;
-		if (ctx->AccessSpecifier() != nullptr)
-			accessibility = parse(ctx->AccessSpecifier()->getText());
-		not_null function = createFunction(target, name);
-		function->setAccessibility(accessibility);
 		//todo: generics
-		/*auto generic = ctx->genericSpecifier();
+		auto generic = ctx->genericSpecifier();
+		auto name = getName(ctx);
 		if (generic != nullptr)
+		{
+			std::vector<std::string> parameters{};
 			for (not_null param : generic->Identifier())
-				function->pushParameter(param->getText());*/
-		appendSpecialVariable(target, function);
+				parameters.push_back(param->getText());
+			auto x = target->appendGeneric<Function>(std::move(parameters), ctx->clone(nullptr), name);
+		}
+		else
+		{
+			dataStructures::Accessibility accessibility = Accessibility::Private;
+			if (ctx->AccessSpecifier() != nullptr)
+				accessibility = parse(ctx->AccessSpecifier()->getText());
+			not_null function = createFunction(target, name);
+			function->setAccessibility(accessibility);
+			appendSpecialVariable(target, function);
+		}
 	}
 
 

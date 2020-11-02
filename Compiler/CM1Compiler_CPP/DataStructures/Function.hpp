@@ -63,7 +63,11 @@ namespace cMCompiler::dataStructures
 		{
 			return std::vector<INamedObject*>();
 		};
-		void setReturnType(Type* t) noexcept { returnType_ = t; }
+		not_null<Function*> setReturnType(Type* t) noexcept
+		{
+			returnType_ = t;
+			return this;
+		}
 		Type* returnType() noexcept { return returnType_; }
 		std::vector<ir::IInstruction*> code();
 		void pushInstruction(std::unique_ptr<ir::IInstruction>&& instruction)

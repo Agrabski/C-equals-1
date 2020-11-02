@@ -7,6 +7,7 @@
 #include "Accessibility.hpp"
 #include "Attribute.hpp"
 #include "Enum.hpp"
+#include "Generic.hpp"
 
 namespace cMCompiler::dataStructures
 {
@@ -21,6 +22,9 @@ namespace cMCompiler::dataStructures
 		std::vector<std::unique_ptr<Namespace>> namespaces_;
 		std::vector<std::unique_ptr<Attribute>> attributes_;
 		std::vector<std::unique_ptr<Enum>> enums_;
+		std::vector<std::unique_ptr<Generic<Type>>> genericTypes_;
+		std::vector<std::unique_ptr<Generic<Function>>> genericFunction_;
+
 #pragma region Bulshit
 		template<typename T, typename std::enable_if<std::is_same<typename T, typename Type>::value, int>::type = 0>
 		std::vector<std::unique_ptr<T>>& getAppropriate() noexcept
@@ -47,6 +51,18 @@ namespace cMCompiler::dataStructures
 		std::vector<std::unique_ptr<T>>& getAppropriate()noexcept
 		{
 			return enums_;
+		}
+
+		template<typename T, typename std::enable_if<std::is_same<typename T, typename Generic<Type>>::value, int>::type = 0>
+		std::vector<std::unique_ptr<T>>& getAppropriate()noexcept
+		{
+			return genericTypes_;
+		}
+
+		template<typename T, typename std::enable_if<std::is_same<typename T, typename Generic<Function>>::value, int>::type = 0>
+		std::vector<std::unique_ptr<T>>& getAppropriate()noexcept
+		{
+			return genericFunction_;
 		}
 #pragma endregion
 
@@ -82,7 +98,15 @@ namespace cMCompiler::dataStructures
 			if (result != end(collection))
 				return result->get();
 			return nullptr;
+		}
 
+		template<typename T>
+		gsl::not_null<Generic<T>*> appendGeneric(std::vector<std::string>&& parameterNames, std::unique_ptr<antlr4::tree::ParseTree>&& parseTree, std::string name)
+		{
+			auto tmp = std::make_unique<Generic<T>>(std::move(parameterNames), std::move(parseTree), name, this);
+			not_null const result = tmp.get();
+			getAppropriate<Generic<T>>().push_back(std::move(tmp));
+			return result;
 		}
 
 

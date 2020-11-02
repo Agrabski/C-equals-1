@@ -180,6 +180,7 @@
     <ClInclude Include="execution\StringValue.hpp" />
     <ClInclude Include="Field.hpp" />
     <ClInclude Include="Function.hpp" />
+    <ClInclude Include="Generic.hpp" />
     <ClInclude Include="Generic\GenericFunction.hpp" />
     <ClInclude Include="Generic\GenericObject.hpp" />
     <ClInclude Include="Generic\GenericParameter.hpp" />
@@ -250,6 +251,17 @@
     <ClCompile Include="Validation\ValidationError.cpp" />
     <ClCompile Include="Validation\ValidationUtility.cpp" />
     <ClCompile Include="Variable.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\antlr_runtime\antlr4cpp-vs2017.vcxproj">
+      <Project>{83be66cd-9c4f-4f84-b72a-dd1855c8fc8a}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Parser\Parser.vcxproj">
+      <Project>{94df607a-ac46-41f1-a284-1113ad742f01}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Utilities\Utilities.vcxproj">
+      <Project>{49d845cf-7d88-48d2-a179-88530fc67cd9}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
