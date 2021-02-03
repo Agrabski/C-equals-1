@@ -16,7 +16,8 @@ namespace cMCompiler::language
 	gsl::not_null<dataStructures::Type*> getFieldDescriptor();
 	gsl::not_null<dataStructures::Type*> getPointerToSource();
 	gsl::not_null<dataStructures::Attribute*> getCompileTimeAttribute();
-	
+	gsl::not_null<dataStructures::Type*> getCollectionTypeFor(gsl::not_null<dataStructures::Type*>elementType);
+
 
 
 }

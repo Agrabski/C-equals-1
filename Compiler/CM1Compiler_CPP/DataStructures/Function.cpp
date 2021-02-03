@@ -26,14 +26,6 @@ std::vector<Variable*> cMCompiler::dataStructures::Function::parameters()
 	return result;
 }
 
-std::vector<ir::IInstruction*> cMCompiler::dataStructures::Function::code()
-{
-	auto result = std::vector<ir::IInstruction*>();
-	for (auto& instruction : intermidiateRepresentation_)
-		result.push_back(instruction.get());
-	return result;
-}
-
 std::vector<validation::ValidationError> cMCompiler::dataStructures::Function::validateContent() const
 {
 	return std::vector<validation::ValidationError>();

@@ -169,6 +169,7 @@
     <ClInclude Include="Enum.hpp" />
     <ClInclude Include="execution\ArrayValue.hpp" />
     <ClInclude Include="execution\BooleanValue.hpp" />
+    <ClInclude Include="execution\InstructionCode.hpp" />
     <ClInclude Include="execution\IRuntimeValue.h" />
     <ClInclude Include="execution\IntegerValue.hpp" />
     <ClInclude Include="execution\IComplexRuntimeValue.hpp" />

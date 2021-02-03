@@ -189,6 +189,9 @@
     <ClInclude Include="Generic.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="execution\InstructionCode.hpp">
+      <Filter>Header Files\Execution</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

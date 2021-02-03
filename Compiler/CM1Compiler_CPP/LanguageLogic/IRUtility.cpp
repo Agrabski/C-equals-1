@@ -3,6 +3,11 @@
 
 using namespace cMCompiler::dataStructures;
 
+bool cMCompiler::language::isOfType(gsl::not_null<cMCompiler::dataStructures::execution::IRuntimeValue*> value, gsl::not_null<dataStructures::Type*> type)
+{
+	return value->type() == type;
+}
+
 gsl::not_null<Type*> cMCompiler::language::buidStatementDescriptor(gsl::not_null<Namespace*> irNs)
 {
 	auto interface = irNs->append<Type>("IStatement"s);
@@ -30,9 +35,45 @@ gsl::not_null<Type*> cMCompiler::language::buildVariableDescriptor(gsl::not_null
 	return result;
 }
 
+gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildLiteralExpressionDescriptor(gsl::not_null<dataStructures::Namespace*> irNs)
+{
+	auto t = irNs->append<Type>("literalExpression");
+	t->appendField("value", nullptr);
+	t->appendInterface(getExpressionDescriptor());
+	return t;
+}
+
+gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildFunctionCallDescriptor(gsl::not_null<dataStructures::Namespace*> irNs)
+{
+	auto result = irNs->append<Type>("IFunctionCallDescriptor");
+	result->append<Function>("function")->setReturnType(getFunctionDescriptor())->setAccessibility(Accessibility::Public);
+	result->append<Function>("parameters")->setReturnType(getCollectionTypeFor(getExpressionDescriptor()))->setAccessibility(Accessibility::Public);
+	std::terminate();
+}
+
 void cMCompiler::language::buildIrNamespace(gsl::not_null<dataStructures::Namespace*> compilerNs)
 {
 	auto ns = compilerNs->append<Namespace>("ir"s);
 	auto statement = buidStatementDescriptor(ns);
 	buildIfDescriptor(ns, statement);
+}
+
+gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getLiteralExpressionDescriptor()
+{
+	return getDefaultPackage()->rootNamespace()->get<Namespace>("std")->get<Namespace>("compiler")->get<Namespace>("ir")->get<Type>("literalExpression");
+}
+
+gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getIfDescriptor()
+{
+	return getDefaultPackage()->rootNamespace()->get<Namespace>("std")->get<Namespace>("compiler")->get<Namespace>("ir")->get<Type>("ifStatement");
+}
+
+gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getAssigmentStatementDescriptor()
+{
+	return getDefaultPackage()->rootNamespace()->get<Namespace>("std")->get<Namespace>("compiler")->get<Namespace>("ir")->get<Type>("assigmentStatement");
+}
+
+gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getIInstruction()
+{
+	return getDefaultPackage()->rootNamespace()->get<Namespace>("std")->get<Namespace>("compiler")->get<Namespace>("ir")->get<Type>("IInstruction");
 }

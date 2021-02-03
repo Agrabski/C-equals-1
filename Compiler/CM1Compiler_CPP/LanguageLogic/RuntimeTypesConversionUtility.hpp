@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <gsl.h>
+#include "runtime_values.hpp"
 #include "../DataStructures/SourcePointer.hpp"
 #include "../DataStructures/execution/IRuntimeValue.h"
 #include "../DataStructures/execution/ReferenceValue.hpp"
@@ -15,6 +16,12 @@ namespace cMCompiler::language
 
 	[[nodiscard]]
 	std::string convertToString(dataStructures::execution::IRuntimeValue& value);
+
+	[[nodiscard]]
+	runtime_value convertToCollection(std::vector<std::string> const& strings);
+
+	[[nodiscard]]
+	bool canCastReference(gsl::not_null<dataStructures::Type*> from, gsl::not_null<dataStructures::Type*> to);
 
 	template<typename T>
 	[[nodiscard]]

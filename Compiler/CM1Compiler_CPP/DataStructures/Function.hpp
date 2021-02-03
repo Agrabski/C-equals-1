@@ -11,6 +11,7 @@
 #include "Target.hpp"
 #include "ObjectWithMetadata.hpp"
 #include "MetadataObject.hpp"
+#include "execution/ArrayValue.hpp"
 
 using gsl::not_null;
 
@@ -48,7 +49,7 @@ namespace cMCompiler::dataStructures
 		public ObjectWithAccessbility,
 		public ObjectWithMetadata<FunctionMetadata>
 	{
-		std::vector<std::unique_ptr<ir::IInstruction>> intermidiateRepresentation_;
+		std::unique_ptr<execution::ArrayValue> intermidiateRepresentation_;
 		std::vector<std::unique_ptr<Variable>> parameters_;
 		std::vector<std::unique_ptr<Variable>> localVariables_;
 		Type* returnType_ = nullptr;
@@ -69,10 +70,10 @@ namespace cMCompiler::dataStructures
 			return this;
 		}
 		Type* returnType() noexcept { return returnType_; }
-		std::vector<ir::IInstruction*> code();
-		void pushInstruction(std::unique_ptr<ir::IInstruction>&& instruction)
+		std::unique_ptr<execution::ArrayValue>& code() noexcept { return intermidiateRepresentation_; }
+		void pushInstruction(std::unique_ptr<execution::IRuntimeValue>&& instruction)
 		{
-			intermidiateRepresentation_.push_back(std::move(instruction));
+			intermidiateRepresentation_->push(std::move(instruction));
 		}
 
 		// Inherited via INamedObject

@@ -57,6 +57,7 @@ Function* cMCompiler::language::resolveOverload(std::vector<gsl::not_null<dataSt
 {
 	if (candidates.size() == 1)
 		return candidates.front();
+	std::terminate();
 }
 
 bool cMCompiler::language::isCompiletimeExecutable(not_null<Function const*> function)

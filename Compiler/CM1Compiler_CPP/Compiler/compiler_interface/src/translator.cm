@@ -1,0 +1,13 @@
+import {ITranslator, IIrBuilder} from {cm1mLang::compilation}
+
+namespace compiler_interface
+{
+	class translator : ITranslator
+	{
+		private _builder: IIrBuilder;
+		public fn construct(builder: IIrBuilder&)
+		{
+			self._builder = builder
+		}
+	}
+}

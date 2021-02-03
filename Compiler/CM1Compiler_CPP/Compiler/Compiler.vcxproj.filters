@@ -63,6 +63,12 @@
     <ClInclude Include="Generic\GenericInstantiationUtility.hpp">
       <Filter>Header Files\Generic</Filter>
     </ClInclude>
+    <ClInclude Include="compilerInterfaceUtility.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LLVMIR.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CompilationUnitDatabaseBuilder.cpp">

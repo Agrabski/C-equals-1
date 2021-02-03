@@ -35,6 +35,7 @@
   <ItemGroup>
     <ClInclude Include="AttributeUtility.hpp" />
     <ClInclude Include="CompilationUnitDatabaseBuilder.hpp" />
+    <ClInclude Include="compilerInterfaceUtility.hpp" />
     <ClInclude Include="ExpressionBuilder.hpp" />
     <ClInclude Include="ExpressionEvaluator.hpp" />
     <ClInclude Include="FunctionBodyBuilder.hpp" />
@@ -42,6 +43,7 @@
     <ClInclude Include="FunctionUtility.hpp" />
     <ClInclude Include="Generic\GenericInstantiationUtility.hpp" />
     <ClInclude Include="IntermidiateRepresentationEmmiter.hpp" />
+    <ClInclude Include="LLVMIR.hpp" />
     <ClInclude Include="PackageBuildUtility.hpp" />
     <ClInclude Include="PackageDiscoveryUtility.hpp" />
     <ClInclude Include="Preprocessor.hpp" />

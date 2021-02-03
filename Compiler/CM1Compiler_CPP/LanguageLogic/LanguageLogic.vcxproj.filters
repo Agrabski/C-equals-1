@@ -36,9 +36,6 @@
     <ClInclude Include="BuiltInPackageBuildUtility.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IntermidiateRepresentationBuilder.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="LiteralUtility.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -97,6 +94,12 @@
       <Filter>Header Files\CompileTimeFunctions</Filter>
     </ClInclude>
     <ClInclude Include="IRUtility.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="runtime_values.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ExpressionUtility.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -168,6 +171,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="IRUtility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ExpressionUtility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

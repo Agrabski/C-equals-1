@@ -15,3 +15,26 @@ Type* cMCompiler::dataStructures::execution::ArrayValue::getMemberType(std::stri
 void cMCompiler::dataStructures::execution::ArrayValue::setValue(std::string const& name, std::unique_ptr<IRuntimeValue>&& value)
 {
 }
+
+void cMCompiler::dataStructures::execution::ArrayValue::push(std::unique_ptr<IRuntimeValue>&& value)
+{
+	assert(value->type() == elementType_);
+	allocated_.push_back(std::move(value));
+}
+
+void cMCompiler::dataStructures::execution::ArrayValue::emmit(std::ostream& stream, ir::INameGetter const& nameLookupFunction) const
+{
+	std::terminate();
+}
+
+std::string cMCompiler::dataStructures::execution::ArrayValue::toString() const
+{
+	std::terminate();
+	return std::string();
+}
+
+std::unique_ptr<IRuntimeValue> cMCompiler::dataStructures::execution::ArrayValue::copy() const
+{
+	std::terminate();
+	return std::unique_ptr<IRuntimeValue>();
+}

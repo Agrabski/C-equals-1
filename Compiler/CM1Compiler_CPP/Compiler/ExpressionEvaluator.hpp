@@ -31,5 +31,7 @@ namespace cMCompiler::compiler
 			resolver_(resolver), context_(context), variableLookupFunction_(variableLookupFunction) {}
 		std::unique_ptr<dataStructures::execution::IRuntimeValue> evaluate(gsl::not_null<dataStructures::ir::IExpression*> expression);
 		std::unique_ptr<dataStructures::execution::ReferenceValue> evaluateLValue(gsl::not_null<dataStructures::ir::IExpression*> expression);
+
+		std::unique_ptr< dataStructures::execution::IRuntimeValue> evaluate(dataStructures::execution::IRuntimeValue & expression);
 	};
 }

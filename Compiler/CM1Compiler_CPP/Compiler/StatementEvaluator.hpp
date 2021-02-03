@@ -1,5 +1,6 @@
 #pragma once
 #include "../DataStructures/IntermidiateRepresentation/IInstructionVisitor.hpp"
+#include "../LanguageLogic/runtime_values.hpp"
 #include "ExpressionEvaluator.hpp"
 
 namespace cMCompiler::compiler
@@ -20,6 +21,7 @@ namespace cMCompiler::compiler
 		void visit(dataStructures::ir::AssigmentStatement&) final;
 	public:
 		void visit(dataStructures::ir::IInstruction& instruction);
+		void evaluate(language::runtime_value& instruction);
 		StatementEvaluator
 		(
 			dataStructures::Function& definition,

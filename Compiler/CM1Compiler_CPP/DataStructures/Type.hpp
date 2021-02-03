@@ -42,6 +42,11 @@ namespace cMCompiler::dataStructures
 			return result;
 		}
 
+		std::vector<not_null<Type*>> const& interfaces() const noexcept
+		{
+			return implementedInterfaces_;
+		}
+
 		template<typename T>
 		T* append(std::string n)
 		{

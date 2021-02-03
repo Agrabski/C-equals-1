@@ -1,5 +1,6 @@
 #include "ExpressionEvaluator.hpp"
 #include "../LanguageLogic/LiteralUtility.hpp"
+#include "../LanguageLogic/IRUtility.hpp"
 #include "FunctionExecutionUtility.hpp"
 using namespace cMCompiler;
 using namespace cMCompiler::dataStructures::execution;
@@ -17,13 +18,24 @@ std::unique_ptr<dataStructures::execution::ReferenceValue> cMCompiler::compiler:
 	return std::unique_ptr<dataStructures::execution::ReferenceValue>(dynamic_cast<ReferenceValue*>(value_.release()));
 }
 
+std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::ExpressionEvaluator::evaluate(dataStructures::execution::IRuntimeValue& expression)
+{
+	not_null type = expression.type();
+
+	if (type.get() == language::getLiteralExpressionDescriptor().get())
+	{
+		return (*dynamic_cast<ObjectValue&>(expression).getMemberValue("value")->value())->copy();
+	}
+
+}
+
 void cMCompiler::compiler::ExpressionEvaluator::visit(dataStructures::ir::MemberAccessExpression& expression)
 {
 	auto evaluator = ExpressionEvaluator(*this);
 	evaluator.makeReference_ = true;
 	auto initialValue = evaluator.evaluate(expression.initialExpression());
 	not_null reference = dynamic_cast<ReferenceValue*>(initialValue.get());
-	auto &members = expression.memberChain();
+	auto& members = expression.memberChain();
 	IRuntimeValue* tmp = reference->value()->get();
 	for (auto s = members.begin(); s + 1 != members.end(); s++)
 	{

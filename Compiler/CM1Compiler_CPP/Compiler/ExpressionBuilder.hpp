@@ -2,6 +2,7 @@
 #include <functional>
 #include "../Parser/CMinusEqualsMinus1Revision0BaseVisitor.h"
 #include "../DataStructures/IntermidiateRepresentation/IExpression.hpp"
+#include "../LanguageLogic/runtime_values.hpp"
 
 namespace cMCompiler::compiler
 {
@@ -11,11 +12,11 @@ namespace cMCompiler::compiler
 		std::function<dataStructures::Variable* (std::string const&)> variableLookupFunction_;
 	public:
 		ExpressionBuilder(std::function<dataStructures::Variable* (std::string const&)> f) : variableLookupFunction_(f) {}
-		std::unique_ptr<dataStructures::ir::IExpression> buildExpression(CMinusEqualsMinus1Revision0Parser::FunctionCallParameterContext* ctx);
-		std::unique_ptr<dataStructures::ir::IExpression> buildExpression(CMinusEqualsMinus1Revision0Parser::LogicalExpressionContext* ctx);
-		std::unique_ptr<dataStructures::ir::IExpression> buildExpression(CMinusEqualsMinus1Revision0Parser::ExpressionContext* ctx);
-		std::unique_ptr<dataStructures::ir::IExpression> buildExpression(CMinusEqualsMinus1Revision0Parser::ArithmeticExpressionContext* ctx, dataStructures::Type* requestedType);
-		std::unique_ptr<dataStructures::ir::IExpression> buildExpression(CMinusEqualsMinus1Revision0Parser::FunctionCallContext* ctx, dataStructures::Type* requestedType);
-		std::unique_ptr<dataStructures::ir::IExpression> buildExpression(CMinusEqualsMinus1Revision0Parser::LExpressionContext *ctx);
+		language::runtime_value buildExpression(gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionCallParameterContext*> ctx);
+		language::runtime_value buildExpression(gsl::not_null<CMinusEqualsMinus1Revision0Parser::LogicalExpressionContext*> ctx);
+		language::runtime_value buildExpression(gsl::not_null<CMinusEqualsMinus1Revision0Parser::ExpressionContext*> ctx);
+		language::runtime_value buildExpression(gsl::not_null<CMinusEqualsMinus1Revision0Parser::ArithmeticExpressionContext*> ctx, dataStructures::Type* requestedType);
+		language::runtime_value buildExpression(gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionCallContext*> ctx, dataStructures::Type* requestedType);
+		language::runtime_value buildExpression(gsl::not_null<CMinusEqualsMinus1Revision0Parser::LExpressionContext *>ctx);
 	};
 }

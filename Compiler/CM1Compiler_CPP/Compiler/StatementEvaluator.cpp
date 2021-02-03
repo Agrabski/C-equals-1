@@ -1,6 +1,7 @@
 #include "StatementEvaluator.hpp"
 #include "../DataStructures/execution/BooleanValue.hpp"
 #include "../LanguageLogic/SpecialFunctionUtility.hpp"
+#include "../LanguageLogic/IRUtility.hpp"
 #include "FunctionExecutionUtility.hpp"
 
 void cMCompiler::compiler::StatementEvaluator::visit(dataStructures::ir::FunctionCall& call)
@@ -49,6 +50,14 @@ void cMCompiler::compiler::StatementEvaluator::visit(dataStructures::ir::ScopeTe
 void cMCompiler::compiler::StatementEvaluator::visit(dataStructures::ir::IInstruction& instruction)
 {
 	instruction.accept(*this);
+}
+
+void cMCompiler::compiler::StatementEvaluator::evaluate(language::runtime_value& instruction)
+{
+	using language::isOfType;
+	if (isOfType(instruction.get(), getFunctionCallDescriptor())
+		call(instruction);
+	std::terminate();
 }
 
 void cMCompiler::compiler::StatementEvaluator::visit(dataStructures::ir::AssigmentStatement& statement)

@@ -21,7 +21,7 @@ antlrcpp::Any cMCompiler::compiler::Preprocessor::visitTypeDeclaration(CMinusEqu
 				return dummyValue;
 			});
 			auto expression = ep.buildExpression(p);
-			parameters.push_back(evaluator.evaluate(expression.get()));
+			parameters.push_back(evaluator.evaluate(*expression.get()));
 		}
 		auto instance = createAttributeInstance(*type, attributeType, std::move(parameters), nameResolver_, context_);
 		type->appendAttribute(std::move(instance));
@@ -49,7 +49,7 @@ antlrcpp::Any cMCompiler::compiler::Preprocessor::visitFunctionDeclaration(CMinu
 						return dummyValue;
 					});
 					auto expression = ep.buildExpression(p);
-					parameters.push_back(evaluator.evaluate(expression.get()));
+					parameters.push_back(evaluator.evaluate(*expression.get()));
 				}
 				auto instance = createAttributeInstance(*function, attributeType, std::move(parameters), nameResolver_, context_);
 				function->appendAttribute(std::move(instance));

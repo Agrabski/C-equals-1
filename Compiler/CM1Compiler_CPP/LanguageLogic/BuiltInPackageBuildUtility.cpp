@@ -18,6 +18,8 @@ auto const compile_time_function_descriptor__ = "functionDescriptor";
 
 static auto defaultPackage__ = std::make_unique<PackageDatabase>("cm1mLang");
 
+
+
 gsl::not_null<Type*> buildTypeDescriptor(gsl::not_null<Namespace*> compilerNs)
 {
 	auto type = compilerNs->append<Type>("typeDescriptor");
@@ -180,4 +182,9 @@ gsl::not_null<Type*> cMCompiler::language::getFieldDescriptor()
 gsl::not_null<Type*> cMCompiler::language::getPointerToSource()
 {
 	return defaultPackage__->rootNamespace()->get<Namespace>("compiler")->get<Type>("pointerToSource");
+}
+
+gsl::not_null< cMCompiler::dataStructures::Type*> cMCompiler::language::getCollectionTypeFor(gsl::not_null<dataStructures::Type*> elementType)
+{
+	return gsl::not_null<dataStructures::Type*>();
 }

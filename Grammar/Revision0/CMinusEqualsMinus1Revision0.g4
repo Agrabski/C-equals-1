@@ -111,7 +111,10 @@ expression
 	| throwExpression
 	| Identifier
 	| ParamOpen expression ParamClose
-	| lExpression;
+	| lExpression
+	| newExpression;
+
+newExpression : 'new' functionCall;
 
 arithmeticExpression:
 	arithmeticExpression ArithmeticBinaryOperator arithmeticExpression

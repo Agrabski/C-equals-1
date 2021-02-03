@@ -6,7 +6,7 @@
 using namespace cMCompiler::compiler;
 using namespace cMCompiler::dataStructures;
 using gsl::not_null;
-
+/*
 
 void emmitAttribute(std::ostream& stream, AttributeInstance& attribute, cMCompiler::dataStructures::ir::INameGetter& nameGetter)
 {
@@ -302,3 +302,4 @@ void IntermidiateRepresentationEmmiter::emmit(std::ostream& stream, PackageDatab
 	stream << "]\r\n";
 	emmitFunctions(functions, stream, nl, 0);
 }
+*/

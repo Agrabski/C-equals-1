@@ -31,7 +31,7 @@ std::unique_ptr<IRuntimeValue> cMCompiler::compiler::execute(
 		return (*f)(std::move(values), std::map<std::string, not_null<dataStructures::Type*>>());
 	}
 	std::map<std::string ,std::unique_ptr<IRuntimeValue>> locals;
-	auto instructions = functionDefinition->code();
+	auto& instructions = functionDefinition->code();
 	auto const variableLookup = [functionDefinition, &locals, &valueMap](auto const& name) -> std::unique_ptr<IRuntimeValue>&
 	{
 		auto local = locals.find(name);
@@ -44,8 +44,8 @@ std::unique_ptr<IRuntimeValue> cMCompiler::compiler::execute(
 	};
 	auto eval = ExpressionEvaluator(resolver, context, variableLookup);
 	auto statementEvaluator = StatementEvaluator(*functionDefinition, eval, locals, resolver, context);
-	for (not_null<dataStructures::ir::IInstruction*> instruction : instructions)
-		statementEvaluator.visit(*instruction);
+	for (auto& instruction : *instructions)
+		statementEvaluator.evaluate(instruction);
 
 	return returnValue;
 }

@@ -1,0 +1,11 @@
+import {IIrBuilder, compiler_interface_entrypoint} from {cm1mLang::compilation}
+import {translator} from
+
+namespace compiler_interface
+{
+	[compiler_interface_entrypoint()]
+	public fn createTranslator(builder: IIrBuilder) -> translator
+	{
+		
+	}
+}
