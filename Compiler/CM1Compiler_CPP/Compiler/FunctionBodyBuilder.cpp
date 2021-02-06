@@ -61,7 +61,7 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitVariableDeclaratio
 		expression = getBuilder().buildExpression(ctx->functionCallParameter());
 
 	auto name = ctx->Identifier(0)->getText();
-	not_null variable = function_->appendLocalVariable(name, type);
+	not_null variable = function_->appendLocalVariable(name, type, cMCompiler::language::createVariableDescriptor("name", type));
 
 	auto instruction = language::buildVariableDeclaration(
 		variable,

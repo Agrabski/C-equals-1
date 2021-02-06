@@ -23,6 +23,7 @@ namespace cMCompiler::dataStructures
 	class AttributeTarget;
 	class Variable : public AttributeTarget
 	{
+		std::unique_ptr<execution::IRuntimeValue> object_;
 		not_null<Type*> type_;
 		std::string name_;
 		std::unique_ptr<execution::IRuntimeValue> scopeTermination_;
@@ -37,10 +38,11 @@ namespace cMCompiler::dataStructures
 			scopeTermination_ = std::move(value);
 		}
 
-		Variable(std::string name, not_null<Type*> type) : AttributeTarget(Target::Variable), type_(type), name_(name) {}
+		Variable(std::string name, not_null<Type*> type, std::function<std::unique_ptr<execution::IRuntimeValue>(not_null<Variable*>)> objectFactory) :
+			AttributeTarget(Target::Variable), type_(type), name_(name), object_(objectFactory(this)) {}
 		not_null<Type*> type() noexcept;
 		std::string const& name() const noexcept { return name_; }
-		not_null<execution::ObjectValue*> object();
+		not_null<execution::IRuntimeValue*> object() { return object_.get(); }
 	};
 
 }

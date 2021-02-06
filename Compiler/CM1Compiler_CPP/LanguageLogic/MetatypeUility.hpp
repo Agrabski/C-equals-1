@@ -30,6 +30,8 @@ namespace cMCompiler::language
 		runtime_value&& referenceToRuntimeFunction,
 		runtime_value&& expressions);
 
+	std::unique_ptr<dataStructures::execution::IRuntimeValue> createVariableDescriptor(not_null<dataStructures::Variable*> variable);
+
 
 	void suplyParent(runtime_value& instruction, runtime_value&& referenceToParent);
 	

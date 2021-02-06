@@ -7,7 +7,9 @@
 #include "../DataStructures/execution/RuntimeTypeDescriptor.hpp"
 #include "../DataStructures/execution/RuntimeFunctionDescriptor.hpp"
 #include "../DataStructures/execution/RuntimeFieldDescriptor.hpp"
+#include "../DataStructures/execution/RuntimeVariableDescriptor.hpp"
 #include "RuntimeTypesConversionUtility.hpp"
+#include "../Utilities/pointer_cast.hpp"
 
 
 using namespace cMCompiler::dataStructures::execution;
@@ -50,6 +52,12 @@ std::unique_ptr<ObjectValue> cMCompiler::language::buildObjectFor(gsl::not_null<
 	result->setValue("qualifiedName"s, buildStringValue((std::string)ns->qualifiedName()));
 	return result;
 
+}
+
+std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler::language::createVariableDescriptor(not_null<Variable*> variable)
+{
+	auto result = std::make_unique<dataStructures::execution::RuntimeVariableDescriptor>(getVariableDescriptor(), variable);
+	return utilities::pointer_cast<IRuntimeValue>(std::move(result));
 }
 
 std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler::language::buildScopeTermination(runtime_value&& variables, runtime_value&& pointerToSource)

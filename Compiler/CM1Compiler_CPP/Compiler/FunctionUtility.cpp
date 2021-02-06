@@ -1,5 +1,6 @@
 #include "FunctionUtility.hpp"
 #include "FunctionBodyBuilder.hpp"
+#include "../LanguageLogic/MetatypeUility.hpp"
 
 std::string cMCompiler::compiler::getName(gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx)
 {
@@ -62,7 +63,7 @@ void cMCompiler::compiler::confirmFunction(
 	{
 		auto typeName = variable->typeSpecifier()->Identifier()->getText();
 		not_null const type = resolver.resolve<dataStructures::Type>(typeName, context);
-		f->appendVariable(variable->Identifier()->getText(), type);
+		f->appendVariable(variable->Identifier()->getText(), type, cMCompiler::language::createVariableDescriptor);
 	}
 	auto type = returnType(ctx);
 	if (type)
@@ -76,7 +77,7 @@ using namespace cMCompiler;
 
 void cMCompiler::compiler::appendSpecialVariable(not_null<dataStructures::Type*> target, not_null<dataStructures::Function*> f)
 {
-	f->appendVariable("self", target);
+	f->appendVariable("self", target, cMCompiler::language::createVariableDescriptor);
 }
 
 dataStructures::Function* cMCompiler::compiler::createFunction(not_null<dataStructures::Type*> target, std::string const& name)
@@ -97,7 +98,7 @@ dataStructures::Function* cMCompiler::compiler::createFunction(not_null<dataStru
 
 void cMCompiler::compiler::appendSpecialVariable(not_null<dataStructures::Attribute*> target, not_null<dataStructures::Function*> f)
 {
-	f->appendVariable("self", target->describingType());
+	f->appendVariable("self", target->describingType(), cMCompiler::language::createVariableDescriptor);
 }
 
 void cMCompiler::compiler::appendSpecialVariable(not_null<dataStructures::Namespace*> target, not_null<dataStructures::Function*> f) noexcept

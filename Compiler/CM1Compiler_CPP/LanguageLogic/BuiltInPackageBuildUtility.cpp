@@ -8,6 +8,7 @@
 #include "CompileTimeFunctions/ReplaceWithCompilerType.hpp"
 #include "CompileTimeFunctions/MarkCompileTimeOnly.hpp"
 #include "IRUtility.hpp"
+#include "MetatypeUility.hpp"
 
 using namespace std::string_literals;
 using namespace cMCompiler::language;
@@ -87,37 +88,40 @@ void buildCompilerLibrary(gsl::not_null<Namespace*> rootNamespace)
 	{
 		auto replace = ns->append<Function>("replaceWithCompilerFunction");
 		replace->setAccessibility(Accessibility::Public);
-		replace->appendVariable("function", function);
-		replace->appendVariable("name", cMCompiler::language::getString());
+		replace->appendVariable("function", function, cMCompiler::language::createVariableDescriptor);
+		replace->appendVariable("name", cMCompiler::language::getString(),
+			cMCompiler::language::createVariableDescriptor);
 		FuntionLibrary::instance().addFunctionDefinition(replace, replaceWithCompilerFunction);
 	}
 	{
 		auto replace = ns->append<Function>("replaceWithCompilerType");
 		replace->setAccessibility(Accessibility::Public);
-		replace->appendVariable("type", type);
-		replace->appendVariable("name", cMCompiler::language::getString());
+		replace->appendVariable("type", type, cMCompiler::language::createVariableDescriptor);
+		replace->appendVariable("name", cMCompiler::language::getString(),
+			cMCompiler::language::createVariableDescriptor);
+
 		FuntionLibrary::instance().addFunctionDefinition(replace, replaceWithCompilerType);
 	}
 	{
 		auto replace = ns->append<Function>("markCompileTimeOnly");
 		replace->setAccessibility(Accessibility::Public);
-		replace->appendVariable("function", function);
+		replace->appendVariable("function", function, cMCompiler::language::createVariableDescriptor);
 		FuntionLibrary::instance().addFunctionDefinition(replace, markCompileTimeOnly);
 	}
 	{
 		auto replace = ns->append<Function>("replaceWithSymbol");
 		replace->setAccessibility(Accessibility::Public);
-		replace->appendVariable("function", function);
-		replace->appendVariable("symbolName", getString());
-		replace->appendVariable("assemblyPath", getString());
+		replace->appendVariable("function", function, cMCompiler::language::createVariableDescriptor);
+		replace->appendVariable("symbolName", getString(), cMCompiler::language::createVariableDescriptor);
+		replace->appendVariable("assemblyPath", getString(), cMCompiler::language::createVariableDescriptor);
 		FuntionLibrary::instance().addFunctionDefinition(replace, ReplaceWithExternalSymbol);
 	}
 	{
 		auto raise = ns->append<Function>("raiseError");
 		raise->setAccessibility(Accessibility::Public);
-		raise->appendVariable("pointerToSource", getPointerToSource());
-		raise->appendVariable("message", getString());
-		raise->appendVariable("code", getUsize());
+		raise->appendVariable("pointerToSource", getPointerToSource(), cMCompiler::language::createVariableDescriptor);
+		raise->appendVariable("message", getString(), cMCompiler::language::createVariableDescriptor);
+		raise->appendVariable("code", getUsize(), cMCompiler::language::createVariableDescriptor);
 		FuntionLibrary::instance().addFunctionDefinition(raise, raiseError);
 	}
 }
