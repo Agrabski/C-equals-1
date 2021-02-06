@@ -22,7 +22,7 @@ namespace cMCompiler::language
 
 
 	runtime_value buildVariableDeclaration(gsl::not_null<dataStructures::Variable*> variable, runtime_value&& expression, gsl::not_null<dataStructures::Type*> type, runtime_value&& pointerToSource);
-	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildScopeTermination(std::vector<gsl::not_null<dataStructures::Variable*>>&& variables, runtime_value&& pointerToSource);
+	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildScopeTermination(runtime_value&& variables, runtime_value&& pointerToSource);
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildIf(runtime_value&& expression, runtime_value&& pointerToSource);
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildAssigmentStatement(runtime_value&& lExpression, runtime_value&& rExpression, runtime_value&& pointerToSource);
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildFunctionCall(

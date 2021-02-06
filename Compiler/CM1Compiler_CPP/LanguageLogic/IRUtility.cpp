@@ -23,7 +23,8 @@ gsl::not_null<Type*> cMCompiler::language::buildIfDescriptor(gsl::not_null<Names
 
 	auto impl = irNs->append<Type>("ifStatement");
 	impl->appendInterface(interface);
-
+	impl->appendField("_pointerToSource", getPointerToSource());
+	impl->appendField("_expression", getExpressionDescriptor());
 	return interface;
 }
 
@@ -46,8 +47,9 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildLite
 gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildFunctionCallDescriptor(gsl::not_null<dataStructures::Namespace*> irNs)
 {
 	auto result = irNs->append<Type>("IFunctionCallDescriptor");
-	result->append<Function>("function")->setReturnType(getFunctionDescriptor())->setAccessibility(Accessibility::Public);
-	result->append<Function>("parameters")->setReturnType(getCollectionTypeFor(getExpressionDescriptor()))->setAccessibility(Accessibility::Public);
+	result->append<Function>("compileTimeFunction")->setReturnType(getFunctionDescriptor())->setAccessibility(Accessibility::Public);
+	result->append<Function>("runtimeTimeFunction")->setReturnType(getFunctionDescriptor())->setAccessibility(Accessibility::Public);
+	result->append<Function>("arguments")->setReturnType(getCollectionTypeFor(getExpressionDescriptor()))->setAccessibility(Accessibility::Public);
 	std::terminate();
 }
 
@@ -58,9 +60,24 @@ void cMCompiler::language::buildIrNamespace(gsl::not_null<dataStructures::Namesp
 	buildIfDescriptor(ns, statement);
 }
 
+gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getVariableDescriptor()
+{
+	return getDefaultPackage()->rootNamespace()->get<Namespace>("std")->get<Namespace>("compiler")->get<Namespace>("ir")->get<Type>("variableDescriptor");
+}
+
+gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getExpressionDescriptor()
+{
+	return getDefaultPackage()->rootNamespace()->get<Namespace>("std")->get<Namespace>("compiler")->get<Namespace>("ir")->get<Type>("IExpression");
+}
+
 gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getLiteralExpressionDescriptor()
 {
 	return getDefaultPackage()->rootNamespace()->get<Namespace>("std")->get<Namespace>("compiler")->get<Namespace>("ir")->get<Type>("literalExpression");
+}
+
+gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getVariableReferenceExpressionDescriptor()
+{
+	return getDefaultPackage()->rootNamespace()->get<Namespace>("std")->get<Namespace>("compiler")->get<Namespace>("ir")->get<Type>("variableReferenceExpression");
 }
 
 gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getIfDescriptor()
@@ -71,6 +88,16 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getIfDesc
 gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getAssigmentStatementDescriptor()
 {
 	return getDefaultPackage()->rootNamespace()->get<Namespace>("std")->get<Namespace>("compiler")->get<Namespace>("ir")->get<Type>("assigmentStatement");
+}
+
+gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getFunctionCallDescriptor()
+{
+	return getDefaultPackage()->rootNamespace()->get<Namespace>("std")->get<Namespace>("compiler")->get<Namespace>("ir")->get<Type>("functionCallExpression");
+}
+
+gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getScopeTerminationStatementDescriptor()
+{
+	return getDefaultPackage()->rootNamespace()->get<Namespace>("std")->get<Namespace>("compiler")->get<Namespace>("ir")->get<Type>("scopeTerminationStatement");
 }
 
 gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getIInstruction()

@@ -15,13 +15,17 @@ namespace cMCompiler::language
 	gsl::not_null<dataStructures::Type*> buildFunctionCallDescriptor(gsl::not_null<dataStructures::Namespace*> irNs);
 	void buildIrNamespace(gsl::not_null<dataStructures::Namespace*> compilerNs);
 
+	gsl::not_null<dataStructures::Type*> getVariableDescriptor();
+
 	// expressions
 	gsl::not_null<dataStructures::Type*> getExpressionDescriptor();
 	gsl::not_null<dataStructures::Type*> getLiteralExpressionDescriptor();
+	gsl::not_null<dataStructures::Type*> getVariableReferenceExpressionDescriptor();
 
 	// statements
 	gsl::not_null<dataStructures::Type*> getIInstruction();
 	gsl::not_null<dataStructures::Type*> getIfDescriptor();
 	gsl::not_null<dataStructures::Type*> getAssigmentStatementDescriptor();
 	gsl::not_null<dataStructures::Type*> getFunctionCallDescriptor();
+	gsl::not_null<dataStructures::Type*> getScopeTerminationStatementDescriptor();
 }

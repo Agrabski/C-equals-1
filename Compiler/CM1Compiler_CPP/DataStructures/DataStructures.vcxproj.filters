@@ -192,6 +192,9 @@
     <ClInclude Include="execution\InstructionCode.hpp">
       <Filter>Header Files\Execution</Filter>
     </ClInclude>
+    <ClInclude Include="execution\RuntimeVariableDescriptor.hpp">
+      <Filter>Header Files\Execution</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -288,6 +291,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="IntermidiateRepresentation\IIRElement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="execution\RuntimeVariableDescriptor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

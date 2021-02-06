@@ -8,6 +8,9 @@ namespace cMCompiler::compiler
 	class IntermidiateRepresentationEmmiter
 	{
 	public:
-		void emmit(std::ostream& stream, dataStructures::PackageDatabase& package, std::vector<gsl::not_null<dataStructures::PackageDatabase*>> dependencies);
+		void emmit(std::ostream& stream, dataStructures::PackageDatabase& package, std::vector<gsl::not_null<dataStructures::PackageDatabase*>> dependencies)
+		{
+			std::terminate();
+		}
 	};
 }

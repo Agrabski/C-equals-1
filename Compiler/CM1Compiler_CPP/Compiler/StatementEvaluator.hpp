@@ -19,6 +19,7 @@ namespace cMCompiler::compiler
 		void visit(dataStructures::ir::IfElseStatement&) final;
 		void visit(dataStructures::ir::ScopeTermination&) final;
 		void visit(dataStructures::ir::AssigmentStatement&) final;
+		void call(language::runtime_value& instruction);
 	public:
 		void visit(dataStructures::ir::IInstruction& instruction);
 		void evaluate(language::runtime_value& instruction);

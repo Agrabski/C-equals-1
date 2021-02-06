@@ -52,12 +52,43 @@ std::unique_ptr<ObjectValue> cMCompiler::language::buildObjectFor(gsl::not_null<
 
 }
 
+std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler::language::buildScopeTermination(runtime_value&& variables, runtime_value&& pointerToSource)
+{
+	auto result = instantiate(getScopeTerminationStatementDescriptor());
+	not_null object = dynamic_cast<ObjectValue*>(result.get());
+	object->setValue("_variables", std::move(variables));
+	object->setValue("_pointerToSource", std::move(pointerToSource));
+	return result;
+}
+
+std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler::language::buildIf(runtime_value&& expression, runtime_value&& pointerToSource)
+{
+	auto result = instantiate(getIfDescriptor());
+	not_null object = dynamic_cast<ObjectValue*>(result.get());
+	object->setValue("_expression", std::move(expression));
+	object->setValue("_pointerToSource", std::move(pointerToSource));
+	return result;
+}
+
 cMCompiler::language::runtime_value cMCompiler::language::buildAssigmentStatement(runtime_value&& lExpression, runtime_value&& rExpression, runtime_value&& pointerToSource)
 {
 	auto result = std::make_unique<execution::ObjectValue>(getAssigmentStatementDescriptor());
 	result->setValue("_lExpression", std::move(lExpression));
 	result->setValue("_rExpression", std::move(rExpression));
 	result->setValue("_pointerToSource", std::move(pointerToSource));
+	return result;
+}
+
+std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler::language::buildFunctionCall(
+	runtime_value&& referenceToCompiletimeFunction,
+	runtime_value&& referenceToRuntimeFunction,
+	runtime_value&& expressions)
+{
+	auto result = instantiate(getFunctionCallDescriptor());
+	not_null object = dynamic_cast<ObjectValue*>(result.get());
+	object->setValue("compileTimeFunction", std::move(referenceToCompiletimeFunction));
+	object->setValue("runtimeTimeFunction", std::move(referenceToRuntimeFunction));
+	object->setValue("arguments", std::move(expressions));
 	return result;
 }
 
@@ -89,6 +120,11 @@ std::unique_ptr<IRuntimeValue> cMCompiler::language::buildPointerToSource(std::s
 	object.setValue("filename", buildStringValue(filename));
 	object.setValue("lineNumber", buildIntegerValue(getUsize(), reinterpret_cast<number_component*>(&lineNumber), sizeof(lineNumber)));
 	return result;
+}
+
+void cMCompiler::language::supplyScopeBegin(runtime_value& scopeBegin, dataStructures::Variable* variable)
+{
+	variable->provideScopeBegin(std::make_unique<execution::ReferenceValue>(&scopeBegin, scopeBegin->type()));
 }
 
 void cMCompiler::language::pushIf(runtime_value& conditionalInstruction, runtime_value&& newInstruction)

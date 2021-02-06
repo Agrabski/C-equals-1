@@ -25,20 +25,22 @@ namespace cMCompiler::dataStructures
 	{
 		not_null<Type*> type_;
 		std::string name_;
-		ir::ScopeTermination* scopeTermination_;
-		ir::VariableDeclaration* scopeStart_;
+		std::unique_ptr<execution::IRuntimeValue> scopeTermination_;
+		std::unique_ptr<execution::IRuntimeValue> scopeStart_;
 	public:
-		void provideScope(not_null<ir::ScopeTermination*> scopeTermination) noexcept
+		void provideScopeBegin(std::unique_ptr<execution::IRuntimeValue>&& value)
 		{
-			scopeTermination_ = scopeTermination;
+			scopeStart_ = std::move(value);
 		}
-		void provideScope(not_null<ir::VariableDeclaration*> scopeStart) noexcept
+		void provideScopeEnd(std::unique_ptr<execution::IRuntimeValue>&& value)
 		{
-			scopeStart_ = scopeStart;
+			scopeTermination_ = std::move(value);
 		}
+
 		Variable(std::string name, not_null<Type*> type) : AttributeTarget(Target::Variable), type_(type), name_(name) {}
 		not_null<Type*> type() noexcept;
 		std::string const& name() const noexcept { return name_; }
+		not_null<execution::ObjectValue*> object();
 	};
 
 }

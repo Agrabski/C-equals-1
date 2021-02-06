@@ -186,5 +186,5 @@ gsl::not_null<Type*> cMCompiler::language::getPointerToSource()
 
 gsl::not_null< cMCompiler::dataStructures::Type*> cMCompiler::language::getCollectionTypeFor(gsl::not_null<dataStructures::Type*> elementType)
 {
-	return gsl::not_null<dataStructures::Type*>();
+	std::terminate();
 }

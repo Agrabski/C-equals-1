@@ -1,6 +1,8 @@
 #include "FunctionBodyBuilder.hpp"
 #include "../DataStructures/IntermidiateRepresentation/VariableDeclaration.hpp"
 #include "ExpressionBuilder.hpp"
+#include "../DataStructures/execution/RuntimeVariableDescriptor.hpp"
+#include "../DataStructures/execution/ArrayValue.hpp"
 #include "../DataStructures/IntermidiateRepresentation/IfElseStatement.hpp"
 #include "../DataStructures/IntermidiateRepresentation/AssigmentStatement.hpp"
 #include "../DataStructures/IntermidiateRepresentation/FunctionCall.hpp"
@@ -17,8 +19,11 @@ void cMCompiler::compiler::FunctionBodyBuilder::enterScope()
 [[nodiscard]]
 cMCompiler::language::runtime_value cMCompiler::compiler::FunctionBodyBuilder::leaveScope(unsigned long long line)
 {
+	auto collection = std::make_unique<dataStructures::execution::ArrayValue>(language::getCollectionTypeFor(language::getVariableDescriptor()), language::getVariableDescriptor());
+	for (auto var : variables_.back())
+		collection->push(std::make_unique<dataStructures::execution::RuntimeVariableDescriptor>(language::getVariableDescriptor(), var));
 	auto instruction = language::buildScopeTermination(
-		std::move(variables_.back()),
+		std::move(collection),
 		language::buildPointerToSource(filePath_.filename().string(), line)
 	);
 	variables_.pop_back();

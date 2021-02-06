@@ -55,7 +55,7 @@ void cMCompiler::compiler::StatementEvaluator::visit(dataStructures::ir::IInstru
 void cMCompiler::compiler::StatementEvaluator::evaluate(language::runtime_value& instruction)
 {
 	using language::isOfType;
-	if (isOfType(instruction.get(), getFunctionCallDescriptor())
+	if (isOfType(instruction.get(), cMCompiler::language::getFunctionCallDescriptor()))
 		call(instruction);
 	std::terminate();
 }
@@ -66,4 +66,9 @@ void cMCompiler::compiler::StatementEvaluator::visit(dataStructures::ir::Assigme
 	if (dynamic_cast<dataStructures::execution::ReferenceValue*>(value.get()))
 		value = (*dynamic_cast<dataStructures::execution::ReferenceValue*>(value.get())->value())->copy();
 	ev_.evaluateLValue(statement.lexpression())->performAssigment(std::move(value));
+}
+
+void cMCompiler::compiler::StatementEvaluator::call(language::runtime_value& instruction)
+{
+	ev_.evaluate(*instruction.get());
 }
