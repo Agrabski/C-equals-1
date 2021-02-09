@@ -82,9 +82,7 @@ std::unique_ptr<dataStructures::AttributeInstance> cMCompiler::compiler::createA
 (
 	dataStructures::AttributeTarget& target,
 	gsl::not_null<dataStructures::Attribute*> attribute,
-	std::vector<std::unique_ptr<dataStructures::execution::IRuntimeValue>>&& values,
-	language::NameResolver& resolver,
-	language::NameResolutionContext& context
+	std::vector<std::unique_ptr<dataStructures::execution::IRuntimeValue>>&& values
 )
 {
 	auto t = language::instantiate(attribute->describingType());
@@ -94,7 +92,7 @@ std::unique_ptr<dataStructures::AttributeInstance> cMCompiler::compiler::createA
 	if (constructors.size() != 0)
 	{
 		auto function = language::resolveOverload(constructors, values, true, true);
-		execute(function, std::move(values), resolver, context);
+		execute(function, std::move(values));
 	}
 
 	return std::make_unique<dataStructures::AttributeInstance>(attribute, std::move(self));

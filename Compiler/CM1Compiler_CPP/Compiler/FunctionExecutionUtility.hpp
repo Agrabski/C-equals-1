@@ -8,9 +8,7 @@ namespace cMCompiler::compiler
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> execute
 	(
 		gsl::not_null<dataStructures::Function*> functionDefinition,
-		std::vector<std::unique_ptr<dataStructures::execution::IRuntimeValue>>&& valueMap,
-		language::NameResolver&resolver,
-		language::NameResolutionContext&context
+		std::vector<std::unique_ptr<dataStructures::execution::IRuntimeValue>>&& valueMap
 	);
 
 }

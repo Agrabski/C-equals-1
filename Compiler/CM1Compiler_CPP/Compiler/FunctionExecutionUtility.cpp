@@ -15,10 +15,7 @@ std::unique_ptr<IRuntimeValue> findValue(IRuntimeValue* value, std::vector<std::
 
 std::unique_ptr<IRuntimeValue> cMCompiler::compiler::execute(
 	gsl::not_null<dataStructures::Function*> functionDefinition,
-	std::vector<std::unique_ptr<dataStructures::execution::IRuntimeValue>>&& valueMap,
-	language::NameResolver& resolver,
-	language::NameResolutionContext& context
-)
+	std::vector<std::unique_ptr<dataStructures::execution::IRuntimeValue>>&& valueMap)
 {
 	std::unique_ptr<IRuntimeValue> returnValue = nullptr;
 	auto f = language::compileTimeFunctions::FuntionLibrary::instance().getFunction(functionDefinition);
@@ -42,8 +39,8 @@ std::unique_ptr<IRuntimeValue> cMCompiler::compiler::execute(
 		if (parameter != parameters.end())
 			return valueMap[parameter - begin(parameters)];
 	};
-	auto eval = ExpressionEvaluator(resolver, context, variableLookup);
-	auto statementEvaluator = StatementEvaluator(*functionDefinition, eval, locals, resolver, context);
+	auto eval = ExpressionEvaluator(variableLookup);
+	auto statementEvaluator = StatementEvaluator(*functionDefinition, eval, locals);
 	for (auto& instruction : *instructions)
 		statementEvaluator.evaluate(instruction);
 

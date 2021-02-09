@@ -41,7 +41,7 @@ void cMCompiler::compiler::StatementEvaluator::visit(dataStructures::ir::ScopeTe
 		{
 			auto value = std::vector<std::unique_ptr<dataStructures::execution::IRuntimeValue>>();
 			value.push_back(std::move(variables_[variable->name()]));
-			execute(finalizer, std::move(value), resolver_, context_);
+			execute(finalizer, std::move(value));
 		}
 		variables_.erase(variable->name());
 	}
@@ -55,7 +55,7 @@ void cMCompiler::compiler::StatementEvaluator::visit(dataStructures::ir::IInstru
 void cMCompiler::compiler::StatementEvaluator::evaluate(language::runtime_value& instruction)
 {
 	using language::isOfType;
-	if (isOfType(instruction.get(), cMCompiler::language::getFunctionCallDescriptor()))
+	if (isOfType(instruction.get(), cMCompiler::language::getFunctionCallExpressionDescriptor()))
 		call(instruction);
 	std::terminate();
 }

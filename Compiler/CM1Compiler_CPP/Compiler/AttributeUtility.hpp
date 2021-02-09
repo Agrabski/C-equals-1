@@ -32,9 +32,7 @@ namespace cMCompiler::compiler
 	(
 		dataStructures::AttributeTarget& target,
 		gsl::not_null<dataStructures::Attribute*> attribute,
-		std::vector<std::unique_ptr<dataStructures::execution::IRuntimeValue>>&& values,
-		language::NameResolver& resolver,
-		language::NameResolutionContext& context
+		std::vector<std::unique_ptr<dataStructures::execution::IRuntimeValue>>&& values
 	);
 
 	template<typename T>
@@ -45,11 +43,11 @@ namespace cMCompiler::compiler
 		language::NameResolutionContext& context)
 	{
 		auto attachmentFunction = language::getAtachmentFunction(target, instance);
-		auto descriptor = language::getValueFor(target);
+		auto descriptor = language::buildReferenceValue(target);
 		auto& thisObject = instance->objectInstance();
 		std::vector<std::unique_ptr<dataStructures::execution::IRuntimeValue>> params;
 		params.push_back(std::make_unique<dataStructures::execution::ReferenceValue>(&thisObject, thisObject->type()));
 		params.push_back(std::move(descriptor));
-		execute(attachmentFunction, std::move(params), resolver, context);
+		execute(attachmentFunction, std::move(params));
 	}
 }

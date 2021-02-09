@@ -9,11 +9,13 @@
 #include "../LanguageLogic/OverloadResolutionUtility.hpp"
 #include "../LanguageLogic/MetatypeUility.hpp"
 #include "../LanguageLogic/IRUtility.hpp"
+#include "../LanguageLogic/RuntimeTypesConversionUtility.hpp"
 
 
-void cMCompiler::compiler::FunctionBodyBuilder::enterScope()
+void cMCompiler::compiler::FunctionBodyBuilder::enterScope(instruction_pointer& currentInstruction)
 {
 	variables_.push_back({});
+	parents_.push_back(std::make_unique<dataStructures::execution::ReferenceValue>(&currentInstruction, currentInstruction->type()));
 }
 
 [[nodiscard]]
@@ -49,6 +51,11 @@ cMCompiler::compiler::ExpressionBuilder cMCompiler::compiler::FunctionBodyBuilde
 	});
 }
 
+cMCompiler::language::runtime_value cMCompiler::compiler::FunctionBodyBuilder::getReferenceToParent()
+{
+	return parents_.back()->copy();
+}
+
 antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitVariableDeclarationStatement(CMinusEqualsMinus1Revision0Parser::VariableDeclarationStatementContext* ctx)
 {
 	//todo: attributes
@@ -61,7 +68,7 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitVariableDeclaratio
 		expression = getBuilder().buildExpression(ctx->functionCallParameter());
 
 	auto name = ctx->Identifier(0)->getText();
-	not_null variable = function_->appendLocalVariable(name, type, cMCompiler::language::createVariableDescriptor("name", type));
+	not_null variable = function_->appendLocalVariable(name, type, cMCompiler::language::createVariableDescriptor);
 
 	auto instruction = language::buildVariableDeclaration(
 		variable,
@@ -79,7 +86,11 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitVariableDeclaratio
 
 antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitFunctionBody(CMinusEqualsMinus1Revision0Parser::FunctionBodyContext* ctx)
 {
-	enterScope();
+	function_->setIrCollection(std::make_unique<dataStructures::execution::ArrayValue>(language::getCollectionTypeFor(
+		language::getIInstruction()), 
+		language::getIInstruction()));
+	auto x = language::getValueFor(function_);
+	enterScope(x);
 	instructionAppenders.push_back([&](auto&& e)
 	{
 		language::suplyParent(e, getReferenceToParent());
@@ -88,6 +99,7 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitFunctionBody(CMinu
 	auto r = visitChildren(ctx);
 	instructionAppenders.back()(leaveScope(ctx->CloseBracket()->getSymbol()->getLine()));
 	instructionAppenders.pop_back();
+	parents_.pop_back();
 	return r;
 }
 
@@ -98,7 +110,7 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitIfStatement(CMinus
 		std::move(expression),
 		language::buildPointerToSource(filePath_.filename().string(), ctx->compoundStatement(0)->OpenBracket()->getSymbol()->getLine())
 	);
-	enterScope();
+	enterScope(conditional);
 	instructionAppenders.push_back([&](auto&& e)
 	{
 		language::suplyParent(e, getReferenceToParent());
@@ -107,10 +119,12 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitIfStatement(CMinus
 	ctx->compoundStatement(0)->accept(this);
 	language::pushIf(conditional, leaveScope(ctx->ParamOpen()->getSymbol()->getLine()));
 	instructionAppenders.pop_back();
+	parents_.pop_back();
+
 
 	if (ctx->compoundStatement(1) != nullptr)
 	{
-		enterScope();
+		enterScope(conditional);
 		instructionAppenders.push_back([&](auto&& e)
 		{
 			language::suplyParent(e, getReferenceToParent());
@@ -121,6 +135,8 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitIfStatement(CMinus
 		language::suplyParent(scopeExit, getReferenceToParent());
 		language::pushElse(conditional, std::move(scopeExit));
 		instructionAppenders.pop_back();
+		parents_.pop_back();
+
 	}
 	language::suplyParent(conditional, getReferenceToParent());
 	instructionAppenders.back()(std::move(conditional));
@@ -137,8 +153,9 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitFunctionCall(CMinu
 	auto f = language::resolveOverload(functions, params); //todo: resolve for runtime and compile-time
 	
 	auto instruction = language::buildFunctionCall(
-		language::buildReferenceValue(f),
-		language::buildReferenceValue(f),
+		language::getValueFor(not_null(f)),
+		language::getValueFor(not_null(f)),
+		language::convertCollection(std::move(params), language::getExpressionDescriptor()),
 		language::buildPointerToSource(filePath_.filename().string(), ctx->Identifier()->getSymbol()->getLine())
 		);
 

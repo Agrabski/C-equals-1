@@ -1,6 +1,7 @@
 #include "ExpressionUtility.hpp"
 #include "TypeInstantiationUtility.hpp"
 #include "IRUtility.hpp"
+#include "MetatypeUility.hpp"
 
 cMCompiler::language::runtime_value cMCompiler::language::buildValueLiteralExpression(runtime_value&& value)
 {
@@ -10,13 +11,18 @@ cMCompiler::language::runtime_value cMCompiler::language::buildValueLiteralExpre
 	return result;
 }
 
+cMCompiler::language::runtime_value cMCompiler::language::buildValueMemberAccessExpression(runtime_value&& variableReference, runtime_value&& memberAccessChain)
+{
+	std::terminate();
+	return runtime_value();
+}
 
-// todo: switch variable to runtime value
+
 cMCompiler::language::runtime_value cMCompiler::language::buildVariableReferenceExpression(gsl::not_null<dataStructures::Variable*> var)
 {
 	auto result = instantiate(getVariableReferenceExpressionDescriptor());
-	//not_null object = dynamic_cast<dataStructures::execution::ObjectValue*>(result.get());
-	//object->setValue("variable");
-	std::terminate();
+	not_null object = dynamic_cast<dataStructures::execution::ObjectValue*>(result.get());
+	object->setValue("_variable", createVariableDescriptor(var));
+	object->setValue("_type", createTypeDescriptor(var->type()));
 	return result;
 }

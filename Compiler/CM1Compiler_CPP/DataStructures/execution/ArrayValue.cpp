@@ -1,6 +1,10 @@
 #include "ArrayValue.hpp"
 using namespace cMCompiler::dataStructures::execution;
 using namespace cMCompiler::dataStructures;
+namespace cMCompiler::language
+{
+	extern bool canBeAssignedTo(gsl::not_null<dataStructures::Type*> valueType, gsl::not_null<dataStructures::Type*> sinkType);
+}
 
 std::unique_ptr<ReferenceValue> cMCompiler::dataStructures::execution::ArrayValue::getMemberValue(std::string const& name)
 {
@@ -18,7 +22,7 @@ void cMCompiler::dataStructures::execution::ArrayValue::setValue(std::string con
 
 void cMCompiler::dataStructures::execution::ArrayValue::push(std::unique_ptr<IRuntimeValue>&& value)
 {
-	assert(value->type() == elementType_);
+	assert(language::canBeAssignedTo(value->type(), elementType_));
 	allocated_.push_back(std::move(value));
 }
 

@@ -23,6 +23,18 @@ namespace cMCompiler::dataStructures::execution
 
 		}
 		void push(std::unique_ptr<IRuntimeValue>&& value);
+		std::unique_ptr<ReferenceValue> get(size_t index)
+		{
+
+			for (auto& e : allocated_)
+			{
+				if ((--index) == 0)
+				{
+					return std::make_unique<ReferenceValue>(&(e), e->type());
+				}
+			}
+			std::terminate();
+		}
 		
 		auto begin() noexcept
 		{

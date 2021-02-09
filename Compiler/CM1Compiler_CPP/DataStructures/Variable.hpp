@@ -26,16 +26,14 @@ namespace cMCompiler::dataStructures
 		std::unique_ptr<execution::IRuntimeValue> object_;
 		not_null<Type*> type_;
 		std::string name_;
-		std::unique_ptr<execution::IRuntimeValue> scopeTermination_;
-		std::unique_ptr<execution::IRuntimeValue> scopeStart_;
 	public:
 		void provideScopeBegin(std::unique_ptr<execution::IRuntimeValue>&& value)
 		{
-			scopeStart_ = std::move(value);
+			dynamic_cast<execution::ObjectValue*>(object_.get())->setValue("_scopeStart", std::move(value));
 		}
 		void provideScopeEnd(std::unique_ptr<execution::IRuntimeValue>&& value)
 		{
-			scopeTermination_ = std::move(value);
+			dynamic_cast<execution::ObjectValue*>(object_.get())->setValue("_scopeTermination", std::move(value));
 		}
 
 		Variable(std::string name, not_null<Type*> type, std::function<std::unique_ptr<execution::IRuntimeValue>(not_null<Variable*>)> objectFactory) :

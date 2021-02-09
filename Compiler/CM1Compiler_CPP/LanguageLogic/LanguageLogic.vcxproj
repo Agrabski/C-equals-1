@@ -33,7 +33,11 @@
     <ClInclude Include="CompileTimeFunctions\ReplaceWithCompilerType.hpp" />
     <ClInclude Include="CompileTimeFunctions\ReplaceWithExternalSymbol.hpp" />
     <ClInclude Include="CompileTimeInfrastrucutre\CompileTimeHeap.hpp" />
+    <ClInclude Include="CreateGetter.hpp" />
     <ClInclude Include="ExpressionUtility.hpp" />
+    <ClInclude Include="GenericUtility.hpp" />
+    <ClInclude Include="GetterExecution.hpp" />
+    <ClInclude Include="InstantiateGeneric.hpp" />
     <ClInclude Include="IRUtility.hpp" />
     <ClInclude Include="LiteralUtility.hpp" />
     <ClInclude Include="MetatypeUility.hpp" />
@@ -44,6 +48,7 @@
     <ClInclude Include="runtime_values.hpp" />
     <ClInclude Include="SpecialFunctionUtility.hpp" />
     <ClInclude Include="SpecialTypes\SpecialTypeLibrary.hpp" />
+    <ClInclude Include="TypeCohersionUtility.hpp" />
     <ClInclude Include="TypeInstantiationUtility.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -65,7 +70,9 @@
     <ClCompile Include="CompileTimeFunctions\ReplaceWithCompilerType.cpp" />
     <ClCompile Include="CompileTimeFunctions\ReplaceWithExternalSymbol.cpp" />
     <ClCompile Include="CompileTimeInfrastrucutre\CompileTimeHeap.cpp" />
+    <ClCompile Include="CreateGetter.cpp" />
     <ClCompile Include="ExpressionUtility.cpp" />
+    <ClCompile Include="InstantiateGeneric.cpp" />
     <ClCompile Include="IRUtility.cpp" />
     <ClCompile Include="LiteralUtility.cpp" />
     <ClCompile Include="MetatypeUility.cpp" />
@@ -75,6 +82,7 @@
     <ClCompile Include="RuntimeTypesConversionUtility.cpp" />
     <ClCompile Include="SpecialFunctionUtility.cpp" />
     <ClCompile Include="SpecialTypes\SpecialTypeLibrary.cpp" />
+    <ClCompile Include="TypeCohersionUtility.cpp" />
     <ClCompile Include="TypeInstantiationUtility.cpp" />
   </ItemGroup>
   <ItemGroup>

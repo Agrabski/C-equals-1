@@ -9,6 +9,7 @@
 #include "CompileTimeFunctions/MarkCompileTimeOnly.hpp"
 #include "IRUtility.hpp"
 #include "MetatypeUility.hpp"
+#include "InstantiateGeneric.hpp"
 
 using namespace std::string_literals;
 using namespace cMCompiler::language;
@@ -136,6 +137,7 @@ void buildPackage()
 	result->rootNamespace()->append<Type>("string");
 	result->rootNamespace()->append<Type>("bool");
 	result->rootNamespace()->append<Type>("usize");
+	result->rootNamespace()->appendGeneric<Type>({ "T" }, nullptr, "array");
 	buildCompilerLibrary(result->rootNamespace());
 }
 
@@ -143,8 +145,10 @@ gsl::not_null<PackageDatabase*> cMCompiler::language::getDefaultPackage()
 {
 	static bool built = false;
 	if (!built)
+	{
+		built = true;
 		buildPackage();
-	built = true;
+	}
 	return defaultPackage__.get();
 }
 
@@ -190,5 +194,8 @@ gsl::not_null<Type*> cMCompiler::language::getPointerToSource()
 
 gsl::not_null< cMCompiler::dataStructures::Type*> cMCompiler::language::getCollectionTypeFor(gsl::not_null<dataStructures::Type*> elementType)
 {
-	std::terminate();
+	auto arr = defaultPackage__->rootNamespace()->get<Generic<Type>>("array");
+	std::vector<gsl::not_null<dataStructures::Type*>> types;
+	types.push_back(elementType);
+	return instantiate(*arr, types);
 }

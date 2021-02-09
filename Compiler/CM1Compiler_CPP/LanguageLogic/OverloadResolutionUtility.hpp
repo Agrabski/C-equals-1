@@ -14,13 +14,9 @@ namespace cMCompiler::language
 
 	dataStructures::Function* resolveOverload(
 		std::vector<gsl::not_null<dataStructures::Function*>> const& candidates,
-		std::vector<std::unique_ptr<dataStructures::execution::IRuntimeValue>> const& parameters,
+		std::vector<std::unique_ptr<dataStructures::execution::IRuntimeValue>>& parameters,
 		bool forceCompileTime = false, bool forceRuntime = false);
 
-	dataStructures::Function* resolveOverload(
-		std::vector<gsl::not_null<dataStructures::Function*>> const& candidates,
-		std::vector<std::unique_ptr<dataStructures::ir::IExpression>> const& parameters,
-		bool forceCompileTime = false, bool forceRuntime = false);
 
 	dataStructures::Function* resolveOverload(
 		std::vector<gsl::not_null<dataStructures::Function*>> const& candidates,

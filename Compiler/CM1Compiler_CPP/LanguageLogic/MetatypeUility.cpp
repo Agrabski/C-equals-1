@@ -38,6 +38,8 @@ std::unique_ptr<ObjectValue> cMCompiler::language::buildObjectFor(gsl::not_null<
 
 void cMCompiler::language::suplyParent(runtime_value& instruction, runtime_value&& referenceToParent)
 {
+	if (referenceToParent->type() == language::getFunctionDescriptor())
+		return;
 	auto object = castToObject(instruction);
 	assert(canCastReference(referenceToParent->type(), object->getMemberType("_parent")));
 	object->setValue("_parent", std::move(referenceToParent));
@@ -54,11 +56,26 @@ std::unique_ptr<ObjectValue> cMCompiler::language::buildObjectFor(gsl::not_null<
 
 }
 
-std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler::language::createVariableDescriptor(not_null<Variable*> variable)
+std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler::language::buildVariableDeclaration(gsl::not_null<dataStructures::Variable*> variable, runtime_value&& expression, gsl::not_null<dataStructures::Type*> type, runtime_value&& pointerToSource)
+{
+	std::terminate();
+	return runtime_value();
+}
+
+
+std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler::language::createVariableDescriptor(not_null<dataStructures::Variable*> variable)
 {
 	auto result = std::make_unique<dataStructures::execution::RuntimeVariableDescriptor>(getVariableDescriptor(), variable);
 	return utilities::pointer_cast<IRuntimeValue>(std::move(result));
 }
+
+std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler::language::createTypeDescriptor(not_null<dataStructures::Type*> type)
+{
+	auto result = std::make_unique<dataStructures::execution::RuntimeTypeDescriptor>(getTypeDescriptor(), type);
+	return utilities::pointer_cast<IRuntimeValue>(std::move(result));
+
+}
+
 
 std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler::language::buildScopeTermination(runtime_value&& variables, runtime_value&& pointerToSource)
 {
@@ -90,19 +107,20 @@ cMCompiler::language::runtime_value cMCompiler::language::buildAssigmentStatemen
 std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler::language::buildFunctionCall(
 	runtime_value&& referenceToCompiletimeFunction,
 	runtime_value&& referenceToRuntimeFunction,
-	runtime_value&& expressions)
+	runtime_value&& expressions,
+	runtime_value&& pointerToSource)
 {
-	auto result = instantiate(getFunctionCallDescriptor());
-	not_null object = dynamic_cast<ObjectValue*>(result.get());
-	object->setValue("compileTimeFunction", std::move(referenceToCompiletimeFunction));
-	object->setValue("runtimeTimeFunction", std::move(referenceToRuntimeFunction));
-	object->setValue("arguments", std::move(expressions));
-	return result;
-}
+	auto expression = instantiate(getFunctionCallExpressionDescriptor());
+	not_null object = dynamic_cast<ObjectValue*>(expression.get());
+	object->setValue("_compileTimeFunction", std::move(referenceToCompiletimeFunction));
+	object->setValue("_runtimeTimeFunction", std::move(referenceToRuntimeFunction));
+	object->setValue("_arguments", std::move(expressions));
+	object->setValue("_pointerToSource", std::move(pointerToSource));
 
-cMCompiler::language::runtime_value cMCompiler::language::buildReferenceValue(gsl::not_null<dataStructures::Function*> f)
-{
-	return std::make_unique<execution::ReferenceValue>(f->object(), f->acutalObject()->type());
+	auto result = instantiate(getFunctionCallStatementDescriptor());
+	not_null resultObject = dynamic_cast<ObjectValue*>(result.get());
+	resultObject->setValue("_function", std::move(expression));
+	return result;
 }
 
 std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(gsl::not_null<Type*> value)
@@ -112,7 +130,7 @@ std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(gsl::not_null<T
 
 std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(gsl::not_null<Function*> value)
 {
-	return std::make_unique<RuntimeFunctionDescriptor>(getTypeDescriptor(), value);
+	return std::make_unique<RuntimeFunctionDescriptor>(getFunctionDescriptor(), value);
 }
 
 std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(gsl::not_null<Field*> value)

@@ -9,8 +9,6 @@ namespace cMCompiler::compiler
 	{
 		dataStructures::Function& definition_;
 		ExpressionEvaluator& ev_;
-		language::NameResolver& resolver_;
-		language::NameResolutionContext& context_;
 
 		std::map<std::string, std::unique_ptr<dataStructures::execution::IRuntimeValue>>& variables_;
 		// Inherited via IInstructionVisitor
@@ -27,11 +25,9 @@ namespace cMCompiler::compiler
 		(
 			dataStructures::Function& definition,
 			ExpressionEvaluator& ev,
-			std::map<std::string, std::unique_ptr<dataStructures::execution::IRuntimeValue>>& variables,
-			language::NameResolver& resolver,
-			language::NameResolutionContext& context
+			std::map<std::string, std::unique_ptr<dataStructures::execution::IRuntimeValue>>& variables
 
-		) noexcept : definition_(definition), ev_(ev), variables_(variables_), resolver_(resolver), context_(context)
+		) noexcept : definition_(definition), ev_(ev), variables_(variables)
 		{}
 	};
 }

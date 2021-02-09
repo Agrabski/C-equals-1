@@ -54,7 +54,7 @@ void cMCompiler::compiler::ExpressionEvaluator::visit(dataStructures::ir::Functi
 	auto parameters = std::vector<std::unique_ptr<IRuntimeValue>>();
 	for (auto const& param : expression.parameters())
 		parameters.push_back(evaluate(param.get()));
-	auto result = execute(expression.compileTimeFunction(), std::move(parameters), resolver_, context_);
+	auto result = execute(expression.compileTimeFunction(), std::move(parameters));
 }
 
 void cMCompiler::compiler::ExpressionEvaluator::visit(cMCompiler::dataStructures::ir::ValueLiteralExpression& expression)

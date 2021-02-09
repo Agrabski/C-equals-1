@@ -16,14 +16,14 @@ antlrcpp::Any cMCompiler::compiler::Preprocessor::visitTypeDeclaration(CMinusEqu
 		auto parameters = std::vector<std::unique_ptr<dataStructures::execution::IRuntimeValue>>();
 		for (auto p : attribute->functionCall()->functionCallParameter())
 		{
-			auto evaluator = ExpressionEvaluator(nameResolver_, context_, [&](const auto&) -> std::unique_ptr<dataStructures::execution::IRuntimeValue>&
+			auto evaluator = ExpressionEvaluator([&](const auto&) -> std::unique_ptr<dataStructures::execution::IRuntimeValue>&
 			{
 				return dummyValue;
 			});
 			auto expression = ep.buildExpression(p);
 			parameters.push_back(evaluator.evaluate(*expression.get()));
 		}
-		auto instance = createAttributeInstance(*type, attributeType, std::move(parameters), nameResolver_, context_);
+		auto instance = createAttributeInstance(*type, attributeType, std::move(parameters));
 		type->appendAttribute(std::move(instance));
 	}
 	return antlrcpp::Any();
@@ -44,14 +44,14 @@ antlrcpp::Any cMCompiler::compiler::Preprocessor::visitFunctionDeclaration(CMinu
 				auto parameters = std::vector<std::unique_ptr<dataStructures::execution::IRuntimeValue>>();
 				for (auto p : attribute->functionCall()->functionCallParameter())
 				{
-					auto evaluator = ExpressionEvaluator(nameResolver_, context_, [&](const auto&) -> std::unique_ptr<dataStructures::execution::IRuntimeValue>&
+					auto evaluator = ExpressionEvaluator([&](const auto&) -> std::unique_ptr<dataStructures::execution::IRuntimeValue>&
 					{
 						return dummyValue;
 					});
 					auto expression = ep.buildExpression(p);
 					parameters.push_back(evaluator.evaluate(*expression.get()));
 				}
-				auto instance = createAttributeInstance(*function, attributeType, std::move(parameters), nameResolver_, context_);
+				auto instance = createAttributeInstance(*function, attributeType, std::move(parameters));
 				function->appendAttribute(std::move(instance));
 			}
 	}

@@ -16,7 +16,8 @@ namespace cMCompiler::compiler
 		language::NameResolutionContext& context_;
 		std::vector<std::vector<gsl::not_null<dataStructures::Variable*>>> variables_;
 		std::vector<std::function<void(instruction_pointer&&)>> instructionAppenders;
-		void enterScope();
+		std::vector<instruction_pointer> parents_;
+		void enterScope(instruction_pointer& currentInstruction);
 		[[nodiscard]]
 		cMCompiler::language::runtime_value leaveScope(unsigned long long line);
 		ExpressionBuilder getBuilder();

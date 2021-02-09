@@ -1,4 +1,5 @@
 #include "OverloadResolutionUtility.hpp"
+#include "GetterExecution.hpp"
 
 using namespace cMCompiler::dataStructures;
 
@@ -18,12 +19,13 @@ bool cMCompiler::language::verifyParameterMatch(Parameter const& parameter, data
 
 Function* cMCompiler::language::resolveOverload(
 	std::vector<gsl::not_null<dataStructures::Function*>> const& candidates,
-	std::vector<std::unique_ptr<dataStructures::execution::IRuntimeValue>> const& parameters,
+	std::vector<std::unique_ptr<dataStructures::execution::IRuntimeValue>>& parameters,
 	bool forceCompileTime, bool forceRuntime)
 {
+	using namespace std::string_literals;
 	auto params = std::vector<Parameter>();
-	for (auto const& p : parameters)
-		params.push_back({ p->type() });
+	for (auto& p : parameters)
+		params.push_back({ executeGetter<Type>(p, "type"s) });
 	return resolveOverload(candidates, params, forceCompileTime, forceRuntime);
 	if (candidates.size() == 1)
 		return candidates.front();
@@ -50,14 +52,6 @@ Function* cMCompiler::language::resolveOverload(
 	if (result != candidates.end())
 		return *result;
 	return nullptr;
-}
-
-
-Function* cMCompiler::language::resolveOverload(std::vector<gsl::not_null<dataStructures::Function*>> const& candidates, std::vector<std::unique_ptr<dataStructures::ir::IExpression>> const& parameters, bool forceCompileTime, bool allowCompileTimeOnly)
-{
-	if (candidates.size() == 1)
-		return candidates.front();
-	std::terminate();
 }
 
 bool cMCompiler::language::isCompiletimeExecutable(not_null<Function const*> function)

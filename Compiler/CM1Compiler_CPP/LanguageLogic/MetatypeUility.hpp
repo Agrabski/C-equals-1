@@ -28,9 +28,11 @@ namespace cMCompiler::language
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildFunctionCall(
 		runtime_value&& referenceToCompiletimeFunction,
 		runtime_value&& referenceToRuntimeFunction,
-		runtime_value&& expressions);
+		runtime_value&& expressions,
+		runtime_value&& pointerToSource);
 
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> createVariableDescriptor(not_null<dataStructures::Variable*> variable);
+	std::unique_ptr<dataStructures::execution::IRuntimeValue> createTypeDescriptor(not_null<dataStructures::Type*> type);
 
 
 	void suplyParent(runtime_value& instruction, runtime_value&& referenceToParent);
@@ -44,7 +46,12 @@ namespace cMCompiler::language
 	void supplyValueTo(gsl::not_null<dataStructures::ir::AssigmentStatement*>);
 
 
-	runtime_value buildReferenceValue(gsl::not_null<dataStructures::Function*> f);
+	template<typename T>
+	runtime_value buildReferenceValue(gsl::not_null<T*> f)
+	{
+		using cMCompiler::dataStructures::execution::ReferenceValue;
+		return std::make_unique<ReferenceValue>(f->object(), f->acutalObject()->type());
+	}
 
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(gsl::not_null<dataStructures::Type*>);
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(gsl::not_null<dataStructures::Function*>);

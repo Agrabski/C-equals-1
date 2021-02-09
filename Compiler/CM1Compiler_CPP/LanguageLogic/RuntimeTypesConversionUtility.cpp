@@ -30,6 +30,14 @@ cMCompiler::language::runtime_value cMCompiler::language::convertToCollection(st
 	return result;
 }
 
+cMCompiler::language::runtime_value cMCompiler::language::convertCollection(std::vector<runtime_value>&& collection, gsl::not_null<dataStructures::Type*> elementType)
+{
+	auto result = std::make_unique<dataStructures::execution::ArrayValue>(getCollectionTypeFor(elementType), elementType);
+	for (auto& e : collection)
+		result->push(std::move(e));
+	return result;
+}
+
 bool cMCompiler::language::canCastReference(gsl::not_null<dataStructures::Type*> from, gsl::not_null<dataStructures::Type*> to)
 {
 	if (from == to)

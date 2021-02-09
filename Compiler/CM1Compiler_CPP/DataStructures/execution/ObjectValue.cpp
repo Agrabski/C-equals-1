@@ -44,7 +44,9 @@ bool cMCompiler::dataStructures::execution::ObjectValue::validate(IRuntimeValue*
 cMCompiler::dataStructures::Type* cMCompiler::dataStructures::execution::ObjectValue::getMemberType(std::string const& name)
 {
 	auto fields = type()->fields();
-	return (*std::find_if(fields.begin(), fields.end(), [&](const auto e) {return e->name() == name; }))->type();
+	auto field = (std::find_if(fields.begin(), fields.end(), [&](const auto e) {return e->name() == name; }));
+	assert(field != fields.end());
+	return (*field)->type();
 }
 
 std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler::dataStructures::execution::ObjectValue::copy() const

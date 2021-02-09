@@ -69,6 +69,11 @@ namespace cMCompiler::dataStructures
 			returnType_ = t;
 			return this;
 		}
+
+		void setIrCollection(std::unique_ptr<execution::ArrayValue>&& collection)
+		{
+			intermidiateRepresentation_ = std::move(collection);
+		}
 		Type* returnType() noexcept { return returnType_; }
 		std::unique_ptr<execution::ArrayValue>& code() noexcept { return intermidiateRepresentation_; }
 		void pushInstruction(std::unique_ptr<execution::IRuntimeValue>&& instruction)
