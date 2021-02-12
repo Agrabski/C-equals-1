@@ -13,6 +13,12 @@ cMCompiler::language::runtime_value cMCompiler::language::buildValueLiteralExpre
 
 cMCompiler::language::runtime_value cMCompiler::language::buildValueMemberAccessExpression(runtime_value&& variableReference, runtime_value&& memberAccessChain)
 {
+	auto result = instantiate(getValueMemberAccessExpressionDescriptor());
+	not_null object = dynamic_cast<dataStructures::execution::ObjectValue*>(result.get());
+	object->setValue("_variable", std::move(variableReference));
+	object->setValue("_memberAccessChain", std::move(memberAccessChain));
+	return result;
+
 	std::terminate();
 	return runtime_value();
 }

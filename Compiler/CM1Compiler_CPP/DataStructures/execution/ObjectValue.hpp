@@ -10,7 +10,11 @@ namespace cMCompiler::dataStructures::execution
 	{
 		std::map<std::string, std::unique_ptr<IRuntimeValue>> values_;
 		// Inherited via IRuntimeValue
-		virtual void emmit(std::ostream& stream, ir::INameGetter const& nameLookupFunction) const override;
+		std::string typeName() const final
+		{
+			return "object";
+		}
+		json emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const final;
 		virtual std::string toString() const override;
 		bool validate(IRuntimeValue* value, std::string const& name);
 	public:

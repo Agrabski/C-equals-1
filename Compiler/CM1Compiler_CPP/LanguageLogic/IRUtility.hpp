@@ -28,6 +28,7 @@ namespace cMCompiler::language
 	gsl::not_null<dataStructures::Type*> getLiteralExpressionDescriptor();
 	gsl::not_null<dataStructures::Type*> getVariableReferenceExpressionDescriptor();
 	gsl::not_null<dataStructures::Type*> getFunctionCallExpressionDescriptor();
+	gsl::not_null<dataStructures::Type*> getValueMemberAccessExpressionDescriptor();
 
 	// statements
 	gsl::not_null<dataStructures::Type*> getIInstruction();

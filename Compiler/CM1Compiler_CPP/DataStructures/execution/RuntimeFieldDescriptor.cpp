@@ -4,9 +4,12 @@
 
 using namespace cMCompiler::dataStructures::execution;
 
-void cMCompiler::dataStructures::execution::RuntimeFieldDescriptor::emmit(std::ostream& stream, ir::INameGetter const& nameLookupFunction) const
+
+cMCompiler::dataStructures::execution::json cMCompiler::dataStructures::execution::RuntimeFieldDescriptor::emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager&) const
 {
-	stream << "{@compile_time_field value = {" << nameLookupFunction.get(value_->type()) + value_->name() << "}}";
+	return {
+		"value", nameLookupFunction.get(value_)
+	};
 }
 
 std::string cMCompiler::dataStructures::execution::RuntimeFieldDescriptor::toString() const

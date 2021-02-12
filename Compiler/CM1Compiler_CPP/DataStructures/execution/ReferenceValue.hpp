@@ -17,7 +17,8 @@ namespace cMCompiler::dataStructures::execution
 
 
 		// Inherited via IRuntimeValue
-		virtual void emmit(std::ostream& stream, ir::INameGetter const& nameLookupFunction) const override;
+		std::string typeName() const final;
+		json emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const final;
 
 		virtual std::string toString() const override;
 

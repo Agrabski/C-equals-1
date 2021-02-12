@@ -10,7 +10,11 @@ namespace cMCompiler::dataStructures::execution
 	{
 		Field* value_;
 		// Inherited via IRuntimeValue
-		void emmit(std::ostream& stream, ir::INameGetter const& nameLookupFunction) const final;
+		std::string typeName() const final
+		{
+			return "runtime_type";
+		}
+		json emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const final;
 		std::string toString() const final;
 	public:
 		RuntimeFieldDescriptor(Type* descriptorType, Field* value) noexcept : IRuntimeValue(descriptorType), value_(value) {}

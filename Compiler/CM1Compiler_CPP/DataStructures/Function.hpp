@@ -1,7 +1,6 @@
 #pragma once
 #include <ostream>
 #include <istream>
-#include "IntermidiateRepresentation/IInstruction.hpp"
 #include "AttributeTarget.hpp"
 #include "Variable.hpp"
 #include "Type.hpp"

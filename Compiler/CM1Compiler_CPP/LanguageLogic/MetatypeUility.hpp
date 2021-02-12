@@ -5,11 +5,6 @@
 #include "../DataStructures/Field.hpp"
 #include "../DataStructures/Type.hpp"
 #include "../DataStructures/Function.hpp"
-#include "../DataStructures/IntermidiateRepresentation/MemberAccessExpression.hpp"
-#include "../DataStructures/IntermidiateRepresentation/VariableDeclaration.hpp"
-#include "../DataStructures/IntermidiateRepresentation/IfElseStatement.hpp"
-#include "../DataStructures/IntermidiateRepresentation/FunctionCall.hpp"
-#include "../DataStructures/IntermidiateRepresentation/AssigmentStatement.hpp"
 #include "../DataStructures/execution/IRuntimeValue.h"
 #include "../DataStructures/execution/ArrayValue.hpp"
 #include "../DataStructures/execution/InstructionCode.hpp"
@@ -38,12 +33,6 @@ namespace cMCompiler::language
 	void suplyParent(runtime_value& instruction, runtime_value&& referenceToParent);
 	
 
-
-	void supplyValueTo(gsl::not_null<dataStructures::ir::ScopeTermination*> st);
-	void supplyValueTo(gsl::not_null<dataStructures::ir::VariableDeclaration*>);
-	void supplyValueTo(gsl::not_null<dataStructures::ir::IfElseStatement*>);
-	void supplyValueTo(gsl::not_null<dataStructures::ir::FunctionCall*>);
-	void supplyValueTo(gsl::not_null<dataStructures::ir::AssigmentStatement*>);
 
 
 	template<typename T>

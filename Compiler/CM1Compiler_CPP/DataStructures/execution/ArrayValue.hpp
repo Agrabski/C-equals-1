@@ -35,7 +35,7 @@ namespace cMCompiler::dataStructures::execution
 			}
 			std::terminate();
 		}
-		
+
 		auto begin() noexcept
 		{
 			return allocated_.begin();
@@ -47,7 +47,11 @@ namespace cMCompiler::dataStructures::execution
 		}
 
 		// Inherited via IRuntimeValue
-		virtual void emmit(std::ostream& stream, ir::INameGetter const& nameLookupFunction) const override;
+		std::string typeName() const final
+		{
+			return "array_value";
+		}
+		json emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const final;
 		virtual std::string toString() const override;
 		virtual std::unique_ptr<IRuntimeValue> copy() const override;
 	};

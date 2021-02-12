@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\IntermidiateRepresentation">
-      <UniqueIdentifier>{96dcdd7d-5b07-4e6d-a182-8f92b76ef04c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Execution">
       <UniqueIdentifier>{6358459d-f663-476d-9e8d-c128ee2c560f}</UniqueIdentifier>
     </Filter>
@@ -66,29 +63,8 @@
     <ClInclude Include="AttributeTarget.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IntermidiateRepresentation\IInstruction.hpp">
-      <Filter>Header Files\IntermidiateRepresentation</Filter>
-    </ClInclude>
-    <ClInclude Include="IntermidiateRepresentation\VariableDeclaration.hpp">
-      <Filter>Header Files\IntermidiateRepresentation</Filter>
-    </ClInclude>
-    <ClInclude Include="IntermidiateRepresentation\FunctionCall.hpp">
-      <Filter>Header Files\IntermidiateRepresentation</Filter>
-    </ClInclude>
-    <ClInclude Include="IntermidiateRepresentation\IExpression.hpp">
-      <Filter>Header Files\IntermidiateRepresentation</Filter>
-    </ClInclude>
     <ClInclude Include="Field.hpp">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IntermidiateRepresentation\VariableReferenceExpression.hpp">
-      <Filter>Header Files\IntermidiateRepresentation</Filter>
-    </ClInclude>
-    <ClInclude Include="IntermidiateRepresentation\ScopeTermination.hpp">
-      <Filter>Header Files\IntermidiateRepresentation</Filter>
-    </ClInclude>
-    <ClInclude Include="IntermidiateRepresentation\IfElseStatement.hpp">
-      <Filter>Header Files\IntermidiateRepresentation</Filter>
     </ClInclude>
     <ClInclude Include="Target.hpp">
       <Filter>Header Files</Filter>
@@ -99,17 +75,8 @@
     <ClInclude Include="execution\IRuntimeValue.h">
       <Filter>Header Files\Execution</Filter>
     </ClInclude>
-    <ClInclude Include="IntermidiateRepresentation\ValueLiteralExpression.hpp">
-      <Filter>Header Files\IntermidiateRepresentation</Filter>
-    </ClInclude>
     <ClInclude Include="execution\RuntimeTypeDescriptor.hpp">
       <Filter>Header Files\Execution</Filter>
-    </ClInclude>
-    <ClInclude Include="IntermidiateRepresentation\ExecutionContext.hpp">
-      <Filter>Header Files\IntermidiateRepresentation</Filter>
-    </ClInclude>
-    <ClInclude Include="IntermidiateRepresentation\INameGetter.hpp">
-      <Filter>Header Files\IntermidiateRepresentation</Filter>
     </ClInclude>
     <ClInclude Include="TypeClassifier.hpp">
       <Filter>Header Files</Filter>
@@ -129,26 +96,14 @@
     <ClInclude Include="execution\ObjectValue.hpp">
       <Filter>Header Files\Execution</Filter>
     </ClInclude>
-    <ClInclude Include="IntermidiateRepresentation\IExpressionVisitor.hpp">
-      <Filter>Header Files\IntermidiateRepresentation</Filter>
-    </ClInclude>
     <ClInclude Include="execution\RuntimeFieldDescriptor.hpp">
       <Filter>Header Files\Execution</Filter>
-    </ClInclude>
-    <ClInclude Include="IntermidiateRepresentation\IInstructionVisitor.hpp">
-      <Filter>Header Files\IntermidiateRepresentation</Filter>
     </ClInclude>
     <ClInclude Include="execution\BooleanValue.hpp">
       <Filter>Header Files\Execution</Filter>
     </ClInclude>
-    <ClInclude Include="IntermidiateRepresentation\AssigmentStatement.hpp">
-      <Filter>Header Files\IntermidiateRepresentation</Filter>
-    </ClInclude>
     <ClInclude Include="execution\ReferenceValue.hpp">
       <Filter>Header Files\Execution</Filter>
-    </ClInclude>
-    <ClInclude Include="IntermidiateRepresentation\MemberAccessExpression.hpp">
-      <Filter>Header Files\IntermidiateRepresentation</Filter>
     </ClInclude>
     <ClInclude Include="ObjectWithMetadata.hpp">
       <Filter>Header Files</Filter>
@@ -183,9 +138,6 @@
     <ClInclude Include="execution\ArrayValue.hpp">
       <Filter>Header Files\Execution</Filter>
     </ClInclude>
-    <ClInclude Include="IntermidiateRepresentation\IIRElement.hpp">
-      <Filter>Header Files\IntermidiateRepresentation</Filter>
-    </ClInclude>
     <ClInclude Include="Generic.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -194,6 +146,9 @@
     </ClInclude>
     <ClInclude Include="execution\RuntimeVariableDescriptor.hpp">
       <Filter>Header Files\Execution</Filter>
+    </ClInclude>
+    <ClInclude Include="ISerializationManager.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -218,28 +173,10 @@
     <ClCompile Include="AttributeTarget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IntermidiateRepresentation\VariableDeclaration.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="IntermidiateRepresentation\ScopeTermination.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="IntermidiateRepresentation\VariableReferenceExpression.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="IntermidiateRepresentation\IfElseStatement.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="execution\IntegerValue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IntermidiateRepresentation\ValueLiteralExpression.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="execution\RuntimeTypeDescriptor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="IntermidiateRepresentation\FunctionCall.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Validation\ValidationUtility.cpp">
@@ -269,13 +206,7 @@
     <ClCompile Include="execution\RuntimeFieldDescriptor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IntermidiateRepresentation\AssigmentStatement.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="execution\ReferenceValue.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="IntermidiateRepresentation\MemberAccessExpression.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Attribute.cpp">
@@ -294,6 +225,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="execution\RuntimeVariableDescriptor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="execution\IRuntimeValue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

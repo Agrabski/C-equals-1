@@ -1,10 +1,15 @@
 #include "StringValue.hpp"
 
-void cMCompiler::dataStructures::execution::StringValue::emmit(std::ostream& stream, ir::INameGetter const& nameLookupFunction) const
+std::string cMCompiler::dataStructures::execution::StringValue::typeName() const
 {
-	stream << "{@string_literal type = ";
-	stream << nameLookupFunction.get(type());
-	stream << " value = \'" << value_ << "\'}";
+	return "string_value";
+}
+
+cMCompiler::dataStructures::execution::json cMCompiler::dataStructures::execution::StringValue::emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const
+{
+	return {
+		{"value", value_}
+	};
 }
 
 std::string cMCompiler::dataStructures::execution::StringValue::toString() const

@@ -158,6 +158,11 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getFuncti
 	return getDefaultPackage()->rootNamespace()->get<Namespace>("compiler")->get<Namespace>("ir")->get<Type>("functionCallExpression");
 }
 
+gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getValueMemberAccessExpressionDescriptor()
+{
+	return getDefaultPackage()->rootNamespace()->get<Namespace>("compiler")->get<Namespace>("ir")->get<Type>("valueMemberAccessExpression");
+}
+
 gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getScopeTerminationStatementDescriptor()
 {
 	return getDefaultPackage()->rootNamespace()->get<Namespace>("compiler")->get<Namespace>("ir")->get<Type>("scopeTerminationStatement");

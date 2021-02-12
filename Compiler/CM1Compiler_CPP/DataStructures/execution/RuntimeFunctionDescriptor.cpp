@@ -1,8 +1,10 @@
 #include "RuntimeFunctionDescriptor.hpp"
 
-void cMCompiler::dataStructures::execution::RuntimeFunctionDescriptor::emmit(std::ostream& stream, ir::INameGetter const& nameLookupFunction) const
+cMCompiler::dataStructures::execution::json cMCompiler::dataStructures::execution::RuntimeFunctionDescriptor::emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager&) const
 {
-	stream << "{@compile_time_function value = {" << nameLookupFunction.get(value_) << "}}";
+	return {
+		{"value", nameLookupFunction.get(value_)}
+	};
 }
 
 std::string cMCompiler::dataStructures::execution::RuntimeFunctionDescriptor::toString() const

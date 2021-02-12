@@ -26,9 +26,15 @@ void cMCompiler::dataStructures::execution::ArrayValue::push(std::unique_ptr<IRu
 	allocated_.push_back(std::move(value));
 }
 
-void cMCompiler::dataStructures::execution::ArrayValue::emmit(std::ostream& stream, ir::INameGetter const& nameLookupFunction) const
+cMCompiler::dataStructures::execution::json cMCompiler::dataStructures::execution::ArrayValue::emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const
 {
-	std::terminate();
+	std::vector<json> elements;
+	for (const auto& e : allocated_)
+		elements.push_back(e->serialize(nameLookupFunction, manager));
+	return {
+		{"element_type", nameLookupFunction.get(elementType_)},
+		{"value", elements}
+	};
 }
 
 std::string cMCompiler::dataStructures::execution::ArrayValue::toString() const

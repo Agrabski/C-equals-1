@@ -47,6 +47,7 @@
     <ClInclude Include="PackageBuildUtility.hpp" />
     <ClInclude Include="PackageDiscoveryUtility.hpp" />
     <ClInclude Include="Preprocessor.hpp" />
+    <ClInclude Include="Serialization\SerializationManager.hpp" />
     <ClInclude Include="StatementEvaluator.hpp" />
     <ClInclude Include="TypeUtility.hpp" />
   </ItemGroup>

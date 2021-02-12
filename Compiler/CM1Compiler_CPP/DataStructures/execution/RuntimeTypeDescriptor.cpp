@@ -2,9 +2,16 @@
 
 using namespace cMCompiler::dataStructures::execution;
 
-void cMCompiler::dataStructures::execution::RuntimeTypeDescriptor::emmit(std::ostream& stream, ir::INameGetter const& nameLookupFunction) const
+std::string cMCompiler::dataStructures::execution::RuntimeTypeDescriptor::typeName() const
 {
-	stream << "{@compile_time_type value = {" << nameLookupFunction.get(value_) << "}}";
+	return "runtime_type_descriptor";
+}
+
+cMCompiler::dataStructures::execution::json cMCompiler::dataStructures::execution::RuntimeTypeDescriptor::emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager&) const
+{
+	return {
+		{"value", nameLookupFunction.get(value_)}
+	};
 }
 
 std::string cMCompiler::dataStructures::execution::RuntimeTypeDescriptor::toString() const

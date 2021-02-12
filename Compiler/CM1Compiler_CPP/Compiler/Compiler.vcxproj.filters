@@ -16,6 +16,9 @@
     <Filter Include="Header Files\Generic">
       <UniqueIdentifier>{56a4cc8c-3a34-4aee-9fa1-cfa28987505e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Serialization">
+      <UniqueIdentifier>{1eecac6e-ccbd-4518-9f9b-38a3ffa50824}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -68,6 +71,9 @@
     </ClInclude>
     <ClInclude Include="LLVMIR.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Serialization\SerializationManager.hpp">
+      <Filter>Header Files\Serialization</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

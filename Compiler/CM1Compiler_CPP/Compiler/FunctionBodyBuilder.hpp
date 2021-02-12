@@ -1,7 +1,6 @@
 #pragma once
 #include <filesystem>
 #include "../Parser/CMinusEqualsMinus1Revision0BaseVisitor.h"
-#include "../DataStructures/IntermidiateRepresentation/IInstruction.hpp"
 #include "../DataStructures/Function.hpp"
 #include "../LanguageLogic/NameResolver.hpp"
 #include "ExpressionBuilder.hpp"

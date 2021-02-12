@@ -4,7 +4,7 @@
 using namespace cMCompiler::dataStructures;
 Variable* Function::appendVariable(std::string name, not_null<Type*> type, std::function<std::unique_ptr<execution::IRuntimeValue>(not_null<Variable*>)> objectFactory)
 {
-	auto tmp = std::make_unique<Variable>(name, type, objectFactory);
+	auto tmp = std::make_unique<Variable>(name, type, this, objectFactory);
 	auto result = tmp.get();
 	parameters_.push_back(std::move(tmp));
 	return result;
@@ -12,7 +12,7 @@ Variable* Function::appendVariable(std::string name, not_null<Type*> type, std::
 
 Variable* cMCompiler::dataStructures::Function::appendLocalVariable(std::string name, not_null<Type*> type, std::function<std::unique_ptr<execution::IRuntimeValue>(not_null<Variable*>)> objectFactory)
 {
-	auto tmp = std::make_unique<Variable>(name, type, objectFactory);
+	auto tmp = std::make_unique<Variable>(name, type, this, objectFactory);
 	auto result = tmp.get();
 	localVariables_.push_back(std::move(tmp));
 	return result;

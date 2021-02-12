@@ -12,6 +12,14 @@ number_component elementAtOr0(std::vector<number_component>& n, size_t index)
 	return n[index];
 }
 
+cMCompiler::dataStructures::execution::json cMCompiler::dataStructures::execution::IntegerValue::emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager&) const
+{
+	return {
+		{"signed", isSigned_},
+		{"value", number_}
+	};
+}
+
 IntegerValue cMCompiler::dataStructures::execution::IntegerValue::operator+(IntegerValue& rhs)
 {
 	auto result = negotiateSize(*this, rhs);
@@ -27,16 +35,6 @@ IntegerValue cMCompiler::dataStructures::execution::IntegerValue::operator+(Inte
 		overflow = 0;
 	}
 	return result;
-}
-
-
-void cMCompiler::dataStructures::execution::IntegerValue::emmit(std::ostream& stream, ir::INameGetter const& nameLookupFunction) const
-{
-	stream << "{@integer_literal type = ";
-	stream << nameLookupFunction.get(type()) << " value = { ";
-	for (auto const e : number_)
-		stream << (short)e << " ";
-	stream << " } }";
 }
 
 cMCompiler::dataStructures::execution::IntegerValue cMCompiler::dataStructures::execution::IntegerValue::negotiateSize(IntegerValue& l, IntegerValue& r)

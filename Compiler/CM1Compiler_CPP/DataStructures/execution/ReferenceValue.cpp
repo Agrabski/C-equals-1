@@ -1,8 +1,8 @@
 #include "ReferenceValue.hpp"
 
-void cMCompiler::dataStructures::execution::ReferenceValue::emmit(std::ostream& stream, ir::INameGetter const& nameLookupFunction) const
+std::string cMCompiler::dataStructures::execution::ReferenceValue::typeName() const
 {
-	stream << "{@reference value = " << value_ << " }";
+	return "reference_value";
 }
 
 std::string cMCompiler::dataStructures::execution::ReferenceValue::toString() const
@@ -18,4 +18,10 @@ std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler
 void cMCompiler::dataStructures::execution::ReferenceValue::performAssigment(std::unique_ptr<IRuntimeValue>&& newValue)
 {
 	*value_ = std::move(newValue);
+}
+cMCompiler::dataStructures::execution::json cMCompiler::dataStructures::execution::ReferenceValue::emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const
+{
+	return {
+		{"value", manager.serializeReference(*value_)}
+	};
 }

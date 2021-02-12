@@ -11,7 +11,8 @@ namespace cMCompiler::dataStructures::execution
 	{
 		Type* value_;
 		// Inherited via IRuntimeValue
-		void emmit(std::ostream& stream, ir::INameGetter const& nameLookupFunction) const final;
+		std::string typeName() const final;
+		json emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const final;
 		std::string toString() const final;
 	public:
 		RuntimeTypeDescriptor(Type* typeDescriptorType, Type* value) noexcept: IRuntimeValue(typeDescriptorType), value_(value) {}

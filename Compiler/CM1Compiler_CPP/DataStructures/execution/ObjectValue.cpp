@@ -2,20 +2,14 @@
 #include "../Type.hpp"
 #include <sstream>
 
-void cMCompiler::dataStructures::execution::ObjectValue::emmit(std::ostream& stream, ir::INameGetter const& nameLookupFunction) const
+cMCompiler::dataStructures::execution::json cMCompiler::dataStructures::execution::ObjectValue::emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const
 {
-	stream << "{@object type = " << nameLookupFunction.get(type()) << " properties = [";
-	for (auto const& kv : values_)
-	{
-		stream << kv.first << " = ";
-		if (kv.second != nullptr)
-			kv.second->emmit(stream, nameLookupFunction);
-		else
-			stream << "NULL";
-		stream << " ";
-	}
-	stream << "] }";
-
+	std::vector<json> properties;
+	for (const auto& v : values_)
+		properties.push_back({ v.first, v.second->serialize(nameLookupFunction, manager) });
+	return {
+		{"fields", properties}
+	};
 }
 
 std::string cMCompiler::dataStructures::execution::ObjectValue::toString() const

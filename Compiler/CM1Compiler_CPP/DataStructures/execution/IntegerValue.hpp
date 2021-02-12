@@ -18,12 +18,17 @@ namespace cMCompiler::dataStructures::execution
 	{
 		std::vector<number_component> number_;
 		bool isSigned_;
+		std::string typeName() const final
+		{
+			return "integer_value";
+		}
+		json emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const final;
+
 	public:
 		IntegerValue operator+(IntegerValue& lhs);
 		IntegerValue operator-(IntegerValue& lhs);
 		IntegerValue operator*(IntegerValue& lhs);
 		IntegerValue operator/(IntegerValue& lhs);
-		void emmit(std::ostream& stream, ir::INameGetter const& nameLookupFunction) const final;
 		static IntegerValue negotiateSize(IntegerValue& l, IntegerValue& r);
 		void setValue(usize componentIndex, number_component value);
 		void setValue(number_component* value, size_t size);

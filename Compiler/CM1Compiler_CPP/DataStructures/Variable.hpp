@@ -3,10 +3,9 @@
 #include <gsl.h>
 #include <string>
 #include <memory>
+#include "INamedObject.hpp"
 #include "AttributeTarget.hpp"
 #include "Type.hpp"
-#include "IntermidiateRepresentation/VariableDeclaration.hpp"
-#include "IntermidiateRepresentation/ScopeTermination.hpp"
 #include "Target.hpp"
 #include <variant>
 
@@ -21,11 +20,10 @@ namespace cMCompiler::dataStructures
 	}
 	class Type;
 	class AttributeTarget;
-	class Variable : public AttributeTarget
+	class Variable : public AttributeTarget, public INamedObject
 	{
 		std::unique_ptr<execution::IRuntimeValue> object_;
 		not_null<Type*> type_;
-		std::string name_;
 	public:
 		void provideScopeBegin(std::unique_ptr<execution::IRuntimeValue>&& value)
 		{
@@ -36,11 +34,13 @@ namespace cMCompiler::dataStructures
 			dynamic_cast<execution::ObjectValue*>(object_.get())->setValue("_scopeTermination", std::move(value));
 		}
 
-		Variable(std::string name, not_null<Type*> type, std::function<std::unique_ptr<execution::IRuntimeValue>(not_null<Variable*>)> objectFactory) :
-			AttributeTarget(Target::Variable), type_(type), name_(name), object_(objectFactory(this)) {}
+		Variable(std::string name, not_null<Type*> type, not_null<Function*> parent, std::function<std::unique_ptr<execution::IRuntimeValue>(not_null<Variable*>)> objectFactory) :
+			AttributeTarget(Target::Variable), INamedObject(name, (INamedObject*)parent.get()), type_(type), object_(objectFactory(this)) {}
 		not_null<Type*> type() noexcept;
-		std::string const& name() const noexcept { return name_; }
 		not_null<execution::IRuntimeValue*> object() { return object_.get(); }
+		std::vector<validation::ValidationError> validateContent() const final { return {}; }
+		std::vector<INamedObject*> children() final { return {}; };
+
 	};
 
 }

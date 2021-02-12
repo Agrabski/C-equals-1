@@ -4,6 +4,7 @@
 #include "../Type.hpp"
 #include "../IntermidiateRepresentation/INameGetter.hpp"
 #include "ObjectValue.hpp"
+#include "../ISerializationManager.hpp"
 
 namespace cMCompiler::dataStructures::execution
 {
@@ -11,10 +12,8 @@ namespace cMCompiler::dataStructures::execution
 	{
 		Variable* value_;
 		// Inherited via IRuntimeValue
-		void emmit(std::ostream& stream, ir::INameGetter const& nameLookupFunction) const final
-		{
-			std::terminate();
-		}
+		std::string typeName() const final;
+		json emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const final;
 		std::string toString() const final;
 	public:
 		RuntimeVariableDescriptor(Type* typeDescriptorType, Variable* value) noexcept : IRuntimeValue(typeDescriptorType), value_(value) {}

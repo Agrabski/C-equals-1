@@ -2,6 +2,7 @@
 #include "CompileTimeFunctions/FunctionLibrary.hpp"
 #include "MetatypeUility.hpp"
 #include "RuntimeTypesConversionUtility.hpp"
+#include "BuiltInPackageBuildUtility.hpp"
 
 gsl::not_null<cMCompiler::dataStructures::Function*> cMCompiler::language::createGetter(gsl::not_null<dataStructures::Function*> function, gsl::not_null<dataStructures::Type*> type)
 {
