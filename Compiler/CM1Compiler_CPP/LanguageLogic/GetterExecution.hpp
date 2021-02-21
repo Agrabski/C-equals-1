@@ -19,7 +19,7 @@ namespace cMCompiler::language
 	template<typename T>
 	gsl::not_null<T*> convert(runtime_value&& value) = delete;
 	template<>
-	gsl::not_null<dataStructures::Type*> convert(runtime_value&& value)
+	inline gsl::not_null<dataStructures::Type*> convert(runtime_value&& value)
 	{
 		not_null reference = dynamic_cast<dataStructures::execution::ReferenceValue*>(value.get());
 		not_null typeReference = dynamic_cast<dataStructures::execution::RuntimeTypeDescriptor*>(reference->value()->get());

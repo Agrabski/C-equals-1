@@ -27,8 +27,8 @@ gsl::not_null<Type*> buildTypeDescriptor(gsl::not_null<Namespace*> compilerNs)
 	auto type = compilerNs->append<Type>("typeDescriptor");
 	type->setTypeClassifier(TypeClassifier::Class);
 	type->setAccessibility(Accessibility::Public);
-	type->appendField("name", cMCompiler::language::getString())->setAccessibility(Accessibility::Public);
-	type->appendField("qualifiedName", cMCompiler::language::getString())->setAccessibility(Accessibility::Public);
+	type->appendField("name", cMCompiler::language::getString(), 0)->setAccessibility(Accessibility::Public);
+	type->appendField("qualifiedName", cMCompiler::language::getString(), 0)->setAccessibility(Accessibility::Public);
 	return type;
 }
 
@@ -53,25 +53,25 @@ gsl::not_null<Type*> buildPointerToSource(gsl::not_null<Namespace*> compilerNs)
 	auto t = compilerNs->append<Type>("pointerToSource");
 	t->setTypeClassifier(TypeClassifier::Class);
 	t->setAccessibility(Accessibility::Public);
-	t->appendField("filename", cMCompiler::language::getString())->setAccessibility(Accessibility::Public);
-	t->appendField("lineNumber", cMCompiler::language::getUsize())->setAccessibility(Accessibility::Public);
+	t->appendField("filename", cMCompiler::language::getString(), 0)->setAccessibility(Accessibility::Public);
+	t->appendField("lineNumber", cMCompiler::language::getUsize(), 0)->setAccessibility(Accessibility::Public);
 
 	return t;
 }
 
 void completeBuildingType(gsl::not_null<Type*> t)
 {
-	t->appendField("parent", cMCompiler::language::getNamespaceDescriptor())->setAccessibility(Accessibility::Public);
+	t->appendField("parent", cMCompiler::language::getNamespaceDescriptor(), 1)->setAccessibility(Accessibility::Public);
 }
 
 void completeBuildingNamespace(gsl::not_null<Type*> t)
 {
-	t->appendField("parent", cMCompiler::language::getNamespaceDescriptor())->setAccessibility(Accessibility::Public);
+	t->appendField("parent", cMCompiler::language::getNamespaceDescriptor(), 1)->setAccessibility(Accessibility::Public);
 }
 
 void completeBuildingFunction(gsl::not_null<Type*> t)
 {
-	t->appendField("parent", cMCompiler::language::getNamespaceDescriptor())->setAccessibility(Accessibility::Public);
+	t->appendField("parent", cMCompiler::language::getNamespaceDescriptor(), 1)->setAccessibility(Accessibility::Public);
 }
 
 void buildCompilerLibrary(gsl::not_null<Namespace*> rootNamespace)
@@ -85,20 +85,21 @@ void buildCompilerLibrary(gsl::not_null<Namespace*> rootNamespace)
 	completeBuildingNamespace(nsDescriptor);
 	completeBuildingFunction(function);
 	buildPointerToSource(ns);
+	buildFieldDescriptor(ns);
 	buildIrNamespace(ns);
 	{
 		auto replace = ns->append<Function>("replaceWithCompilerFunction");
 		replace->setAccessibility(Accessibility::Public);
-		replace->appendVariable("function", function, cMCompiler::language::createVariableDescriptor);
-		replace->appendVariable("name", cMCompiler::language::getString(),
+		replace->appendVariable("function", function, 1, cMCompiler::language::createVariableDescriptor);
+		replace->appendVariable("name", cMCompiler::language::getString(), 0,
 			cMCompiler::language::createVariableDescriptor);
 		FuntionLibrary::instance().addFunctionDefinition(replace, replaceWithCompilerFunction);
 	}
 	{
 		auto replace = ns->append<Function>("replaceWithCompilerType");
 		replace->setAccessibility(Accessibility::Public);
-		replace->appendVariable("type", type, cMCompiler::language::createVariableDescriptor);
-		replace->appendVariable("name", cMCompiler::language::getString(),
+		replace->appendVariable("type", type, 1, cMCompiler::language::createVariableDescriptor);
+		replace->appendVariable("name", cMCompiler::language::getString(), 0,
 			cMCompiler::language::createVariableDescriptor);
 
 		FuntionLibrary::instance().addFunctionDefinition(replace, replaceWithCompilerType);
@@ -106,23 +107,23 @@ void buildCompilerLibrary(gsl::not_null<Namespace*> rootNamespace)
 	{
 		auto replace = ns->append<Function>("markCompileTimeOnly");
 		replace->setAccessibility(Accessibility::Public);
-		replace->appendVariable("function", function, cMCompiler::language::createVariableDescriptor);
+		replace->appendVariable("function", function, 1, cMCompiler::language::createVariableDescriptor);
 		FuntionLibrary::instance().addFunctionDefinition(replace, markCompileTimeOnly);
 	}
 	{
 		auto replace = ns->append<Function>("replaceWithSymbol");
 		replace->setAccessibility(Accessibility::Public);
-		replace->appendVariable("function", function, cMCompiler::language::createVariableDescriptor);
-		replace->appendVariable("symbolName", getString(), cMCompiler::language::createVariableDescriptor);
-		replace->appendVariable("assemblyPath", getString(), cMCompiler::language::createVariableDescriptor);
+		replace->appendVariable("function", function, 1, cMCompiler::language::createVariableDescriptor);
+		replace->appendVariable("symbolName", getString(), 0, cMCompiler::language::createVariableDescriptor);
+		replace->appendVariable("assemblyPath", getString(), 0, cMCompiler::language::createVariableDescriptor);
 		FuntionLibrary::instance().addFunctionDefinition(replace, ReplaceWithExternalSymbol);
 	}
 	{
 		auto raise = ns->append<Function>("raiseError");
 		raise->setAccessibility(Accessibility::Public);
-		raise->appendVariable("pointerToSource", getPointerToSource(), cMCompiler::language::createVariableDescriptor);
-		raise->appendVariable("message", getString(), cMCompiler::language::createVariableDescriptor);
-		raise->appendVariable("code", getUsize(), cMCompiler::language::createVariableDescriptor);
+		raise->appendVariable("pointerToSource", getPointerToSource(), 1, cMCompiler::language::createVariableDescriptor);
+		raise->appendVariable("message", getString(), 1, cMCompiler::language::createVariableDescriptor);
+		raise->appendVariable("code", getUsize(), 0, cMCompiler::language::createVariableDescriptor);
 		FuntionLibrary::instance().addFunctionDefinition(raise, raiseError);
 	}
 }

@@ -31,7 +31,7 @@ cMCompiler::language::runtime_value cMCompiler::compiler::FunctionBodyBuilder::l
 
 cMCompiler::compiler::ExpressionBuilder cMCompiler::compiler::FunctionBodyBuilder::getBuilder()
 {
-	return ExpressionBuilder([this](auto const& e) -> dataStructures::Variable*
+	return ExpressionBuilder(filePath_, [this](auto const& e) -> dataStructures::Variable*
 	{
 		auto varFinder = [&](const auto& v) noexcept {return v->name() == e; };
 		for (auto& scope : variables_)
@@ -102,7 +102,7 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitFunctionBody(CMinu
 
 antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitIfStatement(CMinusEqualsMinus1Revision0Parser::IfStatementContext* ctx)
 {
-	auto expression = getBuilder().buildExpression(ctx->logicalExpression());
+	auto expression = getBuilder().buildExpression(ctx->expression());
 	auto conditional = language::buildIf(
 		std::move(expression),
 		language::buildPointerToSource(filePath_.filename().string(), ctx->compoundStatement(0)->OpenBracket()->getSymbol()->getLine())
@@ -164,8 +164,8 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitFunctionCall(CMinu
 
 antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitAssigmentStatement(CMinusEqualsMinus1Revision0Parser::AssigmentStatementContext* ctx)
 {
-	auto rexpression = getBuilder().buildExpression(ctx->expression());
-	auto lexpression = getBuilder().buildExpression(ctx->lExpression());
+	auto rexpression = getBuilder().buildExpression(ctx->expression()[1]);
+	auto lexpression = getBuilder().buildExpression(ctx->expression()[0]);
 	auto instruction = language::buildAssigmentStatement(
 		std::move(lexpression),
 		std::move(rexpression),

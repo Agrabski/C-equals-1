@@ -18,20 +18,19 @@ public:
 		T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, 
 		T__7 = 8, T__8 = 9, T__9 = 10, T__10 = 11, T__11 = 12, T__12 = 13, T__13 = 14, 
 		T__14 = 15, T__15 = 16, T__16 = 17, T__17 = 18, T__18 = 19, T__19 = 20, 
-		T__20 = 21, T__21 = 22, T__22 = 23, AccessSpecifier = 24, Identifier = 25, 
-		OpenBracket = 26, CloseBracket = 27, DOUBLEQUOTE = 28, SINGLEQUOTE = 29, 
-		ParamOpen = 30, ParamClose = 31, ATTROBITEOPEN = 32, ATTROBITECLOSE = 33, 
-		Array = 34, ArithmeticBinaryOperator = 35, ArithmeticUnaryOperator = 36, 
-		ComparsionOperator = 37, LogicalBinaryOperator = 38, Unsafe = 39, LogicalUnaryOperator = 40, 
-		Not = 41, DoubleColon = 42, SemiColon = 43, Comma = 44, Period = 45, Equals = 46, 
-		Asssigment = 47, NotEquals = 48, Plus = 49, Minus = 50, Star = 51, PlusEquals = 52, 
-		MinusEquals = 53, MultiplyEquals = 54, DivideEquals = 55, GreaterEqual = 56, 
-		LessEqual = 57, Equal = 58, NotEqual = 59, Or = 60, And = 61, Xor = 62, 
-		Strong = 63, Nullable = 64, Mutable = 65, Ref = 66, Class = 67, Interface = 68, 
-		Public = 69, Private = 70, Internal = 71, Final = 72, Virtual = 73, Abstract = 74, 
-		Override = 75, DefaultSpecification = 76, Attribute = 77, Throw = 78, 
-		IntegerLiteral = 79, DIGIT = 80, STRING = 81, AnyCharacter = 82, LETTER = 83, 
-		Whitespace = 84, Newline = 85, BlockComment = 86, LineComment = 87
+		T__20 = 21, T__21 = 22, AccessSpecifier = 23, Identifier = 24, OpenBracket = 25, 
+		CloseBracket = 26, DOUBLEQUOTE = 27, SINGLEQUOTE = 28, ParamOpen = 29, 
+		ParamClose = 30, ATTROBITEOPEN = 31, ATTROBITECLOSE = 32, Array = 33, 
+		Unsafe = 34, LogicalUnaryOperator = 35, Not = 36, DoubleColon = 37, SemiColon = 38, 
+		Comma = 39, Period = 40, Equals = 41, Asssigment = 42, NotEquals = 43, 
+		Plus = 44, Minus = 45, Star = 46, PlusEquals = 47, MinusEquals = 48, MultiplyEquals = 49, 
+		DivideEquals = 50, GreaterEqual = 51, Greater = 52, Less = 53, LessEqual = 54, 
+		Equal = 55, NotEqual = 56, Or = 57, And = 58, Xor = 59, Strong = 60, Nullable = 61, 
+		Mutable = 62, Class = 63, Interface = 64, Public = 65, Private = 66, Internal = 67, 
+		Final = 68, Virtual = 69, Abstract = 70, Override = 71, DefaultSpecification = 72, 
+		Attribute = 73, Throw = 74, IntegerLiteral = 75, DIGIT = 76, STRING = 77, 
+		AnyCharacter = 78, LETTER = 79, Whitespace = 80, Newline = 81, BlockComment = 82, 
+		LineComment = 83
 	};
 
 	CMinusEqualsMinus1Revision0Lexer(antlr4::CharStream *input);

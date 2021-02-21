@@ -11,7 +11,7 @@ declarationSequence: declaration+;
 
 declaration: functionDeclaration | typeDeclaration | namespaceDeclaration | importDeclaration | attributeDeclaration;
 
-attributeDeclaration : (AccessSpecifier)? 'att' '<'attributeTarget+ '>' Identifier OpenBracket classContentSequence CloseBracket;
+attributeDeclaration : (AccessSpecifier)? 'att' Less attributeTarget+ Greater Identifier OpenBracket classContentSequence CloseBracket;
 
 attributeTarget: ('type' | 'variable' | 'function');
 
@@ -28,7 +28,7 @@ classContentSequence: (functionDeclaration | fieldDeclaration)*;
 fieldDeclaration:
 	attributeSequence? AccessSpecifier? Identifier ':' typeSpecifier SemiColon;
 
-genericSpecifier: '<' Identifier (',' Identifier)* '>';
+genericSpecifier: Less Identifier (',' Identifier)* Greater;
 
 implementedInterfacesSequence:
 	Identifier
@@ -45,9 +45,9 @@ parameterList: | parameter | (parameter ',')+ parameter;
 
 parameter: attributeSequence? Identifier ':' typeSpecifier;
 
-typeSpecifier: Identifier genericUsage? Ref? (Array)?;
+typeSpecifier: Identifier genericUsage? ref* (Array)?;
 
-genericUsage: '<' typeSpecifier (',' typeSpecifier)* '>';
+genericUsage: Less typeSpecifier (',' typeSpecifier)* Greater;
 
 functionBody: OpenBracket statement* CloseBracket;
 
@@ -65,10 +65,10 @@ statement:
 
 returnStatement: 'return' expression;
 
-variableDeclarationStatement: attributeSequence? 'let' Identifier (':' Identifier)? ('=' functionCallParameter)?;
+variableDeclarationStatement: attributeSequence? 'let' Identifier (':' typeSpecifier)? ('=' functionCallParameter)?;
 
 ifStatement:
-	'if' ParamOpen logicalExpression ParamClose compoundStatement ('else' compoundStatement)?;
+	'if' ParamOpen expression ParamClose compoundStatement ('else' compoundStatement)?;
 
 loopStatement:
 	rangeForStatement
@@ -81,12 +81,12 @@ rangeForStatement:
 	'for' ParamOpen Identifier 'in' expression ParamClose compoundStatement;
 
 forStatement:
-	'for' ParamOpen expression SemiColon logicalExpression SemiColon expression ParamClose
+	'for' ParamOpen expression SemiColon expression SemiColon expression ParamClose
 		compoundStatement;
 
 whileStatement: whileHeader compoundStatement;
 doWhileStatement: 'do' compoundStatement whileHeader SemiColon;
-whileHeader: 'while' ParamOpen logicalExpression ParamClose;
+whileHeader: 'while' ParamOpen expression ParamClose;
 
 infiniteLoopStatement: 'loop' compoundStatement;
 
@@ -95,10 +95,7 @@ functionCall:
 		functionCallParameter (Comma functionCallParameter)*
 	)? ParamClose;
 
-functionCallParameter:
-	expression
-	| arithmeticExpression
-	| logicalExpression;
+functionCallParameter: expression;
 attributeSequence: attribute+;
 
 attribute: ATTROBITEOPEN functionCall ATTROBITECLOSE;
@@ -107,42 +104,24 @@ qualifiedIdentifier: Identifier (DoubleColon Identifier)*;
 
 expression
     : STRING
-	| functionCall
-	| throwExpression
-	| Identifier
+    | functionCall
+    | throwExpression
+    | Identifier
+    | IntegerLiteral
 	| ParamOpen expression ParamClose
-	| lExpression
-	| newExpression;
+	| newExpression
+	| expression arithmeticBinaryOperator expression
+	| expression comparsionOperator expression
+	| expression logicalBinaryOperator expression
+    | LogicalUnaryOperator expression
+    | expression Period Identifier
+    | expression Period functionCall
+    ;
 
 newExpression : 'new' functionCall;
 
-arithmeticExpression:
-	arithmeticExpression ArithmeticBinaryOperator arithmeticExpression
-	| functionCall
-	| Identifier
-	| ArithmeticUnaryOperator arithmeticExpression
-	| IntegerLiteral
-	| expression;
-
-logicalExpression:
-	logicalExpression LogicalBinaryOperator logicalExpression
-	| functionCall
-	| Identifier
-	| LogicalUnaryOperator logicalExpression
-	| comparisonExpression
-	| expression;
-
-comparisonExpression:
-	arithmeticExpression ComparsionOperator arithmeticExpression;
-
 assigmentStatement:
-	lExpression Asssigment (
-		expression
-		| arithmeticExpression
-		| logicalExpression
-	);
-
-lExpression: Identifier | Identifier ('.' Identifier)+;
+	expression Asssigment expression;
 
 throwExpression: Throw expression;
 
@@ -160,7 +139,7 @@ ATTROBITEOPEN: '[';
 ATTROBITECLOSE: ']';
 Array: '['']';
 
-ArithmeticBinaryOperator:
+arithmeticBinaryOperator:
 	| Plus
 	| Minus
 	| Star
@@ -168,17 +147,18 @@ ArithmeticBinaryOperator:
 	| MinusEquals
 	| MultiplyEquals
 	| DivideEquals;
-ArithmeticUnaryOperator: Plus | Minus;
 
-ComparsionOperator:
-	'>'
-	| '<'
+comparsionOperator
+    : Greater
+	| Less
 	| GreaterEqual
 	| LessEqual
 	| Equal
 	| NotEqual;
 
-LogicalBinaryOperator: Or | And | Xor;
+binaryOperator: logicalBinaryOperator | comparsionOperator | arithmeticBinaryOperator;
+
+logicalBinaryOperator: Or | And | Xor;
 
 Unsafe: 'unsafe';
 
@@ -200,6 +180,8 @@ MinusEquals: '-=';
 MultiplyEquals: '*=';
 DivideEquals: '/=';
 GreaterEqual: '>=';
+Greater: '>';
+Less: '<';
 LessEqual: '<=';
 Equal: '==';
 NotEqual: '!=';
@@ -209,7 +191,7 @@ Xor: '^^';
 Strong: '!';
 Nullable: '?';
 Mutable: '^';
-Ref: '&';
+ref: Star;
 Class: 'class';
 Interface: 'interface';
 Public: 'public';

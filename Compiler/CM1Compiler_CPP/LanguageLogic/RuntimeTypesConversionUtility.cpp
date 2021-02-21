@@ -22,6 +22,15 @@ std::string cMCompiler::language::convertToString(dataStructures::execution::IRu
 	return string.toString();
 }
 
+cMCompiler::language::runtime_value cMCompiler::language::convertToCollection(std::vector<runtime_value> && values, not_null<dataStructures::Type*> type)
+{
+	auto result = std::make_unique<execution::ArrayValue>(getCollectionTypeFor(type), type);
+	for (auto& v : values)
+		result->push(std::move(v));
+	return result;
+}
+
+
 cMCompiler::language::runtime_value cMCompiler::language::convertToCollection(std::vector<std::string> const& strings)
 {
 	auto result = std::make_unique<execution::ArrayValue>(getCollectionTypeFor(getString()), getString());

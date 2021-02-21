@@ -35,7 +35,7 @@ namespace cMCompiler::dataStructures
 			return std::vector<validation::ValidationError>();
 		}
 
-		not_null<Field*> appendField(std::string const& name, Type* type);
+		not_null<Field*> appendField(std::string const& name, Type* type, unsigned char referenceLevel);
 		Function* appendFunction(std::string const& name);
 
 		std::vector<gsl::not_null<Function*>> methods();

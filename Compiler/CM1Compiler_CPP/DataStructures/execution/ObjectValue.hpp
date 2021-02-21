@@ -16,7 +16,7 @@ namespace cMCompiler::dataStructures::execution
 		}
 		json emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const final;
 		virtual std::string toString() const override;
-		bool validate(IRuntimeValue* value, std::string const& name);
+		bool validate(IRuntimeValue* value, std::string const& name) const;
 	public:
 		ObjectValue(Type* t) noexcept : IRuntimeValue(t)
 		{

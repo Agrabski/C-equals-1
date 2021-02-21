@@ -17,20 +17,19 @@ public:
 		T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, 
 		T__7 = 8, T__8 = 9, T__9 = 10, T__10 = 11, T__11 = 12, T__12 = 13, T__13 = 14, 
 		T__14 = 15, T__15 = 16, T__16 = 17, T__17 = 18, T__18 = 19, T__19 = 20, 
-		T__20 = 21, T__21 = 22, T__22 = 23, AccessSpecifier = 24, Identifier = 25, 
-		OpenBracket = 26, CloseBracket = 27, DOUBLEQUOTE = 28, SINGLEQUOTE = 29, 
-		ParamOpen = 30, ParamClose = 31, ATTROBITEOPEN = 32, ATTROBITECLOSE = 33, 
-		Array = 34, ArithmeticBinaryOperator = 35, ArithmeticUnaryOperator = 36, 
-		ComparsionOperator = 37, LogicalBinaryOperator = 38, Unsafe = 39, LogicalUnaryOperator = 40, 
-		Not = 41, DoubleColon = 42, SemiColon = 43, Comma = 44, Period = 45, Equals = 46, 
-		Asssigment = 47, NotEquals = 48, Plus = 49, Minus = 50, Star = 51, PlusEquals = 52, 
-		MinusEquals = 53, MultiplyEquals = 54, DivideEquals = 55, GreaterEqual = 56, 
-		LessEqual = 57, Equal = 58, NotEqual = 59, Or = 60, And = 61, Xor = 62, 
-		Strong = 63, Nullable = 64, Mutable = 65, Ref = 66, Class = 67, Interface = 68, 
-		Public = 69, Private = 70, Internal = 71, Final = 72, Virtual = 73, Abstract = 74, 
-		Override = 75, DefaultSpecification = 76, Attribute = 77, Throw = 78, 
-		IntegerLiteral = 79, DIGIT = 80, STRING = 81, AnyCharacter = 82, LETTER = 83, 
-		Whitespace = 84, Newline = 85, BlockComment = 86, LineComment = 87
+		T__20 = 21, T__21 = 22, AccessSpecifier = 23, Identifier = 24, OpenBracket = 25, 
+		CloseBracket = 26, DOUBLEQUOTE = 27, SINGLEQUOTE = 28, ParamOpen = 29, 
+		ParamClose = 30, ATTROBITEOPEN = 31, ATTROBITECLOSE = 32, Array = 33, 
+		Unsafe = 34, LogicalUnaryOperator = 35, Not = 36, DoubleColon = 37, SemiColon = 38, 
+		Comma = 39, Period = 40, Equals = 41, Asssigment = 42, NotEquals = 43, 
+		Plus = 44, Minus = 45, Star = 46, PlusEquals = 47, MinusEquals = 48, MultiplyEquals = 49, 
+		DivideEquals = 50, GreaterEqual = 51, Greater = 52, Less = 53, LessEqual = 54, 
+		Equal = 55, NotEqual = 56, Or = 57, And = 58, Xor = 59, Strong = 60, Nullable = 61, 
+		Mutable = 62, Class = 63, Interface = 64, Public = 65, Private = 66, Internal = 67, 
+		Final = 68, Virtual = 69, Abstract = 70, Override = 71, DefaultSpecification = 72, 
+		Attribute = 73, Throw = 74, IntegerLiteral = 75, DIGIT = 76, STRING = 77, 
+		AnyCharacter = 78, LETTER = 79, Whitespace = 80, Newline = 81, BlockComment = 82, 
+		LineComment = 83
 	};
 
 	enum
@@ -48,8 +47,9 @@ public:
 		RuleDoWhileStatement = 29, RuleWhileHeader = 30, RuleInfiniteLoopStatement = 31, 
 		RuleFunctionCall = 32, RuleFunctionCallParameter = 33, RuleAttributeSequence = 34, 
 		RuleAttribute = 35, RuleQualifiedIdentifier = 36, RuleExpression = 37, 
-		RuleArithmeticExpression = 38, RuleLogicalExpression = 39, RuleComparisonExpression = 40, 
-		RuleAssigmentStatement = 41, RuleLExpression = 42, RuleThrowExpression = 43
+		RuleNewExpression = 38, RuleAssigmentStatement = 39, RuleThrowExpression = 40, 
+		RuleArithmeticBinaryOperator = 41, RuleComparsionOperator = 42, RuleBinaryOperator = 43, 
+		RuleLogicalBinaryOperator = 44, RuleRef = 45
 	};
 
 	CMinusEqualsMinus1Revision0Parser(antlr4::TokenStream *input);
@@ -101,12 +101,14 @@ public:
 	class AttributeContext;
 	class QualifiedIdentifierContext;
 	class ExpressionContext;
-	class ArithmeticExpressionContext;
-	class LogicalExpressionContext;
-	class ComparisonExpressionContext;
+	class NewExpressionContext;
 	class AssigmentStatementContext;
-	class LExpressionContext;
-	class ThrowExpressionContext; 
+	class ThrowExpressionContext;
+	class ArithmeticBinaryOperatorContext;
+	class ComparsionOperatorContext;
+	class BinaryOperatorContext;
+	class LogicalBinaryOperatorContext;
+	class RefContext; 
 
 	class  CompilationUnitContext : public antlr4::ParserRuleContext
 	{
@@ -215,6 +217,8 @@ public:
 		using antlr4::ParserRuleContext::copyFrom;
 
 		size_t getRuleIndex() const final;
+		antlr4::tree::TerminalNode *Less();
+		antlr4::tree::TerminalNode *Greater();
 		antlr4::tree::TerminalNode *Identifier();
 		antlr4::tree::TerminalNode *OpenBracket();
 		ClassContentSequenceContext *classContentSequence();
@@ -395,8 +399,10 @@ public:
 		using antlr4::ParserRuleContext::copyFrom;
 
 		size_t getRuleIndex() const final;
+		antlr4::tree::TerminalNode *Less();
 		std::vector<antlr4::tree::TerminalNode *> Identifier();
 		antlr4::tree::TerminalNode* Identifier(size_t i);
+		antlr4::tree::TerminalNode *Greater();
 		std::vector<antlr4::tree::TerminalNode *> Comma();
 		antlr4::tree::TerminalNode* Comma(size_t i);
 
@@ -551,7 +557,8 @@ public:
 		size_t getRuleIndex() const final;
 		antlr4::tree::TerminalNode *Identifier();
 		GenericUsageContext *genericUsage();
-		antlr4::tree::TerminalNode *Ref();
+		std::vector<RefContext *> ref();
+		RefContext* ref(size_t i);
 		antlr4::tree::TerminalNode *Array();
 
 		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
@@ -574,8 +581,10 @@ public:
 		using antlr4::ParserRuleContext::copyFrom;
 
 		size_t getRuleIndex() const final;
+		antlr4::tree::TerminalNode *Less();
 		std::vector<TypeSpecifierContext *> typeSpecifier();
 		TypeSpecifierContext* typeSpecifier(size_t i);
+		antlr4::tree::TerminalNode *Greater();
 		std::vector<antlr4::tree::TerminalNode *> Comma();
 		antlr4::tree::TerminalNode* Comma(size_t i);
 
@@ -700,9 +709,9 @@ public:
 		using antlr4::ParserRuleContext::copyFrom;
 
 		size_t getRuleIndex() const final;
-		std::vector<antlr4::tree::TerminalNode *> Identifier();
-		antlr4::tree::TerminalNode* Identifier(size_t i);
+		antlr4::tree::TerminalNode *Identifier();
 		AttributeSequenceContext *attributeSequence();
+		TypeSpecifierContext *typeSpecifier();
 		antlr4::tree::TerminalNode *Asssigment();
 		FunctionCallParameterContext *functionCallParameter();
 
@@ -727,7 +736,7 @@ public:
 
 		size_t getRuleIndex() const final;
 		antlr4::tree::TerminalNode *ParamOpen();
-		LogicalExpressionContext *logicalExpression();
+		ExpressionContext *expression();
 		antlr4::tree::TerminalNode *ParamClose();
 		std::vector<CompoundStatementContext *> compoundStatement();
 		CompoundStatementContext* compoundStatement(size_t i);
@@ -809,7 +818,6 @@ public:
 		ExpressionContext* expression(size_t i);
 		std::vector<antlr4::tree::TerminalNode *> SemiColon();
 		antlr4::tree::TerminalNode* SemiColon(size_t i);
-		LogicalExpressionContext *logicalExpression();
 		antlr4::tree::TerminalNode *ParamClose();
 		CompoundStatementContext *compoundStatement();
 
@@ -881,7 +889,7 @@ public:
 
 		size_t getRuleIndex() const final;
 		antlr4::tree::TerminalNode *ParamOpen();
-		LogicalExpressionContext *logicalExpression();
+		ExpressionContext *expression();
 		antlr4::tree::TerminalNode *ParamClose();
 
 		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
@@ -956,8 +964,6 @@ public:
 
 		size_t getRuleIndex() const final;
 		ExpressionContext *expression();
-		ArithmeticExpressionContext *arithmeticExpression();
-		LogicalExpressionContext *logicalExpression();
 
 		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
 		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
@@ -1055,39 +1061,17 @@ public:
 		FunctionCallContext *functionCall();
 		ThrowExpressionContext *throwExpression();
 		antlr4::tree::TerminalNode *Identifier();
-		antlr4::tree::TerminalNode *ParamOpen();
-		ExpressionContext *expression();
-		antlr4::tree::TerminalNode *ParamClose();
-		LExpressionContext *lExpression();
-
-		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
-		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
-
-		antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) final;
-	 
-	};
-
-	ExpressionContext* expression(antlr4::ParserRuleContext *parent = nullptr);
-	std::unique_ptr<ExpressionContext> parseexpression();
-
-	class  ArithmeticExpressionContext : public antlr4::ParserRuleContext
-	{
-	public:
-		std::unique_ptr<ParseTree> clone(ParseTree* parent) const override;
-		ArithmeticExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-		ArithmeticExpressionContext() = default;
-		void copyFrom(ArithmeticExpressionContext *context);
-		using antlr4::ParserRuleContext::copyFrom;
-
-		size_t getRuleIndex() const final;
-		FunctionCallContext *functionCall();
-		antlr4::tree::TerminalNode *Identifier();
-		antlr4::tree::TerminalNode *ArithmeticUnaryOperator();
-		std::vector<ArithmeticExpressionContext *> arithmeticExpression();
-		ArithmeticExpressionContext* arithmeticExpression(size_t i);
 		antlr4::tree::TerminalNode *IntegerLiteral();
-		ExpressionContext *expression();
-		antlr4::tree::TerminalNode *ArithmeticBinaryOperator();
+		antlr4::tree::TerminalNode *ParamOpen();
+		std::vector<ExpressionContext *> expression();
+		ExpressionContext* expression(size_t i);
+		antlr4::tree::TerminalNode *ParamClose();
+		NewExpressionContext *newExpression();
+		antlr4::tree::TerminalNode *LogicalUnaryOperator();
+		ArithmeticBinaryOperatorContext *arithmeticBinaryOperator();
+		ComparsionOperatorContext *comparsionOperator();
+		LogicalBinaryOperatorContext *logicalBinaryOperator();
+		antlr4::tree::TerminalNode *Period();
 
 		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
 		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
@@ -1096,27 +1080,20 @@ public:
 	 
 	};
 
-	ArithmeticExpressionContext* arithmeticExpression();
-	ArithmeticExpressionContext* arithmeticExpression(int precedence, antlr4::ParserRuleContext *parent);
-	std::unique_ptr<ArithmeticExpressionContext> parsearithmeticExpression();
-	class  LogicalExpressionContext : public antlr4::ParserRuleContext
+	ExpressionContext* expression();
+	ExpressionContext* expression(int precedence, antlr4::ParserRuleContext *parent);
+	std::unique_ptr<ExpressionContext> parseexpression();
+	class  NewExpressionContext : public antlr4::ParserRuleContext
 	{
 	public:
 		std::unique_ptr<ParseTree> clone(ParseTree* parent) const override;
-		LogicalExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-		LogicalExpressionContext() = default;
-		void copyFrom(LogicalExpressionContext *context);
+		NewExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+		NewExpressionContext() = default;
+		void copyFrom(NewExpressionContext *context);
 		using antlr4::ParserRuleContext::copyFrom;
 
 		size_t getRuleIndex() const final;
 		FunctionCallContext *functionCall();
-		antlr4::tree::TerminalNode *Identifier();
-		antlr4::tree::TerminalNode *LogicalUnaryOperator();
-		std::vector<LogicalExpressionContext *> logicalExpression();
-		LogicalExpressionContext* logicalExpression(size_t i);
-		ComparisonExpressionContext *comparisonExpression();
-		ExpressionContext *expression();
-		antlr4::tree::TerminalNode *LogicalBinaryOperator();
 
 		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
 		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
@@ -1125,32 +1102,8 @@ public:
 	 
 	};
 
-	LogicalExpressionContext* logicalExpression();
-	LogicalExpressionContext* logicalExpression(int precedence, antlr4::ParserRuleContext *parent);
-	std::unique_ptr<LogicalExpressionContext> parselogicalExpression();
-	class  ComparisonExpressionContext : public antlr4::ParserRuleContext
-	{
-	public:
-		std::unique_ptr<ParseTree> clone(ParseTree* parent) const override;
-		ComparisonExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-		ComparisonExpressionContext() = default;
-		void copyFrom(ComparisonExpressionContext *context);
-		using antlr4::ParserRuleContext::copyFrom;
-
-		size_t getRuleIndex() const final;
-		std::vector<ArithmeticExpressionContext *> arithmeticExpression();
-		ArithmeticExpressionContext* arithmeticExpression(size_t i);
-		antlr4::tree::TerminalNode *ComparsionOperator();
-
-		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
-		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
-
-		antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) final;
-	 
-	};
-
-	ComparisonExpressionContext* comparisonExpression(antlr4::ParserRuleContext *parent = nullptr);
-	std::unique_ptr<ComparisonExpressionContext> parsecomparisonExpression();
+	NewExpressionContext* newExpression(antlr4::ParserRuleContext *parent = nullptr);
+	std::unique_ptr<NewExpressionContext> parsenewExpression();
 
 	class  AssigmentStatementContext : public antlr4::ParserRuleContext
 	{
@@ -1162,11 +1115,9 @@ public:
 		using antlr4::ParserRuleContext::copyFrom;
 
 		size_t getRuleIndex() const final;
-		LExpressionContext *lExpression();
+		std::vector<ExpressionContext *> expression();
+		ExpressionContext* expression(size_t i);
 		antlr4::tree::TerminalNode *Asssigment();
-		ExpressionContext *expression();
-		ArithmeticExpressionContext *arithmeticExpression();
-		LogicalExpressionContext *logicalExpression();
 
 		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
 		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
@@ -1177,31 +1128,6 @@ public:
 
 	AssigmentStatementContext* assigmentStatement(antlr4::ParserRuleContext *parent = nullptr);
 	std::unique_ptr<AssigmentStatementContext> parseassigmentStatement();
-
-	class  LExpressionContext : public antlr4::ParserRuleContext
-	{
-	public:
-		std::unique_ptr<ParseTree> clone(ParseTree* parent) const override;
-		LExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-		LExpressionContext() = default;
-		void copyFrom(LExpressionContext *context);
-		using antlr4::ParserRuleContext::copyFrom;
-
-		size_t getRuleIndex() const final;
-		std::vector<antlr4::tree::TerminalNode *> Identifier();
-		antlr4::tree::TerminalNode* Identifier(size_t i);
-		std::vector<antlr4::tree::TerminalNode *> Period();
-		antlr4::tree::TerminalNode* Period(size_t i);
-
-		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
-		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
-
-		antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) final;
-	 
-	};
-
-	LExpressionContext* lExpression(antlr4::ParserRuleContext *parent = nullptr);
-	std::unique_ptr<LExpressionContext> parselExpression();
 
 	class  ThrowExpressionContext : public antlr4::ParserRuleContext
 	{
@@ -1226,10 +1152,134 @@ public:
 	ThrowExpressionContext* throwExpression(antlr4::ParserRuleContext *parent = nullptr);
 	std::unique_ptr<ThrowExpressionContext> parsethrowExpression();
 
+	class  ArithmeticBinaryOperatorContext : public antlr4::ParserRuleContext
+	{
+	public:
+		std::unique_ptr<ParseTree> clone(ParseTree* parent) const override;
+		ArithmeticBinaryOperatorContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+		ArithmeticBinaryOperatorContext() = default;
+		void copyFrom(ArithmeticBinaryOperatorContext *context);
+		using antlr4::ParserRuleContext::copyFrom;
+
+		size_t getRuleIndex() const final;
+		antlr4::tree::TerminalNode *Plus();
+		antlr4::tree::TerminalNode *Minus();
+		antlr4::tree::TerminalNode *Star();
+		antlr4::tree::TerminalNode *PlusEquals();
+		antlr4::tree::TerminalNode *MinusEquals();
+		antlr4::tree::TerminalNode *MultiplyEquals();
+		antlr4::tree::TerminalNode *DivideEquals();
+
+		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
+		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
+
+		antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) final;
+	 
+	};
+
+	ArithmeticBinaryOperatorContext* arithmeticBinaryOperator(antlr4::ParserRuleContext *parent = nullptr);
+	std::unique_ptr<ArithmeticBinaryOperatorContext> parsearithmeticBinaryOperator();
+
+	class  ComparsionOperatorContext : public antlr4::ParserRuleContext
+	{
+	public:
+		std::unique_ptr<ParseTree> clone(ParseTree* parent) const override;
+		ComparsionOperatorContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+		ComparsionOperatorContext() = default;
+		void copyFrom(ComparsionOperatorContext *context);
+		using antlr4::ParserRuleContext::copyFrom;
+
+		size_t getRuleIndex() const final;
+		antlr4::tree::TerminalNode *Greater();
+		antlr4::tree::TerminalNode *Less();
+		antlr4::tree::TerminalNode *GreaterEqual();
+		antlr4::tree::TerminalNode *LessEqual();
+		antlr4::tree::TerminalNode *Equal();
+		antlr4::tree::TerminalNode *NotEqual();
+
+		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
+		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
+
+		antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) final;
+	 
+	};
+
+	ComparsionOperatorContext* comparsionOperator(antlr4::ParserRuleContext *parent = nullptr);
+	std::unique_ptr<ComparsionOperatorContext> parsecomparsionOperator();
+
+	class  BinaryOperatorContext : public antlr4::ParserRuleContext
+	{
+	public:
+		std::unique_ptr<ParseTree> clone(ParseTree* parent) const override;
+		BinaryOperatorContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+		BinaryOperatorContext() = default;
+		void copyFrom(BinaryOperatorContext *context);
+		using antlr4::ParserRuleContext::copyFrom;
+
+		size_t getRuleIndex() const final;
+		LogicalBinaryOperatorContext *logicalBinaryOperator();
+		ComparsionOperatorContext *comparsionOperator();
+		ArithmeticBinaryOperatorContext *arithmeticBinaryOperator();
+
+		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
+		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
+
+		antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) final;
+	 
+	};
+
+	BinaryOperatorContext* binaryOperator(antlr4::ParserRuleContext *parent = nullptr);
+	std::unique_ptr<BinaryOperatorContext> parsebinaryOperator();
+
+	class  LogicalBinaryOperatorContext : public antlr4::ParserRuleContext
+	{
+	public:
+		std::unique_ptr<ParseTree> clone(ParseTree* parent) const override;
+		LogicalBinaryOperatorContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+		LogicalBinaryOperatorContext() = default;
+		void copyFrom(LogicalBinaryOperatorContext *context);
+		using antlr4::ParserRuleContext::copyFrom;
+
+		size_t getRuleIndex() const final;
+		antlr4::tree::TerminalNode *Or();
+		antlr4::tree::TerminalNode *And();
+		antlr4::tree::TerminalNode *Xor();
+
+		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
+		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
+
+		antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) final;
+	 
+	};
+
+	LogicalBinaryOperatorContext* logicalBinaryOperator(antlr4::ParserRuleContext *parent = nullptr);
+	std::unique_ptr<LogicalBinaryOperatorContext> parselogicalBinaryOperator();
+
+	class  RefContext : public antlr4::ParserRuleContext
+	{
+	public:
+		std::unique_ptr<ParseTree> clone(ParseTree* parent) const override;
+		RefContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+		RefContext() = default;
+		void copyFrom(RefContext *context);
+		using antlr4::ParserRuleContext::copyFrom;
+
+		size_t getRuleIndex() const final;
+		antlr4::tree::TerminalNode *Star();
+
+		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
+		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
+
+		antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) final;
+	 
+	};
+
+	RefContext* ref(antlr4::ParserRuleContext *parent = nullptr);
+	std::unique_ptr<RefContext> parseref();
+
 
 	bool sempred(antlr4::RuleContext *_localctx, size_t ruleIndex, size_t predicateIndex) final;
-	bool arithmeticExpressionSempred(ArithmeticExpressionContext *_localctx, size_t predicateIndex);
-	bool logicalExpressionSempred(LogicalExpressionContext *_localctx, size_t predicateIndex);
+	bool expressionSempred(ExpressionContext *_localctx, size_t predicateIndex);
 
 private:
 	static std::vector<antlr4::dfa::DFA> _decisionToDFA;

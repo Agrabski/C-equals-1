@@ -3,6 +3,7 @@
 #include "runtime_values.hpp"
 #include "../DataStructures/Type.hpp"
 #include "../DataStructures/Function.hpp"
+#include "../ParserAdapter/ParserAdapter.hpp"
 
 namespace cMCompiler::language
 {
@@ -14,7 +15,10 @@ namespace cMCompiler::language
 		gsl::not_null<dataStructures::Type*> baseStatement,
 		gsl::not_null<dataStructures::Type*> expression);
 	gsl::not_null<dataStructures::Type*> buildVariableDescriptor(gsl::not_null<dataStructures::Namespace*> irNs);
+	gsl::not_null<dataStructures::Type*> buildFieldDescriptor(gsl::not_null<dataStructures::Namespace*> compilerNs);
 	gsl::not_null<dataStructures::Type*> buildVariableReferenceExpression(gsl::not_null<dataStructures::Namespace*> irNs);
+	gsl::not_null<dataStructures::Type*> buildFieldAccessExpressionDescriptor(gsl::not_null<dataStructures::Namespace*> irNs);
+
 	gsl::not_null<dataStructures::Type*> buildLiteralExpressionDescriptor(gsl::not_null<dataStructures::Namespace*> irNs);
 	gsl::not_null<dataStructures::Type*> buildFunctionCallDescriptor(gsl::not_null<dataStructures::Namespace*> irNs);
 	gsl::not_null<dataStructures::Type*> buildFunctionCallStatementDescriptor(gsl::not_null<dataStructures::Namespace*> irNs);
@@ -28,7 +32,7 @@ namespace cMCompiler::language
 	gsl::not_null<dataStructures::Type*> getLiteralExpressionDescriptor();
 	gsl::not_null<dataStructures::Type*> getVariableReferenceExpressionDescriptor();
 	gsl::not_null<dataStructures::Type*> getFunctionCallExpressionDescriptor();
-	gsl::not_null<dataStructures::Type*> getValueMemberAccessExpressionDescriptor();
+	gsl::not_null<dataStructures::Type*> getFieldAccessExpressionDescriptor();
 
 	// statements
 	gsl::not_null<dataStructures::Type*> getIInstruction();
@@ -36,4 +40,6 @@ namespace cMCompiler::language
 	gsl::not_null<dataStructures::Type*> getAssigmentStatementDescriptor();
 	gsl::not_null<dataStructures::Type*> getScopeTerminationStatementDescriptor();
 	gsl::not_null<dataStructures::Type*> getFunctionCallStatementDescriptor();
+
+	language::runtime_value buildSourcePointer(std::string const& filename, antlr4::tree::ParseTree& tree);
 }

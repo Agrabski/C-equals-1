@@ -95,17 +95,21 @@ public:
 
 		virtual antlrcpp::Any visitExpression(CMinusEqualsMinus1Revision0Parser::ExpressionContext *context) = 0;
 
-		virtual antlrcpp::Any visitArithmeticExpression(CMinusEqualsMinus1Revision0Parser::ArithmeticExpressionContext *context) = 0;
-
-		virtual antlrcpp::Any visitLogicalExpression(CMinusEqualsMinus1Revision0Parser::LogicalExpressionContext *context) = 0;
-
-		virtual antlrcpp::Any visitComparisonExpression(CMinusEqualsMinus1Revision0Parser::ComparisonExpressionContext *context) = 0;
+		virtual antlrcpp::Any visitNewExpression(CMinusEqualsMinus1Revision0Parser::NewExpressionContext *context) = 0;
 
 		virtual antlrcpp::Any visitAssigmentStatement(CMinusEqualsMinus1Revision0Parser::AssigmentStatementContext *context) = 0;
 
-		virtual antlrcpp::Any visitLExpression(CMinusEqualsMinus1Revision0Parser::LExpressionContext *context) = 0;
-
 		virtual antlrcpp::Any visitThrowExpression(CMinusEqualsMinus1Revision0Parser::ThrowExpressionContext *context) = 0;
+
+		virtual antlrcpp::Any visitArithmeticBinaryOperator(CMinusEqualsMinus1Revision0Parser::ArithmeticBinaryOperatorContext *context) = 0;
+
+		virtual antlrcpp::Any visitComparsionOperator(CMinusEqualsMinus1Revision0Parser::ComparsionOperatorContext *context) = 0;
+
+		virtual antlrcpp::Any visitBinaryOperator(CMinusEqualsMinus1Revision0Parser::BinaryOperatorContext *context) = 0;
+
+		virtual antlrcpp::Any visitLogicalBinaryOperator(CMinusEqualsMinus1Revision0Parser::LogicalBinaryOperatorContext *context) = 0;
+
+		virtual antlrcpp::Any visitRef(CMinusEqualsMinus1Revision0Parser::RefContext *context) = 0;
 
 
 };

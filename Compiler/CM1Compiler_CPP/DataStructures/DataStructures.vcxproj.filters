@@ -150,6 +150,9 @@
     <ClInclude Include="ISerializationManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="IValueHolder.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -219,9 +222,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="execution\ArrayValue.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="IntermidiateRepresentation\IIRElement.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="execution\RuntimeVariableDescriptor.cpp">

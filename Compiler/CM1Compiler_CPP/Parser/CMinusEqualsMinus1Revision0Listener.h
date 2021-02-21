@@ -128,23 +128,29 @@ public:
 	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::ExpressionContext *>) = 0;
 	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::ExpressionContext *>) = 0;
 
-	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::ArithmeticExpressionContext *>) = 0;
-	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::ArithmeticExpressionContext *>) = 0;
-
-	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::LogicalExpressionContext *>) = 0;
-	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::LogicalExpressionContext *>) = 0;
-
-	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::ComparisonExpressionContext *>) = 0;
-	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::ComparisonExpressionContext *>) = 0;
+	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::NewExpressionContext *>) = 0;
+	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::NewExpressionContext *>) = 0;
 
 	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::AssigmentStatementContext *>) = 0;
 	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::AssigmentStatementContext *>) = 0;
 
-	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::LExpressionContext *>) = 0;
-	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::LExpressionContext *>) = 0;
-
 	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::ThrowExpressionContext *>) = 0;
 	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::ThrowExpressionContext *>) = 0;
+
+	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::ArithmeticBinaryOperatorContext *>) = 0;
+	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::ArithmeticBinaryOperatorContext *>) = 0;
+
+	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::ComparsionOperatorContext *>) = 0;
+	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::ComparsionOperatorContext *>) = 0;
+
+	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::BinaryOperatorContext *>) = 0;
+	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::BinaryOperatorContext *>) = 0;
+
+	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::LogicalBinaryOperatorContext *>) = 0;
+	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::LogicalBinaryOperatorContext *>) = 0;
+
+	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::RefContext *>) = 0;
+	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::RefContext *>) = 0;
 
 
 };

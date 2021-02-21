@@ -190,6 +190,7 @@
     <ClInclude Include="Generic\TypePointer.hpp" />
     <ClInclude Include="INamedObject.hpp" />
     <ClInclude Include="ISerializationManager.hpp" />
+    <ClInclude Include="IValueHolder.hpp" />
     <ClInclude Include="MetadataObject.hpp" />
     <ClInclude Include="Namespace.hpp" />
     <ClInclude Include="ObjectWithAccessibility.hpp" />
@@ -224,7 +225,6 @@
     <ClCompile Include="Function.cpp" />
     <ClCompile Include="Generic\GenericObject.cpp" />
     <ClCompile Include="INamedObject.cpp" />
-    <ClCompile Include="IntermidiateRepresentation\IIRElement.cpp" />
     <ClCompile Include="Namespace.cpp" />
     <ClCompile Include="QualifiedName.cpp" />
     <ClCompile Include="Target.cpp" />

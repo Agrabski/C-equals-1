@@ -19,6 +19,9 @@ namespace cMCompiler::language
 
 	[[nodiscard]]
 	runtime_value convertToCollection(std::vector<std::string> const& strings);
+	
+	[[nodiscard]]
+	runtime_value convertToCollection(std::vector<runtime_value> && values, not_null<dataStructures::Type*> type);
 
 	[[nodiscard]]
 	runtime_value convertCollection(std::vector<runtime_value>&& collection, gsl::not_null<dataStructures::Type*> elementType);

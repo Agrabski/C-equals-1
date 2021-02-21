@@ -6,7 +6,7 @@
 
 gsl::not_null<cMCompiler::dataStructures::Function*> cMCompiler::language::createGetter(gsl::not_null<dataStructures::Function*> function, gsl::not_null<dataStructures::Type*> type)
 {
-	function->appendVariable("self", type, cMCompiler::language::createVariableDescriptor);
+	function->appendVariable("self", type, 1, cMCompiler::language::createVariableDescriptor);
 	auto f = [=](
 		std::map<std::string, std::unique_ptr<dataStructures::execution::IRuntimeValue>>&& valueMap,
 		std::map<std::string, not_null<dataStructures::Type*>> genericParameters
@@ -22,8 +22,8 @@ gsl::not_null<cMCompiler::dataStructures::Function*> cMCompiler::language::creat
 
 void cMCompiler::language::createIndexer(gsl::not_null<dataStructures::Function*> function, gsl::not_null<dataStructures::Type*> type, gsl::not_null<dataStructures::Type*> returnType)
 {
-	function->appendVariable("self", type, language::createVariableDescriptor);
-	function->appendVariable("index", getUsize(), language::createVariableDescriptor);
+	function->appendVariable("self", type, 1, language::createVariableDescriptor);
+	function->appendVariable("index", getUsize(), 0, language::createVariableDescriptor);
 	function->setReturnType(returnType);
 	auto f = [=](
 		std::map<std::string, std::unique_ptr<dataStructures::execution::IRuntimeValue>>&& valueMap,

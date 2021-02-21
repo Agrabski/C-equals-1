@@ -130,23 +130,29 @@ public:
 	void enter(not_null<CMinusEqualsMinus1Revision0Parser::ExpressionContext*> ) override { }
 	void exit(not_null<CMinusEqualsMinus1Revision0Parser::ExpressionContext*>) override { }
 
-	void enter(not_null<CMinusEqualsMinus1Revision0Parser::ArithmeticExpressionContext*> ) override { }
-	void exit(not_null<CMinusEqualsMinus1Revision0Parser::ArithmeticExpressionContext*>) override { }
-
-	void enter(not_null<CMinusEqualsMinus1Revision0Parser::LogicalExpressionContext*> ) override { }
-	void exit(not_null<CMinusEqualsMinus1Revision0Parser::LogicalExpressionContext*>) override { }
-
-	void enter(not_null<CMinusEqualsMinus1Revision0Parser::ComparisonExpressionContext*> ) override { }
-	void exit(not_null<CMinusEqualsMinus1Revision0Parser::ComparisonExpressionContext*>) override { }
+	void enter(not_null<CMinusEqualsMinus1Revision0Parser::NewExpressionContext*> ) override { }
+	void exit(not_null<CMinusEqualsMinus1Revision0Parser::NewExpressionContext*>) override { }
 
 	void enter(not_null<CMinusEqualsMinus1Revision0Parser::AssigmentStatementContext*> ) override { }
 	void exit(not_null<CMinusEqualsMinus1Revision0Parser::AssigmentStatementContext*>) override { }
 
-	void enter(not_null<CMinusEqualsMinus1Revision0Parser::LExpressionContext*> ) override { }
-	void exit(not_null<CMinusEqualsMinus1Revision0Parser::LExpressionContext*>) override { }
-
 	void enter(not_null<CMinusEqualsMinus1Revision0Parser::ThrowExpressionContext*> ) override { }
 	void exit(not_null<CMinusEqualsMinus1Revision0Parser::ThrowExpressionContext*>) override { }
+
+	void enter(not_null<CMinusEqualsMinus1Revision0Parser::ArithmeticBinaryOperatorContext*> ) override { }
+	void exit(not_null<CMinusEqualsMinus1Revision0Parser::ArithmeticBinaryOperatorContext*>) override { }
+
+	void enter(not_null<CMinusEqualsMinus1Revision0Parser::ComparsionOperatorContext*> ) override { }
+	void exit(not_null<CMinusEqualsMinus1Revision0Parser::ComparsionOperatorContext*>) override { }
+
+	void enter(not_null<CMinusEqualsMinus1Revision0Parser::BinaryOperatorContext*> ) override { }
+	void exit(not_null<CMinusEqualsMinus1Revision0Parser::BinaryOperatorContext*>) override { }
+
+	void enter(not_null<CMinusEqualsMinus1Revision0Parser::LogicalBinaryOperatorContext*> ) override { }
+	void exit(not_null<CMinusEqualsMinus1Revision0Parser::LogicalBinaryOperatorContext*>) override { }
+
+	void enter(not_null<CMinusEqualsMinus1Revision0Parser::RefContext*> ) override { }
+	void exit(not_null<CMinusEqualsMinus1Revision0Parser::RefContext*>) override { }
 
 
 	void enterEveryRule(not_null<antlr4::ParserRuleContext *> ) override { }

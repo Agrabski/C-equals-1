@@ -12,6 +12,9 @@
 
 namespace cMCompiler::language
 {
+	dataStructures::Type* getExpressionType(std::unique_ptr<dataStructures::execution::IRuntimeValue>& expression);
+
+
 	std::unique_ptr<dataStructures::execution::ObjectValue> buildObjectFor(gsl::not_null<dataStructures::Type*> type);
 	std::unique_ptr<dataStructures::execution::ObjectValue> buildObjectFor(gsl::not_null<dataStructures::Namespace*> ns);
 

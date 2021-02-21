@@ -10,6 +10,7 @@
 #include "../DataStructures/execution/RuntimeVariableDescriptor.hpp"
 #include "RuntimeTypesConversionUtility.hpp"
 #include "../Utilities/pointer_cast.hpp"
+#include "GetterExecution.hpp"
 
 
 using namespace cMCompiler::dataStructures::execution;
@@ -23,6 +24,12 @@ gsl::not_null<ObjectValue*> castToObject(cMCompiler::language::runtime_value& va
 gsl::not_null<ArrayValue*> castToArray(gsl::not_null<ReferenceValue*> reference)
 {
 	return dynamic_cast<ArrayValue*>(reference->value()->get());
+}
+
+cMCompiler::dataStructures::Type* cMCompiler::language::getExpressionType(std::unique_ptr<dataStructures::execution::IRuntimeValue>& expression)
+{
+	return executeGetter<Type>(expression, "type"s);
+
 }
 
 std::unique_ptr<ObjectValue> cMCompiler::language::buildObjectFor(gsl::not_null<Type*> type)

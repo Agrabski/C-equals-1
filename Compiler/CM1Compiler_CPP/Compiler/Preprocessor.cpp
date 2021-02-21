@@ -7,7 +7,7 @@
 
 antlrcpp::Any cMCompiler::compiler::Preprocessor::visitTypeDeclaration(CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext* ctx)
 {
-	auto ep = ExpressionBuilder([](const auto&) {return nullptr; });
+	auto ep = ExpressionBuilder(filePath_, [](const auto&) {return nullptr; });
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> dummyValue = nullptr;
 	not_null type = context_.namespaceStack_.back()->get<dataStructures::Type>(ctx->Identifier()->getText());
 	for (not_null<CMinusEqualsMinus1Revision0Parser::AttributeContext*> attribute : ctx->attributeSequence()->attribute())
@@ -17,9 +17,9 @@ antlrcpp::Any cMCompiler::compiler::Preprocessor::visitTypeDeclaration(CMinusEqu
 		for (auto p : attribute->functionCall()->functionCallParameter())
 		{
 			auto evaluator = ExpressionEvaluator([&](const auto&) -> std::unique_ptr<dataStructures::execution::IRuntimeValue>&
-			{
-				return dummyValue;
-			});
+				{
+					return dummyValue;
+				});
 			auto expression = ep.buildExpression(p);
 			parameters.push_back(evaluator.evaluate(*expression.get()));
 		}
@@ -33,7 +33,7 @@ antlrcpp::Any cMCompiler::compiler::Preprocessor::visitFunctionDeclaration(CMinu
 {
 	if (ctx->genericSpecifier() == nullptr)
 	{
-		auto ep = ExpressionBuilder([](const auto&) {return nullptr; });
+		auto ep = ExpressionBuilder(filePath_, [](const auto&) {return nullptr; });
 		std::unique_ptr<dataStructures::execution::IRuntimeValue> dummyValue = nullptr;
 		auto name = getName(ctx);
 		not_null const function = getCompatibleFunction(name, nameResolver_, context_, ctx);
@@ -45,9 +45,9 @@ antlrcpp::Any cMCompiler::compiler::Preprocessor::visitFunctionDeclaration(CMinu
 				for (auto p : attribute->functionCall()->functionCallParameter())
 				{
 					auto evaluator = ExpressionEvaluator([&](const auto&) -> std::unique_ptr<dataStructures::execution::IRuntimeValue>&
-					{
-						return dummyValue;
-					});
+						{
+							return dummyValue;
+						});
 					auto expression = ep.buildExpression(p);
 					parameters.push_back(evaluator.evaluate(*expression.get()));
 				}

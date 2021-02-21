@@ -167,15 +167,7 @@ public:
 		return visitChildren(ctx);
 	}
 
-	antlrcpp::Any visitArithmeticExpression(CMinusEqualsMinus1Revision0Parser::ArithmeticExpressionContext *ctx) override {
-		return visitChildren(ctx);
-	}
-
-	antlrcpp::Any visitLogicalExpression(CMinusEqualsMinus1Revision0Parser::LogicalExpressionContext *ctx) override {
-		return visitChildren(ctx);
-	}
-
-	antlrcpp::Any visitComparisonExpression(CMinusEqualsMinus1Revision0Parser::ComparisonExpressionContext *ctx) override {
+	antlrcpp::Any visitNewExpression(CMinusEqualsMinus1Revision0Parser::NewExpressionContext *ctx) override {
 		return visitChildren(ctx);
 	}
 
@@ -183,11 +175,27 @@ public:
 		return visitChildren(ctx);
 	}
 
-	antlrcpp::Any visitLExpression(CMinusEqualsMinus1Revision0Parser::LExpressionContext *ctx) override {
+	antlrcpp::Any visitThrowExpression(CMinusEqualsMinus1Revision0Parser::ThrowExpressionContext *ctx) override {
 		return visitChildren(ctx);
 	}
 
-	antlrcpp::Any visitThrowExpression(CMinusEqualsMinus1Revision0Parser::ThrowExpressionContext *ctx) override {
+	antlrcpp::Any visitArithmeticBinaryOperator(CMinusEqualsMinus1Revision0Parser::ArithmeticBinaryOperatorContext *ctx) override {
+		return visitChildren(ctx);
+	}
+
+	antlrcpp::Any visitComparsionOperator(CMinusEqualsMinus1Revision0Parser::ComparsionOperatorContext *ctx) override {
+		return visitChildren(ctx);
+	}
+
+	antlrcpp::Any visitBinaryOperator(CMinusEqualsMinus1Revision0Parser::BinaryOperatorContext *ctx) override {
+		return visitChildren(ctx);
+	}
+
+	antlrcpp::Any visitLogicalBinaryOperator(CMinusEqualsMinus1Revision0Parser::LogicalBinaryOperatorContext *ctx) override {
+		return visitChildren(ctx);
+	}
+
+	antlrcpp::Any visitRef(CMinusEqualsMinus1Revision0Parser::RefContext *ctx) override {
 		return visitChildren(ctx);
 	}
 

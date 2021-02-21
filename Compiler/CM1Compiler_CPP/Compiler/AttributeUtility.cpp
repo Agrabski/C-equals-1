@@ -38,7 +38,7 @@ void cMCompiler::compiler::confirmAttribute(
 	for (not_null<CMinusEqualsMinus1Revision0Parser::FieldDeclarationContext*> member : ctx->classContentSequence()->fieldDeclaration())
 	{
 		auto type = resolver.resolve<dataStructures::Type>(member->typeSpecifier()->Identifier()->getText(), context);
-		auto var = attribute->appendField(member->Identifier()->getText(), type);
+		auto var = attribute->appendField(member->Identifier()->getText(), type, member->typeSpecifier()->ref().size());
 		auto access = dataStructures::parse(member->AccessSpecifier()->getText());
 		var->setAccessibility(access);
 	}

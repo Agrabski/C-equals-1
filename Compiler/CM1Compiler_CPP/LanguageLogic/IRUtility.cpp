@@ -1,6 +1,7 @@
 #include "IRUtility.hpp"
 #include "BuiltInPackageBuildUtility.hpp"
 #include "CreateGetter.hpp"
+#include "MetatypeUility.hpp"
 
 using namespace cMCompiler::dataStructures;
 
@@ -40,8 +41,16 @@ gsl::not_null<Type*> cMCompiler::language::buildIfDescriptor(gsl::not_null<Names
 gsl::not_null<Type*> cMCompiler::language::buildVariableDescriptor(gsl::not_null<Namespace*> irNs)
 {
 	auto result = irNs->append<Type>("variableDescriptor"s);
-	result->append<Function>("name"s)->setReturnType(getString())->setAccessibility(Accessibility::Public);
-	result->append<Function>("type"s)->setReturnType(getTypeDescriptor())->setAccessibility(Accessibility::Public);
+	result->append<Function>("_name"s)->setReturnType(getString())->setAccessibility(Accessibility::Public);
+	result->append<Function>("_type"s)->setReturnType(getTypeDescriptor())->setAccessibility(Accessibility::Public);
+	return result;
+}
+
+gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildFieldDescriptor(gsl::not_null<dataStructures::Namespace*> compilerNs)
+{
+	auto result = compilerNs->append<Type>("fieldDescriptor"s);
+	result->append<Function>("_name"s)->setReturnType(getString())->setAccessibility(Accessibility::Public);
+	result->append<Function>("_type"s)->setReturnType(getTypeDescriptor())->setAccessibility(Accessibility::Public);
 	return result;
 }
 
@@ -60,6 +69,17 @@ gsl::not_null<Type*> cMCompiler::language::buildVariableReferenceExpression(gsl:
 
 	result->appendInterface(getExpressionDescriptor());
 	return result;
+}
+
+gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildFieldAccessExpressionDescriptor(gsl::not_null<dataStructures::Namespace*> irNs)
+{
+	auto t = irNs->append<Type>("fieldAccessExpression");
+	t->appendInterface(getExpressionDescriptor());
+	t->appendField("_expression", getExpressionDescriptor());
+	t->appendField("_field", getFieldDescriptor());
+	createGetter(t->append<Function>("expression"), t);
+	createGetter(t->append<Function>("field"), t);
+	return t;
 }
 
 
@@ -83,7 +103,7 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildFunc
 	result->appendField("_runtimeTimeFunction", getFunctionDescriptor())->setAccessibility(Accessibility::Private);
 	result->appendField("_arguments", getCollectionTypeFor(getExpressionDescriptor()))->setAccessibility(Accessibility::Private);
 	result->appendField("_pointerToSource", getPointerToSource())->setAccessibility(Accessibility::Private);
-	result->appendField("_parent", getExpressionDescriptor())->setAccessibility(Accessibility::Private); 
+	result->appendField("_parent", getExpressionDescriptor())->setAccessibility(Accessibility::Private);
 	return result;
 }
 
@@ -121,6 +141,7 @@ void cMCompiler::language::buildIrNamespace(gsl::not_null<dataStructures::Namesp
 	buildFunctionCallDescriptor(ns);
 	buildFunctionCallStatementDescriptor(ns);
 	buildScopeTerminationStatementDescriptor(ns);
+	buildFieldAccessExpressionDescriptor(ns);
 }
 
 gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getVariableDescriptor()
@@ -158,9 +179,9 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getFuncti
 	return getDefaultPackage()->rootNamespace()->get<Namespace>("compiler")->get<Namespace>("ir")->get<Type>("functionCallExpression");
 }
 
-gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getValueMemberAccessExpressionDescriptor()
+gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getFieldAccessExpressionDescriptor()
 {
-	return getDefaultPackage()->rootNamespace()->get<Namespace>("compiler")->get<Namespace>("ir")->get<Type>("valueMemberAccessExpression");
+	return getDefaultPackage()->rootNamespace()->get<Namespace>("compiler")->get<Namespace>("ir")->get<Type>("fieldAccessExpression");
 }
 
 gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getScopeTerminationStatementDescriptor()
@@ -171,6 +192,15 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getScopeT
 gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getFunctionCallStatementDescriptor()
 {
 	return getDefaultPackage()->rootNamespace()->get<Namespace>("compiler")->get<Namespace>("ir")->get<Type>("functionCallStatement");
+}
+
+cMCompiler::language::runtime_value cMCompiler::language::buildSourcePointer(std::string const& filename, antlr4::tree::ParseTree& tree)
+{
+	auto* current = &tree;
+	while (current != nullptr && dynamic_cast<antlr4::Token*>(current) == nullptr)
+		current = current->children.front().get();
+	assert(current != nullptr);
+	return buildPointerToSource(filename, dynamic_cast<antlr4::Token*>(current)->getLine());
 }
 
 

@@ -42,7 +42,7 @@ namespace cMCompiler::compiler
 			return true;
 		}
 		CompilationUnitDataBaseBuilder(dataStructures::PackageDatabase& database, language::NameResolver& nameResolver) noexcept :
-			database_(database), nameResolver_(nameResolver), preprocessor_(database_, nameResolver_, resolutionContext_) {}
+			database_(database), nameResolver_(nameResolver), preprocessor_(database_, file_, nameResolver_, resolutionContext_) {}
 		void buildDatabase(Parser::CompilationUnit& compilationUnit);
 		void setFile(std::filesystem::path const& file)
 		{

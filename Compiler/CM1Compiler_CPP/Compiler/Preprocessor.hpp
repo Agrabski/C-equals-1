@@ -1,4 +1,5 @@
 #pragma once
+#include <filesystem>
 #include "../Parser/CMinusEqualsMinus1Revision0BaseVisitor.h"
 #include "../ParserAdapter/ParserAdapter.hpp"
 #include "../DataStructures/PackageDatabase.hpp"
@@ -9,6 +10,8 @@ namespace cMCompiler::compiler
 {
 	class Preprocessor : public CMinusEqualsMinus1Revision0BaseVisitor
 	{
+
+		std::filesystem::path filePath_;
 		dataStructures::PackageDatabase& database_;
 		language::NameResolver& nameResolver_;
 		language::NameResolutionContext& context_;
@@ -17,8 +20,8 @@ namespace cMCompiler::compiler
 	public:
 		void executeAttachmentFunctions();
 		void executeAttributeSpecialFunctions();
-		Preprocessor(dataStructures::PackageDatabase& database, language::NameResolver& nameResolver, language::NameResolutionContext& context) noexcept :
-			database_(database), nameResolver_(nameResolver), context_(context)
+		Preprocessor(dataStructures::PackageDatabase& database, std::filesystem::path const& filePath, language::NameResolver& nameResolver, language::NameResolutionContext& context) noexcept :
+			database_(database), nameResolver_(nameResolver), context_(context), filePath_(filePath)
 		{
 		}
 		void preprocess(Parser::CompilationUnit& compilationUnit);

@@ -28,17 +28,17 @@ std::string cMCompiler::dataStructures::execution::ObjectValue::toString() const
 	return stream.str();
 }
 
-bool cMCompiler::dataStructures::execution::ObjectValue::validate(IRuntimeValue* value, std::string const& name)
+bool cMCompiler::dataStructures::execution::ObjectValue::validate(IRuntimeValue* value, std::string const& name) const
 {
 	auto fields = type()->fields();
-	auto field = std::find_if(fields.begin(), fields.end(), [&](auto const& e) {return e->name() == name; });
+	auto field = std::find_if(fields.begin(), fields.end(), [&](auto const& e) noexcept {return e->name() == name; });
 	return field != fields.end() && (*field)->type() == value->type();
 }
 
 cMCompiler::dataStructures::Type* cMCompiler::dataStructures::execution::ObjectValue::getMemberType(std::string const& name)
 {
 	auto fields = type()->fields();
-	auto field = (std::find_if(fields.begin(), fields.end(), [&](const auto e) {return e->name() == name; }));
+	auto field = (std::find_if(fields.begin(), fields.end(), [&](const auto e) noexcept {return e->name() == name; }));
 	assert(field != fields.end());
 	return (*field)->type();
 }
