@@ -76,6 +76,12 @@ public:
 	void enter(not_null<CMinusEqualsMinus1Revision0Parser::FunctionBodyContext*> ) override { }
 	void exit(not_null<CMinusEqualsMinus1Revision0Parser::FunctionBodyContext*>) override { }
 
+	void enter(not_null<CMinusEqualsMinus1Revision0Parser::FunctionNameContext*> ) override { }
+	void exit(not_null<CMinusEqualsMinus1Revision0Parser::FunctionNameContext*>) override { }
+
+	void enter(not_null<CMinusEqualsMinus1Revision0Parser::SpecialFunctionIdentifierContext*> ) override { }
+	void exit(not_null<CMinusEqualsMinus1Revision0Parser::SpecialFunctionIdentifierContext*>) override { }
+
 	void enter(not_null<CMinusEqualsMinus1Revision0Parser::CompoundStatementContext*> ) override { }
 	void exit(not_null<CMinusEqualsMinus1Revision0Parser::CompoundStatementContext*>) override { }
 
@@ -130,6 +136,9 @@ public:
 	void enter(not_null<CMinusEqualsMinus1Revision0Parser::ExpressionContext*> ) override { }
 	void exit(not_null<CMinusEqualsMinus1Revision0Parser::ExpressionContext*>) override { }
 
+	void enter(not_null<CMinusEqualsMinus1Revision0Parser::IndexExpressionContext*> ) override { }
+	void exit(not_null<CMinusEqualsMinus1Revision0Parser::IndexExpressionContext*>) override { }
+
 	void enter(not_null<CMinusEqualsMinus1Revision0Parser::NewExpressionContext*> ) override { }
 	void exit(not_null<CMinusEqualsMinus1Revision0Parser::NewExpressionContext*>) override { }
 
@@ -153,6 +162,9 @@ public:
 
 	void enter(not_null<CMinusEqualsMinus1Revision0Parser::RefContext*> ) override { }
 	void exit(not_null<CMinusEqualsMinus1Revision0Parser::RefContext*>) override { }
+
+	void enter(not_null<CMinusEqualsMinus1Revision0Parser::IdentifierContext*> ) override { }
+	void exit(not_null<CMinusEqualsMinus1Revision0Parser::IdentifierContext*>) override { }
 
 
 	void enterEveryRule(not_null<antlr4::ParserRuleContext *> ) override { }

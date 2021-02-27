@@ -6,7 +6,6 @@
 
 gsl::not_null<cMCompiler::dataStructures::Function*> cMCompiler::language::createGetter(gsl::not_null<dataStructures::Function*> function, gsl::not_null<dataStructures::Type*> type)
 {
-	function->appendVariable("self", type, 1, cMCompiler::language::createVariableDescriptor);
 	auto f = [=](
 		std::map<std::string, std::unique_ptr<dataStructures::execution::IRuntimeValue>>&& valueMap,
 		std::map<std::string, not_null<dataStructures::Type*>> genericParameters
@@ -16,9 +15,20 @@ gsl::not_null<cMCompiler::dataStructures::Function*> cMCompiler::language::creat
 		return dynamic_cast<dataStructures::execution::IComplexRuntimeValue*>(reference->value()->get())
 			->getMemberValue("_" + function->name());
 	};
-	compileTimeFunctions::FuntionLibrary::instance().addFunctionDefinition(function, f);
+	return createCustomFunction(function, type, f);
+}
+
+gsl::not_null<cMCompiler::dataStructures::Function*> cMCompiler::language::createCustomFunction(
+	gsl::not_null<dataStructures::Function*> function,
+	gsl::not_null<dataStructures::Type*> type,
+	std::function<std::unique_ptr<dataStructures::execution::IRuntimeValue>(std::map<std::string, std::unique_ptr<dataStructures::execution::IRuntimeValue>>&& valueMap, 
+	std::map<std::string, not_null<dataStructures::Type*>>genericParameters)> body)
+{
+	function->appendVariable("self", type, 1, cMCompiler::language::createVariableDescriptor);
+	compileTimeFunctions::FuntionLibrary::instance().addFunctionDefinition(function, body);
 	return function;
 }
+
 
 void cMCompiler::language::createIndexer(gsl::not_null<dataStructures::Function*> function, gsl::not_null<dataStructures::Type*> type, gsl::not_null<dataStructures::Type*> returnType)
 {

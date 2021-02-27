@@ -11,14 +11,14 @@ declarationSequence: declaration+;
 
 declaration: functionDeclaration | typeDeclaration | namespaceDeclaration | importDeclaration | attributeDeclaration;
 
-attributeDeclaration : (AccessSpecifier)? 'att' Less attributeTarget+ Greater Identifier OpenBracket classContentSequence CloseBracket;
+attributeDeclaration : (AccessSpecifier)? 'att' Less attributeTarget+ Greater identifier OpenBracket classContentSequence CloseBracket;
 
 attributeTarget: ('type' | 'variable' | 'function');
 
-importDeclaration : 'import' '{' Identifier+ '}' 'from' '{' qualifiedIdentifier '}';
+importDeclaration : 'import' '{' identifier+ '}' 'from' '{' qualifiedIdentifier '}';
 
 typeDeclaration:
-	(attributeSequence)? AccessSpecifier? classTypeSpecifier Identifier (':' implementedInterfacesSequence)? OpenBracket
+	(attributeSequence)? AccessSpecifier? classTypeSpecifier identifier (':' implementedInterfacesSequence)? OpenBracket
 		classContentSequence CloseBracket;
 
 classTypeSpecifier: (Class| Interface | 'struct');
@@ -26,30 +26,33 @@ classTypeSpecifier: (Class| Interface | 'struct');
 classContentSequence: (functionDeclaration | fieldDeclaration)*;
 
 fieldDeclaration:
-	attributeSequence? AccessSpecifier? Identifier ':' typeSpecifier SemiColon;
+	attributeSequence? AccessSpecifier? identifier ':' typeSpecifier SemiColon;
 
-genericSpecifier: Less Identifier (',' Identifier)* Greater;
+genericSpecifier: Less identifier (',' identifier)* Greater;
 
 implementedInterfacesSequence:
-	Identifier
-	| (Identifier ',')+ Identifier;
+	identifier
+	| (identifier ',')+ identifier;
 
 namespaceDeclaration:
 	'namespace' qualifiedIdentifier OpenBracket declarationSequence CloseBracket;
 
 functionDeclaration:
-	(attributeSequence)? AccessSpecifier? 'fn' Identifier genericSpecifier? ParamOpen parameterList ParamClose ('->'
+	(attributeSequence)? AccessSpecifier? 'fn' functionName genericSpecifier? ParamOpen parameterList ParamClose ('->'
 		typeSpecifier)? functionBody;
 
 parameterList: | parameter | (parameter ',')+ parameter;
 
-parameter: attributeSequence? Identifier ':' typeSpecifier;
+parameter: attributeSequence? identifier ':' typeSpecifier;
 
-typeSpecifier: Identifier genericUsage? ref* (Array)?;
+typeSpecifier: identifier genericUsage? ref* (Array)?;
 
 genericUsage: Less typeSpecifier (',' typeSpecifier)* Greater;
 
 functionBody: OpenBracket statement* CloseBracket;
+
+functionName: identifier | specialFunctionIdentifier;
+specialFunctionIdentifier: Operator (New (Unique | Shared) ); // todo: more operators
 
 compoundStatement:
 	Unsafe? OpenBracket statement* CloseBracket
@@ -65,7 +68,7 @@ statement:
 
 returnStatement: 'return' expression;
 
-variableDeclarationStatement: attributeSequence? 'let' Identifier (':' typeSpecifier)? ('=' functionCallParameter)?;
+variableDeclarationStatement: attributeSequence? 'let' identifier (':' typeSpecifier)? ('=' functionCallParameter)?;
 
 ifStatement:
 	'if' ParamOpen expression ParamClose compoundStatement ('else' compoundStatement)?;
@@ -78,7 +81,7 @@ loopStatement:
 	| infiniteLoopStatement;
 
 rangeForStatement:
-	'for' ParamOpen Identifier 'in' expression ParamClose compoundStatement;
+	'for' ParamOpen identifier 'in' expression ParamClose compoundStatement;
 
 forStatement:
 	'for' ParamOpen expression SemiColon expression SemiColon expression ParamClose
@@ -91,7 +94,7 @@ whileHeader: 'while' ParamOpen expression ParamClose;
 infiniteLoopStatement: 'loop' compoundStatement;
 
 functionCall:
-	Identifier genericUsage? ParamOpen (
+	identifier genericUsage? ParamOpen (
 		functionCallParameter (Comma functionCallParameter)*
 	)? ParamClose;
 
@@ -100,13 +103,13 @@ attributeSequence: attribute+;
 
 attribute: ATTROBITEOPEN functionCall ATTROBITECLOSE;
 
-qualifiedIdentifier: Identifier (DoubleColon Identifier)*;
+qualifiedIdentifier: identifier (DoubleColon identifier)*;
 
 expression
     : STRING
     | functionCall
     | throwExpression
-    | Identifier
+    | identifier
     | IntegerLiteral
 	| ParamOpen expression ParamClose
 	| newExpression
@@ -114,11 +117,14 @@ expression
 	| expression comparsionOperator expression
 	| expression logicalBinaryOperator expression
     | LogicalUnaryOperator expression
-    | expression Period Identifier
+    | expression Period identifier
     | expression Period functionCall
+    | expression indexExpression
     ;
 
-newExpression : 'new' functionCall;
+indexExpression: '[' expression']';
+
+newExpression : New (Unique | Shared) functionCall;
 
 assigmentStatement:
 	expression Asssigment expression;
@@ -127,7 +133,7 @@ throwExpression: Throw expression;
 
 AccessSpecifier: Public | Private | Internal;
 
-Identifier: LETTER (LETTER | DIGIT)*;
+
 
 OpenBracket: '{';
 CloseBracket: '}';
@@ -204,7 +210,14 @@ Override: 'override';
 DefaultSpecification: '=' 'default';
 Attribute: 'attribute';
 Throw: 'throw';
+Operator: 'operator';
+Shared: 'shared';
+Unique: 'unique';
+New: 'new';
 
+identifier: SimpleIdentifier | '@new' | '@unique' | '@shared' | '@throw' | '@attribute' | '@default';
+
+SimpleIdentifier: LETTER (LETTER | DIGIT)*;
 
 
 IntegerLiteral: (DIGIT)+;

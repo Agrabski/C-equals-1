@@ -14,10 +14,7 @@ Namespace* NamespaceBuilder::buildNamespace(QualifiedName name, Namespace* curre
 		if (ns != nullptr)
 			currentNamespace = ns;
 		else
-		{
 			currentNamespace = currentNamespace->append<Namespace>(nextName);
-			currentNamespace->setObject(buildObjectFor(currentNamespace));
-		}
 	}
 	return currentNamespace;
 }

@@ -21,13 +21,28 @@ namespace cMCompiler::language
 	runtime_value convertToCollection(std::vector<std::string> const& strings);
 	
 	[[nodiscard]]
-	runtime_value convertToCollection(std::vector<runtime_value> && values, not_null<dataStructures::Type*> type);
+	runtime_value convertToCollection(std::vector<runtime_value> && values, not_null<dataStructures::Type*> type, unsigned char referenceLevel);
 
 	[[nodiscard]]
-	runtime_value convertCollection(std::vector<runtime_value>&& collection, gsl::not_null<dataStructures::Type*> elementType);
+	runtime_value convertCollection(std::vector<runtime_value>&& collection, gsl::not_null<dataStructures::Type*> elementType, unsigned char referenceLevel);
 
 	[[nodiscard]]
 	bool canCastReference(gsl::not_null<dataStructures::Type*> from, gsl::not_null<dataStructures::Type*> to);
+
+	[[nodiscard]]
+	dataStructures::execution::IRuntimeValue* dereference(not_null<dataStructures::execution::IRuntimeValue*>reference);
+
+	[[nodiscard]]
+	dataStructures::execution::IRuntimeValue* dereferenceOnce(not_null<dataStructures::execution::IRuntimeValue*>reference);
+
+
+	template<typename T>
+	[[nodiscard]]
+	T* dereferenceAs(not_null<dataStructures::execution::IRuntimeValue*>reference)
+	{
+		auto v = dereference(reference);
+		return dynamic_cast<T*>(v);
+	}
 
 	template<typename T>
 	[[nodiscard]]

@@ -2,6 +2,7 @@
 #include "ExpressionEvaluator.hpp"
 #include "StatementEvaluator.hpp"
 #include "../LanguageLogic/CompileTimeFunctions/FunctionLibrary.hpp"
+#include "../Utilities/algorithm.hpp"
 using namespace cMCompiler::dataStructures::execution;
 using namespace cMCompiler::dataStructures::execution;
 
@@ -35,7 +36,7 @@ std::unique_ptr<IRuntimeValue> cMCompiler::compiler::execute(
 		if (local != locals.end())
 			return local->second;
 		auto parameters = functionDefinition->parameters();
-		auto parameter = std::find_if(begin(parameters), end(parameters), [&](auto const e) noexcept {return e->name() == name; });
+		auto parameter = utilities::find_if(parameters, [&](auto const& e) noexcept {return e->name() == name; });
 		if (parameter != parameters.end())
 			return valueMap[parameter - begin(parameters)];
 	};

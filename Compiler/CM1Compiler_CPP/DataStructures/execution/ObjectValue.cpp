@@ -1,6 +1,22 @@
 #include "ObjectValue.hpp"
-#include "../Type.hpp"
 #include <sstream>
+#include <optional>
+#include "../Type.hpp"
+
+namespace cMCompiler::language
+{
+	struct CoercionStrategy
+	{
+
+	};
+	extern std::optional<CoercionStrategy> coerce(
+		gsl::not_null<dataStructures::Type*> valueType,
+		unsigned char valueReferenceLevel,
+		unsigned char sinkReferenceLevel,
+		gsl::not_null<dataStructures::Type*> sinkType);
+	extern unsigned char countReferenceLevel(dataStructures::execution::IRuntimeValue const* value);
+
+}
 
 cMCompiler::dataStructures::execution::json cMCompiler::dataStructures::execution::ObjectValue::emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const
 {
@@ -32,7 +48,10 @@ bool cMCompiler::dataStructures::execution::ObjectValue::validate(IRuntimeValue*
 {
 	auto fields = type()->fields();
 	auto field = std::find_if(fields.begin(), fields.end(), [&](auto const& e) noexcept {return e->name() == name; });
-	return field != fields.end() && (*field)->type() == value->type();
+	if (field->get()->type() == nullptr)
+		return true; // allow any type in interpreted mode if type is null. Only for compiler internals
+	return field != fields.end() &&
+		language::coerce(value->type(), language::countReferenceLevel(value), (*field)->referenceLevel(), (*field)->type());
 }
 
 cMCompiler::dataStructures::Type* cMCompiler::dataStructures::execution::ObjectValue::getMemberType(std::string const& name)

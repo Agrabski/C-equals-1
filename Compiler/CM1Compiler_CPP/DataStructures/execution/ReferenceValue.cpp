@@ -12,7 +12,7 @@ std::string cMCompiler::dataStructures::execution::ReferenceValue::toString() co
 
 std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler::dataStructures::execution::ReferenceValue::copy() const
 {
-	return std::make_unique<ReferenceValue>(value_, type());
+	return make(value_, type());
 }
 
 void cMCompiler::dataStructures::execution::ReferenceValue::performAssigment(std::unique_ptr<IRuntimeValue>&& newValue)

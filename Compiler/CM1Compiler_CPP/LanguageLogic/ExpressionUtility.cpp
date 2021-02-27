@@ -5,12 +5,13 @@
 #include "RuntimeTypesConversionUtility.hpp"
 #include "OverloadResolutionUtility.hpp"
 
-cMCompiler::language::runtime_value cMCompiler::language::buildValueLiteralExpression(runtime_value&& value)
+cMCompiler::language::runtime_value cMCompiler::language::buildValueLiteralExpression(runtime_value&& value, runtime_value&& pointerToSource)
 {
-	auto result = instantiate(getLiteralExpressionDescriptor());
-	not_null object = dynamic_cast<dataStructures::execution::ObjectValue*>(result.get());
-	object->setValue("value", std::move(value));
-	return result;
+	auto [result, object] = heapAllocateObject(getLiteralExpressionDescriptor());
+	object.setValue("_value", std::move(value));
+	object.setValue("_pointerToSource", std::move(pointerToSource));
+
+	return std::move(result);
 }
 
 cMCompiler::language::runtime_value cMCompiler::language::buildMethodCallExpression(
@@ -22,31 +23,43 @@ cMCompiler::language::runtime_value cMCompiler::language::buildMethodCallExpress
 {
 	argumentExpressions.insert(argumentExpressions.begin(), std::move(expression));
 
+	std::vector<not_null<dataStructures::execution::IRuntimeValue*>> expressions;
+	for (auto& e : argumentExpressions)
+		expressions.push_back(e.get());
+
 	auto methods = type->methods();
 	methods.erase(std::remove_if(methods.begin(), methods.end(), [&](auto const e) {return e->name() != methodName; }));
 
-	return buildFunctionCall(
+	auto result = buildFunctionCallExpression(
 		getValueFor(resolveOverload(methods, argumentExpressions, true, false)),
 		getValueFor(resolveOverload(methods, argumentExpressions, false, true)),
-		language::convertToCollection(std::move(argumentExpressions), getExpressionDescriptor()),
+		language::convertToCollection(std::move(argumentExpressions), getExpressionDescriptor(), 1),
 		std::move(pointerToSource));
-	return runtime_value();
+	assert(dynamic_cast<dataStructures::execution::ReferenceValue*>(result.get()) != nullptr);
+	for (auto arg : expressions)
+		setParent(arg, result->copy());
+	return std::move(result);
 }
 
-cMCompiler::language::runtime_value cMCompiler::language::buildFieldAccessExpression(runtime_value&& expression, gsl::not_null<dataStructures::Field*> field)
+cMCompiler::language::runtime_value cMCompiler::language::buildFieldAccessExpression(runtime_value&& expression, gsl::not_null<dataStructures::Field*> field, runtime_value&& pointerToSource)
 {
-	auto result = instantiate(getFieldAccessExpressionDescriptor());
-	not_null object = dynamic_cast<dataStructures::execution::ObjectValue*>(result.get());
-	object->setValue("_field", getValueFor(field));
-	object->setValue("_expression", std::move(expression));
-	return result;
+	auto [result, object] = heapAllocateObject(getFieldAccessExpressionDescriptor());
+	object.setValue("_field", getValueFor(field));
+	object.setValue("_expression", std::move(expression));
+	object.setValue("_pointerToSource", std::move(pointerToSource));
+	return std::move(result);
 }
 
 cMCompiler::language::runtime_value cMCompiler::language::buildVariableReferenceExpressionDescriptor(gsl::not_null<dataStructures::Variable*> var)
 {
-	auto result = instantiate(getVariableReferenceExpressionDescriptor());
-	not_null object = dynamic_cast<dataStructures::execution::ObjectValue*>(result.get());
-	object->setValue("_variable", createVariableDescriptor(var));
-	object->setValue("_type", createTypeDescriptor(var->type()));
-	return result;
+	auto [result, object] = heapAllocateObject(getVariableReferenceExpressionDescriptor());
+	object.setValue("_variable", createVariableDescriptor(var));
+	object.setValue("_type", createTypeDescriptor(var->type()));
+	return std::move(result);
+}
+
+void cMCompiler::language::setParent(not_null<dataStructures::execution::IRuntimeValue*> expression, runtime_value&& parentReference)
+{
+	not_null complex = dynamic_cast<dataStructures::execution::IComplexRuntimeValue*>(expression.get());
+	complex->setValue("_parentExpression", std::move(parentReference));
 }

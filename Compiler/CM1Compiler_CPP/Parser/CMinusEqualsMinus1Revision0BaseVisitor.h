@@ -95,6 +95,14 @@ public:
 		return visitChildren(ctx);
 	}
 
+	antlrcpp::Any visitFunctionName(CMinusEqualsMinus1Revision0Parser::FunctionNameContext *ctx) override {
+		return visitChildren(ctx);
+	}
+
+	antlrcpp::Any visitSpecialFunctionIdentifier(CMinusEqualsMinus1Revision0Parser::SpecialFunctionIdentifierContext *ctx) override {
+		return visitChildren(ctx);
+	}
+
 	antlrcpp::Any visitCompoundStatement(CMinusEqualsMinus1Revision0Parser::CompoundStatementContext *ctx) override {
 		return visitChildren(ctx);
 	}
@@ -167,6 +175,10 @@ public:
 		return visitChildren(ctx);
 	}
 
+	antlrcpp::Any visitIndexExpression(CMinusEqualsMinus1Revision0Parser::IndexExpressionContext *ctx) override {
+		return visitChildren(ctx);
+	}
+
 	antlrcpp::Any visitNewExpression(CMinusEqualsMinus1Revision0Parser::NewExpressionContext *ctx) override {
 		return visitChildren(ctx);
 	}
@@ -196,6 +208,10 @@ public:
 	}
 
 	antlrcpp::Any visitRef(CMinusEqualsMinus1Revision0Parser::RefContext *ctx) override {
+		return visitChildren(ctx);
+	}
+
+	antlrcpp::Any visitIdentifier(CMinusEqualsMinus1Revision0Parser::IdentifierContext *ctx) override {
 		return visitChildren(ctx);
 	}
 

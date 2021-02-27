@@ -43,10 +43,10 @@ namespace cMCompiler::compiler
 		language::NameResolutionContext& context)
 	{
 		auto attachmentFunction = language::getAtachmentFunction(target, instance);
-		auto descriptor = language::buildReferenceValue(target);
+		auto descriptor = language::getValueFor(target);
 		auto& thisObject = instance->objectInstance();
 		std::vector<std::unique_ptr<dataStructures::execution::IRuntimeValue>> params;
-		params.push_back(std::make_unique<dataStructures::execution::ReferenceValue>(&thisObject, thisObject->type()));
+		params.push_back(dataStructures::execution::ReferenceValue::make(&thisObject, thisObject->type()));
 		params.push_back(std::move(descriptor));
 		execute(attachmentFunction, std::move(params));
 	}

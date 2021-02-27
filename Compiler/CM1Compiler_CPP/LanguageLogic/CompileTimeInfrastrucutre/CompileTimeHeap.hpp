@@ -2,8 +2,11 @@
 #include <vector>
 #include <array>
 #include <memory>
+#include <gsl.h>
 #include "../../DataStructures/execution/IRuntimeValue.h"
 #include "../../DataStructures/execution/ReferenceValue.hpp"
+
+using gsl::not_null;
 
 namespace cMCompiler::language::compileTimeInfrastructure
 {
@@ -14,10 +17,10 @@ namespace cMCompiler::language::compileTimeInfrastructure
 		using block_pointer = std::unique_ptr<block>;
 		std::vector<block_pointer> memory_;
 		element_pointer& getFreeElement();
-		std::unique_ptr<dataStructures::execution::ReferenceValue> wrap(element_pointer&, dataStructures::Type*);
+		std::unique_ptr<dataStructures::execution::ReferenceValue> wrap(element_pointer&, dataStructures::Type*, bool unique = true);
 	public:
 		static CompileTimeHeap& instance();
-		std::unique_ptr<dataStructures::execution::ReferenceValue> allocate(dataStructures::Type* type);
+		std::unique_ptr<dataStructures::execution::ReferenceValue> allocate(not_null<dataStructures::Type*> type, bool unique = true);
 		void dealocate(dataStructures::execution::ReferenceValue&);
 	};
 }

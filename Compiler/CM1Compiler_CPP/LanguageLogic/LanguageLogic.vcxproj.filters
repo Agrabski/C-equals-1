@@ -114,7 +114,7 @@
     <ClInclude Include="GenericUtility.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TypeCohersionUtility.hpp">
+    <ClInclude Include="TypeCoercionUtility.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -197,7 +197,7 @@
     <ClCompile Include="InstantiateGeneric.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TypeCohersionUtility.cpp">
+    <ClCompile Include="TypeCoercionUtility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

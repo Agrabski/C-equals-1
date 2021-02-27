@@ -24,7 +24,7 @@ namespace cMCompiler::dataStructures::execution
 
 		std::unique_ptr<ReferenceValue> getMemberValue(std::string const& name) final
 		{
-			return std::make_unique<ReferenceValue>(&values_[name], getMemberType(name));
+			return ReferenceValue::make(&values_[name], getMemberType(name));
 		}
 
 		Type* getMemberType(std::string const& name) final;

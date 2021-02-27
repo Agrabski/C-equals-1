@@ -9,6 +9,6 @@ namespace cMCompiler::language
 		std::vector<not_null<dataStructures::Type*>> const& genericParameters);
 
 	not_null<dataStructures::Type*> instantiate(
-		dataStructures::Generic<dataStructures::Type>& type,
+		dataStructures::Generic<dataStructures::Type> const& type,
 		std::vector<not_null<dataStructures::Type*>> const& genericParameters);
 }

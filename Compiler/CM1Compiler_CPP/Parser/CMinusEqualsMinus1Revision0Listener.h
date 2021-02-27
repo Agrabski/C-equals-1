@@ -74,6 +74,12 @@ public:
 	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::FunctionBodyContext *>) = 0;
 	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::FunctionBodyContext *>) = 0;
 
+	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::FunctionNameContext *>) = 0;
+	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::FunctionNameContext *>) = 0;
+
+	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::SpecialFunctionIdentifierContext *>) = 0;
+	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::SpecialFunctionIdentifierContext *>) = 0;
+
 	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::CompoundStatementContext *>) = 0;
 	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::CompoundStatementContext *>) = 0;
 
@@ -128,6 +134,9 @@ public:
 	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::ExpressionContext *>) = 0;
 	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::ExpressionContext *>) = 0;
 
+	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::IndexExpressionContext *>) = 0;
+	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::IndexExpressionContext *>) = 0;
+
 	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::NewExpressionContext *>) = 0;
 	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::NewExpressionContext *>) = 0;
 
@@ -151,6 +160,9 @@ public:
 
 	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::RefContext *>) = 0;
 	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::RefContext *>) = 0;
+
+	virtual void enter(not_null<CMinusEqualsMinus1Revision0Parser::IdentifierContext *>) = 0;
+	virtual void exit(not_null<CMinusEqualsMinus1Revision0Parser::IdentifierContext *>) = 0;
 
 
 };

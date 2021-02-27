@@ -16,16 +16,25 @@ CompileTimeHeap::element_pointer& cMCompiler::language::compileTimeInfrastructur
 	return memory_.back()->front();
 }
 
-std::unique_ptr<ReferenceValue> cMCompiler::language::compileTimeInfrastructure::CompileTimeHeap::wrap(element_pointer& element, dataStructures::Type* type)
+std::unique_ptr<ReferenceValue> cMCompiler::language::compileTimeInfrastructure::CompileTimeHeap::wrap(element_pointer& element, dataStructures::Type* type, bool unique)
 {
-	return std::make_unique<ReferenceValue>(&element, type);
+	if(unique)
+		return std::make_unique<ReferenceValue>(&element, type, [this](auto e) {dealocate(e); });
+	return ReferenceValue::make(&element, type);
 }
 
-std::unique_ptr<ReferenceValue> cMCompiler::language::compileTimeInfrastructure::CompileTimeHeap::allocate(dataStructures::Type* type)
+cMCompiler::language::compileTimeInfrastructure::CompileTimeHeap& 
+	cMCompiler::language::compileTimeInfrastructure::CompileTimeHeap::instance()
+{
+	static CompileTimeHeap heap;
+	return heap;
+}
+
+std::unique_ptr<ReferenceValue> cMCompiler::language::compileTimeInfrastructure::CompileTimeHeap::allocate(not_null<dataStructures::Type*> type, bool unique)
 {
 	auto& element = getFreeElement();
 	element = instantiate(type);
-	return wrap(element, type);
+	return wrap(element, type, unique);
 }
 
 void cMCompiler::language::compileTimeInfrastructure::CompileTimeHeap::dealocate(dataStructures::execution::ReferenceValue& val)

@@ -47,7 +47,7 @@ namespace cMCompiler::compiler
 		if (generic != nullptr)
 		{
 			std::vector<std::string> parameters{};
-			for (not_null param : generic->Identifier())
+			for (not_null param : generic->identifier())
 				parameters.push_back(param->getText());
 			auto x = target->appendGeneric<Function>(std::move(parameters), ctx->clone(nullptr), name);
 		}

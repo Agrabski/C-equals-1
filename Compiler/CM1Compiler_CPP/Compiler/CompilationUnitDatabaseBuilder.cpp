@@ -64,7 +64,7 @@ antlrcpp::Any cMCompiler::compiler::CompilationUnitDataBaseBuilder::visitImportD
 {
 	assert(ctx != nullptr);
 	QualifiedName newNamespace = ctx->qualifiedIdentifier()->getText();
-	for (not_null unconfirmedName : ctx->Identifier())
+	for (not_null unconfirmedName : ctx->identifier())
 	{
 		nameResolver_.addImport(unconfirmedName->getText(), newNamespace, &database_, resolutionContext_);
 	}

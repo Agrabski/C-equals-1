@@ -11,7 +11,7 @@ std::vector<std::unique_ptr<AttributeInstance>> getAttributes(not_null<CMinusEqu
 	{
 		not_null functionCall = attribute->functionCall();
 		//todo: add error handling
-		auto attribute = nr.resolve<Attribute>(functionCall->Identifier()->getText(), context);
+		auto attribute = nr.resolve<Attribute>(functionCall->identifier()->getText(), context);
 	}
 	return result;
 }

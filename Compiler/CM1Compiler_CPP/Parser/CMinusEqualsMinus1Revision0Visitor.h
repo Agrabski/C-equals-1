@@ -59,6 +59,10 @@ public:
 
 		virtual antlrcpp::Any visitFunctionBody(CMinusEqualsMinus1Revision0Parser::FunctionBodyContext *context) = 0;
 
+		virtual antlrcpp::Any visitFunctionName(CMinusEqualsMinus1Revision0Parser::FunctionNameContext *context) = 0;
+
+		virtual antlrcpp::Any visitSpecialFunctionIdentifier(CMinusEqualsMinus1Revision0Parser::SpecialFunctionIdentifierContext *context) = 0;
+
 		virtual antlrcpp::Any visitCompoundStatement(CMinusEqualsMinus1Revision0Parser::CompoundStatementContext *context) = 0;
 
 		virtual antlrcpp::Any visitStatement(CMinusEqualsMinus1Revision0Parser::StatementContext *context) = 0;
@@ -95,6 +99,8 @@ public:
 
 		virtual antlrcpp::Any visitExpression(CMinusEqualsMinus1Revision0Parser::ExpressionContext *context) = 0;
 
+		virtual antlrcpp::Any visitIndexExpression(CMinusEqualsMinus1Revision0Parser::IndexExpressionContext *context) = 0;
+
 		virtual antlrcpp::Any visitNewExpression(CMinusEqualsMinus1Revision0Parser::NewExpressionContext *context) = 0;
 
 		virtual antlrcpp::Any visitAssigmentStatement(CMinusEqualsMinus1Revision0Parser::AssigmentStatementContext *context) = 0;
@@ -110,6 +116,8 @@ public:
 		virtual antlrcpp::Any visitLogicalBinaryOperator(CMinusEqualsMinus1Revision0Parser::LogicalBinaryOperatorContext *context) = 0;
 
 		virtual antlrcpp::Any visitRef(CMinusEqualsMinus1Revision0Parser::RefContext *context) = 0;
+
+		virtual antlrcpp::Any visitIdentifier(CMinusEqualsMinus1Revision0Parser::IdentifierContext *context) = 0;
 
 
 };

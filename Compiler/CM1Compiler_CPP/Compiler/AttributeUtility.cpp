@@ -7,6 +7,7 @@
 #include "../LanguageLogic/OverloadResolutionUtility.hpp"
 #include "../LanguageLogic/SpecialFunctionUtility.hpp"
 #include "../LanguageLogic/TypeInstantiationUtility.hpp"
+using namespace cMCompiler::dataStructures::execution;
 
 using namespace cMCompiler;
 
@@ -14,7 +15,7 @@ void cMCompiler::compiler::createAttribute(
 	gsl::not_null<CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext*> ctx,
 	gsl::not_null<dataStructures::Namespace*> parent)
 {
-	auto name = ctx->Identifier()->getText();
+	auto name = ctx->identifier()->getText();
 	not_null attribute = parent->append<dataStructures::Attribute>(name);
 	attribute->setAccessibility(dataStructures::parse(ctx->AccessSpecifier()->getText()));
 	auto targets = std::vector<std::string>();
@@ -34,11 +35,11 @@ void cMCompiler::compiler::confirmAttribute(
 	language::NameResolver resolver,
 	language::NameResolutionContext context)
 {
-	not_null attribute = parent->get<dataStructures::Attribute>(ctx->Identifier()->getText());
+	not_null attribute = parent->get<dataStructures::Attribute>(ctx->identifier()->getText());
 	for (not_null<CMinusEqualsMinus1Revision0Parser::FieldDeclarationContext*> member : ctx->classContentSequence()->fieldDeclaration())
 	{
-		auto type = resolver.resolve<dataStructures::Type>(member->typeSpecifier()->Identifier()->getText(), context);
-		auto var = attribute->appendField(member->Identifier()->getText(), type, member->typeSpecifier()->ref().size());
+		auto type = resolver.resolve<dataStructures::Type>(member->typeSpecifier()->identifier()->getText(), context);
+		auto var = attribute->appendField(member->identifier()->getText(), type, member->typeSpecifier()->ref().size());
 		auto access = dataStructures::parse(member->AccessSpecifier()->getText());
 		var->setAccessibility(access);
 	}
@@ -63,7 +64,7 @@ void cMCompiler::compiler::finalizeAttribute(
 	language::NameResolutionContext context,
 	std::filesystem::path const& file)
 {
-	auto name = ctx->Identifier()->getText();
+	auto name = ctx->identifier()->getText();
 	not_null attribute = parent->get<dataStructures::Attribute>(name);
 
 	auto functions = attribute->methods();
@@ -87,11 +88,11 @@ std::unique_ptr<dataStructures::AttributeInstance> cMCompiler::compiler::createA
 {
 	auto t = language::instantiate(attribute->describingType());
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> self = std::move(t);
-	values.insert(values.begin(), std::make_unique<dataStructures::execution::ReferenceValue>(&self, self->type()));
+	values.insert(values.begin(), dataStructures::execution::ReferenceValue::make(&self, self->type()));
 	auto constructors = language::getConstructors(attribute->methods());
 	if (constructors.size() != 0)
 	{
-		auto function = language::resolveOverload(constructors, values, true, true);
+		auto function = language::resolveOverloadForExecution(constructors, values, true, true);
 		execute(function, std::move(values));
 	}
 

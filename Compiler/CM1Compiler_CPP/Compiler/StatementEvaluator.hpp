@@ -10,8 +10,9 @@ namespace cMCompiler::compiler
 		ExpressionEvaluator& ev_;
 
 		std::map<std::string, std::unique_ptr<dataStructures::execution::IRuntimeValue>>& variables_;
-		// Inherited via IInstructionVisitor
-		void call(language::runtime_value& instruction);
+		void call(dataStructures::execution::IRuntimeValue& instruction);
+		void assign(dataStructures::execution::IRuntimeValue& instruction);
+		void terminate(dataStructures::execution::IRuntimeValue& instruction);
 	public:
 		void evaluate(language::runtime_value& instruction);
 		StatementEvaluator

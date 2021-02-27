@@ -10,18 +10,20 @@ namespace cMCompiler::dataStructures::execution
 	class ArrayValue : public IRuntimeValue, public IComplexRuntimeValue
 	{
 		gsl::not_null<Type*> elementType_;
+
 		std::list<std::unique_ptr<IRuntimeValue>> allocated_;
+		unsigned const char elementReferenceLevel_;
 
 		// Inherited via IComplexRuntimeValue
 		virtual std::unique_ptr<ReferenceValue> getMemberValue(std::string const& name) override;
 		virtual Type* getMemberType(std::string const& name) override;
 		virtual void setValue(std::string const& name, std::unique_ptr<IRuntimeValue>&& value) override;
 	public:
-		ArrayValue(gsl::not_null<Type*> type, gsl::not_null<Type*> elementType) : IRuntimeValue(type),
-			elementType_(elementType)
-		{
-
-		}
+		ArrayValue(gsl::not_null<Type*> type, gsl::not_null<Type*> elementType, unsigned char elementReferenceLevel) :
+			IRuntimeValue(type),
+			elementType_(elementType),
+			elementReferenceLevel_(elementReferenceLevel)
+		{}
 		void push(std::unique_ptr<IRuntimeValue>&& value);
 		std::unique_ptr<ReferenceValue> get(size_t index)
 		{
@@ -29,9 +31,7 @@ namespace cMCompiler::dataStructures::execution
 			for (auto& e : allocated_)
 			{
 				if ((--index) == 0)
-				{
-					return std::make_unique<ReferenceValue>(&(e), e->type());
-				}
+					return ReferenceValue::make(&(e), e->type());
 			}
 			std::terminate();
 		}
@@ -52,7 +52,7 @@ namespace cMCompiler::dataStructures::execution
 			return "array_value";
 		}
 		json emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const final;
-		virtual std::string toString() const override;
-		virtual std::unique_ptr<IRuntimeValue> copy() const override;
+		std::string toString() const final;
+		std::unique_ptr<IRuntimeValue> copy() const final;
 	};
 }

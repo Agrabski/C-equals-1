@@ -4,7 +4,7 @@
 #include "MetatypeUility.hpp"
 #include "CreateGetter.hpp"
 
-gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::instantiate(dataStructures::Generic<dataStructures::Type>& type, std::vector<not_null<dataStructures::Type*>> const& genericParameters)
+gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::instantiate(dataStructures::Generic<dataStructures::Type> const& type, std::vector<not_null<dataStructures::Type*>> const& genericParameters)
 {
 	auto name = getGenericMangledName(type, genericParameters);
 	auto found = getDefaultPackage()->rootNamespace()->get<dataStructures::Type>(name);

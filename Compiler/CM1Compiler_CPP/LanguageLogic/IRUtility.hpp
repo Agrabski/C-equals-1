@@ -9,6 +9,8 @@ namespace cMCompiler::language
 {
 	bool isOfType(gsl::not_null<dataStructures::execution::IRuntimeValue*> value, gsl::not_null<dataStructures::Type*> type);
 
+	void implementExpressionInterface(not_null<dataStructures::Type*> type);
+
 	gsl::not_null<dataStructures::Type*> buildExpressionDescriptor(gsl::not_null<dataStructures::Namespace*> irNs);
 	gsl::not_null<dataStructures::Type*> buidStatementDescriptor(gsl::not_null<dataStructures::Namespace*> irNs);
 	gsl::not_null<dataStructures::Type*> buildIfDescriptor(gsl::not_null<dataStructures::Namespace*> irNs,
@@ -18,6 +20,7 @@ namespace cMCompiler::language
 	gsl::not_null<dataStructures::Type*> buildFieldDescriptor(gsl::not_null<dataStructures::Namespace*> compilerNs);
 	gsl::not_null<dataStructures::Type*> buildVariableReferenceExpression(gsl::not_null<dataStructures::Namespace*> irNs);
 	gsl::not_null<dataStructures::Type*> buildFieldAccessExpressionDescriptor(gsl::not_null<dataStructures::Namespace*> irNs);
+	gsl::not_null<dataStructures::Type*> buildAssigmentStatementDescriptor(gsl::not_null<dataStructures::Namespace*> irns);
 
 	gsl::not_null<dataStructures::Type*> buildLiteralExpressionDescriptor(gsl::not_null<dataStructures::Namespace*> irNs);
 	gsl::not_null<dataStructures::Type*> buildFunctionCallDescriptor(gsl::not_null<dataStructures::Namespace*> irNs);

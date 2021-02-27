@@ -14,16 +14,17 @@ namespace cMCompiler::language
 {
 	dataStructures::Type* getExpressionType(std::unique_ptr<dataStructures::execution::IRuntimeValue>& expression);
 
-
-	std::unique_ptr<dataStructures::execution::ObjectValue> buildObjectFor(gsl::not_null<dataStructures::Type*> type);
-	std::unique_ptr<dataStructures::execution::ObjectValue> buildObjectFor(gsl::not_null<dataStructures::Namespace*> ns);
-
-
 	runtime_value buildVariableDeclaration(gsl::not_null<dataStructures::Variable*> variable, runtime_value&& expression, gsl::not_null<dataStructures::Type*> type, runtime_value&& pointerToSource);
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildScopeTermination(runtime_value&& variables, runtime_value&& pointerToSource);
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildIf(runtime_value&& expression, runtime_value&& pointerToSource);
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildAssigmentStatement(runtime_value&& lExpression, runtime_value&& rExpression, runtime_value&& pointerToSource);
-	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildFunctionCall(
+	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildFunctionCallStatement(
+		runtime_value&& referenceToCompiletimeFunction,
+		runtime_value&& referenceToRuntimeFunction,
+		runtime_value&& expressions,
+		runtime_value&& pointerToSource);
+
+	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildFunctionCallExpression(
 		runtime_value&& referenceToCompiletimeFunction,
 		runtime_value&& referenceToRuntimeFunction,
 		runtime_value&& expressions,
@@ -38,12 +39,6 @@ namespace cMCompiler::language
 
 
 
-	template<typename T>
-	runtime_value buildReferenceValue(gsl::not_null<T*> f)
-	{
-		using cMCompiler::dataStructures::execution::ReferenceValue;
-		return std::make_unique<ReferenceValue>(f->object(), f->acutalObject()->type());
-	}
 
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(gsl::not_null<dataStructures::Type*>);
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(gsl::not_null<dataStructures::Function*>);

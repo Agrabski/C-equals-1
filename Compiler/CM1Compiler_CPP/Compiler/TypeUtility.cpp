@@ -4,7 +4,7 @@
 
 std::string name(gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*> ctx)
 {
-	return ctx->Identifier()->getText();
+	return ctx->identifier()->getText();
 }
 
 void cMCompiler::compiler::createType(
@@ -35,7 +35,7 @@ void cMCompiler::compiler::confirmType(
 	assert(type != nullptr);
 
 	if (ctx->implementedInterfacesSequence() != nullptr)
-		for (not_null interface : ctx->implementedInterfacesSequence()->Identifier())
+		for (not_null interface : ctx->implementedInterfacesSequence()->identifier())
 		{
 			auto implementedType = resolver.resolve<dataStructures::Type>(interface->getText(), context);
 			if (implementedType == nullptr)
@@ -45,8 +45,8 @@ void cMCompiler::compiler::confirmType(
 
 	for (not_null<CMinusEqualsMinus1Revision0Parser::FieldDeclarationContext*> member : ctx->classContentSequence()->fieldDeclaration())
 	{
-		auto t = resolver.resolve<dataStructures::Type>(member->typeSpecifier()->Identifier()->getText(), context);
-		auto var = type->appendField(member->Identifier()->getText(), t);
+		auto t = resolver.resolve<dataStructures::Type>(member->typeSpecifier()->identifier()->getText(), context);
+		auto var = type->appendField(member->identifier()->getText(), t, member->typeSpecifier()->ref().size());
 		auto access = dataStructures::parse(member->AccessSpecifier()->getText());
 		var->setAccessibility(access);
 	}

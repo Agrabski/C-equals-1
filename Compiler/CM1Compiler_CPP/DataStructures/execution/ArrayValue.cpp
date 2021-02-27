@@ -1,9 +1,21 @@
 #include "ArrayValue.hpp"
+#include "../IValueHolder.hpp"
+#include <optional>
 using namespace cMCompiler::dataStructures::execution;
 using namespace cMCompiler::dataStructures;
 namespace cMCompiler::language
 {
-	extern bool canBeAssignedTo(gsl::not_null<dataStructures::Type*> valueType, gsl::not_null<dataStructures::Type*> sinkType);
+	struct CoercionStrategy
+	{
+
+	};
+	extern std::optional<CoercionStrategy> coerce(
+		gsl::not_null<Type*> valueType,
+		unsigned char valueReferenceLevel,
+		unsigned char sinkReferenceLevel, 
+		gsl::not_null<Type*> sinkType);
+	extern unsigned char countReferenceLevel(dataStructures::execution::IRuntimeValue const* value);
+
 }
 
 std::unique_ptr<ReferenceValue> cMCompiler::dataStructures::execution::ArrayValue::getMemberValue(std::string const& name)
@@ -22,7 +34,7 @@ void cMCompiler::dataStructures::execution::ArrayValue::setValue(std::string con
 
 void cMCompiler::dataStructures::execution::ArrayValue::push(std::unique_ptr<IRuntimeValue>&& value)
 {
-	assert(language::canBeAssignedTo(value->type(), elementType_));
+	assert(language::coerce(value->type(), language::countReferenceLevel(value.get()) ,elementReferenceLevel_, elementType_));
 	allocated_.push_back(std::move(value));
 }
 
@@ -39,8 +51,17 @@ cMCompiler::dataStructures::execution::json cMCompiler::dataStructures::executio
 
 std::string cMCompiler::dataStructures::execution::ArrayValue::toString() const
 {
-	std::terminate();
-	return std::string();
+	using namespace std::string_literals;
+	auto result = "["s;
+	for (auto const& e : allocated_)
+		result += e->toString() + " ,";
+	if (allocated_.size() >= 1)
+	{
+		result.erase(result.end() - 1);
+		result.erase(result.end() - 1);
+	}
+	result += "]";
+	return result;
 }
 
 std::unique_ptr<IRuntimeValue> cMCompiler::dataStructures::execution::ArrayValue::copy() const

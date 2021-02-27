@@ -12,13 +12,13 @@
 void cMCompiler::compiler::FunctionBodyBuilder::enterScope(instruction_pointer& currentInstruction)
 {
 	variables_.push_back({});
-	parents_.push_back(std::make_unique<dataStructures::execution::ReferenceValue>(&currentInstruction, currentInstruction->type()));
+	parents_.push_back(dataStructures::execution::ReferenceValue::make(&currentInstruction, currentInstruction->type()));
 }
 
 [[nodiscard]]
 cMCompiler::language::runtime_value cMCompiler::compiler::FunctionBodyBuilder::leaveScope(unsigned long long line)
 {
-	auto collection = std::make_unique<dataStructures::execution::ArrayValue>(language::getCollectionTypeFor(language::getVariableDescriptor()), language::getVariableDescriptor());
+	auto collection = std::make_unique<dataStructures::execution::ArrayValue>(language::getCollectionTypeFor(language::getVariableDescriptor()), language::getVariableDescriptor(), 0);
 	for (auto var : variables_.back())
 		collection->push(std::make_unique<dataStructures::execution::RuntimeVariableDescriptor>(language::getVariableDescriptor(), var));
 	auto instruction = language::buildScopeTermination(
@@ -31,21 +31,21 @@ cMCompiler::language::runtime_value cMCompiler::compiler::FunctionBodyBuilder::l
 
 cMCompiler::compiler::ExpressionBuilder cMCompiler::compiler::FunctionBodyBuilder::getBuilder()
 {
-	return ExpressionBuilder(filePath_, [this](auto const& e) -> dataStructures::Variable*
-	{
-		auto varFinder = [&](const auto& v) noexcept {return v->name() == e; };
-		for (auto& scope : variables_)
+	return ExpressionBuilder(filePath_, nr_, context_, [this](auto const& e) -> dataStructures::Variable*
 		{
-			auto var = std::find_if(scope.begin(), scope.end(), varFinder);
-			if (var != scope.end())
+			auto varFinder = [&](const auto& v) noexcept {return v->name() == e; };
+			for (auto& scope : variables_)
+			{
+				auto var = std::find_if(scope.begin(), scope.end(), varFinder);
+				if (var != scope.end())
+					return *var;
+			}
+			auto const& params = function_->parameters();
+			auto var = std::find_if(params.begin(), params.end(), varFinder);
+			if (var != params.end())
 				return *var;
-		}
-		auto const& params = function_->parameters();
-		auto var = std::find_if(params.begin(), params.end(), varFinder);
-		if (var != params.end())
-			return *var;
-		return nullptr;
-	});
+			return nullptr;
+		});
 }
 
 cMCompiler::language::runtime_value cMCompiler::compiler::FunctionBodyBuilder::getReferenceToParent()
@@ -58,20 +58,21 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitVariableDeclaratio
 	//todo: attributes
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> expression;
 	dataStructures::Type* type = nullptr;
-	auto typeAnnotationPresent = (ctx->Identifier().size() != 1);
+	auto typeAnnotationPresent = ctx->typeSpecifier() != nullptr;
 	if (typeAnnotationPresent)
-		type = nr_.resolve<dataStructures::Type>(ctx->Identifier(1)->getText(), context_);
+		type = nr_.resolve<dataStructures::Type>(ctx->typeSpecifier()->identifier()->getText(), context_);
 	if (!typeAnnotationPresent || ctx->functionCallParameter())
 		expression = getBuilder().buildExpression(ctx->functionCallParameter());
 
-	auto name = ctx->Identifier(0)->getText();
-	not_null variable = function_->appendLocalVariable(name, type, cMCompiler::language::createVariableDescriptor);
+	auto name = ctx->identifier()->getText();
+	// todo: infer reference
+	not_null variable = function_->appendLocalVariable(name, type, ctx->typeSpecifier()->ref().size(), cMCompiler::language::createVariableDescriptor);
 
 	auto instruction = language::buildVariableDeclaration(
 		variable,
 		std::move(expression),
 		type,
-		language::buildPointerToSource(filePath_.filename().string(), ctx->Identifier(0)->getSymbol()->getLine())
+		language::buildSourcePointer(filePath_.filename().string(), *ctx)
 	);
 
 	language::suplyParent(instruction, getReferenceToParent());
@@ -83,16 +84,20 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitVariableDeclaratio
 
 antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitFunctionBody(CMinusEqualsMinus1Revision0Parser::FunctionBodyContext* ctx)
 {
-	function_->setIrCollection(std::make_unique<dataStructures::execution::ArrayValue>(language::getCollectionTypeFor(
-		language::getIInstruction()), 
-		language::getIInstruction()));
+	function_->setIrCollection(
+		std::make_unique<dataStructures::execution::ArrayValue>(language::getCollectionTypeFor(
+			language::getIInstruction()),
+			language::getIInstruction(),
+			1
+			)
+	);
 	auto x = language::getValueFor(function_);
 	enterScope(x);
 	instructionAppenders.push_back([&](auto&& e)
-	{
-		language::suplyParent(e, getReferenceToParent());
-		function_->pushInstruction(std::move(e));
-	});
+		{
+			language::suplyParent(e, getReferenceToParent());
+			function_->pushInstruction(std::move(e));
+		});
 	auto r = visitChildren(ctx);
 	instructionAppenders.back()(leaveScope(ctx->CloseBracket()->getSymbol()->getLine()));
 	instructionAppenders.pop_back();
@@ -102,17 +107,17 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitFunctionBody(CMinu
 
 antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitIfStatement(CMinusEqualsMinus1Revision0Parser::IfStatementContext* ctx)
 {
-	auto expression = getBuilder().buildExpression(ctx->expression());
+	auto expression = getBuilder().buildExpression(ctx->expression(), nullptr);
 	auto conditional = language::buildIf(
 		std::move(expression),
 		language::buildPointerToSource(filePath_.filename().string(), ctx->compoundStatement(0)->OpenBracket()->getSymbol()->getLine())
 	);
 	enterScope(conditional);
 	instructionAppenders.push_back([&](auto&& e)
-	{
-		language::suplyParent(e, getReferenceToParent());
-		language::pushIf(conditional, std::move(e));
-	});
+		{
+			language::suplyParent(e, getReferenceToParent());
+			language::pushIf(conditional, std::move(e));
+		});
 	ctx->compoundStatement(0)->accept(this);
 	language::pushIf(conditional, leaveScope(ctx->ParamOpen()->getSymbol()->getLine()));
 	instructionAppenders.pop_back();
@@ -123,10 +128,10 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitIfStatement(CMinus
 	{
 		enterScope(conditional);
 		instructionAppenders.push_back([&](auto&& e)
-		{
-			language::suplyParent(e, getReferenceToParent());
-			language::pushElse(conditional, std::move(e));
-		});
+			{
+				language::suplyParent(e, getReferenceToParent());
+				language::pushElse(conditional, std::move(e));
+			});
 		ctx->compoundStatement(1)->accept(this);
 		auto scopeExit = leaveScope(ctx->compoundStatement(1)->CloseBracket()->getSymbol()->getLine());
 		language::suplyParent(scopeExit, getReferenceToParent());
@@ -143,18 +148,18 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitIfStatement(CMinus
 
 antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitFunctionCall(CMinusEqualsMinus1Revision0Parser::FunctionCallContext* ctx)
 {
-	auto functions = nr_.resolveOverloadSet(ctx->Identifier()->getText(), context_);
+	auto functions = nr_.resolveOverloadSet(ctx->identifier()->getText(), context_);
 	auto params = std::vector<language::runtime_value>();
 	for (auto parameter : ctx->functionCallParameter())
 		params.push_back(getBuilder().buildExpression(parameter));
 	auto f = language::resolveOverload(functions, params); //todo: resolve for runtime and compile-time
-	
-	auto instruction = language::buildFunctionCall(
+
+	auto instruction = language::buildFunctionCallStatement(
 		language::getValueFor(not_null(f)),
 		language::getValueFor(not_null(f)),
-		language::convertCollection(std::move(params), language::getExpressionDescriptor()),
-		language::buildPointerToSource(filePath_.filename().string(), ctx->Identifier()->getSymbol()->getLine())
-		);
+		language::convertCollection(std::move(params), language::getExpressionDescriptor(), 1),
+		language::buildSourcePointer(filePath_.filename().string(), *ctx)
+	);
 
 	language::suplyParent(instruction, getReferenceToParent());
 	instructionAppenders.back()(std::move(instruction));
@@ -164,8 +169,8 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitFunctionCall(CMinu
 
 antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitAssigmentStatement(CMinusEqualsMinus1Revision0Parser::AssigmentStatementContext* ctx)
 {
-	auto rexpression = getBuilder().buildExpression(ctx->expression()[1]);
-	auto lexpression = getBuilder().buildExpression(ctx->expression()[0]);
+	auto rexpression = getBuilder().buildExpression(ctx->expression()[1], nullptr);
+	auto lexpression = getBuilder().buildExpression(ctx->expression()[0], nullptr);
 	auto instruction = language::buildAssigmentStatement(
 		std::move(lexpression),
 		std::move(rexpression),
