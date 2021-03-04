@@ -52,7 +52,7 @@ genericUsage: Less typeSpecifier (',' typeSpecifier)* Greater;
 functionBody: OpenBracket statement* CloseBracket;
 
 functionName: identifier | specialFunctionIdentifier;
-specialFunctionIdentifier: Operator (New (Unique | Shared) ); // todo: more operators
+specialFunctionIdentifier: Operator (New (Unique | Shared) | binaryOperator ); // todo: more operators
 
 compoundStatement:
 	Unsafe? OpenBracket statement* CloseBracket
@@ -113,9 +113,7 @@ expression
     | IntegerLiteral
 	| ParamOpen expression ParamClose
 	| newExpression
-	| expression arithmeticBinaryOperator expression
-	| expression comparsionOperator expression
-	| expression logicalBinaryOperator expression
+	| expression binaryOperator expression
     | LogicalUnaryOperator expression
     | expression Period identifier
     | expression Period functionCall

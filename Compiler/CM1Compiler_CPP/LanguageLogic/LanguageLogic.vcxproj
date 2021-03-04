@@ -29,6 +29,7 @@
     <ClInclude Include="CompileTimeFunctions\MarkCompileTimeOnly.hpp" />
     <ClInclude Include="CompileTimeFunctions\Print.hpp" />
     <ClInclude Include="CompileTimeFunctions\RaiseError.hpp" />
+    <ClInclude Include="CompileTimeFunctions\ReadAllFile.hpp" />
     <ClInclude Include="CompileTimeFunctions\ReplaceWithCompilerFunction.hpp" />
     <ClInclude Include="CompileTimeFunctions\ReplaceWithCompilerType.hpp" />
     <ClInclude Include="CompileTimeFunctions\ReplaceWithExternalSymbol.hpp" />
@@ -66,6 +67,7 @@
     <ClCompile Include="CompileTimeFunctions\MarkCompileTimeOnly.cpp" />
     <ClCompile Include="CompileTimeFunctions\Print.cpp" />
     <ClCompile Include="CompileTimeFunctions\RaiseError.cpp" />
+    <ClCompile Include="CompileTimeFunctions\ReadAllFile.cpp" />
     <ClCompile Include="CompileTimeFunctions\ReplaceWithCompilerFunction.cpp" />
     <ClCompile Include="CompileTimeFunctions\ReplaceWithCompilerType.cpp" />
     <ClCompile Include="CompileTimeFunctions\ReplaceWithExternalSymbol.cpp" />
@@ -225,11 +227,13 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\Microsoft.Gsl.0.1.2.1\build\native\Microsoft.Gsl.targets" Condition="Exists('..\packages\Microsoft.Gsl.0.1.2.1\build\native\Microsoft.Gsl.targets')" />
+    <Import Project="..\packages\boost.1.72.0.0\build\boost.targets" Condition="Exists('..\packages\boost.1.72.0.0\build\boost.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.Gsl.0.1.2.1\build\native\Microsoft.Gsl.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Gsl.0.1.2.1\build\native\Microsoft.Gsl.targets'))" />
+    <Error Condition="!Exists('..\packages\boost.1.72.0.0\build\boost.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\boost.1.72.0.0\build\boost.targets'))" />
   </Target>
 </Project>

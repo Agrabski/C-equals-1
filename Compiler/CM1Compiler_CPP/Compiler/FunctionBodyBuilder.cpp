@@ -59,14 +59,21 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitVariableDeclaratio
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> expression;
 	dataStructures::Type* type = nullptr;
 	auto typeAnnotationPresent = ctx->typeSpecifier() != nullptr;
+	auto referenceLevel = 0;
 	if (typeAnnotationPresent)
+	{
+		referenceLevel = ctx->typeSpecifier()->ref().size();
 		type = nr_.resolve<dataStructures::Type>(ctx->typeSpecifier()->identifier()->getText(), context_);
+	}
 	if (!typeAnnotationPresent || ctx->functionCallParameter())
+	{
 		expression = getBuilder().buildExpression(ctx->functionCallParameter());
+		type = language::getExpressionType(expression);
+	}
 
 	auto name = ctx->identifier()->getText();
 	// todo: infer reference
-	not_null variable = function_->appendLocalVariable(name, type, ctx->typeSpecifier()->ref().size(), cMCompiler::language::createVariableDescriptor);
+	not_null variable = function_->appendLocalVariable(name, type, referenceLevel, cMCompiler::language::createVariableDescriptor);
 
 	auto instruction = language::buildVariableDeclaration(
 		variable,

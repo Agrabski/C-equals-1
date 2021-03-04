@@ -26,7 +26,7 @@ std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::
 std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::ExpressionEvaluator::evaluateCall(dataStructures::execution::IRuntimeValue& expression)
 {
 	not_null exp = language::dereferenceAs<ObjectValue>(&expression);
-	not_null function = language::dereferenceAs<RuntimeFunctionDescriptor>(exp->getMemberValue("_compileTimeFunction").get());
+	not_null function = language::dereferenceAs<RuntimeFunctionDescriptor>(exp->getMemberValue("_compiletimeFunction").get());
 	not_null arguments = language::dereferenceAs<ArrayValue>(exp->getMemberValue("_arguments").get());
 	std::vector<language::runtime_value> argumentValues;
 	for (auto& arg : *arguments)

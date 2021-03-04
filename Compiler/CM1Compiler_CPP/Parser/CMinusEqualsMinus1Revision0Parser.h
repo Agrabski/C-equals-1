@@ -664,6 +664,7 @@ public:
 		size_t getRuleIndex() const final;
 		antlr4::tree::TerminalNode *Operator();
 		antlr4::tree::TerminalNode *New();
+		BinaryOperatorContext *binaryOperator();
 		antlr4::tree::TerminalNode *Unique();
 		antlr4::tree::TerminalNode *Shared();
 
@@ -1122,9 +1123,7 @@ public:
 		antlr4::tree::TerminalNode *ParamClose();
 		NewExpressionContext *newExpression();
 		antlr4::tree::TerminalNode *LogicalUnaryOperator();
-		ArithmeticBinaryOperatorContext *arithmeticBinaryOperator();
-		ComparsionOperatorContext *comparsionOperator();
-		LogicalBinaryOperatorContext *logicalBinaryOperator();
+		BinaryOperatorContext *binaryOperator();
 		antlr4::tree::TerminalNode *Period();
 		IndexExpressionContext *indexExpression();
 

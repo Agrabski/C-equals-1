@@ -117,6 +117,9 @@
     <ClInclude Include="TypeCoercionUtility.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CompileTimeFunctions\ReadAllFile.hpp">
+      <Filter>Header Files\CompileTimeFunctions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NamespaceBuilder.cpp">
@@ -198,6 +201,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TypeCoercionUtility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CompileTimeFunctions\ReadAllFile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -20,6 +20,7 @@ namespace cMCompiler::language
 	gsl::not_null<dataStructures::Type*> buildFieldDescriptor(gsl::not_null<dataStructures::Namespace*> compilerNs);
 	gsl::not_null<dataStructures::Type*> buildVariableReferenceExpression(gsl::not_null<dataStructures::Namespace*> irNs);
 	gsl::not_null<dataStructures::Type*> buildFieldAccessExpressionDescriptor(gsl::not_null<dataStructures::Namespace*> irNs);
+	gsl::not_null<dataStructures::Type*> buildBinaryOperatorExpressionDescriptor(gsl::not_null<dataStructures::Namespace*> irNs);
 	gsl::not_null<dataStructures::Type*> buildAssigmentStatementDescriptor(gsl::not_null<dataStructures::Namespace*> irns);
 
 	gsl::not_null<dataStructures::Type*> buildLiteralExpressionDescriptor(gsl::not_null<dataStructures::Namespace*> irNs);
@@ -36,6 +37,7 @@ namespace cMCompiler::language
 	gsl::not_null<dataStructures::Type*> getVariableReferenceExpressionDescriptor();
 	gsl::not_null<dataStructures::Type*> getFunctionCallExpressionDescriptor();
 	gsl::not_null<dataStructures::Type*> getFieldAccessExpressionDescriptor();
+	gsl::not_null<dataStructures::Type*> getBinaryOperatorExpressionDescriptor();
 
 	// statements
 	gsl::not_null<dataStructures::Type*> getIInstruction();

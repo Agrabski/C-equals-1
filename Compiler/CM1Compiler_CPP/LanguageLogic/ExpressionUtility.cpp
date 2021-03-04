@@ -14,6 +14,24 @@ cMCompiler::language::runtime_value cMCompiler::language::buildValueLiteralExpre
 	return std::move(result);
 }
 
+std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler::language::buildFunctionCallStatement(
+	runtime_value&& referenceToCompiletimeFunction,
+	runtime_value&& referenceToRuntimeFunction,
+	runtime_value&& expressions,
+	runtime_value&& pointerToSource)
+{
+	auto expression = buildFunctionCallExpression(
+		std::move(referenceToCompiletimeFunction),
+		std::move(referenceToRuntimeFunction),
+		std::move(expressions),
+		pointerToSource->copy());
+
+	auto [result, resultObject] = heapAllocateObject(getFunctionCallStatementDescriptor());
+	resultObject.setValue("_function", std::move(expression));
+	return std::move(result);
+}
+
+
 cMCompiler::language::runtime_value cMCompiler::language::buildMethodCallExpression(
 	runtime_value&& expression,
 	gsl::not_null<dataStructures::Type*> type,
@@ -60,6 +78,9 @@ cMCompiler::language::runtime_value cMCompiler::language::buildVariableReference
 
 void cMCompiler::language::setParent(not_null<dataStructures::execution::IRuntimeValue*> expression, runtime_value&& parentReference)
 {
-	not_null complex = dynamic_cast<dataStructures::execution::IComplexRuntimeValue*>(expression.get());
-	complex->setValue("_parentExpression", std::move(parentReference));
+	if (parentReference != nullptr)
+	{
+		not_null complex = dereferenceAs<dataStructures::execution::IComplexRuntimeValue>(expression.get());
+		complex->setValue("_parentExpression", std::move(parentReference));
+	}
 }

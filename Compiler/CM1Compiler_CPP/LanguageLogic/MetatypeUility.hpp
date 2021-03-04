@@ -24,12 +24,6 @@ namespace cMCompiler::language
 		runtime_value&& expressions,
 		runtime_value&& pointerToSource);
 
-	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildFunctionCallExpression(
-		runtime_value&& referenceToCompiletimeFunction,
-		runtime_value&& referenceToRuntimeFunction,
-		runtime_value&& expressions,
-		runtime_value&& pointerToSource);
-
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> createVariableDescriptor(not_null<dataStructures::Variable*> variable);
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> createTypeDescriptor(not_null<dataStructures::Type*> type);
 

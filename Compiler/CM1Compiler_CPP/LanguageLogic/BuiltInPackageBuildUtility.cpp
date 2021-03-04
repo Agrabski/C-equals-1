@@ -1,4 +1,6 @@
 #include "BuiltInPackageBuildUtility.hpp"
+#include <boost/algorithm/string/replace.hpp>
+#include "../DataStructures/execution/RuntimeFunctionDescriptor.hpp"
 #include "LiteralUtility.hpp"
 #include "CompileTimeFunctions/FunctionLibrary.hpp"
 #include "CompileTimeFunctions/Print.hpp"
@@ -10,6 +12,10 @@
 #include "IRUtility.hpp"
 #include "MetatypeUility.hpp"
 #include "InstantiateGeneric.hpp"
+#include "CreateGetter.hpp"
+#include "RuntimeTypesConversionUtility.hpp"
+#include "CompileTimeFunctions/ReadAllFile.hpp"
+using namespace cMCompiler::dataStructures::execution;
 
 using namespace std::string_literals;
 using namespace cMCompiler::language;
@@ -80,6 +86,7 @@ void buildCompilerLibrary(gsl::not_null<Namespace*> rootNamespace)
 	auto ns = rootNamespace->append<Namespace>("compiler"s);
 	auto type = buildTypeDescriptor(ns);
 	auto function = buildFunctionDescriptor(ns);
+
 	auto nsDescriptor = buildNamespaceDescriptor(ns);
 	completeBuildingType(type);
 	completeBuildingNamespace(nsDescriptor);
@@ -126,6 +133,57 @@ void buildCompilerLibrary(gsl::not_null<Namespace*> rootNamespace)
 		raise->appendVariable("code", getUsize(), 0, cMCompiler::language::createVariableDescriptor);
 		FuntionLibrary::instance().addFunctionDefinition(raise, raiseError);
 	}
+	createCustomFunction(function->append<Function>("overridenLLVMIR")->setReturnType(getString()), function,
+		[](value_map&& a, generic_parameters)->runtime_value
+		{
+			auto llvm = dereferenceAs<execution::RuntimeFunctionDescriptor>(a["self"].get())->value()->metadata().overrideLLVMIR_;
+			if (llvm)
+				return buildStringValue(*llvm);
+			return buildStringValue();
+		})->setAccessibility(Accessibility::Public);
+		auto setter = createCustomFunction(function->append<Function>("overridenLLVMIR")->setReturnType(getString()), function,
+			[](value_map&& a, generic_parameters)->runtime_value
+			{
+				auto llvm = dereferenceAs<execution::StringValue>(a["ir"].get())->value();
+				auto function = dereferenceAs<execution::RuntimeFunctionDescriptor>(a["self"].get())->value();
+				function->metadata().overrideLLVMIR_ = llvm;
+				function->metadata().appendFlag(FunctionFlags::ExcludeAtCompileTime);
+				return runtime_value();
+			});
+		setter->setAccessibility(Accessibility::Public);
+		setter->appendVariable("ir", getString(), 0, createVariableDescriptor);
+
+}
+
+void buildString(gsl::not_null<Type*> string)
+{
+	auto replace = createCustomFunction(string->append<Function>("replace"), string,
+		[](value_map&& a, generic_parameters)->runtime_value
+		{
+			auto self = dereferenceAs<StringValue>(a["self"].get());
+			auto what = dereferenceAs<StringValue>(a["what"].get())->value();
+			auto to = dereferenceAs<StringValue>(a["to"].get())->value();
+			return buildStringValue(boost::replace_all_copy(self->value(), what, to));
+		});
+	replace->appendVariable("what", string, 0, cMCompiler::language::createVariableDescriptor);
+	replace->appendVariable("to", string, 0, cMCompiler::language::createVariableDescriptor);
+	replace->setReturnType(string)->setAccessibility(Accessibility::Public);
+	replace->metadata().appendFlag(FunctionFlags::ExcludeAtRuntime);
+
+
+	auto plus = getDefaultPackage()->rootNamespace()->append<Function>("operator_+");
+	plus->setReturnType(string);
+	plus->appendVariable("arg1", string, 0, createVariableDescriptor);
+	plus->appendVariable("arg2", string, 0, createVariableDescriptor);
+	cMCompiler::language::compileTimeFunctions::FuntionLibrary::instance().addFunctionDefinition(
+		plus,
+		[](value_map&& a, generic_parameters)->runtime_value
+		{
+			auto a1 = dereferenceAs<StringValue>(a["arg1"].get())->value();
+			auto a2 = dereferenceAs<StringValue>(a["arg2"].get())->value();
+			return buildStringValue(a1 + a2);
+		}
+	);
 }
 
 void buildPackage()
@@ -135,11 +193,16 @@ void buildPackage()
 	auto& functionLibrary = FuntionLibrary::instance();
 	using namespace std::string_literals;
 	auto result = defaultPackage__.get();
-	result->rootNamespace()->append<Type>("string");
+	auto string = result->rootNamespace()->append<Type>("string");
 	result->rootNamespace()->append<Type>("bool");
 	result->rootNamespace()->append<Type>("usize");
 	result->rootNamespace()->appendGeneric<Type>({ "T" }, nullptr, "array");
 	buildCompilerLibrary(result->rootNamespace());
+	buildString(string);
+	auto readFile = result->rootNamespace()->append<Function>("read_all_file");
+	readFile->appendVariable("path", string, 0, createVariableDescriptor);
+	readFile->setReturnType(string);
+	functionLibrary.addFunctionDefinition(readFile, compileTimeFunctions::readAllFile);
 }
 
 gsl::not_null<PackageDatabase*> cMCompiler::language::getDefaultPackage()

@@ -20,6 +20,8 @@ namespace cMCompiler::language
 		std::map<std::string, std::vector<dataStructures::INamedObject*>> objectMap_;
 		std::map<std::string, dataStructures::Namespace*> unconfirmedNames_;
 		std::vector<not_null<dataStructures::Namespace*>> namespaceStack_;
+		not_null<dataStructures::PackageDatabase*> package_;
+		NameResolutionContext(not_null<dataStructures::PackageDatabase*> package) :package_(package) {}
 	};
 
 	class NameResolver
@@ -58,6 +60,34 @@ namespace cMCompiler::language
 			return currentNamespace->get<T>(name);
 		}
 
+		std::vector<not_null<dataStructures::Generic<dataStructures::Function>*>> resolveGenericOverloadSet(std::string const& name, NameResolutionContext& context)
+		{
+			auto r = context.objectMap_.find(name);
+			auto functions = std::vector<not_null<dataStructures::Generic<dataStructures::Function>*>>();
+			if (r != context.objectMap_.end()) //packages or other namespaces
+			{
+				auto objects = r->second;
+				for (auto o : objects)
+				{
+					auto f = dynamic_cast<dataStructures::Generic<dataStructures::Function>*>(o);
+					if (f != nullptr)
+						functions.push_back(f);
+				}
+			}
+			else //local function
+			{
+				auto ns = context.namespaceStack_.back();
+				auto objects = ns->children();
+				for (auto o : objects)
+				{
+					auto f = dynamic_cast<dataStructures::Generic<dataStructures::Function>*>(o);
+					if (f != nullptr && f->name() == name)
+						functions.push_back(f);
+				}
+			}
+			return functions;
+		}
+
 		std::vector<not_null<dataStructures::Function*>> resolveOverloadSet(std::string const& name, NameResolutionContext& context)
 		{
 			//todo: fucking disgusting
@@ -85,6 +115,24 @@ namespace cMCompiler::language
 				}
 			}
 			return functions;
+		}
+
+		std::vector<not_null<dataStructures::Function*>> resolveOperatorOverloadSet(std::string const& op, not_null<dataStructures::Type*> arg1, not_null<dataStructures::Type*> arg2, NameResolutionContext const& context)
+		{
+			auto result = std::vector<not_null<dataStructures::Function*>>();
+			auto name = "operator_" + op;
+			for (not_null f : context.package_->rootNamespace()->get<dataStructures::Function>())
+				if (f->name() == name)
+					result.push_back(f);
+			for (auto package : dependencies_)
+			{
+				auto functions = package->rootNamespace()->get<dataStructures::Function>();
+				for (not_null f : functions)
+					if (f->name() == name)
+						result.push_back(f);
+			}
+			return result;
+
 		}
 
 		void addImport(std::string const& name, dataStructures::QualifiedName ns, dataStructures::PackageDatabase* currentPackage, NameResolutionContext& context)

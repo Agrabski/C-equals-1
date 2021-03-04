@@ -81,28 +81,12 @@ std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler
 cMCompiler::language::runtime_value cMCompiler::language::buildAssigmentStatement(runtime_value&& lExpression, runtime_value&& rExpression, runtime_value&& pointerToSource)
 {
 	auto [result, object] = language::heapAllocateObject(getAssigmentStatementDescriptor());
-	setParent(lExpression.get(), result->copy());
-	setParent(rExpression.get(), result->copy());
+	// todo: parent statement
+	//setParent(lExpression.get(), result->copy());
+	//setParent(rExpression.get(), result->copy());
 	object.setValue("_lExpression", std::move(lExpression));
 	object.setValue("_rExpression", std::move(rExpression));
 	object.setValue("_pointerToSource", std::move(pointerToSource));
-	return std::move(result);
-}
-
-std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler::language::buildFunctionCallStatement(
-	runtime_value&& referenceToCompiletimeFunction,
-	runtime_value&& referenceToRuntimeFunction,
-	runtime_value&& expressions,
-	runtime_value&& pointerToSource)
-{
-	auto expression = buildFunctionCallExpression(
-		std::move(referenceToCompiletimeFunction),
-		std::move(referenceToRuntimeFunction),
-		std::move(expressions),
-		pointerToSource->copy());
-
-	auto [result, resultObject] = heapAllocateObject(getFunctionCallStatementDescriptor());
-	resultObject.setValue("_function", std::move(expression));
 	return std::move(result);
 }
 
@@ -111,9 +95,28 @@ std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler
 	auto [expression, object] = heapAllocateObject(getFunctionCallExpressionDescriptor());
 	for (auto& arg : *dereferenceAs<dataStructures::execution::ArrayValue>(expressions.get()))
 		setParent(arg.get(), expression->copy());
-	object.setValue("_compileTimeFunction", std::move(referenceToCompiletimeFunction));
-	object.setValue("_runtimeTimeFunction", std::move(referenceToRuntimeFunction));
+	object.setValue("_compiletimeFunction", std::move(referenceToCompiletimeFunction));
+	object.setValue("_runtimeFunction", std::move(referenceToRuntimeFunction));
 	object.setValue("_arguments", std::move(expressions));
+	object.setValue("_pointerToSource", std::move(pointerToSource));
+	return std::move(expression);
+}
+
+cMCompiler::language::runtime_value cMCompiler::language::buildBinaryOperatorExpression(
+	runtime_value&& referenceToCompiletimeFunction,
+	runtime_value&& referenceToRuntimeFunction,
+	runtime_value&& arg1,
+	runtime_value&& arg2,
+	runtime_value&& pointerToSource
+)
+{
+	auto [expression, object] = heapAllocateObject(getBinaryOperatorExpressionDescriptor());
+	setParent(arg1.get(), expression->copy());
+	setParent(arg2.get(), expression->copy());
+	object.setValue("_compiletimeFunction", std::move(referenceToCompiletimeFunction));
+	object.setValue("_runtimeFunction", std::move(referenceToRuntimeFunction));
+	object.setValue("_arg1", std::move(arg1));
+	object.setValue("_arg2", std::move(arg2));
 	object.setValue("_pointerToSource", std::move(pointerToSource));
 	return std::move(expression);
 }

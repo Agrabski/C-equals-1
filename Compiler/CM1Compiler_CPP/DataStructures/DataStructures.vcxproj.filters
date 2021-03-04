@@ -120,9 +120,6 @@
     <ClInclude Include="Generic\GenericVariable.hpp">
       <Filter>Header Files\Generics</Filter>
     </ClInclude>
-    <ClInclude Include="Generic\GenericFunction.hpp">
-      <Filter>Header Files\Generics</Filter>
-    </ClInclude>
     <ClInclude Include="Generic\TypePointer.hpp">
       <Filter>Header Files\Generics</Filter>
     </ClInclude>

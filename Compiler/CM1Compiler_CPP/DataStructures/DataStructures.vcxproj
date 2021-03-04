@@ -183,7 +183,6 @@
     <ClInclude Include="Field.hpp" />
     <ClInclude Include="Function.hpp" />
     <ClInclude Include="Generic.hpp" />
-    <ClInclude Include="Generic\GenericFunction.hpp" />
     <ClInclude Include="Generic\GenericObject.hpp" />
     <ClInclude Include="Generic\GenericParameter.hpp" />
     <ClInclude Include="Generic\GenericVariable.hpp" />

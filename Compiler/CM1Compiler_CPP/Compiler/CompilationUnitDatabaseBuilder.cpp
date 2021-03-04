@@ -18,7 +18,7 @@ void cMCompiler::compiler::CompilationUnitDataBaseBuilder::processDeclaration(CM
 
 void cMCompiler::compiler::CompilationUnitDataBaseBuilder::buildDatabase(Parser::CompilationUnit& compilationUnit)
 {
-	resolutionContext_ = language::NameResolutionContext();
+	resolutionContext_ = language::NameResolutionContext(&this->database_);
 	resolutionContext_.namespaceStack_.push_back(database_.rootNamespace());
 	for (auto declaration : compilationUnit.declarationSequence()->declaration())
 		processDeclaration(declaration);

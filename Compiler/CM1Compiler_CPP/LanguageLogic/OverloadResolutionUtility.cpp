@@ -76,7 +76,7 @@ bool cMCompiler::language::isCompiletimeExecutable(not_null<Function const*> fun
 
 bool cMCompiler::language::isRuntimeExecutable(not_null<Function const*> function)
 {
-	return function->metadata().hasFlag(dataStructures::FunctionFlags::ExcludeAtRuntimeTime);
+	return function->metadata().hasFlag(dataStructures::FunctionFlags::ExcludeAtRuntime);
 }
 
 std::function<bool(not_null<Function const*>function)> cMCompiler::language::getFunctionPredicate(bool forceCompileTime, bool forceRuntime)

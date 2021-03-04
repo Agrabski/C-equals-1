@@ -19,6 +19,8 @@ namespace cMCompiler::dataStructures
 	class Function;
 	class Type;
 	class Namespace;
+	template<typename T>
+	class Generic;
 
 	class Attribute : public INamedObject, public ObjectWithAccessbility
 	{

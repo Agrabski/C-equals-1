@@ -20,3 +20,12 @@ std::unique_ptr<FunctionBody> cMCompiler::Parser::ParserAdapter::parseBody(std::
 	auto parser = CMinusEqualsMinus1Revision0Parser(&tokenStream);
 	return parser.parsefunctionBody();
 }
+
+std::unique_ptr<TypeSpecifier> cMCompiler::Parser::ParserAdapter::parseType(std::istream& stream)
+{
+	antlr4::ANTLRInputStream aStream(stream);
+	auto lexer = CMinusEqualsMinus1Revision0Lexer(&aStream);
+	antlr4::BufferedTokenStream tokenStream(&lexer);
+	auto parser = CMinusEqualsMinus1Revision0Parser(&tokenStream);
+	return parser.parsetypeSpecifier();
+}

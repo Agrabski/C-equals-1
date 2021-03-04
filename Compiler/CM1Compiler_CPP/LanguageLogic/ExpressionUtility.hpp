@@ -15,5 +15,19 @@ namespace cMCompiler::language
 	runtime_value buildFieldAccessExpression(runtime_value&& expression, gsl::not_null<dataStructures::Field*> field, runtime_value&& pointerToSource);
 	runtime_value buildVariableReferenceExpressionDescriptor(gsl::not_null<dataStructures::Variable*> var);
 
+	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildFunctionCallExpression(
+		runtime_value&& referenceToCompiletimeFunction,
+		runtime_value&& referenceToRuntimeFunction,
+		runtime_value&& expressions,
+		runtime_value&& pointerToSource
+	);
+	runtime_value buildBinaryOperatorExpression(
+		runtime_value&& referenceToCompiletimeFunction,
+		runtime_value&& referenceToRuntimeFunction,
+		runtime_value&& arg1,
+		runtime_value&& arg2,
+		runtime_value&& pointerToSource
+	);
+
 	void setParent(not_null<dataStructures::execution::IRuntimeValue*> expression, runtime_value&& parentReference);
 }

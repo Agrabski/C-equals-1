@@ -12,6 +12,7 @@ namespace cMCompiler::compiler
 		std::filesystem::path filepath_;
 		std::function<dataStructures::Variable* (std::string const&)> variableLookupFunction_;
 		bool hasBinaryOperator(gsl::not_null<CMinusEqualsMinus1Revision0Parser::ExpressionContext*> ctx) const;
+		std::optional<language::runtime_value> buildSpecialFunction(gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionCallContext*> ctx, std::string const& functionName);
 		std::vector<language::runtime_value> buildParameters(gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionCallContext*> ctx);
 		language::NameResolver& nameResolver_;
 		language::NameResolutionContext& context_;

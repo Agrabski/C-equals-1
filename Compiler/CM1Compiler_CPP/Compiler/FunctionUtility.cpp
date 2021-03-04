@@ -13,7 +13,10 @@ std::string cMCompiler::compiler::getName(gsl::not_null<CMinusEqualsMinus1Revisi
 		result += "new_";
 	if (name->Shared() != nullptr)
 		result += "shared";
-	return result + "unique";
+	if (name->Unique())
+		return result + "unique";
+	if (name->Operator())
+		return result + name->binaryOperator()->getText();
 }
 
 std::optional<std::string> cMCompiler::compiler::returnType(gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx)

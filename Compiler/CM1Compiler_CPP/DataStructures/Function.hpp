@@ -1,6 +1,8 @@
 #pragma once
+#include <string>
 #include <ostream>
 #include <istream>
+#include <optional>
 #include "AttributeTarget.hpp"
 #include "Variable.hpp"
 #include "Type.hpp"
@@ -21,11 +23,11 @@ namespace cMCompiler::ir
 
 namespace cMCompiler::dataStructures
 {
-	enum class FunctionFlags
+	enum class FunctionFlags : int64_t
 	{
 		None = 0b0000000000000,
 		ExcludeAtCompileTime = 0b0000000000001,
-		ExcludeAtRuntimeTime = 0b0000000000010,
+		ExcludeAtRuntime = 0b0000000000010,
 		Unsafe = 0b0000000000100
 	};
 
@@ -34,6 +36,7 @@ namespace cMCompiler::dataStructures
 
 	struct FunctionMetadata : public MetadataObject<FunctionFlags, FunctionFlags::None>
 	{
+		std::optional<std::string> overrideLLVMIR_;
 	};
 
 	std::ostream& operator<<(std::ostream& stream, FunctionFlags flags);

@@ -5,6 +5,7 @@
 #include "../antlr_runtime/src/antlr4-runtime.h"
 #include "../Parser/CMinusEqualsMinus1Revision0Parser.h"
 #include "../Parser/CMinusEqualsMinus1Revision0BaseVisitor.h"
+#include "../ParserAdapter/ParserAdapter.hpp"
 #include "Type.hpp"
 
 
@@ -27,8 +28,8 @@ namespace cMCompiler::dataStructures
 
 	struct GenericParameter
 	{
-		std::string name_;
 		not_null<Type*> value_;
+		unsigned char referenceLevel_;
 	};
 
 	template<typename TargetType>
@@ -57,16 +58,22 @@ namespace cMCompiler::dataStructures
 
 				antlrcpp::Any visitTypeSpecifier(CMinusEqualsMinus1Revision0Parser::TypeSpecifierContext* ctx) final
 				{
-					auto name = ctx->Identifier()->getText();
-					if (std::find(parameterNames_.begin(), parameterNames_.end(), name) != parameterNames_.end())
+					auto name = ctx->identifier()->getText();
+					auto paramName = std::find(parameterNames_.begin(), parameterNames_.end(), name);
+					if (paramName != parameterNames_.end())
 					{
-						auto type = std::find_if(parameters_.begin(), parameters_.end(), [&](const auto& e) {return e.name_ == name; });
-						ctx->Identifier()->getSymbol()->getText() = type->value_->name();
+						auto type = parameters_[std::distance(paramName, parameterNames_.begin())];
+						auto refLevel = gsl::narrow<unsigned char>(ctx->ref().size() + type.referenceLevel_);
+						auto stream = std::stringstream(type.value_->name() + std::string(refLevel, '*'));
+						auto identifier = Parser::ParserAdapter().parseType(stream);
+
+						*std::find_if(ctx->parent->children.begin(), ctx->parent->children.end(), [ctx](const auto& e) -> bool {return e.get() == ctx; }) = std::move(identifier);
 					}
+					return {};
 				}
 			};
 			Visitor(parameterNames_, parameters).visit(not_null(result.get()));
-			return utilities::pointer_cast<TreeType>(std::move(result));
+			return std::unique_ptr<TreeType>(result.release());
 		}
 
 		std::vector<validation::ValidationError> validateContent() const final
