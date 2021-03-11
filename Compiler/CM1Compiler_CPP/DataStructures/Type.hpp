@@ -94,9 +94,10 @@ namespace cMCompiler::dataStructures
 		gsl::not_null<Generic<T>*> appendGeneric(
 			std::vector<std::string>&& parameterNames,
 			std::unique_ptr<antlr4::tree::ParseTree>&& parseTree,
-			std::string name)
+			std::string name,
+			NameResolutionContext const& context)
 		{
-			auto tmp = std::make_unique<Generic<T>>(std::move(parameterNames), std::move(parseTree), name, this);
+			auto tmp = std::make_unique<Generic<T>>(std::move(parameterNames), std::move(parseTree), name, this, context);
 			not_null const result = tmp.get();
 			genericFunction_.push_back(std::move(tmp));
 			return result;

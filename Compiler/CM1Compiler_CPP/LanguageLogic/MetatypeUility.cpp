@@ -36,15 +36,18 @@ void cMCompiler::language::suplyParent(runtime_value& instruction, runtime_value
 {
 	if (referenceToParent->type() == language::getFunctionDescriptor())
 		return;
-	auto object = castToObject(instruction);
+	auto object = dereferenceAs<ObjectValue>(instruction.get());
 	assert(canCastReference(referenceToParent->type(), object->getMemberType("_parent")));
 	object->setValue("_parent", std::move(referenceToParent));
 }
 
-std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler::language::buildVariableDeclaration(gsl::not_null<dataStructures::Variable*> variable, runtime_value&& expression, gsl::not_null<dataStructures::Type*> type, runtime_value&& pointerToSource)
+std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler::language::buildVariableDeclaration(gsl::not_null<dataStructures::Variable*> variable, runtime_value&& expression, runtime_value&& pointerToSource)
 {
-	std::terminate();
-	return runtime_value();
+	auto [result, object] = heapAllocateObject(getVariableDeclarationStatementDescriptor());
+	object.setValue("_variable", getValueFor(variable));
+	object.setValue("_expression", std::move(expression));
+	object.setValue("_sourcePointer", std::move(pointerToSource));
+	return std::move(result);
 }
 
 
@@ -93,10 +96,24 @@ cMCompiler::language::runtime_value cMCompiler::language::buildAssigmentStatemen
 std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler::language::buildFunctionCallExpression(runtime_value&& referenceToCompiletimeFunction, runtime_value&& referenceToRuntimeFunction, runtime_value&& expressions, runtime_value&& pointerToSource)
 {
 	auto [expression, object] = heapAllocateObject(getFunctionCallExpressionDescriptor());
+	assert(referenceToCompiletimeFunction != nullptr || referenceToRuntimeFunction != nullptr);
 	for (auto& arg : *dereferenceAs<dataStructures::execution::ArrayValue>(expressions.get()))
 		setParent(arg.get(), expression->copy());
 	object.setValue("_compiletimeFunction", std::move(referenceToCompiletimeFunction));
 	object.setValue("_runtimeFunction", std::move(referenceToRuntimeFunction));
+	object.setValue("_arguments", std::move(expressions));
+	object.setValue("_pointerToSource", std::move(pointerToSource));
+	return std::move(expression);
+}
+
+std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler::language::buildConstructorInvocationExpression(runtime_value&& referenceToCompiletimeFunction, runtime_value&& referenceToRuntimeFunction, runtime_value&& expressions, runtime_value&& pointerToSource)
+{
+
+	auto [expression, object] = heapAllocateObject(getConstructorInvocationExpressionDescriptor());
+	for (auto& arg : *dereferenceAs<dataStructures::execution::ArrayValue>(expressions.get()))
+		setParent(arg.get(), expression->copy());
+	object.setValue("_compiletimeConstructor", std::move(referenceToCompiletimeFunction));
+	object.setValue("_runtimeConstructor", std::move(referenceToRuntimeFunction));
 	object.setValue("_arguments", std::move(expressions));
 	object.setValue("_pointerToSource", std::move(pointerToSource));
 	return std::move(expression);
@@ -124,6 +141,11 @@ cMCompiler::language::runtime_value cMCompiler::language::buildBinaryOperatorExp
 std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(gsl::not_null<Type*> value)
 {
 	return std::make_unique<RuntimeTypeDescriptor>(getTypeDescriptor(), value);
+}
+
+std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(gsl::not_null<Variable*> value)
+{
+	return std::make_unique<RuntimeVariableDescriptor>(getVariableDescriptor(), value);
 }
 
 std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(gsl::not_null<Function*> value)

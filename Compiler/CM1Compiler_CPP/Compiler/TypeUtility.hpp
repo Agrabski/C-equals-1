@@ -4,7 +4,7 @@
 #include "../LanguageLogic/NameResolver.hpp"
 namespace cMCompiler::compiler
 {
-	void createType(
+	dataStructures::Type* createType(
 		dataStructures::Namespace* target,
 		language::NameResolver& resolver,
 		language::NameResolutionContext& context,
@@ -12,7 +12,8 @@ namespace cMCompiler::compiler
 
 	void confirmType(language::NameResolver& resolver,
 		language::NameResolutionContext& context,
-		gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*> ctx);
+		gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*> ctx,
+		std::filesystem::path file);
 	void finalizeType(language::NameResolver& resolver,
 		language::NameResolutionContext& context,
 		gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*> ctx,

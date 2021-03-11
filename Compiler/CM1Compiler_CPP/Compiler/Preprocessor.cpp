@@ -9,35 +9,9 @@ antlrcpp::Any cMCompiler::compiler::Preprocessor::visitTypeDeclaration(CMinusEqu
 {
 	auto ep = ExpressionBuilder(filePath_, nameResolver_, context_, [](const auto&) {return nullptr; });
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> dummyValue = nullptr;
-	not_null type = context_.namespaceStack_.back()->get<dataStructures::Type>(ctx->identifier()->getText());
-	if (ctx->attributeSequence() != nullptr)
-		for (not_null<CMinusEqualsMinus1Revision0Parser::AttributeContext*> attribute : ctx->attributeSequence()->attribute())
-		{
-			not_null attributeType = nameResolver_.resolve<dataStructures::Attribute>(attribute->functionCall()->identifier()->getText(), context_);
-			auto parameters = std::vector<std::unique_ptr<dataStructures::execution::IRuntimeValue>>();
-			for (auto p : attribute->functionCall()->functionCallParameter())
-			{
-				auto evaluator = ExpressionEvaluator([&](const auto&) -> std::unique_ptr<dataStructures::execution::IRuntimeValue>&
-					{
-						return dummyValue;
-					});
-				auto expression = ep.buildExpression(p);
-				parameters.push_back(evaluator.evaluate(*expression.get()));
-			}
-			auto instance = createAttributeInstance(*type, attributeType, std::move(parameters));
-			type->appendAttribute(std::move(instance));
-		}
-	return antlrcpp::Any();
-}
-
-antlrcpp::Any cMCompiler::compiler::Preprocessor::visitFunctionDeclaration(CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext* ctx)
-{
-	if (ctx->genericSpecifier() == nullptr)
-	{
-		auto ep = ExpressionBuilder(filePath_, nameResolver_, context_, [](const auto&) {return nullptr; });
-		std::unique_ptr<dataStructures::execution::IRuntimeValue> dummyValue = nullptr;
-		auto name = getName(ctx);
-		not_null const function = getCompatibleFunction(name, nameResolver_, context_, ctx);
+	if (ctx->genericSpecifier() == nullptr) {
+		auto name = ctx->identifier()->getText();
+		not_null type = context_.namespaceStack_.back()->get<dataStructures::Type>(name);
 		if (ctx->attributeSequence() != nullptr)
 			for (not_null<CMinusEqualsMinus1Revision0Parser::AttributeContext*> attribute : ctx->attributeSequence()->attribute())
 			{
@@ -52,9 +26,25 @@ antlrcpp::Any cMCompiler::compiler::Preprocessor::visitFunctionDeclaration(CMinu
 					auto expression = ep.buildExpression(p);
 					parameters.push_back(evaluator.evaluate(*expression.get()));
 				}
-				auto instance = createAttributeInstance(*function, attributeType, std::move(parameters));
-				function->appendAttribute(std::move(instance));
+				auto instance = createAttributeInstance(*type, attributeType, std::move(parameters));
+				type->appendAttribute(std::move(instance));
 			}
+	}
+	return antlrcpp::Any();
+}
+
+antlrcpp::Any cMCompiler::compiler::Preprocessor::visitFunctionDeclaration(CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext* ctx)
+{
+	if (ctx->genericSpecifier() == nullptr || !ignoreGenerics_)
+	{
+		auto ep = ExpressionBuilder(filePath_, nameResolver_, context_, [](const auto&) {return nullptr; });
+		std::unique_ptr<dataStructures::execution::IRuntimeValue> dummyValue = nullptr;
+		auto name = getName(ctx);
+		not_null const function = getCompatibleFunction(name, nameResolver_, context_, ctx);
+		if (ctx->attributeSequence() != nullptr)
+			for (not_null<CMinusEqualsMinus1Revision0Parser::AttributeContext*> attribute : ctx->attributeSequence()->attribute())
+				attachAttribute(function, attribute, nameResolver_, context_, ep);
+
 	}
 	return antlrcpp::Any();
 }

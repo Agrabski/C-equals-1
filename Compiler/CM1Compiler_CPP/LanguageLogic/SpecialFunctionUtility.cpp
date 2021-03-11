@@ -14,10 +14,15 @@ cMCompiler::dataStructures::Function* cMCompiler::language::getFinalizer(std::ve
 std::vector<gsl::not_null<cMCompiler::dataStructures::Function*>> cMCompiler::language::getConstructors(std::vector<gsl::not_null<dataStructures::Function*>> methods)
 {
 	auto result = std::vector<gsl::not_null<cMCompiler::dataStructures::Function*>>();
-	auto f = std::find_if(methods.begin(), methods.end(), [](auto const& e) {return e->name() == "construct"; });
+	auto f = std::find_if(methods.begin(), methods.end(), isConstructor);
 	if (f != methods.end())
 		result.push_back(*f);
 	return result;
+}
+
+bool cMCompiler::language::isConstructor(gsl::not_null<dataStructures::Function*> f)
+{
+	return f->name() == "construct";
 }
 
 gsl::not_null<cMCompiler::dataStructures::Function*> cMCompiler::language::getAtachmentFunction(

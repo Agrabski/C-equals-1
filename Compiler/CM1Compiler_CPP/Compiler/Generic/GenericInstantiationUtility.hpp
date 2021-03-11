@@ -10,7 +10,15 @@ namespace cMCompiler::compiler
 		dataStructures::Generic<dataStructures::Function>& function,
 		std::vector<dataStructures::GenericParameter> const& genericParameters,
 		language::NameResolver&resolver,
-		language::NameResolutionContext&context,
+		dataStructures::NameResolutionContext const&context,
+		std::filesystem::path const& file
+	);
+
+	not_null<dataStructures::Type*> instantiate(
+		dataStructures::Generic<dataStructures::Type>& type,
+		std::vector<dataStructures::GenericParameter> const& genericParameters,
+		language::NameResolver& resolver,
+		dataStructures::NameResolutionContext const& context,
 		std::filesystem::path const& file
 	);
 }

@@ -97,40 +97,46 @@ void buildCompilerLibrary(gsl::not_null<Namespace*> rootNamespace)
 	{
 		auto replace = ns->append<Function>("replaceWithCompilerFunction");
 		replace->setAccessibility(Accessibility::Public);
-		replace->appendVariable("function", function, 1, cMCompiler::language::createVariableDescriptor);
-		replace->appendVariable("name", cMCompiler::language::getString(), 0,
-			cMCompiler::language::createVariableDescriptor);
+		replace->appendVariable("function", function, 1);
+		replace->appendVariable("name", cMCompiler::language::getString(), 0);
 		FuntionLibrary::instance().addFunctionDefinition(replace, replaceWithCompilerFunction);
 	}
 	{
 		auto replace = ns->append<Function>("replaceWithCompilerType");
 		replace->setAccessibility(Accessibility::Public);
-		replace->appendVariable("type", type, 1, cMCompiler::language::createVariableDescriptor);
-		replace->appendVariable("name", cMCompiler::language::getString(), 0,
-			cMCompiler::language::createVariableDescriptor);
+		replace->appendVariable("type", type, 1);
+		replace->appendVariable("name", cMCompiler::language::getString(), 0);
 
 		FuntionLibrary::instance().addFunctionDefinition(replace, replaceWithCompilerType);
 	}
 	{
 		auto replace = ns->append<Function>("markCompileTimeOnly");
 		replace->setAccessibility(Accessibility::Public);
-		replace->appendVariable("function", function, 1, cMCompiler::language::createVariableDescriptor);
+		replace->appendVariable("function", function, 1);
 		FuntionLibrary::instance().addFunctionDefinition(replace, markCompileTimeOnly);
 	}
 	{
 		auto replace = ns->append<Function>("replaceWithSymbol");
 		replace->setAccessibility(Accessibility::Public);
-		replace->appendVariable("function", function, 1, cMCompiler::language::createVariableDescriptor);
-		replace->appendVariable("symbolName", getString(), 0, cMCompiler::language::createVariableDescriptor);
-		replace->appendVariable("assemblyPath", getString(), 0, cMCompiler::language::createVariableDescriptor);
+		replace->appendVariable("function", function, 1);
+		replace->appendVariable("symbolName", getString(), 0);
+		replace->appendVariable("assemblyPath", getString(), 0);
+		FuntionLibrary::instance().addFunctionDefinition(replace, ReplaceWithExternalSymbol);
+	}
+	{
+		auto replace = ns->append<Function>("replaceWithSymbol");
+		replace->setAccessibility(Accessibility::Public);
+		replace->appendVariable("type", type, 1);
+		replace->appendVariable("symbolName", getString(), 0);
+		replace->appendVariable("assemblyPath", getString(), 0);
 		FuntionLibrary::instance().addFunctionDefinition(replace, ReplaceWithExternalSymbol);
 	}
 	{
 		auto raise = ns->append<Function>("raiseError");
 		raise->setAccessibility(Accessibility::Public);
-		raise->appendVariable("pointerToSource", getPointerToSource(), 1, cMCompiler::language::createVariableDescriptor);
-		raise->appendVariable("message", getString(), 1, cMCompiler::language::createVariableDescriptor);
-		raise->appendVariable("code", getUsize(), 0, cMCompiler::language::createVariableDescriptor);
+		raise->appendVariable("pointerToSource", getPointerToSource(), 1);
+		raise->appendVariable("message", getString(), 1);
+		raise->appendVariable("code", getUsize(), 0);
 		FuntionLibrary::instance().addFunctionDefinition(raise, raiseError);
 	}
 	createCustomFunction(function->append<Function>("overridenLLVMIR")->setReturnType(getString()), function,
@@ -151,8 +157,66 @@ void buildCompilerLibrary(gsl::not_null<Namespace*> rootNamespace)
 				return runtime_value();
 			});
 		setter->setAccessibility(Accessibility::Public);
-		setter->appendVariable("ir", getString(), 0, createVariableDescriptor);
+		setter->appendVariable("ir", getString(), 0);
 
+}
+
+void buildUsize(gsl::not_null<Type*> usize_type)
+{
+	using cMCompiler::language::createCustomFunction;
+	using cMCompiler::language::convertToIntegral;
+	using cMCompiler::dataStructures::execution::usize;
+	using cMCompiler::dataStructures::Function;
+	auto ns = defaultPackage__->rootNamespace();
+
+	createOperator(
+		ns,
+		"+",
+		usize_type, 0,
+		usize_type, 0,
+		usize_type,
+		[usize_type](auto& a, auto& b)
+		{
+			auto result = convertToIntegral<usize>(*a) + convertToIntegral<usize>(*b);
+			return buildIntegerValue(usize_type, result);
+		}
+	);
+	createOperator(
+		ns,
+		"-",
+		usize_type, 0,
+		usize_type, 0,
+		usize_type,
+		[usize_type](auto& a, auto& b)
+		{
+			auto result = convertToIntegral<usize>(*a) - convertToIntegral<usize>(*b);
+			return buildIntegerValue(usize_type, result);
+		}
+	);
+	createOperator(
+		ns,
+		"*",
+		usize_type, 0,
+		usize_type, 0,
+		usize_type,
+		[usize_type](auto& a, auto& b)
+		{
+			auto result = convertToIntegral<usize>(*a) * convertToIntegral<usize>(*b);
+			return buildIntegerValue(usize_type, result);
+		}
+	);
+	createOperator(
+		ns,
+		"/",
+		usize_type, 0,
+		usize_type, 0,
+		usize_type,
+		[usize_type](auto& a, auto& b)
+		{
+			auto result = convertToIntegral<usize>(*a) / convertToIntegral<usize>(*b);
+			return buildIntegerValue(usize_type, result);
+		}
+	);
 }
 
 void buildString(gsl::not_null<Type*> string)
@@ -165,16 +229,16 @@ void buildString(gsl::not_null<Type*> string)
 			auto to = dereferenceAs<StringValue>(a["to"].get())->value();
 			return buildStringValue(boost::replace_all_copy(self->value(), what, to));
 		});
-	replace->appendVariable("what", string, 0, cMCompiler::language::createVariableDescriptor);
-	replace->appendVariable("to", string, 0, cMCompiler::language::createVariableDescriptor);
+	replace->appendVariable("what", string, 0);
+	replace->appendVariable("to", string, 0);
 	replace->setReturnType(string)->setAccessibility(Accessibility::Public);
 	replace->metadata().appendFlag(FunctionFlags::ExcludeAtRuntime);
 
 
 	auto plus = getDefaultPackage()->rootNamespace()->append<Function>("operator_+");
 	plus->setReturnType(string);
-	plus->appendVariable("arg1", string, 0, createVariableDescriptor);
-	plus->appendVariable("arg2", string, 0, createVariableDescriptor);
+	plus->appendVariable("arg1", string, 0);
+	plus->appendVariable("arg2", string, 0);
 	cMCompiler::language::compileTimeFunctions::FuntionLibrary::instance().addFunctionDefinition(
 		plus,
 		[](value_map&& a, generic_parameters)->runtime_value
@@ -182,6 +246,18 @@ void buildString(gsl::not_null<Type*> string)
 			auto a1 = dereferenceAs<StringValue>(a["arg1"].get())->value();
 			auto a2 = dereferenceAs<StringValue>(a["arg2"].get())->value();
 			return buildStringValue(a1 + a2);
+		}
+	);
+
+	auto length = string->append<Function>("length");
+	length->setReturnType(getUsize());
+	createCustomFunction(
+		length,
+		string,
+		[](value_map&& a, generic_parameters)->runtime_value
+		{
+			auto self = dereferenceAs<StringValue>(a["self"].get());
+			return buildIntegerValue(getUsize(), self->value().length());
 		}
 	);
 }
@@ -195,12 +271,13 @@ void buildPackage()
 	auto result = defaultPackage__.get();
 	auto string = result->rootNamespace()->append<Type>("string");
 	result->rootNamespace()->append<Type>("bool");
-	result->rootNamespace()->append<Type>("usize");
-	result->rootNamespace()->appendGeneric<Type>({ "T" }, nullptr, "array");
+	auto usize = result->rootNamespace()->append<Type>("usize");
+	result->rootNamespace()->appendGeneric<Type>({ "T" }, nullptr, "array", NameResolutionContext(defaultPackage__.get()));
 	buildCompilerLibrary(result->rootNamespace());
 	buildString(string);
+	buildUsize(usize);
 	auto readFile = result->rootNamespace()->append<Function>("read_all_file");
-	readFile->appendVariable("path", string, 0, createVariableDescriptor);
+	readFile->appendVariable("path", string, 0);
 	readFile->setReturnType(string);
 	functionLibrary.addFunctionDefinition(readFile, compileTimeFunctions::readAllFile);
 }

@@ -88,6 +88,9 @@ public:
 	void enter(not_null<CMinusEqualsMinus1Revision0Parser::StatementContext*> ) override { }
 	void exit(not_null<CMinusEqualsMinus1Revision0Parser::StatementContext*>) override { }
 
+	void enter(not_null<CMinusEqualsMinus1Revision0Parser::FunctionCallStatementContext*> ) override { }
+	void exit(not_null<CMinusEqualsMinus1Revision0Parser::FunctionCallStatementContext*>) override { }
+
 	void enter(not_null<CMinusEqualsMinus1Revision0Parser::ReturnStatementContext*> ) override { }
 	void exit(not_null<CMinusEqualsMinus1Revision0Parser::ReturnStatementContext*>) override { }
 

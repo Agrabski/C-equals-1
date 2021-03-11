@@ -11,6 +11,7 @@
 #include "Namespace.hpp"
 #include "Generic.hpp"
 #include "execution/ObjectValue.hpp"
+#include "NameResolutionContext.hpp"
 
 using gsl::not_null;
 
@@ -44,7 +45,11 @@ namespace cMCompiler::dataStructures
 
 		Type* describingType() noexcept { return describingType_.get(); }
 		template<typename T>
-		gsl::not_null<Generic<T>*> appendGeneric(std::vector<std::string>&& parameterNames, std::unique_ptr<antlr4::tree::ParseTree>&& parseTree, std::string name)
+		gsl::not_null<Generic<T>*> appendGeneric(
+			std::vector<std::string>&& parameterNames, 
+			std::unique_ptr<antlr4::tree::ParseTree>&& parseTree, 
+			std::string name,
+			NameResolutionContext const&)
 		{
 			std::terminate();
 			throw 0;

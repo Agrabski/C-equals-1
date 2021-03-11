@@ -7,7 +7,8 @@
 #include "../LanguageLogic/MetatypeUility.hpp"
 #include "../LanguageLogic/IRUtility.hpp"
 #include "../LanguageLogic/RuntimeTypesConversionUtility.hpp"
-
+#include "../LanguageLogic/SpecialFunctionUtility.hpp"
+#include "../LanguageLogic/ExpressionUtility.hpp"
 
 void cMCompiler::compiler::FunctionBodyBuilder::enterScope(instruction_pointer& currentInstruction)
 {
@@ -73,12 +74,11 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitVariableDeclaratio
 
 	auto name = ctx->identifier()->getText();
 	// todo: infer reference
-	not_null variable = function_->appendLocalVariable(name, type, referenceLevel, cMCompiler::language::createVariableDescriptor);
+	not_null variable = function_->appendLocalVariable(name, type, referenceLevel);
 
 	auto instruction = language::buildVariableDeclaration(
 		variable,
 		std::move(expression),
-		type,
 		language::buildSourcePointer(filePath_.filename().string(), *ctx)
 	);
 
@@ -153,35 +153,46 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitIfStatement(CMinus
 	return antlrcpp::Any();
 }
 
-antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitFunctionCall(CMinusEqualsMinus1Revision0Parser::FunctionCallContext* ctx)
+antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitFunctionCallStatement(CMinusEqualsMinus1Revision0Parser::FunctionCallStatementContext* ctx)
 {
-	auto functions = nr_.resolveOverloadSet(ctx->identifier()->getText(), context_);
-	auto params = std::vector<language::runtime_value>();
-	for (auto parameter : ctx->functionCallParameter())
-		params.push_back(getBuilder().buildExpression(parameter));
-	auto f = language::resolveOverload(functions, params); //todo: resolve for runtime and compile-time
+	if (ctx->Period())
+	{
+		auto expression = getBuilder().buildExpression(ctx->expression(), nullptr);
+		not_null type = language::getExpressionType(expression);
 
-	auto instruction = language::buildFunctionCallStatement(
-		language::getValueFor(not_null(f)),
-		language::getValueFor(not_null(f)),
-		language::convertCollection(std::move(params), language::getExpressionDescriptor(), 1),
-		language::buildSourcePointer(filePath_.filename().string(), *ctx)
-	);
+		auto methodName = ctx->functionCall()->identifier()->getText();
 
-	language::suplyParent(instruction, getReferenceToParent());
-	instructionAppenders.back()(std::move(instruction));
+		auto parameters = getBuilder().buildParameters(ctx->functionCall());
 
+		auto result = language::buildMethodCallExpression(
+			std::move(expression),
+			type,
+			std::move(parameters),
+			methodName,
+			language::buildSourcePointer(filePath_.string(), *ctx)
+		);
+	}
+	else
+	{
+		auto instruction = language::buildFunctionCallStatement(
+			getBuilder().buildExpression(ctx->functionCall(), nullptr),
+			language::buildSourcePointer(filePath_.string(), *ctx)
+		);
+
+		language::suplyParent(instruction, getReferenceToParent());
+		instructionAppenders.back()(std::move(instruction));
+	}
 	return antlrcpp::Any();
 }
 
 antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitAssigmentStatement(CMinusEqualsMinus1Revision0Parser::AssigmentStatementContext* ctx)
 {
-	auto rexpression = getBuilder().buildExpression(ctx->expression()[1], nullptr);
-	auto lexpression = getBuilder().buildExpression(ctx->expression()[0], nullptr);
+	auto rexpression = getBuilder().buildExpression(ctx->expression(1), nullptr);
+	auto lexpression = getBuilder().buildExpression(ctx->expression(0), nullptr);
 	auto instruction = language::buildAssigmentStatement(
 		std::move(lexpression),
 		std::move(rexpression),
-		language::buildPointerToSource(filePath_.filename().string(), ctx->Asssigment()->getSymbol()->getLine()));
+		language::buildPointerToSource(filePath_.string(), ctx->Asssigment()->getSymbol()->getLine()));
 	language::suplyParent(instruction, getReferenceToParent());
 
 	instructionAppenders.back()(std::move(instruction));

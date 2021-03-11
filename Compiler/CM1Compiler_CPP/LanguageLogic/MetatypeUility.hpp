@@ -14,14 +14,12 @@ namespace cMCompiler::language
 {
 	dataStructures::Type* getExpressionType(std::unique_ptr<dataStructures::execution::IRuntimeValue>& expression);
 
-	runtime_value buildVariableDeclaration(gsl::not_null<dataStructures::Variable*> variable, runtime_value&& expression, gsl::not_null<dataStructures::Type*> type, runtime_value&& pointerToSource);
+	runtime_value buildVariableDeclaration(gsl::not_null<dataStructures::Variable*> variable, runtime_value&& expression, runtime_value&& pointerToSource);
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildScopeTermination(runtime_value&& variables, runtime_value&& pointerToSource);
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildIf(runtime_value&& expression, runtime_value&& pointerToSource);
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildAssigmentStatement(runtime_value&& lExpression, runtime_value&& rExpression, runtime_value&& pointerToSource);
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildFunctionCallStatement(
-		runtime_value&& referenceToCompiletimeFunction,
-		runtime_value&& referenceToRuntimeFunction,
-		runtime_value&& expressions,
+		runtime_value&& expression,
 		runtime_value&& pointerToSource);
 
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> createVariableDescriptor(not_null<dataStructures::Variable*> variable);
@@ -37,6 +35,7 @@ namespace cMCompiler::language
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(gsl::not_null<dataStructures::Type*>);
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(gsl::not_null<dataStructures::Function*>);
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(gsl::not_null<dataStructures::Field*>);
+	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(gsl::not_null<dataStructures::Variable*>);
 
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildPointerToSource(
 		std::string const& filename,

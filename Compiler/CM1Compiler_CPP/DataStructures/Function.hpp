@@ -59,8 +59,8 @@ namespace cMCompiler::dataStructures
 		virtual ~Function() = default;
 		Function(std::string name, INamedObject* parent)
 			: AttributeTarget(Target::Function), INamedObject(name, parent) {}
-		Variable* appendVariable(std::string name, not_null<Type*> type, unsigned char referenceLevel, std::function<std::unique_ptr<execution::IRuntimeValue>(not_null<Variable*>)> objectFactory);
-		Variable* appendLocalVariable(std::string name, not_null<Type*> type, unsigned char referenceLevel, std::function<std::unique_ptr<execution::IRuntimeValue>(not_null<Variable*>)> objectFactory);
+		Variable* appendVariable(std::string name, not_null<Type*> type, unsigned char referenceLevel);
+		Variable* appendLocalVariable(std::string name, not_null<Type*> type, unsigned char referenceLevel);
 		std::vector<Variable*> parameters();
 		std::vector<INamedObject*> children() noexcept final
 		{

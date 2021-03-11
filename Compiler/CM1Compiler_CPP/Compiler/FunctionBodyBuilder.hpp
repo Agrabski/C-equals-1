@@ -27,7 +27,7 @@ namespace cMCompiler::compiler
 		antlrcpp::Any visitVariableDeclarationStatement(CMinusEqualsMinus1Revision0Parser::VariableDeclarationStatementContext* ctx) final;
 		antlrcpp::Any visitFunctionBody(CMinusEqualsMinus1Revision0Parser::FunctionBodyContext* ctx) final;
 		antlrcpp::Any visitIfStatement(CMinusEqualsMinus1Revision0Parser::IfStatementContext* ctx) final;
-		antlrcpp::Any visitFunctionCall(CMinusEqualsMinus1Revision0Parser::FunctionCallContext* ctx) final;
+		antlrcpp::Any visitFunctionCallStatement(CMinusEqualsMinus1Revision0Parser::FunctionCallStatementContext* ctx) final;
 		antlrcpp::Any visitAssigmentStatement(CMinusEqualsMinus1Revision0Parser::AssigmentStatementContext* ctx) final;
 	public:
 		FunctionBodyBuilder(dataStructures::Function* function, language::NameResolver& nr, language::NameResolutionContext& context, std::filesystem::path const& f) noexcept :

@@ -67,6 +67,8 @@ public:
 
 		virtual antlrcpp::Any visitStatement(CMinusEqualsMinus1Revision0Parser::StatementContext *context) = 0;
 
+		virtual antlrcpp::Any visitFunctionCallStatement(CMinusEqualsMinus1Revision0Parser::FunctionCallStatementContext *context) = 0;
+
 		virtual antlrcpp::Any visitReturnStatement(CMinusEqualsMinus1Revision0Parser::ReturnStatementContext *context) = 0;
 
 		virtual antlrcpp::Any visitVariableDeclarationStatement(CMinusEqualsMinus1Revision0Parser::VariableDeclarationStatementContext *context) = 0;

@@ -111,6 +111,10 @@ public:
 		return visitChildren(ctx);
 	}
 
+	antlrcpp::Any visitFunctionCallStatement(CMinusEqualsMinus1Revision0Parser::FunctionCallStatementContext *ctx) override {
+		return visitChildren(ctx);
+	}
+
 	antlrcpp::Any visitReturnStatement(CMinusEqualsMinus1Revision0Parser::ReturnStatementContext *ctx) override {
 		return visitChildren(ctx);
 	}

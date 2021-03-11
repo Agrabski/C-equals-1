@@ -16,6 +16,7 @@ namespace cMCompiler::compiler
 		}
 
 		std::unique_ptr<dataStructures::execution::IRuntimeValue> evaluateLiteral(dataStructures::execution::IRuntimeValue& expression);
+		std::unique_ptr<dataStructures::execution::IRuntimeValue> evaluateBinaryOperator(dataStructures::execution::IRuntimeValue& expression);
 		std::unique_ptr<dataStructures::execution::IRuntimeValue> evaluateFieldAccess(dataStructures::execution::IRuntimeValue& expression);
 		std::unique_ptr<dataStructures::execution::IRuntimeValue> evaluateCall(dataStructures::execution::IRuntimeValue& expression);
 		std::unique_ptr<dataStructures::execution::IRuntimeValue> evaluateVariable(dataStructures::execution::IRuntimeValue& expression);

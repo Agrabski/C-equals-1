@@ -27,6 +27,11 @@ void cMCompiler::compiler::StatementEvaluator::evaluate(language::runtime_value&
 		terminate(*inst);
 		return;
 	}
+	if (isOfType(inst, language::getVariableDeclarationStatementDescriptor()))
+	{
+		declareVariable(*inst);
+		return;
+	}
 	std::terminate();
 }
 
@@ -41,6 +46,18 @@ void cMCompiler::compiler::StatementEvaluator::assign(dataStructures::execution:
 	auto lExpression = pointer_cast<IRuntimeValue>(language::dereferenceAs<ObjectValue>(&instruction)->getMemberValue("_lExpression"));
 	auto rExpression = pointer_cast<IRuntimeValue>(language::dereferenceAs<ObjectValue>(&instruction)->getMemberValue("_rExpression"));
 	ev_.evaluateLeftExpression(*lExpression)->performAssigment(ev_.evaluate(*rExpression));
+}
+
+void cMCompiler::compiler::StatementEvaluator::declareVariable(dataStructures::execution::IRuntimeValue& instruction)
+{
+	using language::dereferenceAs;
+	using language::dereferenceOnce;
+	using dataStructures::execution::RuntimeVariableDescriptor;
+	not_null i = dereferenceAs<ObjectValue>(&instruction);
+	not_null variable = dereferenceAs<RuntimeVariableDescriptor>(i->getMemberValue("_variable").get())->value();
+	auto expression = i->getMemberValue("_expression");
+	auto value = ev_.evaluate(*expression);
+	this->variables_[variable->name()] = dereferenceOnce(value.get())->copy();
 }
 
 void cMCompiler::compiler::StatementEvaluator::terminate(dataStructures::execution::IRuntimeValue& instruction)

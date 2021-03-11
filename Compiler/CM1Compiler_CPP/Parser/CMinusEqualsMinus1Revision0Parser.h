@@ -43,15 +43,16 @@ public:
 		RuleFunctionDeclaration = 14, RuleParameterList = 15, RuleParameter = 16, 
 		RuleTypeSpecifier = 17, RuleGenericUsage = 18, RuleFunctionBody = 19, 
 		RuleFunctionName = 20, RuleSpecialFunctionIdentifier = 21, RuleCompoundStatement = 22, 
-		RuleStatement = 23, RuleReturnStatement = 24, RuleVariableDeclarationStatement = 25, 
-		RuleIfStatement = 26, RuleLoopStatement = 27, RuleRangeForStatement = 28, 
-		RuleForStatement = 29, RuleWhileStatement = 30, RuleDoWhileStatement = 31, 
-		RuleWhileHeader = 32, RuleInfiniteLoopStatement = 33, RuleFunctionCall = 34, 
-		RuleFunctionCallParameter = 35, RuleAttributeSequence = 36, RuleAttribute = 37, 
-		RuleQualifiedIdentifier = 38, RuleExpression = 39, RuleIndexExpression = 40, 
-		RuleNewExpression = 41, RuleAssigmentStatement = 42, RuleThrowExpression = 43, 
-		RuleArithmeticBinaryOperator = 44, RuleComparsionOperator = 45, RuleBinaryOperator = 46, 
-		RuleLogicalBinaryOperator = 47, RuleRef = 48, RuleIdentifier = 49
+		RuleStatement = 23, RuleFunctionCallStatement = 24, RuleReturnStatement = 25, 
+		RuleVariableDeclarationStatement = 26, RuleIfStatement = 27, RuleLoopStatement = 28, 
+		RuleRangeForStatement = 29, RuleForStatement = 30, RuleWhileStatement = 31, 
+		RuleDoWhileStatement = 32, RuleWhileHeader = 33, RuleInfiniteLoopStatement = 34, 
+		RuleFunctionCall = 35, RuleFunctionCallParameter = 36, RuleAttributeSequence = 37, 
+		RuleAttribute = 38, RuleQualifiedIdentifier = 39, RuleExpression = 40, 
+		RuleIndexExpression = 41, RuleNewExpression = 42, RuleAssigmentStatement = 43, 
+		RuleThrowExpression = 44, RuleArithmeticBinaryOperator = 45, RuleComparsionOperator = 46, 
+		RuleBinaryOperator = 47, RuleLogicalBinaryOperator = 48, RuleRef = 49, 
+		RuleIdentifier = 50
 	};
 
 	CMinusEqualsMinus1Revision0Parser(antlr4::TokenStream *input);
@@ -89,6 +90,7 @@ public:
 	class SpecialFunctionIdentifierContext;
 	class CompoundStatementContext;
 	class StatementContext;
+	class FunctionCallStatementContext;
 	class ReturnStatementContext;
 	class VariableDeclarationStatementContext;
 	class IfStatementContext;
@@ -309,6 +311,7 @@ public:
 		antlr4::tree::TerminalNode *CloseBracket();
 		AttributeSequenceContext *attributeSequence();
 		antlr4::tree::TerminalNode *AccessSpecifier();
+		GenericSpecifierContext *genericSpecifier();
 		ImplementedInterfacesSequenceContext *implementedInterfacesSequence();
 
 		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
@@ -714,13 +717,13 @@ public:
 		using antlr4::ParserRuleContext::copyFrom;
 
 		size_t getRuleIndex() const final;
-		ExpressionContext *expression();
-		antlr4::tree::TerminalNode *SemiColon();
 		IfStatementContext *ifStatement();
 		LoopStatementContext *loopStatement();
 		AssigmentStatementContext *assigmentStatement();
+		antlr4::tree::TerminalNode *SemiColon();
 		VariableDeclarationStatementContext *variableDeclarationStatement();
 		ReturnStatementContext *returnStatement();
+		FunctionCallStatementContext *functionCallStatement();
 
 		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
 		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
@@ -731,6 +734,30 @@ public:
 
 	StatementContext* statement(antlr4::ParserRuleContext *parent = nullptr);
 	std::unique_ptr<StatementContext> parsestatement();
+
+	class  FunctionCallStatementContext : public antlr4::ParserRuleContext
+	{
+	public:
+		std::unique_ptr<ParseTree> clone(ParseTree* parent) const override;
+		FunctionCallStatementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+		FunctionCallStatementContext() = default;
+		void copyFrom(FunctionCallStatementContext *context);
+		using antlr4::ParserRuleContext::copyFrom;
+
+		size_t getRuleIndex() const final;
+		FunctionCallContext *functionCall();
+		ExpressionContext *expression();
+		antlr4::tree::TerminalNode *Period();
+
+		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
+		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
+
+		antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) final;
+	 
+	};
+
+	FunctionCallStatementContext* functionCallStatement(antlr4::ParserRuleContext *parent = nullptr);
+	std::unique_ptr<FunctionCallStatementContext> parsefunctionCallStatement();
 
 	class  ReturnStatementContext : public antlr4::ParserRuleContext
 	{
@@ -1113,14 +1140,14 @@ public:
 
 		size_t getRuleIndex() const final;
 		antlr4::tree::TerminalNode *STRING();
-		FunctionCallContext *functionCall();
-		ThrowExpressionContext *throwExpression();
-		IdentifierContext *identifier();
-		antlr4::tree::TerminalNode *IntegerLiteral();
 		antlr4::tree::TerminalNode *ParamOpen();
 		std::vector<ExpressionContext *> expression();
 		ExpressionContext* expression(size_t i);
 		antlr4::tree::TerminalNode *ParamClose();
+		FunctionCallContext *functionCall();
+		ThrowExpressionContext *throwExpression();
+		IdentifierContext *identifier();
+		antlr4::tree::TerminalNode *IntegerLiteral();
 		NewExpressionContext *newExpression();
 		antlr4::tree::TerminalNode *LogicalUnaryOperator();
 		BinaryOperatorContext *binaryOperator();

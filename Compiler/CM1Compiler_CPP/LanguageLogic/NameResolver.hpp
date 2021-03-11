@@ -5,6 +5,8 @@
 #include "../DataStructures/QualifiedName.hpp"
 #include "../DataStructures/INamedObject.hpp"
 #include "../DataStructures/Function.hpp"
+#include "../DataStructures/NameResolutionContext.hpp"
+#include "NamespaceBuilder.hpp"
 
 namespace cMCompiler::dataStructures
 {
@@ -15,14 +17,7 @@ namespace cMCompiler::dataStructures
 
 namespace cMCompiler::language
 {
-	struct NameResolutionContext
-	{
-		std::map<std::string, std::vector<dataStructures::INamedObject*>> objectMap_;
-		std::map<std::string, dataStructures::Namespace*> unconfirmedNames_;
-		std::vector<not_null<dataStructures::Namespace*>> namespaceStack_;
-		not_null<dataStructures::PackageDatabase*> package_;
-		NameResolutionContext(not_null<dataStructures::PackageDatabase*> package) :package_(package) {}
-	};
+	using NameResolutionContext = dataStructures::NameResolutionContext;
 
 	class NameResolver
 	{
@@ -52,7 +47,9 @@ namespace cMCompiler::language
 			auto unconfirmedResult = context.unconfirmedNames_.find(name);
 			if (unconfirmedResult != context.unconfirmedNames_.end())
 			{
-				auto result = nullptr;// unconfirmedResult->second->append<T>(name);
+				auto result = unconfirmedResult->second->get<T>(name);
+				context.objectMap_[name].push_back(result);
+				context.unconfirmedNames_.erase(name);
 				return result;
 			}
 
@@ -138,6 +135,7 @@ namespace cMCompiler::language
 		void addImport(std::string const& name, dataStructures::QualifiedName ns, dataStructures::PackageDatabase* currentPackage, NameResolutionContext& context)
 		{
 			dataStructures::PackageDatabase* package = nullptr;
+			dataStructures::QualifiedName const n = ns;
 			auto found = std::find_if(dependencies_.begin(), dependencies_.end(), [&](auto const& e) noexcept {return e->name() == ns.peek(); });
 			if (found != dependencies_.end())
 			{
@@ -160,7 +158,14 @@ namespace cMCompiler::language
 			}
 			if (ns.size() != 0)
 			{
+				//std::terminate();
 				//todo: report error
+			}
+			if (current == nullptr)
+			{
+				auto unconfirmedNamespace = NamespaceBuilder::buildNamespace(n, currentPackage->rootNamespace());
+				context.unconfirmedNames_[name] = unconfirmedNamespace;
+				return;
 			}
 			context.objectMap_[name];
 			auto children = current->children();
@@ -168,6 +173,7 @@ namespace cMCompiler::language
 				if (child->name() == name)
 					context.objectMap_[name].push_back(child);
 		}
+
 	};
 
 }

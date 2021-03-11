@@ -36,8 +36,7 @@ namespace antlr4
 			 */
 			antlrcpp::Any visitChildren(ParseTree* node) override {
 				antlrcpp::Any result = defaultResult();
-				auto const n = node->children.size();
-				for (size_t i = 0; i < n; i++) {
+				for (size_t i = 0; i < node->children.size(); i++) {
 					if (!shouldVisitNextChild(node, result)) {
 						break;
 					}

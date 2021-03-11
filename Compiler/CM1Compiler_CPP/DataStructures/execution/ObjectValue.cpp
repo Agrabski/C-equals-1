@@ -46,6 +46,8 @@ std::string cMCompiler::dataStructures::execution::ObjectValue::toString() const
 
 bool cMCompiler::dataStructures::execution::ObjectValue::validate(IRuntimeValue* value, std::string const& name) const
 {
+	if (value == nullptr)
+		return true;
 	auto fields = type()->fields();
 	auto field = std::find_if(fields.begin(), fields.end(), [&](auto const& e) noexcept {return e->name() == name; });
 	if (field->get()->type() == nullptr)

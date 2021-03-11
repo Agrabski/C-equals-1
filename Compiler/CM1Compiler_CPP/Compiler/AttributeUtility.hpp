@@ -7,19 +7,21 @@
 #include "../LanguageLogic/SpecialFunctionUtility.hpp"
 #include "../LanguageLogic/MetatypeUility.hpp"
 #include "FunctionExecutionUtility.hpp"
-
+#include "ExpressionBuilder.hpp"
 
 namespace cMCompiler::compiler
 {
 	void createAttribute(
 		gsl::not_null<CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext*> ctx,
-		gsl::not_null<dataStructures::Namespace*> parent);
+		gsl::not_null<dataStructures::Namespace*> parent, 
+		language::NameResolutionContext const& context);
 
 	void confirmAttribute(
 		gsl::not_null<CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext*> ctx,
 		gsl::not_null<dataStructures::Namespace*> parent,
 		language::NameResolver resolver,
-		language::NameResolutionContext context);
+		language::NameResolutionContext context,
+		std::filesystem::path file);
 
 	void finalizeAttribute(
 		gsl::not_null<CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext*> ctx,
@@ -34,6 +36,20 @@ namespace cMCompiler::compiler
 		gsl::not_null<dataStructures::Attribute*> attribute,
 		std::vector<std::unique_ptr<dataStructures::execution::IRuntimeValue>>&& values
 	);
+
+	void attachAttribute(
+		not_null<dataStructures::Function*>f,
+		not_null<CMinusEqualsMinus1Revision0Parser::AttributeContext*> attribute,
+		language::NameResolver& resolver,
+		language::NameResolutionContext& context,
+		ExpressionBuilder& ep);
+
+	void attachAttribute(
+		not_null<dataStructures::Type*>t,
+		not_null<CMinusEqualsMinus1Revision0Parser::AttributeContext*> attribute,
+		language::NameResolver& resolver,
+		language::NameResolutionContext& context,
+		ExpressionBuilder& ep);
 
 	template<typename T>
 	void executeAttachmentFunction(

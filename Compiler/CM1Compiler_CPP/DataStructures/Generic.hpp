@@ -2,11 +2,13 @@
 #include <string>
 #include <memory>
 #include "../Utilities/pointer_cast.hpp"
+#include "../Utilities/algorithm.hpp"
 #include "../antlr_runtime/src/antlr4-runtime.h"
 #include "../Parser/CMinusEqualsMinus1Revision0Parser.h"
 #include "../Parser/CMinusEqualsMinus1Revision0BaseVisitor.h"
 #include "../ParserAdapter/ParserAdapter.hpp"
 #include "Type.hpp"
+#include "NameResolutionContext.hpp"
 
 
 namespace cMCompiler::dataStructures
@@ -41,9 +43,10 @@ namespace cMCompiler::dataStructures
 			std::vector<std::string>&& parameterNames,
 			std::unique_ptr<TreeType>&& parseTree,
 			std::string name,
-			not_null<INamedObject*> parent) :
+			not_null<INamedObject*> parent,
+			NameResolutionContext const& context) :
 			parameterNames_(std::move(parameterNames)), parseTree_(std::move(parseTree)),
-			INamedObject(name, parent)
+			INamedObject(name, parent), context_(context)
 		{}
 
 		std::unique_ptr<TreeType> fillGeneric(std::vector<GenericParameter> const& parameters)
@@ -62,13 +65,22 @@ namespace cMCompiler::dataStructures
 					auto paramName = std::find(parameterNames_.begin(), parameterNames_.end(), name);
 					if (paramName != parameterNames_.end())
 					{
-						auto type = parameters_[std::distance(paramName, parameterNames_.begin())];
+						auto type = parameters_[std::distance(parameterNames_.begin(), paramName)];
 						auto refLevel = gsl::narrow<unsigned char>(ctx->ref().size() + type.referenceLevel_);
 						auto stream = std::stringstream(type.value_->name() + std::string(refLevel, '*'));
 						auto identifier = Parser::ParserAdapter().parseType(stream);
 
 						*std::find_if(ctx->parent->children.begin(), ctx->parent->children.end(), [ctx](const auto& e) -> bool {return e.get() == ctx; }) = std::move(identifier);
 					}
+					return {};
+				}
+
+				antlrcpp::Any visitGenericSpecifier(CMinusEqualsMinus1Revision0Parser::GenericSpecifierContext* ctx) final
+				{
+					ctx->parent->children.erase(utilities::find_if(ctx->parent->children, [=](const auto& e)
+						{
+							return e.get() == ctx;
+						}));
 					return {};
 				}
 			};
@@ -86,9 +98,12 @@ namespace cMCompiler::dataStructures
 			return {};
 		}
 
+		NameResolutionContext& context() { return context_; }
+
 	private:
 		std::vector<std::string> parameterNames_;
 		std::unique_ptr<TreeType> parseTree_;
+		NameResolutionContext context_;
 
 	};
 }

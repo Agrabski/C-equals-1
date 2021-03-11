@@ -12,6 +12,7 @@ namespace cMCompiler::compiler
 		std::map<std::string, std::unique_ptr<dataStructures::execution::IRuntimeValue>>& variables_;
 		void call(dataStructures::execution::IRuntimeValue& instruction);
 		void assign(dataStructures::execution::IRuntimeValue& instruction);
+		void declareVariable(dataStructures::execution::IRuntimeValue& instruction);
 		void terminate(dataStructures::execution::IRuntimeValue& instruction);
 	public:
 		void evaluate(language::runtime_value& instruction);

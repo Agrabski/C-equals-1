@@ -2,17 +2,17 @@
 
 
 using namespace cMCompiler::dataStructures;
-Variable* Function::appendVariable(std::string name, not_null<Type*> type, unsigned char referenceLevel, std::function<std::unique_ptr<execution::IRuntimeValue>(not_null<Variable*>)> objectFactory)
+Variable* Function::appendVariable(std::string name, not_null<Type*> type, unsigned char referenceLevel)
 {
-	auto tmp = std::make_unique<Variable>(name, type, this, referenceLevel, objectFactory);
+	auto tmp = std::make_unique<Variable>(name, type, this, referenceLevel);
 	auto result = tmp.get();
 	parameters_.push_back(std::move(tmp));
 	return result;
 }
 
-Variable* cMCompiler::dataStructures::Function::appendLocalVariable(std::string name, not_null<Type*> type, unsigned char referenceLevel, std::function<std::unique_ptr<execution::IRuntimeValue>(not_null<Variable*>)> objectFactory)
+Variable* cMCompiler::dataStructures::Function::appendLocalVariable(std::string name, not_null<Type*> type, unsigned char referenceLevel)
 {
-	auto tmp = std::make_unique<Variable>(name, type, this, referenceLevel, objectFactory);
+	auto tmp = std::make_unique<Variable>(name, type, this, referenceLevel);
 	auto result = tmp.get();
 	localVariables_.push_back(std::move(tmp));
 	return result;

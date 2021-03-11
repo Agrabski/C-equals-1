@@ -18,7 +18,7 @@ attributeTarget: ('type' | 'variable' | 'function');
 importDeclaration : 'import' '{' identifier+ '}' 'from' '{' qualifiedIdentifier '}';
 
 typeDeclaration:
-	(attributeSequence)? AccessSpecifier? classTypeSpecifier identifier (':' implementedInterfacesSequence)? OpenBracket
+	(attributeSequence)? AccessSpecifier? classTypeSpecifier identifier genericSpecifier? (':' implementedInterfacesSequence)? OpenBracket
 		classContentSequence CloseBracket;
 
 classTypeSpecifier: (Class| Interface | 'struct');
@@ -59,12 +59,14 @@ compoundStatement:
 	| statement;
 
 statement:
-	expression SemiColon
-	| ifStatement
+	  ifStatement
 	| loopStatement
 	| assigmentStatement SemiColon
 	| variableDeclarationStatement SemiColon
-	| returnStatement SemiColon;
+	| returnStatement SemiColon
+    | functionCallStatement SemiColon;
+
+functionCallStatement: functionCall | expression Period functionCall;
 
 returnStatement: 'return' expression;
 
@@ -107,16 +109,16 @@ qualifiedIdentifier: identifier (DoubleColon identifier)*;
 
 expression
     : STRING
+    | ParamOpen expression ParamClose
+    | expression Period identifier
+    | expression Period functionCall
     | functionCall
     | throwExpression
     | identifier
     | IntegerLiteral
-	| ParamOpen expression ParamClose
 	| newExpression
 	| expression binaryOperator expression
     | LogicalUnaryOperator expression
-    | expression Period identifier
-    | expression Period functionCall
     | expression indexExpression
     ;
 

@@ -15,18 +15,12 @@ cMCompiler::language::runtime_value cMCompiler::language::buildValueLiteralExpre
 }
 
 std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler::language::buildFunctionCallStatement(
-	runtime_value&& referenceToCompiletimeFunction,
-	runtime_value&& referenceToRuntimeFunction,
-	runtime_value&& expressions,
+	runtime_value&& expression,
 	runtime_value&& pointerToSource)
 {
-	auto expression = buildFunctionCallExpression(
-		std::move(referenceToCompiletimeFunction),
-		std::move(referenceToRuntimeFunction),
-		std::move(expressions),
-		pointerToSource->copy());
-
 	auto [result, resultObject] = heapAllocateObject(getFunctionCallStatementDescriptor());
+	//todo: parent
+	//dereferenceAs<dataStructures::execution::ObjectValue>(expression.get())->setValue("_parentExpression", result->copy());
 	resultObject.setValue("_function", std::move(expression));
 	return std::move(result);
 }
@@ -46,11 +40,15 @@ cMCompiler::language::runtime_value cMCompiler::language::buildMethodCallExpress
 		expressions.push_back(e.get());
 
 	auto methods = type->methods();
-	methods.erase(std::remove_if(methods.begin(), methods.end(), [&](auto const e) {return e->name() != methodName; }));
+	auto remove = std::remove_if(methods.begin(), methods.end(), [&](auto const e) {return e->name() != methodName; });
+	if (remove != methods.end())
+		methods.erase(remove);
+	auto compile = resolveOverload(methods, argumentExpressions, true, false);
+	auto run = resolveOverload(methods, argumentExpressions, false, true);
 
 	auto result = buildFunctionCallExpression(
-		getValueFor(resolveOverload(methods, argumentExpressions, true, false)),
-		getValueFor(resolveOverload(methods, argumentExpressions, false, true)),
+		compile != nullptr ? getValueFor(compile) : nullptr,
+		run != nullptr ? getValueFor(run) : nullptr,
 		language::convertToCollection(std::move(argumentExpressions), getExpressionDescriptor(), 1),
 		std::move(pointerToSource));
 	assert(dynamic_cast<dataStructures::execution::ReferenceValue*>(result.get()) != nullptr);

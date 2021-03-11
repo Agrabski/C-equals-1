@@ -22,7 +22,7 @@ std::string cMCompiler::language::convertToString(dataStructures::execution::IRu
 	return string.toString();
 }
 
-cMCompiler::language::runtime_value cMCompiler::language::convertToCollection(std::vector<runtime_value> && values, not_null<dataStructures::Type*> type, unsigned char referenceLevel)
+cMCompiler::language::runtime_value cMCompiler::language::convertToCollection(std::vector<runtime_value>&& values, not_null<dataStructures::Type*> type, unsigned char referenceLevel)
 {
 	auto result = std::make_unique<execution::ArrayValue>(getCollectionTypeFor(type), type, referenceLevel);
 	for (auto& v : values)
@@ -59,15 +59,17 @@ cMCompiler::dataStructures::execution::IRuntimeValue* cMCompiler::language::dere
 {
 	using namespace cMCompiler::dataStructures::execution;
 	ReferenceValue* ref = nullptr;
+	dataStructures::execution::IRuntimeValue* v = value.get();
 	do
 	{
-		ref = dynamic_cast<ReferenceValue*>(value.get());
+		ref = dynamic_cast<ReferenceValue*>(v);
 		if (ref == nullptr)
-			return value;
-		value = ref->value()->get();
-	}
-	while (ref->value() != nullptr);
-	std::terminate();
+			return v;
+
+		if (ref->value() != nullptr)
+			v = ref->value()->get();
+	} while (ref->value() != nullptr);
+	return nullptr;
 }
 
 cMCompiler::dataStructures::execution::IRuntimeValue* cMCompiler::language::dereferenceOnce(not_null<dataStructures::execution::IRuntimeValue*> value)

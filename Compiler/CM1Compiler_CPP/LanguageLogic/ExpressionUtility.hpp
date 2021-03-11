@@ -21,6 +21,15 @@ namespace cMCompiler::language
 		runtime_value&& expressions,
 		runtime_value&& pointerToSource
 	);
+
+
+	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildConstructorInvocationExpression(
+		runtime_value&& referenceToCompiletimeFunction,
+		runtime_value&& referenceToRuntimeFunction,
+		runtime_value&& expressions,
+		runtime_value&& pointerToSource
+	);
+
 	runtime_value buildBinaryOperatorExpression(
 		runtime_value&& referenceToCompiletimeFunction,
 		runtime_value&& referenceToRuntimeFunction,

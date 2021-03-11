@@ -7,13 +7,17 @@
 #include "../LanguageLogic/OverloadResolutionUtility.hpp"
 #include "../LanguageLogic/SpecialFunctionUtility.hpp"
 #include "../LanguageLogic/TypeInstantiationUtility.hpp"
+#include "ExpressionEvaluator.hpp"
+#include "ExpressionBuilder.hpp"
+using cMCompiler::compiler::ExpressionEvaluator;
 using namespace cMCompiler::dataStructures::execution;
 
 using namespace cMCompiler;
 
 void cMCompiler::compiler::createAttribute(
 	gsl::not_null<CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext*> ctx,
-	gsl::not_null<dataStructures::Namespace*> parent)
+	gsl::not_null<dataStructures::Namespace*> parent, 
+	language::NameResolutionContext const& context)
 {
 	auto name = ctx->identifier()->getText();
 	not_null attribute = parent->append<dataStructures::Attribute>(name);
@@ -24,7 +28,7 @@ void cMCompiler::compiler::createAttribute(
 	attribute->addAttributeTarget(dataStructures::parseTarget(targets));
 
 	for (not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> member : ctx->classContentSequence()->functionDeclaration())
-		createFunction<dataStructures::Attribute>(attribute, member);
+		createFunction<dataStructures::Attribute>(attribute, member, context);
 
 
 }
@@ -33,7 +37,8 @@ void cMCompiler::compiler::confirmAttribute(
 	gsl::not_null<CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext*> ctx,
 	gsl::not_null<dataStructures::Namespace*> parent,
 	language::NameResolver resolver,
-	language::NameResolutionContext context)
+	language::NameResolutionContext context,
+	std::filesystem::path file)
 {
 	not_null attribute = parent->get<dataStructures::Attribute>(ctx->identifier()->getText());
 	for (not_null<CMinusEqualsMinus1Revision0Parser::FieldDeclarationContext*> member : ctx->classContentSequence()->fieldDeclaration())
@@ -47,11 +52,11 @@ void cMCompiler::compiler::confirmAttribute(
 	auto functions = attribute->methods();
 	for (not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> member : ctx->classContentSequence()->functionDeclaration())
 	{
-		not_null f = *std::find_if(functions.begin(), functions.end(), [&](const auto f)
+		not_null f = *std::find_if(functions.begin(), functions.end(), [&](const auto f) noexcept
 		{
 			return f->state() == dataStructures::ObjectState::Cretated;
 		});
-		confirmFunction(resolver, context, f, member);
+		confirmFunction(resolver, context, f, member, file);
 	}
 
 	attribute->confirm();
@@ -99,3 +104,34 @@ std::unique_ptr<dataStructures::AttributeInstance> cMCompiler::compiler::createA
 	return std::make_unique<dataStructures::AttributeInstance>(attribute, std::move(self));
 }
 
+void cMCompiler::compiler::attachAttribute(not_null<dataStructures::Function*> f,
+	not_null<CMinusEqualsMinus1Revision0Parser::AttributeContext*> attribute,
+	language::NameResolver& resolver,
+	language::NameResolutionContext& context,
+	ExpressionBuilder& ep)
+{
+	std::unique_ptr<dataStructures::execution::IRuntimeValue> dummyValue;
+	auto attributeName = attribute->functionCall()->identifier()->getText();
+	not_null attributeType = resolver.resolve<dataStructures::Attribute>(attributeName, context);
+	auto parameters = std::vector<std::unique_ptr<dataStructures::execution::IRuntimeValue>>();
+	for (auto p : attribute->functionCall()->functionCallParameter())
+	{
+		auto evaluator = ExpressionEvaluator([&](const auto&) -> std::unique_ptr<dataStructures::execution::IRuntimeValue>&
+			{
+				return dummyValue;
+			});
+		auto expression = ep.buildExpression(p);
+		parameters.push_back(evaluator.evaluate(*expression.get()));
+	}
+	auto instance = cMCompiler::compiler::createAttributeInstance(*f, attributeType, std::move(parameters));
+	f->appendAttribute(std::move(instance));
+}
+
+void cMCompiler::compiler::attachAttribute(not_null<dataStructures::Type*> type,
+	not_null<CMinusEqualsMinus1Revision0Parser::AttributeContext*> attribute,
+	language::NameResolver& resolver,
+	language::NameResolutionContext& context,
+	ExpressionBuilder& ep)
+{
+	//todo: todo
+}

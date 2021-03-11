@@ -15,6 +15,18 @@ std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::
 	return (*language::dereferenceAs<ObjectValue>(&expression)->getMemberValue("_value")->value())->copy();
 }
 
+std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::ExpressionEvaluator::evaluateBinaryOperator(dataStructures::execution::IRuntimeValue& expression)
+{
+	not_null exp = language::dereferenceAs<ObjectValue>(&expression);
+	not_null function = language::dereferenceAs<RuntimeFunctionDescriptor>(exp->getMemberValue("_compiletimeFunction").get());
+	not_null arg1 = language::dereferenceAs<ObjectValue>(exp->getMemberValue("_arg1").get());
+	not_null arg2 = language::dereferenceAs<ObjectValue>(exp->getMemberValue("_arg2").get());
+	std::vector<language::runtime_value> argumentValues;
+	argumentValues.push_back(evaluate(*arg1));
+	argumentValues.push_back(evaluate(*arg2));
+	return execute(function->value(), std::move(argumentValues));
+}
+
 std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::ExpressionEvaluator::evaluateFieldAccess(dataStructures::execution::IRuntimeValue& expression)
 {
 	auto exp = language::dereferenceAs<ObjectValue>(&expression)->getMemberValue("_expression");
@@ -52,6 +64,8 @@ std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::
 		return evaluateCall(*e);
 	if (isOfType(e, language::getVariableReferenceExpressionDescriptor()))
 		return evaluateVariable(*e);
+	if (isOfType(e, language::getBinaryOperatorExpressionDescriptor()))
+		return evaluateBinaryOperator(*e);
 
 	std::terminate();
 }
@@ -67,7 +81,7 @@ std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::
 
 std::unique_ptr<dataStructures::execution::ReferenceValue> cMCompiler::compiler::ExpressionEvaluator::evaluateLeftExpression(dataStructures::execution::IRuntimeValue& expression)
 {
-	auto result =  evaluateCommon(expression);
+	auto result = evaluateCommon(expression);
 	auto reference = dynamic_cast<dataStructures::execution::ReferenceValue*>(result.get());
 	if (reference != nullptr)
 	{

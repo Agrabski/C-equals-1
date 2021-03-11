@@ -99,7 +99,9 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 			return result;
 		}
 	}
-	std::terminate();
+	if (ctx->ParamOpen())
+		return buildExpression(ctx->expression(0), std::move(referenceToParent));
+	std::terminate();//todo: index expression
 }
 
 cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::buildBinaryOperatorExpression(gsl::not_null<CMinusEqualsMinus1Revision0Parser::ExpressionContext*> ctx, language::runtime_value&& referenceToParent)
@@ -140,9 +142,10 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 			type,
 			std::move(parameters),
 			methodName,
-			language::buildSourcePointer(filepath_.string(), *ctx) // todo: pass filename
+			language::buildSourcePointer(filepath_.string(), *ctx)
 		);
 		language::setParent(result.get(), std::move(referenceToParent));
+		return result;
 	}
 	else
 	{
@@ -159,14 +162,11 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 		language::setParent(result.get(), std::move(referenceToParent));
 		return result;
 	}
+	std::terminate();
 }
 
 cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::buildExpression(gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionCallContext*> ctx, language::runtime_value&& referenceToParent)
 {
-	auto arguments = buildParameters(ctx);
-	// todo: generics
-	// todo: operators
-	std::vector<not_null<dataStructures::Function*>> candidates;
 	auto name = ctx->identifier()->getText();
 	auto special = buildSpecialFunction(ctx, name);
 	if (special)
@@ -174,6 +174,10 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 		language::setParent(special->get(), std::move(referenceToParent));
 		return std::move(*special);
 	}
+	auto arguments = buildParameters(ctx);
+	// todo: generics
+	// todo: operators
+	std::vector<not_null<dataStructures::Function*>> candidates;
 	if (ctx->genericUsage() != nullptr)
 	{
 		auto genericParameters = std::vector<dataStructures::GenericParameter>();
@@ -194,13 +198,38 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 				context_,
 				filepath_
 			));
+		auto genericType = nameResolver_.resolve<Generic<Type>>(name, context_);
+		if (genericType != nullptr)
+			for (auto c : instantiate(
+				*genericType,
+				genericParameters,
+				nameResolver_,
+				context_,
+				filepath_)->methods())
+				if (language::isConstructor(c))
+					candidates.push_back(c);
 	}
 	else
 	{
 		candidates = nameResolver_.resolveOverloadSet(ctx->identifier()->getText(), context_);
+		auto type = nameResolver_.resolve<Type>(name, context_);
+		if (type != nullptr)
+			for (auto c : type->methods())
+				if (language::isConstructor(c))
+					candidates.push_back(c);
 	}
 	auto compileTime = language::resolveOverload(candidates, arguments, true, false);
 	auto runtime = language::resolveOverload(candidates, arguments, false, true);
+	if (language::isConstructor(compileTime) || language::isConstructor(runtime))
+	{
+		assert((compileTime == nullptr || language::isConstructor(compileTime)) && (runtime == nullptr || language::isConstructor(runtime)));
+		return language::buildConstructorInvocationExpression(
+			language::getValueFor(compileTime),
+			language::getValueFor(runtime),
+			language::convertCollection(std::move(arguments), language::getExpressionDescriptor(), 1),
+			language::buildSourcePointer(filepath_.string(), *ctx)
+		);
+	}
 	return language::buildFunctionCallExpression(
 		language::getValueFor(compileTime),
 		language::getValueFor(runtime),

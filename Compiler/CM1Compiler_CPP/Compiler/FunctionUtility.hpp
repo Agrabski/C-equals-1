@@ -14,7 +14,12 @@ namespace cMCompiler::compiler
 {
 	std::string getName(gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx);
 
-	std::optional<std::string> returnType(gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx);
+	dataStructures::Type* returnType(
+		gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx,
+		language::NameResolver& resolver,
+		language::NameResolutionContext& context,
+		std::filesystem::path file
+		);
 
 	dataStructures::Function* getCompatibleFunction(
 		std::string const& name,
@@ -36,7 +41,7 @@ namespace cMCompiler::compiler
 	dataStructures::Function* createFunction(not_null<dataStructures::Namespace*> target, std::string const& name);
 
 	template<typename T>
-	void createFunction(not_null<T*> target, gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx)
+	void createFunction(not_null<T*> target, gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx, language::NameResolutionContext const&context)
 	{
 		using dataStructures::Function;
 		using dataStructures::Accessibility;
@@ -49,7 +54,7 @@ namespace cMCompiler::compiler
 			std::vector<std::string> parameters{};
 			for (not_null param : generic->identifier())
 				parameters.push_back(param->getText());
-			auto x = target->appendGeneric<Function>(std::move(parameters), ctx->clone(nullptr), name);
+			auto x = target->appendGeneric<Function>(std::move(parameters), ctx->clone(nullptr), name, context);
 		}
 		else
 		{
@@ -66,13 +71,15 @@ namespace cMCompiler::compiler
 	void confirmFunction(
 		language::NameResolver& resolver,
 		language::NameResolutionContext& context,
-		gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx);
+		gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx,
+		std::filesystem::path file);
 
 	void confirmFunction(
 		language::NameResolver& resolver,
 		language::NameResolutionContext& context,
 		gsl::not_null<dataStructures::Function*> f,
-		gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx);
+		gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx,
+		std::filesystem::path file);
 
 	void finalizeFunction(
 		language::NameResolver& resolver,

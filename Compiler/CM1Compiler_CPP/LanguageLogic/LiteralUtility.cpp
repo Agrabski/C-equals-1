@@ -11,6 +11,13 @@ std::unique_ptr<execution::IntegerValue> cMCompiler::language::buildIntegerValue
 	std::terminate(); // todo: handle custom integer types
 }
 
+std::unique_ptr<cMCompiler::dataStructures::execution::IntegerValue> cMCompiler::language::buildIntegerValue(dataStructures::Type* ofType, dataStructures::execution::usize value)
+{
+	return buildIntegerValue(ofType,
+		(dataStructures::execution::number_component*)&value,
+		sizeof(decltype(value)) / sizeof(dataStructures::execution::number_component));
+}
+
 std::unique_ptr<execution::IntegerValue> cMCompiler::language::buildIntegerValue(dataStructures::Type* ofType, dataStructures::execution::number_component* value, size_t valueSize)
 {
 	auto result = buildIntegerValue(ofType);

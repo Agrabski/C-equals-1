@@ -48,14 +48,7 @@ namespace cMCompiler::language
 	[[nodiscard]]
 	T convertToIntegral(dataStructures::execution::IRuntimeValue& value)
 	{
-		auto* integerValue = dynamic_cast<dataStructures::execution::IntegerValue*>(&value);
-		if (integerValue == nullptr)
-		{
-			not_null reference = dynamic_cast<dataStructures::execution::ReferenceValue*>(&value);
-			integerValue = dynamic_cast<dataStructures::execution::IntegerValue*>(reference->value()->get());
-			if (integerValue == nullptr)
-				std::terminate();
-		}
+		auto integerValue = dereferenceAs<dataStructures::execution::IntegerValue>(&value);
 		return *reinterpret_cast<T*>(integerValue->rawNumber().get());
 	}
 }
