@@ -1,6 +1,7 @@
 #pragma once
 #include <gsl.h>
 #include "../DataStructures/Variable.hpp"
+#include "NameResolver.hpp"
 #include "runtime_values.hpp"
 
 namespace cMCompiler::language
@@ -22,6 +23,13 @@ namespace cMCompiler::language
 		runtime_value&& pointerToSource
 	);
 
+	runtime_value buildIndexOperatorExpression(
+		runtime_value&& expression,
+		gsl::not_null<dataStructures::Type*> type,
+		std::vector<runtime_value>&& argumentExpressions,
+		runtime_value&& pointerToSource
+	);
+
 
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildConstructorInvocationExpression(
 		runtime_value&& referenceToCompiletimeFunction,
@@ -37,6 +45,16 @@ namespace cMCompiler::language
 		runtime_value&& arg2,
 		runtime_value&& pointerToSource
 	);
+
+	runtime_value buildBinaryOperatorExpression(
+		NameResolver& nr,
+		NameResolutionContext& context,
+		std::string operatorKind,
+		runtime_value&& arg1,
+		runtime_value&& arg2,
+		runtime_value&& pointerToSource
+	);
+
 
 	void setParent(not_null<dataStructures::execution::IRuntimeValue*> expression, runtime_value&& parentReference);
 }

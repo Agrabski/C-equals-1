@@ -213,6 +213,7 @@
     <ClCompile Include="Attribute.cpp" />
     <ClCompile Include="AttributeTarget.cpp" />
     <ClCompile Include="execution\ArrayValue.cpp" />
+    <ClCompile Include="execution\BooleanValue.cpp" />
     <ClCompile Include="execution\IntegerValue.cpp" />
     <ClCompile Include="execution\IRuntimeValue.cpp" />
     <ClCompile Include="execution\ObjectValue.cpp" />

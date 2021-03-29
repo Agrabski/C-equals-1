@@ -12,6 +12,7 @@
 #include "../Utilities/pointer_cast.hpp"
 #include "GetterExecution.hpp"
 #include "ExpressionUtility.hpp"
+#include "OverloadResolutionUtility.hpp"
 
 using namespace cMCompiler::dataStructures::execution;
 using namespace cMCompiler::dataStructures;
@@ -106,6 +107,20 @@ std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler
 	return std::move(expression);
 }
 
+cMCompiler::language::runtime_value cMCompiler::language::buildIndexOperatorExpression(
+	runtime_value&& expression,
+	gsl::not_null<dataStructures::Type*> type,
+	std::vector<runtime_value>&& argumentExpressions,
+	runtime_value&& pointerToSource)
+{
+	return buildMethodCallExpression(
+		std::move(expression),
+		type,
+		std::move(argumentExpressions),
+		"operator_[]",
+		std::move(pointerToSource));
+}
+
 std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler::language::buildConstructorInvocationExpression(runtime_value&& referenceToCompiletimeFunction, runtime_value&& referenceToRuntimeFunction, runtime_value&& expressions, runtime_value&& pointerToSource)
 {
 
@@ -136,6 +151,33 @@ cMCompiler::language::runtime_value cMCompiler::language::buildBinaryOperatorExp
 	object.setValue("_arg2", std::move(arg2));
 	object.setValue("_pointerToSource", std::move(pointerToSource));
 	return std::move(expression);
+}
+
+cMCompiler::language::runtime_value cMCompiler::language::buildBinaryOperatorExpression(
+	NameResolver& nr,
+	NameResolutionContext& context,
+	std::string operatorKind,
+	runtime_value&& arg1,
+	runtime_value&& arg2,
+	runtime_value&& pointerToSource)
+{
+	auto candidates = nr.resolveOperatorOverloadSet(
+		operatorKind,
+		language::getExpressionType(arg1),
+		language::getExpressionType(arg2),
+		context);
+	std::vector<language::runtime_value> args;
+	args.push_back(std::move(arg1));
+	args.push_back(std::move(arg2));
+	auto compileTime = resolveOverload(candidates, args, true, false);
+	auto runTime = resolveOverload(candidates, args, false, true);
+	return language::buildBinaryOperatorExpression(
+		language::getValueFor(compileTime),
+		language::getValueFor(runTime),
+		std::move(args[0]),
+		std::move(args[1]),
+		std::move(pointerToSource)
+	);
 }
 
 std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(gsl::not_null<Type*> value)
@@ -186,5 +228,13 @@ void cMCompiler::language::pushElse(runtime_value& conditionalInstruction, runti
 	auto object = castToObject(conditionalInstruction);
 	assert(canCastReference(newInstruction->type(), getIInstruction()));
 	auto collection = castToArray(object->getMemberValue("_elseBranch").get());
+	collection->push(std::move(newInstruction));
+}
+
+void cMCompiler::language::pushWhile(runtime_value& whileInstruction, runtime_value&& newInstruction)
+{
+	auto object = castToObject(whileInstruction);
+	assert(canCastReference(newInstruction->type(), getIInstruction()));
+	auto collection = castToArray(object->getMemberValue("_body").get());
 	collection->push(std::move(newInstruction));
 }

@@ -22,6 +22,11 @@ namespace cMCompiler::language
 		runtime_value&& expression,
 		runtime_value&& pointerToSource);
 
+	runtime_value buildWhileLoop(
+		runtime_value&& expression,
+		runtime_value&& pointerToSource
+	);
+
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> createVariableDescriptor(not_null<dataStructures::Variable*> variable);
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> createTypeDescriptor(not_null<dataStructures::Type*> type);
 
@@ -54,4 +59,5 @@ namespace cMCompiler::language
 
 	void pushIf(runtime_value& conditionalInstruction, runtime_value&& newInstruction);
 	void pushElse(runtime_value& conditionalInstruction, runtime_value&& newInstruction);
+	void pushWhile(runtime_value& whileInstruction, runtime_value&& newInstruction);
 }

@@ -10,6 +10,16 @@
 #include "../LanguageLogic/SpecialFunctionUtility.hpp"
 #include "../LanguageLogic/ExpressionUtility.hpp"
 
+std::string cMCompiler::compiler::FunctionBodyBuilder::decorateTemporary(not_null<antlr4::tree::ParseTree*>tree, int index)
+{
+	return "$$_temporary" + language::getLineNumber(tree)+ std::to_string(index);
+}
+
+std::string cMCompiler::compiler::FunctionBodyBuilder::decorateRangeLoopEndVariableName(std::string const& original)
+{
+	return "$$_" + original;
+}
+
 void cMCompiler::compiler::FunctionBodyBuilder::enterScope(instruction_pointer& currentInstruction)
 {
 	variables_.push_back({});
@@ -47,6 +57,187 @@ cMCompiler::compiler::ExpressionBuilder cMCompiler::compiler::FunctionBodyBuilde
 				return *var;
 			return nullptr;
 		});
+}
+
+
+void cMCompiler::compiler::FunctionBodyBuilder::buildForLoop(
+	std::string const& variableName,
+	std::function<language::runtime_value()> variableInitialisationExpressionFactory,
+	std::function<language::runtime_value(not_null<dataStructures::Variable*>)> testExpressionFactory,
+	std::function<void(not_null<dataStructures::Variable*>)> postExpressionFactory,
+	gsl::not_null<antlr4::tree::ParseTree*> body,
+	std::function<void(not_null<dataStructures::Variable*>)> actionInNewScope)
+{
+	auto initialisationExpression = variableInitialisationExpressionFactory();
+	// todo: reference level
+	not_null variable = function_->appendLocalVariable(
+		variableName,
+		language::getExpressionType(initialisationExpression),
+		0
+	);
+
+	auto testExpression = testExpressionFactory(variable);
+
+	auto assigment = language::buildVariableDeclaration(
+		variable,
+		std::move(initialisationExpression),
+		language::buildSourcePointer(filePath_.string(), *body->parent)
+	);
+	language::suplyParent(assigment, getReferenceToParent());
+	language::supplyScopeBegin(assigment, variable);
+	instructionAppenders.back()(std::move(assigment));
+	variables_.back().push_back(variable);
+
+	buildWhileLoop(
+		std::move(testExpression),
+		body,
+		[&]() {actionInNewScope(variable); },
+		[&]()
+		{
+			postExpressionFactory(variable);
+		}
+	);
+
+
+}
+
+void cMCompiler::compiler::FunctionBodyBuilder::buildWhileLoop(
+	language::runtime_value&& expression,
+	not_null<antlr4::tree::ParseTree*> body,
+	std::function<void()> actionInNewScope,
+	std::function<void()> actionAtEndOfNewScope
+)
+{
+	auto loop = language::buildWhileLoop(std::move(expression), language::buildSourcePointer(filePath_.string(), *body->parent));
+	enterScope(loop);
+	actionInNewScope();
+	instructionAppenders.push_back([&](auto&& e)
+		{
+			language::suplyParent(e, getReferenceToParent());
+			language::pushWhile(loop, std::move(e));
+		});
+	body->accept(this);
+	actionAtEndOfNewScope();
+	auto scopeExit = leaveScope(22); // todo: line number
+	language::suplyParent(scopeExit, getReferenceToParent());
+	language::pushWhile(loop, std::move(scopeExit));
+	instructionAppenders.pop_back();
+	parents_.pop_back();
+}
+
+void cMCompiler::compiler::FunctionBodyBuilder::buildForRangeLoop(
+	std::string const& variableName,
+	language::runtime_value&& expression,
+	not_null<antlr4::tree::ParseTree*> body)
+{
+	not_null expressionType = language::getExpressionType(expression);
+	auto expressionMethods = expressionType->methods();
+	auto iterateMethod = std::find_if(expressionMethods.begin(), expressionMethods.end(), [](const auto e) {return e->name() == "iterate"; });
+	not_null rangeObjectVariable = function_->appendLocalVariable(
+		decorateTemporary(body, 0),
+		(*iterateMethod)->returnType(),
+		0
+	);
+	{
+		auto assigment = language::buildVariableDeclaration(
+			rangeObjectVariable,
+			language::buildMethodCallExpression(
+				std::move(expression),
+				expressionType,
+				{},
+				"iterate",
+				language::buildSourcePointer(filePath_.string(), *body->parent)
+			),
+			language::buildSourcePointer(filePath_.string(), *body->parent)
+		);
+		language::suplyParent(assigment, getReferenceToParent());
+		language::supplyScopeBegin(assigment, rangeObjectVariable);
+		instructionAppenders.back()(std::move(assigment));
+		variables_.back().push_back(rangeObjectVariable);
+	}
+
+	auto methods = rangeObjectVariable->type()->methods();
+	auto begin = std::find_if(methods.begin(), methods.end(), [](auto e) {return e->name() == "begin"; });
+
+	// todo: reference level
+	auto variable = function_->appendLocalVariable(variableName, (*begin)->returnType(), 0);
+
+	// todo: jesus fucking christ
+
+
+	buildForLoop(
+		decorateTemporary(body, 1),
+		[=]()
+		{
+			return language::buildMethodCallExpression(
+				language::buildVariableReferenceExpressionDescriptor(rangeObjectVariable),
+				rangeObjectVariable->type(),
+				{},
+				"begin",
+				language::buildSourcePointer(filePath_.string(), *body->parent)
+			);
+		},
+		[=](auto e)
+		{
+			return language::buildBinaryOperatorExpression(
+				nr_,
+				context_,
+				"!=",
+				language::buildVariableReferenceExpressionDescriptor(e),
+				language::buildMethodCallExpression(
+					language::buildVariableReferenceExpressionDescriptor(rangeObjectVariable),
+					rangeObjectVariable->type(),
+					{},
+					"end",
+					language::buildSourcePointer(filePath_.string(), *body->parent)
+				),
+				language::buildSourcePointer(filePath_.string(), *body->parent)
+			);
+		},
+			[=](auto e)
+		{
+			auto instruction = language::buildFunctionCallStatement(
+				language::buildMethodCallExpression(
+					language::buildVariableReferenceExpressionDescriptor(e),
+					rangeObjectVariable->type(),
+					{},
+					"advance",
+					language::buildSourcePointer(filePath_.string(), *body->parent)),
+				language::buildSourcePointer(filePath_.string(), *body->parent)
+			);
+			instructionAppenders.back()(std::move(instruction));
+		},
+			body,
+			[variable, this, body](auto e) -> void
+		{
+			variables_.back().push_back(variable);
+			auto assigment = language::buildVariableDeclaration(
+				variable,
+				language::buildMethodCallExpression(
+					language::buildVariableReferenceExpressionDescriptor(e),
+					e->type(),
+					{},
+					"get",
+					language::buildSourcePointer(filePath_.string(), *body->parent)
+				),
+				language::buildSourcePointer(filePath_.string(), *body->parent)
+			);
+			language::suplyParent(assigment, getReferenceToParent());
+			language::supplyScopeBegin(assigment, variable);
+			instructionAppenders.back()(std::move(assigment));
+		}
+		);
+}
+
+antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitRangeForStatement(
+	CMinusEqualsMinus1Revision0Parser::RangeForStatementContext* ctx)
+{
+	buildForRangeLoop(
+		ctx->identifier()->getText(),
+		getBuilder().buildExpression(ctx->expression(), nullptr),
+		ctx->compoundStatement()
+	);
+	return {};
 }
 
 cMCompiler::language::runtime_value cMCompiler::compiler::FunctionBodyBuilder::getReferenceToParent()

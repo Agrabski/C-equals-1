@@ -101,6 +101,22 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 	}
 	if (ctx->ParamOpen())
 		return buildExpression(ctx->expression(0), std::move(referenceToParent));
+	if (ctx->indexExpression())
+	{
+		auto expression = buildExpression(ctx->expression(0), nullptr);
+		auto type = language::getExpressionType(expression);
+		std::vector<language::runtime_value> expressions;
+		for (auto exp : ctx->indexExpression()->expression())
+			expressions.push_back(buildExpression(exp, nullptr));
+		auto result = language::buildIndexOperatorExpression(
+			std::move(expression),
+			type,
+			std::move(expressions),
+			language::buildSourcePointer(filepath_.string(), *ctx)
+		);
+		language::setParent(result.get(), std::move(referenceToParent));
+		return std::move(result);
+	}
 	std::terminate();//todo: index expression
 }
 
@@ -110,17 +126,12 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 	auto expr1 = buildExpression(ctx->expression(0), nullptr);
 	auto expr2 = buildExpression(ctx->expression(1), nullptr);
 
-	auto candidates = nameResolver_.resolveOperatorOverloadSet(op, language::getExpressionType(expr1), language::getExpressionType(expr2), context_);
-	std::vector<language::runtime_value> args;
-	args.push_back(std::move(expr1));
-	args.push_back(std::move(expr2));
-	auto compileTime = language::resolveOverload(candidates, args, true, false);
-	auto runTime = language::resolveOverload(candidates, args, false, true);
 	auto result = language::buildBinaryOperatorExpression(
-		language::getValueFor(compileTime),
-		language::getValueFor(runTime),
-		std::move(args[0]),
-		std::move(args[1]),
+		nameResolver_,
+		context_,
+		op,
+		std::move(expr1),
+		std::move(expr2),
 		language::buildSourcePointer(filepath_.string(), *ctx)
 	);
 	language::setParent(result.get(), std::move(referenceToParent));

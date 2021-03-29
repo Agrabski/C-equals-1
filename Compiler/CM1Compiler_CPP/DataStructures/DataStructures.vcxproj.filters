@@ -233,5 +233,8 @@
     <ClCompile Include="NameResolutionContext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="execution\BooleanValue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

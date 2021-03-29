@@ -1175,8 +1175,9 @@ public:
 
 		size_t getRuleIndex() const final;
 		antlr4::tree::TerminalNode *ATTROBITEOPEN();
-		ExpressionContext *expression();
 		antlr4::tree::TerminalNode *ATTROBITECLOSE();
+		std::vector<ExpressionContext *> expression();
+		ExpressionContext* expression(size_t i);
 
 		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
 		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;

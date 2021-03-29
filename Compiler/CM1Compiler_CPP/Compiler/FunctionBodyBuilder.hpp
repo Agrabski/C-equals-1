@@ -9,6 +9,8 @@ namespace cMCompiler::compiler
 {
 	class FunctionBodyBuilder : public CMinusEqualsMinus1Revision0BaseVisitor
 	{
+		std::string decorateTemporary(not_null<antlr4::tree::ParseTree*>tree, int index);
+		std::string decorateRangeLoopEndVariableName(std::string const& original);
 		using instruction_pointer = std::unique_ptr<dataStructures::execution::IRuntimeValue>;
 		dataStructures::Function* function_;
 		language::NameResolver& nr_;
@@ -22,11 +24,33 @@ namespace cMCompiler::compiler
 		ExpressionBuilder getBuilder();
 		std::filesystem::path filePath_;
 
+		void buildWhileLoop(
+			language::runtime_value&& expression,
+			not_null<antlr4::tree::ParseTree*> body,
+			std::function<void()> actionInNewScope = {},
+			std::function<void()> actionAtEndOfNewScope = {}
+		);
+
+		void buildForLoop(
+			std::string const& variableName,
+			std::function<language::runtime_value()> variableInitialisationExpressionFactory,
+			std::function<language::runtime_value(not_null<dataStructures::Variable*>)> testExpressionFactory,
+			std::function<void(not_null<dataStructures::Variable*>)> postExpressionFactory,
+			not_null<antlr4::tree::ParseTree*> body,
+			std::function<void(not_null<dataStructures::Variable*>)> actionInNewScope = {}
+		);
+
+		void buildForRangeLoop(
+			std::string const& variableName,
+			language::runtime_value&& expression,
+			not_null<antlr4::tree::ParseTree*> body);
+
 		language::runtime_value getReferenceToParent();
 
 		antlrcpp::Any visitVariableDeclarationStatement(CMinusEqualsMinus1Revision0Parser::VariableDeclarationStatementContext* ctx) final;
 		antlrcpp::Any visitFunctionBody(CMinusEqualsMinus1Revision0Parser::FunctionBodyContext* ctx) final;
 		antlrcpp::Any visitIfStatement(CMinusEqualsMinus1Revision0Parser::IfStatementContext* ctx) final;
+		antlrcpp::Any visitRangeForStatement(CMinusEqualsMinus1Revision0Parser::RangeForStatementContext* ctx) final;
 		antlrcpp::Any visitFunctionCallStatement(CMinusEqualsMinus1Revision0Parser::FunctionCallStatementContext* ctx) final;
 		antlrcpp::Any visitAssigmentStatement(CMinusEqualsMinus1Revision0Parser::AssigmentStatementContext* ctx) final;
 	public:

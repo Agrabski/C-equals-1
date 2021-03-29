@@ -122,7 +122,7 @@ expression
     | expression indexExpression
     ;
 
-indexExpression: '[' expression']';
+indexExpression: '[' expression+']';
 
 newExpression : New (Unique | Shared) functionCall;
 
@@ -164,12 +164,14 @@ comparsionOperator
 
 binaryOperator: logicalBinaryOperator | comparsionOperator | arithmeticBinaryOperator;
 
-logicalBinaryOperator: Or | And | Xor;
+logicalBinaryOperator: Or | And | Xor | NotEqual | Equal;
 
 Unsafe: 'unsafe';
 
 LogicalUnaryOperator: Not;
 
+Equal: '==';
+NotEqual: '!=';
 Not: '!';
 DoubleColon: '::';
 SemiColon: ';';
@@ -189,8 +191,6 @@ GreaterEqual: '>=';
 Greater: '>';
 Less: '<';
 LessEqual: '<=';
-Equal: '==';
-NotEqual: '!=';
 Or: '||';
 And: '&&';
 Xor: '^^';

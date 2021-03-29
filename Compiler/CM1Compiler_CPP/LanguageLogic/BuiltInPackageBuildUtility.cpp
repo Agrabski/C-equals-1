@@ -217,6 +217,19 @@ void buildUsize(gsl::not_null<Type*> usize_type)
 			return buildIntegerValue(usize_type, result);
 		}
 	);
+
+	createOperator(
+		ns,
+		"!=",
+		usize_type, 0,
+		usize_type, 0,
+		getBool(),
+		[usize_type](auto& a, auto& b)
+		{
+			auto result = convertToIntegral<usize>(*a) != convertToIntegral<usize>(*b);
+			return buildBooleanValue(result);
+		}
+	);
 }
 
 void buildString(gsl::not_null<Type*> string)

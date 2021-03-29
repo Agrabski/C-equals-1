@@ -6,9 +6,20 @@
 #include "../DataStructures/execution/RuntimeFieldDescriptor.hpp"
 #include "../DataStructures/execution/RuntimeFunctionDescriptor.hpp"
 #include "GetterExecution.hpp"
+#include "../Parser/antlr4-runtime.h"
 using namespace cMCompiler::dataStructures::execution;
 
 using namespace cMCompiler::dataStructures;
+
+int cMCompiler::language::getLineNumber(antlr4::tree::ParseTree* tree)
+{
+	auto current = tree;
+	while (current != nullptr && dynamic_cast<antlr4::tree::TerminalNode*>(current) == nullptr)
+		current = current->children.front().get();
+	assert(current != nullptr);
+	return dynamic_cast<antlr4::tree::TerminalNodeImpl*>(current)->getSymbol()->getLine();
+
+}
 
 bool cMCompiler::language::isOfType(gsl::not_null<cMCompiler::dataStructures::execution::IRuntimeValue*> value, gsl::not_null<dataStructures::Type*> type)
 {
@@ -53,6 +64,19 @@ gsl::not_null<Type*> cMCompiler::language::buildIfDescriptor(gsl::not_null<Names
 	impl->appendInterface(interface);
 	impl->appendField("_pointerToSource", getPointerToSource(), 0);
 	impl->appendField("_expression", expression, 1);
+	return interface;
+}
+
+gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildWhileDescriptor(gsl::not_null<dataStructures::Namespace*> irNs, gsl::not_null<dataStructures::Type*> baseStatement, gsl::not_null<dataStructures::Type*> expression)
+{
+	auto interface = irNs->append<Type>("IWhileStatement"s);
+	interface->appendInterface(baseStatement);
+
+	auto impl = irNs->append<Type>("whileStatement");
+	impl->appendInterface(interface);
+	impl->appendField("_pointerToSource", getPointerToSource(), 0);
+	impl->appendField("_expression", expression, 1);
+	impl->appendField("_body", getCollectionTypeFor(expression), 0);
 	return interface;
 }
 
@@ -289,6 +313,7 @@ void cMCompiler::language::buildIrNamespace(gsl::not_null<dataStructures::Namesp
 	buildVariableDeclarationStatementDescriptor(ns);
 	buildBinaryOperatorExpressionDescriptor(ns);
 	buildConstructorInvocationExpressionDescriptor(ns);
+	buildWhileDescriptor(ns, statement, expression);
 }
 
 gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getVariableDescriptor()
@@ -314,6 +339,11 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getVariab
 gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getIfDescriptor()
 {
 	return getDefaultPackage()->rootNamespace()->get<Namespace>("compiler")->get<Namespace>("ir")->get<Type>("ifStatement");
+}
+
+gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getWhileDescriptor()
+{
+	return getDefaultPackage()->rootNamespace()->get<Namespace>("compiler")->get<Namespace>("ir")->get<Type>("whileStatement");
 }
 
 gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getAssigmentStatementDescriptor()

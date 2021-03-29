@@ -72,6 +72,7 @@ namespace cMCompiler::dataStructures
 
 						*std::find_if(ctx->parent->children.begin(), ctx->parent->children.end(), [ctx](const auto& e) -> bool {return e.get() == ctx; }) = std::move(identifier);
 					}
+					visitChildren(ctx);
 					return {};
 				}
 

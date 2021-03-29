@@ -25,6 +25,14 @@ std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler
 	return std::move(result);
 }
 
+cMCompiler::language::runtime_value cMCompiler::language::buildWhileLoop(runtime_value&& expression, runtime_value&& pointerToSource)
+{
+	auto [result, object] = heapAllocateObject(getWhileDescriptor());
+	object.setValue("_expression", std::move(expression));
+	object.setValue("_pointerToSource", std::move(pointerToSource));
+	return std::move(result);
+}
+
 
 cMCompiler::language::runtime_value cMCompiler::language::buildMethodCallExpression(
 	runtime_value&& expression,

@@ -10,6 +10,7 @@ std::string cMCompiler::compiler::getName(gsl::not_null<CMinusEqualsMinus1Revisi
 		return ctx->functionName()->identifier()->getText();
 	auto name = ctx->functionName()->specialFunctionIdentifier();
 	auto result = "operator_"s;
+	auto x = name->getText();
 	if (name->New() != nullptr)
 		result += "new_";
 	if (name->Shared() != nullptr)
@@ -31,15 +32,15 @@ cMCompiler::dataStructures::Type* cMCompiler::compiler::returnType(
 	if (id != nullptr)
 	{
 		auto name = id->identifier()->getText();
-		if (ctx->genericSpecifier())
+		if (id->genericUsage())
 		{
 			std::vector<dataStructures::GenericParameter> parameters;
-			for (auto p : ctx->genericSpecifier()->identifier())
+			for (not_null p : id->genericUsage()->typeSpecifier())
 				parameters.push_back({
-					.value_ = resolver.resolve<dataStructures::Type>(p->getText(), context),
+					.value_ = resolver.resolve<dataStructures::Type>(p->getText(), context), // todo: nested generics
 					.referenceLevel_ = 0
 					});	// todo: references
-			auto g = resolver.resolve<dataStructures::Generic<dataStructures::Type>>(name, context);
+			not_null g = resolver.resolve<dataStructures::Generic<dataStructures::Type>>(name, context);
 			return instantiate(*g, parameters, resolver, context, file);
 		}
 		return resolver.resolve<dataStructures::Type>(name, context);

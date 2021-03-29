@@ -20,6 +20,7 @@ not_null<dataStructures::Function*> cMCompiler::compiler::instantiate
 )
 {
 	auto tree = function.fillGeneric(genericParameters);
+	auto x = tree->getText();
 	not_null functionTree = dynamic_cast<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*>(tree.get());
 	not_null f = createFunction(dynamic_cast<Namespace*>(function.parent()), function.name());
 	auto context = NameResolutionContext::merge(function.context(), c);
@@ -55,6 +56,18 @@ not_null<dataStructures::Type*> cMCompiler::compiler::instantiate
 		resolver,
 		context,
 		ast
+	);
+	confirmType(
+		resolver,
+		context,
+		ast,
+		file
+	);
+	finalizeType(
+		resolver,
+		context,
+		ast,
+		file
 	);
 	auto ep = ExpressionBuilder(file, resolver, context, [](const auto&) {return nullptr; });
 	if (ast->attributeSequence())

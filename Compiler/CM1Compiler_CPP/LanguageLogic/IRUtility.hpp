@@ -7,6 +7,8 @@
 
 namespace cMCompiler::language
 {
+
+	int getLineNumber(antlr4::tree::ParseTree* tree);
 	bool isOfType(gsl::not_null<dataStructures::execution::IRuntimeValue*> value, gsl::not_null<dataStructures::Type*> type);
 
 	void implementExpressionInterface(not_null<dataStructures::Type*> type);
@@ -14,6 +16,9 @@ namespace cMCompiler::language
 	gsl::not_null<dataStructures::Type*> buildExpressionDescriptor(gsl::not_null<dataStructures::Namespace*> irNs);
 	gsl::not_null<dataStructures::Type*> buidStatementDescriptor(gsl::not_null<dataStructures::Namespace*> irNs);
 	gsl::not_null<dataStructures::Type*> buildIfDescriptor(gsl::not_null<dataStructures::Namespace*> irNs,
+		gsl::not_null<dataStructures::Type*> baseStatement,
+		gsl::not_null<dataStructures::Type*> expression);
+	gsl::not_null<dataStructures::Type*> buildWhileDescriptor(gsl::not_null<dataStructures::Namespace*> irNs,
 		gsl::not_null<dataStructures::Type*> baseStatement,
 		gsl::not_null<dataStructures::Type*> expression);
 	gsl::not_null<dataStructures::Type*> buildVariableDescriptor(gsl::not_null<dataStructures::Namespace*> irNs);
@@ -45,6 +50,7 @@ namespace cMCompiler::language
 	// statements
 	gsl::not_null<dataStructures::Type*> getIInstruction();
 	gsl::not_null<dataStructures::Type*> getIfDescriptor();
+	gsl::not_null<dataStructures::Type*> getWhileDescriptor();
 	gsl::not_null<dataStructures::Type*> getAssigmentStatementDescriptor();
 	gsl::not_null<dataStructures::Type*> getScopeTerminationStatementDescriptor();
 	gsl::not_null<dataStructures::Type*> getFunctionCallStatementDescriptor();

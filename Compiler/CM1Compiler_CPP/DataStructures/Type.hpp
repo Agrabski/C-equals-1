@@ -57,7 +57,7 @@ namespace cMCompiler::dataStructures
 		Type* setTypeClassifier(TypeClassifier t)
 		{
 			Expects(t != TypeClassifier::None);
-			if (typeClassification_ != TypeClassifier::None)
+			if (typeClassification_ != TypeClassifier::None && typeClassification_ != t)
 				throw std::exception(); // todo: better exception
 			typeClassification_ = t;
 			return this;

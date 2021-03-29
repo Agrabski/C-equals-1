@@ -37,3 +37,10 @@ std::unique_ptr<execution::StringValue> cMCompiler::language::buildStringValue(s
 	result->setValue(value);
 	return result;
 }
+
+std::unique_ptr<cMCompiler::dataStructures::execution::BooleanValue> cMCompiler::language::buildBooleanValue(bool value)
+{
+	auto result = std::make_unique<execution::BooleanValue>(getBool());
+	result->value(value);
+	return result;
+}
