@@ -1,5 +1,6 @@
 #include "FunctionUtility.hpp"
 #include "FunctionBodyBuilder.hpp"
+#include "TypeUtility.hpp"
 #include "Generic/GenericInstantiationUtility.hpp"
 #include "../LanguageLogic/MetatypeUility.hpp"
 
@@ -30,21 +31,12 @@ cMCompiler::dataStructures::Type* cMCompiler::compiler::returnType(
 {
 	auto* const id = ctx->typeSpecifier();
 	if (id != nullptr)
-	{
-		auto name = id->identifier()->getText();
-		if (id->genericUsage())
-		{
-			std::vector<dataStructures::GenericParameter> parameters;
-			for (not_null p : id->genericUsage()->typeSpecifier())
-				parameters.push_back({
-					.value_ = resolver.resolve<dataStructures::Type>(p->getText(), context), // todo: nested generics
-					.referenceLevel_ = 0
-					});	// todo: references
-			not_null g = resolver.resolve<dataStructures::Generic<dataStructures::Type>>(name, context);
-			return instantiate(*g, parameters, resolver, context, file);
-		}
-		return resolver.resolve<dataStructures::Type>(name, context);
-	}
+		return getType(
+			resolver,
+			context,
+			id,
+			file
+		);
 	return nullptr;
 }
 

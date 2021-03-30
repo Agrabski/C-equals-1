@@ -44,3 +44,8 @@ std::unique_ptr<cMCompiler::dataStructures::execution::BooleanValue> cMCompiler:
 	result->value(value);
 	return result;
 }
+
+std::unique_ptr<cMCompiler::dataStructures::execution::IntegerValue> cMCompiler::language::buildCharValue(char value)
+{
+	return buildIntegerValue(getChar(), value);
+}

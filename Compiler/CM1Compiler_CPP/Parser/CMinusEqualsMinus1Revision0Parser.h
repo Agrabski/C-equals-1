@@ -21,13 +21,13 @@ public:
 		T__26 = 27, AccessSpecifier = 28, OpenBracket = 29, CloseBracket = 30, 
 		DOUBLEQUOTE = 31, SINGLEQUOTE = 32, ParamOpen = 33, ParamClose = 34, ATTROBITEOPEN = 35, 
 		ATTROBITECLOSE = 36, Array = 37, Unsafe = 38, LogicalUnaryOperator = 39, 
-		Not = 40, DoubleColon = 41, SemiColon = 42, Comma = 43, Period = 44, Equals = 45, 
-		Asssigment = 46, NotEquals = 47, Plus = 48, Minus = 49, Star = 50, PlusEquals = 51, 
-		MinusEquals = 52, MultiplyEquals = 53, DivideEquals = 54, GreaterEqual = 55, 
-		Greater = 56, Less = 57, LessEqual = 58, Equal = 59, NotEqual = 60, Or = 61, 
-		And = 62, Xor = 63, Strong = 64, Nullable = 65, Mutable = 66, Class = 67, 
-		Interface = 68, Public = 69, Private = 70, Internal = 71, Final = 72, 
-		Virtual = 73, Abstract = 74, Override = 75, DefaultSpecification = 76, 
+		Equal = 40, NotEqual = 41, Not = 42, DoubleColon = 43, SemiColon = 44, 
+		Comma = 45, Period = 46, Equals = 47, Asssigment = 48, NotEquals = 49, 
+		Plus = 50, Minus = 51, Star = 52, PlusEquals = 53, MinusEquals = 54, MultiplyEquals = 55, 
+		DivideEquals = 56, GreaterEqual = 57, Greater = 58, Less = 59, LessEqual = 60, 
+		Or = 61, And = 62, Xor = 63, Strong = 64, Nullable = 65, Mutable = 66, 
+		Class = 67, Interface = 68, Public = 69, Private = 70, Internal = 71, 
+		Final = 72, Virtual = 73, Abstract = 74, Override = 75, DefaultSpecification = 76, 
 		Attribute = 77, Throw = 78, Operator = 79, Shared = 80, Unique = 81, New = 82, 
 		SimpleIdentifier = 83, IntegerLiteral = 84, DIGIT = 85, STRING = 86, AnyCharacter = 87, 
 		LETTER = 88, Whitespace = 89, Newline = 90, BlockComment = 91, LineComment = 92
@@ -1353,6 +1353,8 @@ public:
 		antlr4::tree::TerminalNode *Or();
 		antlr4::tree::TerminalNode *And();
 		antlr4::tree::TerminalNode *Xor();
+		antlr4::tree::TerminalNode *NotEqual();
+		antlr4::tree::TerminalNode *Equal();
 
 		void enterRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;
 		void exitRule(not_null<antlr4::tree::ParseTreeListener*> listener) final;

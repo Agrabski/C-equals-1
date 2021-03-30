@@ -10,6 +10,8 @@ namespace cMCompiler::language
 	gsl::not_null<dataStructures::Type*> getBool();
 	gsl::not_null<dataStructures::Type*> getUsize();
 	gsl::not_null<dataStructures::Type*> getString();
+	gsl::not_null<dataStructures::Type*> getChar();
+	gsl::not_null<dataStructures::Type*> getByte();
 	gsl::not_null<dataStructures::Type*> getTypeDescriptor();
 	gsl::not_null<dataStructures::Type*> getFunctionDescriptor();
 	gsl::not_null<dataStructures::Type*> getNamespaceDescriptor();

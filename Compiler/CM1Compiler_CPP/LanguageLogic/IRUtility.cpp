@@ -288,6 +288,7 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildVari
 {
 	auto result = irNs->append<Type>("variableDeclarationStatement");
 	result->appendInterface(getIInstruction());
+	result->appendField("_parent", getIInstruction(), 1)->setAccessibility(Accessibility::Private);
 	result->appendField("_variable", getVariableDescriptor(), 0);
 	createGetter(result->append<Function>("variable"), result);
 	result->appendField("_expression", getExpressionDescriptor(), 1);

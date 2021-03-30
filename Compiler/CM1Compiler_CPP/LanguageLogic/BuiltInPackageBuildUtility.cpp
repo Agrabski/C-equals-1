@@ -273,6 +273,19 @@ void buildString(gsl::not_null<Type*> string)
 			return buildIntegerValue(getUsize(), self->value().length());
 		}
 	);
+	auto indexOperator = string->append<Function>("operator_[]");
+	indexOperator->setAccessibility(Accessibility::Public);
+	indexOperator->setReturnType(getChar());
+	createCustomFunction(
+		indexOperator,
+		string,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<StringValue>(a["self"].get());
+			return buildCharValue(self->value()[convertToIntegral<size_t>(*a["index"])]);
+		}
+	);
+	indexOperator->appendVariable("index", getUsize(), 0);
 }
 
 void buildPackage()
@@ -284,6 +297,7 @@ void buildPackage()
 	auto result = defaultPackage__.get();
 	auto string = result->rootNamespace()->append<Type>("string");
 	result->rootNamespace()->append<Type>("bool");
+	result->rootNamespace()->append<Type>("char");
 	auto usize = result->rootNamespace()->append<Type>("usize");
 	result->rootNamespace()->appendGeneric<Type>({ "T" }, nullptr, "array", NameResolutionContext(defaultPackage__.get()));
 	buildCompilerLibrary(result->rootNamespace());
@@ -309,6 +323,11 @@ gsl::not_null<PackageDatabase*> cMCompiler::language::getDefaultPackage()
 gsl::not_null<Type*> cMCompiler::language::getBool()
 {
 	return defaultPackage__->rootNamespace()->get<Type>("bool");
+}
+
+gsl::not_null<Type*> cMCompiler::language::getChar()
+{
+	return defaultPackage__->rootNamespace()->get<Type>("char");
 }
 
 gsl::not_null<Type*> cMCompiler::language::getUsize()

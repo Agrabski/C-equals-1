@@ -14,4 +14,5 @@ namespace cMCompiler::language
 	std::unique_ptr<dataStructures::execution::StringValue> buildStringValue(std::string const& value);
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildLiteral(dataStructures::Type* ofType, std::string value);
 	std::unique_ptr<dataStructures::execution::BooleanValue> buildBooleanValue(bool value);
+	std::unique_ptr<dataStructures::execution::IntegerValue> buildCharValue(char value);
 }

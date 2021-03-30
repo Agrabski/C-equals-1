@@ -1,6 +1,7 @@
 #include "TypeUtility.hpp"
 #include "FunctionUtility.hpp"
 #include "../DataStructures/Accessibility.hpp"
+#include "Generic/GenericInstantiationUtility.hpp"
 
 std::string name(gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*> ctx)
 {
@@ -63,7 +64,12 @@ void cMCompiler::compiler::confirmType(
 		if (ctx->classContentSequence() != nullptr)
 			for (not_null<CMinusEqualsMinus1Revision0Parser::FieldDeclarationContext*> member : ctx->classContentSequence()->fieldDeclaration())
 			{
-				auto t = resolver.resolve<dataStructures::Type>(member->typeSpecifier()->identifier()->getText(), context);
+				auto t = getType(
+					resolver,
+					context,
+					member->typeSpecifier(),
+					file
+				);
 				auto var = type->appendField(member->identifier()->getText(), t, member->typeSpecifier()->ref().size());
 				auto access = dataStructures::parse(member->AccessSpecifier()->getText());
 				var->setAccessibility(access);
@@ -110,4 +116,33 @@ void cMCompiler::compiler::finalizeType(
 			}
 		type->finalize();
 	}
+}
+
+not_null<cMCompiler::dataStructures::Type*> cMCompiler::compiler::getType(
+	language::NameResolver& resolver,
+	language::NameResolutionContext& context,
+	gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeSpecifierContext*> ctx,
+	std::filesystem::path file)
+{
+	auto name = ctx->identifier()->getText();
+	if (ctx->genericUsage())
+	{
+		std::vector<dataStructures::GenericParameter> parameters;
+		for (not_null p : ctx->genericUsage()->typeSpecifier())
+		{
+			auto name = p->getText();
+			parameters.push_back({
+				.value_ = getType(
+					resolver,
+					context,
+					p,
+					file
+				), // todo: nested generics
+				.referenceLevel_ = 0
+				});	// todo: references
+		}
+		not_null g = resolver.resolve<dataStructures::Generic<dataStructures::Type>>(name, context);
+		return instantiate(*g, parameters, resolver, context, file);
+	}
+	return resolver.resolve<dataStructures::Type>(name, context);
 }

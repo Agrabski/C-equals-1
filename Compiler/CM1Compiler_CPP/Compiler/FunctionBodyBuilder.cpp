@@ -23,7 +23,7 @@ std::string cMCompiler::compiler::FunctionBodyBuilder::decorateRangeLoopEndVaria
 void cMCompiler::compiler::FunctionBodyBuilder::enterScope(instruction_pointer& currentInstruction)
 {
 	variables_.push_back({});
-	parents_.push_back(dataStructures::execution::ReferenceValue::make(&currentInstruction, currentInstruction->type()));
+	parents_.push_back(currentInstruction->copy());
 }
 
 [[nodiscard]]
@@ -158,9 +158,14 @@ void cMCompiler::compiler::FunctionBodyBuilder::buildForRangeLoop(
 
 	auto methods = rangeObjectVariable->type()->methods();
 	auto begin = std::find_if(methods.begin(), methods.end(), [](auto e) {return e->name() == "begin"; });
+	auto beginMethods = (*begin)->returnType()->methods();
+	auto get = std::find_if(beginMethods.begin(), beginMethods.end(), [](auto const e)
+		{
+			return e->name() == "get";
+		});
 
 	// todo: reference level
-	auto variable = function_->appendLocalVariable(variableName, (*begin)->returnType(), 0);
+	auto variable = function_->appendLocalVariable(variableName, (*get)->returnType(), 0);
 
 	// todo: jesus fucking christ
 
