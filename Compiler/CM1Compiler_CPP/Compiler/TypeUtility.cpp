@@ -70,7 +70,7 @@ void cMCompiler::compiler::confirmType(
 					member->typeSpecifier(),
 					file
 				);
-				auto var = type->appendField(member->identifier()->getText(), t, member->typeSpecifier()->ref().size());
+				auto var = type->appendField(member->identifier()->getText(), t);
 				auto access = dataStructures::parse(member->AccessSpecifier()->getText());
 				var->setAccessibility(access);
 			}
@@ -118,31 +118,30 @@ void cMCompiler::compiler::finalizeType(
 	}
 }
 
-not_null<cMCompiler::dataStructures::Type*> cMCompiler::compiler::getType(
+cMCompiler::dataStructures::TypeReference cMCompiler::compiler::getType(
 	language::NameResolver& resolver,
 	language::NameResolutionContext& context,
 	gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeSpecifierContext*> ctx,
 	std::filesystem::path file)
 {
 	auto name = ctx->identifier()->getText();
+	std::cout << ctx->getText() << std::endl;
 	if (ctx->genericUsage())
 	{
-		std::vector<dataStructures::GenericParameter> parameters;
+		std::vector<dataStructures::TypeReference> parameters;
 		for (not_null p : ctx->genericUsage()->typeSpecifier())
 		{
 			auto name = p->getText();
-			parameters.push_back({
-				.value_ = getType(
+			parameters.push_back(
+				getType(
 					resolver,
 					context,
 					p,
 					file
-				), // todo: nested generics
-				.referenceLevel_ = 0
-				});	// todo: references
+				));
 		}
 		not_null g = resolver.resolve<dataStructures::Generic<dataStructures::Type>>(name, context);
-		return instantiate(*g, parameters, resolver, context, file);
+		return { instantiate(*g, parameters, resolver, context, file), ctx->ref().size() };
 	}
-	return resolver.resolve<dataStructures::Type>(name, context);
+	return {resolver.resolve<dataStructures::Type>(name, context), ctx->ref().size() };
 }

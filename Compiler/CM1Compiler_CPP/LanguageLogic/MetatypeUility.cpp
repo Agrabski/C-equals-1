@@ -13,6 +13,7 @@
 #include "GetterExecution.hpp"
 #include "ExpressionUtility.hpp"
 #include "OverloadResolutionUtility.hpp"
+#include "TypeCoercionUtility.hpp"
 
 using namespace cMCompiler::dataStructures::execution;
 using namespace cMCompiler::dataStructures;
@@ -27,18 +28,18 @@ gsl::not_null<ArrayValue*> castToArray(gsl::not_null<ReferenceValue*> reference)
 	return dynamic_cast<ArrayValue*>(reference->value()->get());
 }
 
-cMCompiler::dataStructures::Type* cMCompiler::language::getExpressionType(std::unique_ptr<dataStructures::execution::IRuntimeValue>& expression)
+cMCompiler::dataStructures::TypeReference cMCompiler::language::getExpressionType(std::unique_ptr<dataStructures::execution::IRuntimeValue>& expression)
 {
-	return executeGetter<Type>(expression, "type"s);
+	return executeGetter<TypeReference>(expression, "type"s);
 
 }
 
 void cMCompiler::language::suplyParent(runtime_value& instruction, runtime_value&& referenceToParent)
 {
-	if (referenceToParent->type() == language::getFunctionDescriptor())
+	if (isOfType(referenceToParent.get(), language::getFunctionDescriptor()))
 		return;
 	auto object = dereferenceAs<ObjectValue>(instruction.get());
-	assert(canCastReference(referenceToParent->type(), object->getMemberType("_parent")));
+	assert(coerce(referenceToParent->type(), object->getMemberType("_parent")));
 	object->setValue("_parent", std::move(referenceToParent));
 }
 
@@ -54,13 +55,13 @@ std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler
 
 std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler::language::createVariableDescriptor(not_null<dataStructures::Variable*> variable)
 {
-	auto result = std::make_unique<dataStructures::execution::RuntimeVariableDescriptor>(getVariableDescriptor(), variable);
+	auto result = std::make_unique<dataStructures::execution::RuntimeVariableDescriptor>(TypeReference{ getVariableDescriptor(), 0 }, variable);
 	return utilities::pointer_cast<IRuntimeValue>(std::move(result));
 }
 
-std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler::language::createTypeDescriptor(not_null<dataStructures::Type*> type)
+std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler::language::createTypeDescriptor(dataStructures::TypeReference  type)
 {
-	auto result = std::make_unique<dataStructures::execution::RuntimeTypeDescriptor>(getTypeDescriptor(), type);
+	auto result = std::make_unique<dataStructures::execution::RuntimeTypeDescriptor>(TypeReference{ getTypeDescriptor(), 0}, type);
 	return utilities::pointer_cast<IRuntimeValue>(std::move(result));
 
 }
@@ -109,7 +110,7 @@ std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler
 
 cMCompiler::language::runtime_value cMCompiler::language::buildIndexOperatorExpression(
 	runtime_value&& expression,
-	gsl::not_null<dataStructures::Type*> type,
+	dataStructures::TypeReference type,
 	std::vector<runtime_value>&& argumentExpressions,
 	runtime_value&& pointerToSource)
 {
@@ -180,30 +181,35 @@ cMCompiler::language::runtime_value cMCompiler::language::buildBinaryOperatorExp
 	);
 }
 
-std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(gsl::not_null<Type*> value)
+std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(TypeReference value)
 {
-	return std::make_unique<RuntimeTypeDescriptor>(getTypeDescriptor(), value);
+	return std::make_unique<RuntimeTypeDescriptor>(TypeReference{ getTypeDescriptor(), 0 }, value);
 }
 
 std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(gsl::not_null<Variable*> value)
 {
-	return std::make_unique<RuntimeVariableDescriptor>(getVariableDescriptor(), value);
+	return std::make_unique<RuntimeVariableDescriptor>(TypeReference{ getVariableDescriptor(),0 }, value);
+}
+
+std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(gsl::not_null<dataStructures::Type*> t)
+{
+		return getValueFor({ t, 0 });
 }
 
 std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(gsl::not_null<Function*> value)
 {
-	return std::make_unique<RuntimeFunctionDescriptor>(getFunctionDescriptor(), value);
+	return std::make_unique<RuntimeFunctionDescriptor>(TypeReference{ getFunctionDescriptor(), 0 }, value);
 }
 
 std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(gsl::not_null<Field*> value)
 {
-	return std::make_unique<RuntimeFieldDescriptor>(getFieldDescriptor(), value);
+	return std::make_unique<RuntimeFieldDescriptor>(TypeReference{ getFieldDescriptor(), 0 }, value);
 }
 
 std::unique_ptr<IRuntimeValue> cMCompiler::language::buildPointerToSource(std::string const& filename, unsigned long long lineNumber)
 {
 
-	auto result = instantiate(getPointerToSource());
+	auto result = instantiate({ getPointerToSource(), 0 });
 	auto& object = dynamic_cast<ObjectValue&>(*result);
 	object.setValue("filename", buildStringValue(filename));
 	object.setValue("lineNumber", buildIntegerValue(getUsize(), reinterpret_cast<number_component*>(&lineNumber), sizeof(lineNumber)));
@@ -218,7 +224,7 @@ void cMCompiler::language::supplyScopeBegin(runtime_value& scopeBegin, dataStruc
 void cMCompiler::language::pushIf(runtime_value& conditionalInstruction, runtime_value&& newInstruction)
 {
 	auto object = castToObject(conditionalInstruction);
-	assert(canCastReference(newInstruction->type(), getIInstruction()));
+	assert(coerce(newInstruction->type(), { getIInstruction(), 1 }));
 	auto collection = castToArray(object->getMemberValue("_ifBranch").get());
 	collection->push(std::move(newInstruction));
 }
@@ -226,7 +232,7 @@ void cMCompiler::language::pushIf(runtime_value& conditionalInstruction, runtime
 void cMCompiler::language::pushElse(runtime_value& conditionalInstruction, runtime_value&& newInstruction)
 {
 	auto object = castToObject(conditionalInstruction);
-	assert(canCastReference(newInstruction->type(), getIInstruction()));
+	assert(coerce(newInstruction->type(), { getIInstruction(), 1 }));
 	auto collection = castToArray(object->getMemberValue("_elseBranch").get());
 	collection->push(std::move(newInstruction));
 }
@@ -234,7 +240,7 @@ void cMCompiler::language::pushElse(runtime_value& conditionalInstruction, runti
 void cMCompiler::language::pushWhile(runtime_value& whileInstruction, runtime_value&& newInstruction)
 {
 	auto object = castToObject(whileInstruction);
-	assert(canCastReference(newInstruction->type(), getIInstruction()));
+	assert(coerce(newInstruction->type(), { getIInstruction(), 1 }));
 	auto collection = castToArray(object->getMemberValue("_body").get());
 	collection->push(std::move(newInstruction));
 }

@@ -28,11 +28,6 @@ namespace cMCompiler::dataStructures
 		using T = CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext;
 	};
 
-	struct GenericParameter
-	{
-		not_null<Type*> value_;
-		unsigned char referenceLevel_;
-	};
 
 	template<typename TargetType>
 	class Generic : public INamedObject
@@ -49,14 +44,14 @@ namespace cMCompiler::dataStructures
 			INamedObject(name, parent), context_(context)
 		{}
 
-		std::unique_ptr<TreeType> fillGeneric(std::vector<GenericParameter> const& parameters)
+		std::unique_ptr<TreeType> fillGeneric(std::vector<TypeReference> const& parameters)
 		{
 			auto result = parseTree_->clone(nullptr);
 			struct Visitor : public CMinusEqualsMinus1Revision0BaseVisitor
 			{
 				std::vector<std::string>& parameterNames_;
-				std::vector<GenericParameter> const& parameters_;
-				Visitor(std::vector<std::string>& parameterNames, std::vector<GenericParameter> const& parameters) :
+				std::vector<TypeReference> const& parameters_;
+				Visitor(std::vector<std::string>& parameterNames, std::vector<TypeReference> const& parameters) :
 					parameterNames_(parameterNames), parameters_(parameters) {}
 
 				antlrcpp::Any visitTypeSpecifier(CMinusEqualsMinus1Revision0Parser::TypeSpecifierContext* ctx) final
@@ -66,8 +61,8 @@ namespace cMCompiler::dataStructures
 					if (paramName != parameterNames_.end())
 					{
 						auto type = parameters_[std::distance(parameterNames_.begin(), paramName)];
-						auto refLevel = gsl::narrow<unsigned char>(ctx->ref().size() + type.referenceLevel_);
-						auto stream = std::stringstream(type.value_->name() + std::string(refLevel, '*'));
+						auto refLevel = gsl::narrow<unsigned char>(ctx->ref().size() + type.referenceCount);
+						auto stream = std::stringstream(type.type->name() + std::string(refLevel, '*'));
 						auto identifier = Parser::ParserAdapter().parseType(stream);
 
 						*std::find_if(ctx->parent->children.begin(), ctx->parent->children.end(), [ctx](const auto& e) -> bool {return e.get() == ctx; }) = std::move(identifier);

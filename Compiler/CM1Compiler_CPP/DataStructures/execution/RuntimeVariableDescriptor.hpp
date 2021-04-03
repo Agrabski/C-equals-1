@@ -16,7 +16,7 @@ namespace cMCompiler::dataStructures::execution
 		json emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const final;
 		std::string toString() const final;
 	public:
-		RuntimeVariableDescriptor(Type* typeDescriptorType, Variable* value) noexcept : IRuntimeValue(typeDescriptorType), value_(value) {}
+		RuntimeVariableDescriptor(TypeReference typeDescriptorType, Variable* value) noexcept : IRuntimeValue(typeDescriptorType), value_(value) {}
 		Variable* value() const noexcept { return value_; }
 
 		// Inherited via IRuntimeValue
@@ -24,7 +24,10 @@ namespace cMCompiler::dataStructures::execution
 
 		// Inherited via IComplexRuntimeValue
 		std::unique_ptr<ReferenceValue> getMemberValue(std::string const& name) final;
-		virtual Type* getMemberType(std::string const& name) override;
+		TypeReference& getMemberType(std::string const& name) const final
+		{
+			std::terminate();
+		}
 		virtual void setValue(std::string const& name, std::unique_ptr<IRuntimeValue>&& value) override;
 	};
 }

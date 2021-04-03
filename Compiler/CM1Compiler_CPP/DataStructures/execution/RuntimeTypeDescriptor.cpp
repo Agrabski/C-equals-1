@@ -1,4 +1,5 @@
 #include "RuntimeTypeDescriptor.hpp"
+#include <sstream>
 
 using namespace cMCompiler::dataStructures::execution;
 
@@ -16,7 +17,9 @@ cMCompiler::dataStructures::execution::json cMCompiler::dataStructures::executio
 
 std::string cMCompiler::dataStructures::execution::RuntimeTypeDescriptor::toString() const
 {
-	return (std::string)value_->qualifiedName();
+	std::stringstream result;
+	result << value_;
+	return result.str();
 }
 
 std::unique_ptr<IRuntimeValue> RuntimeTypeDescriptor::copy() const
@@ -26,11 +29,6 @@ std::unique_ptr<IRuntimeValue> RuntimeTypeDescriptor::copy() const
 }
 
 std::unique_ptr<ReferenceValue> cMCompiler::dataStructures::execution::RuntimeTypeDescriptor::getMemberValue(std::string const& name)
-{
-	std::terminate();
-}
-
-cMCompiler::dataStructures::Type* cMCompiler::dataStructures::execution::RuntimeTypeDescriptor::getMemberType(std::string const& name)
 {
 	std::terminate();
 }

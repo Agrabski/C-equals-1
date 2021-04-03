@@ -40,7 +40,7 @@ antlrcpp::Any cMCompiler::compiler::Preprocessor::visitFunctionDeclaration(CMinu
 		auto ep = ExpressionBuilder(filePath_, nameResolver_, context_, [](const auto&) {return nullptr; });
 		std::unique_ptr<dataStructures::execution::IRuntimeValue> dummyValue = nullptr;
 		auto name = getName(ctx);
-		not_null const function = getCompatibleFunction(name, nameResolver_, context_, ctx);
+		not_null const function = getCompatibleFunction(name, nameResolver_, context_, ctx, filePath_);
 		if (ctx->attributeSequence() != nullptr)
 			for (not_null<CMinusEqualsMinus1Revision0Parser::AttributeContext*> attribute : ctx->attributeSequence()->attribute())
 				attachAttribute(function, attribute, nameResolver_, context_, ep);

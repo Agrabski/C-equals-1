@@ -25,7 +25,7 @@ Function* cMCompiler::language::resolveOverload(
 	using namespace std::string_literals;
 	auto params = std::vector<Parameter>();
 	for (auto& p : parameters)
-		params.push_back({ executeGetter<Type>(p, "type"s) });
+		params.push_back({ executeGetter<TypeReference>(p, "type"s) });
 	return resolveOverload(candidates, params, forceCompileTime, forceRuntime);
 	if (candidates.size() == 1)
 		return candidates.front();

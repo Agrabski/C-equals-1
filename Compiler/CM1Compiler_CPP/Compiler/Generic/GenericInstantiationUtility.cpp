@@ -13,7 +13,7 @@ using namespace cMCompiler::compiler;
 not_null<dataStructures::Function*> cMCompiler::compiler::instantiate
 (
 	dataStructures::Generic<Function>& function,
-	std::vector<dataStructures::GenericParameter> const& genericParameters,
+	std::vector<dataStructures::TypeReference> const& genericParameters,
 	language::NameResolver& resolver,
 	dataStructures::NameResolutionContext const& c,
 	std::filesystem::path const& file
@@ -42,7 +42,7 @@ not_null<dataStructures::Function*> cMCompiler::compiler::instantiate
 not_null<dataStructures::Type*> cMCompiler::compiler::instantiate
 (
 	dataStructures::Generic<Type>& genericType,
-	std::vector<dataStructures::GenericParameter> const& genericParameters,
+	std::vector<dataStructures::TypeReference> const& genericParameters,
 	language::NameResolver& resolver,
 	dataStructures::NameResolutionContext const& c,
 	std::filesystem::path const& file

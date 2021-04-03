@@ -28,17 +28,17 @@ gsl::not_null<Function*> cMCompiler::language::createCustomFunction(
 	std::function<std::unique_ptr<dataStructures::execution::IRuntimeValue>(std::map<std::string, std::unique_ptr<dataStructures::execution::IRuntimeValue>>&& valueMap,
 		std::map<std::string, not_null<dataStructures::Type*>>genericParameters)> body)
 {
-	function->appendVariable("self", type, 1);
+	function->appendVariable("self", { type, 1 });
 	compileTimeFunctions::FuntionLibrary::instance().addFunctionDefinition(function, body);
 	return function;
 }
 
 
-void cMCompiler::language::createIndexer(gsl::not_null<dataStructures::Function*> function, gsl::not_null<dataStructures::Type*> type, gsl::not_null<dataStructures::Type*> returnType)
+void cMCompiler::language::createIndexer(gsl::not_null<dataStructures::Function*> function, gsl::not_null<dataStructures::Type*> type, dataStructures::TypeReference returnType)
 {
-	function->appendVariable("self", type, 1);
-	function->appendVariable("index", getUsize(), 0);
-	function->setReturnType(returnType);
+	function->appendVariable("self", { type, 1 });
+	function->appendVariable("index", { getUsize(), 0 });
+	function->setReturnType(returnType );
 	auto f = [=](
 		std::map<std::string, std::unique_ptr<dataStructures::execution::IRuntimeValue>>&& valueMap,
 		std::map<std::string, not_null<dataStructures::Type*>> genericParameters
@@ -54,16 +54,14 @@ void cMCompiler::language::createIndexer(gsl::not_null<dataStructures::Function*
 void cMCompiler::language::createOperator(
 	gsl::not_null<Namespace*> ns,
 	std::string const& kind,
-	gsl::not_null<Type*> type1,
-	unsigned char refLevel1,
-	gsl::not_null<Type*> type2,
-	unsigned char refLevel2,
-	gsl::not_null<Type*> returnType,
+	TypeReference type1,
+	TypeReference type2,
+	TypeReference returnType,
 	std::function<runtime_value(runtime_value& arg1, runtime_value& arg2)> body)
 {
 	auto f = ns->append<Function>("operator_" + kind);
-	f->appendVariable("arg1", type1, refLevel1);
-	f->appendVariable("arg2", type2, refLevel2);
+	f->appendVariable("arg1", type1);
+	f->appendVariable("arg2", type2);
 	f->setReturnType(returnType);
 	f->confirm();
 	f->finalize();

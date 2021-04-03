@@ -6,10 +6,13 @@
 
 namespace cMCompiler::language
 {
+	runtime_value buildAdressofExpression(runtime_value&& value, runtime_value&& pointerToSource);
+
+
 	runtime_value buildValueLiteralExpression(runtime_value&& value, runtime_value&& pointerToSource);
 	runtime_value buildMethodCallExpression(
 		runtime_value&& expression,
-		gsl::not_null<dataStructures::Type*> type,
+		dataStructures::TypeReference type,
 		std::vector<runtime_value>&& argumentExpressions,
 		std::string const& methodName,
 		runtime_value&& pointerToSource);
@@ -25,7 +28,7 @@ namespace cMCompiler::language
 
 	runtime_value buildIndexOperatorExpression(
 		runtime_value&& expression,
-		gsl::not_null<dataStructures::Type*> type,
+		dataStructures::TypeReference type,
 		std::vector<runtime_value>&& argumentExpressions,
 		runtime_value&& pointerToSource
 	);

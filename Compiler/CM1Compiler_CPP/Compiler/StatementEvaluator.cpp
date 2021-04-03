@@ -66,10 +66,13 @@ void cMCompiler::compiler::StatementEvaluator::terminate(dataStructures::executi
 	for (auto& var : *variables)
 	{
 		auto variable = language::dereferenceAs<RuntimeVariableDescriptor>(var.get())->value();
-		auto finalizer = language::getFinalizer(variable->type()->methods());
-		std::vector<language::runtime_value> arguments;
-		arguments.push_back(ReferenceValue::make(&variables_[variable->name()], variable->type()));
-		if (finalizer != nullptr)
-			execute(finalizer, std::move(arguments));
+		if (variable->type().referenceCount == 0)
+		{
+			auto finalizer = language::getFinalizer(variable->type().type->methods());
+			std::vector<language::runtime_value> arguments;
+			arguments.push_back(ReferenceValue::make(&variables_[variable->name()], variable->type()));
+			if (finalizer != nullptr)
+				execute(finalizer, std::move(arguments));
+		}
 	}
 }

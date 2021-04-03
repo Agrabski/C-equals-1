@@ -44,7 +44,7 @@ void cMCompiler::compiler::confirmAttribute(
 	for (not_null<CMinusEqualsMinus1Revision0Parser::FieldDeclarationContext*> member : ctx->classContentSequence()->fieldDeclaration())
 	{
 		auto type = resolver.resolve<dataStructures::Type>(member->typeSpecifier()->identifier()->getText(), context);
-		auto var = attribute->appendField(member->identifier()->getText(), type, member->typeSpecifier()->ref().size());
+		auto var = attribute->appendField(member->identifier()->getText(), { type, member->typeSpecifier()->ref().size() });
 		auto access = dataStructures::parse(member->AccessSpecifier()->getText());
 		var->setAccessibility(access);
 	}
@@ -91,7 +91,7 @@ std::unique_ptr<dataStructures::AttributeInstance> cMCompiler::compiler::createA
 	std::vector<std::unique_ptr<dataStructures::execution::IRuntimeValue>>&& values
 )
 {
-	auto t = language::instantiate(attribute->describingType());
+	auto t = language::instantiate({ attribute->describingType(), 0 });
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> self = std::move(t);
 	values.insert(values.begin(), dataStructures::execution::ReferenceValue::make(&self, self->type()));
 	auto constructors = language::getConstructors(attribute->methods());

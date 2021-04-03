@@ -11,6 +11,6 @@ cMCompiler::language::compileTimeFunctions::replaceWithCompilerType
 {
 	auto& name = valueMap["name"];
 	auto type = dynamic_cast<dataStructures::execution::RuntimeTypeDescriptor*>(valueMap["type"].get());
-	specialTypes::SpecialTypeLibrary::instance().append(type->value(), name->toString());
+	specialTypes::SpecialTypeLibrary::instance().append(type->value().type, name->toString());
 	return nullptr;
 }

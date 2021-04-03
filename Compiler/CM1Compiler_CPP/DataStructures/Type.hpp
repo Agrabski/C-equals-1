@@ -76,9 +76,9 @@ namespace cMCompiler::dataStructures
 			implementedInterfaces_.push_back(t);
 		}
 
-		Field* appendField(std::string const& name, Type* type, unsigned char referenceLevel)
+		Field* appendField(std::string const& name, TypeReference type)
 		{
-			fields_.push_back(std::make_unique<Field>(name, type, referenceLevel, this));
+			fields_.push_back(std::make_unique<Field>(name, type, this));
 			return fields_.back().get();
 		}
 

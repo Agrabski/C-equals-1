@@ -33,7 +33,7 @@ namespace cMCompiler::dataStructures::execution
 		void setValue(usize componentIndex, number_component value);
 		void setValue(number_component* value, size_t size);
 		void fromString(std::string const& s);
-		IntegerValue(usize size, bool isSigned, Type* type) : IRuntimeValue(type), isSigned_(isSigned)
+		IntegerValue(usize size, bool isSigned, TypeReference type) : IRuntimeValue(type), isSigned_(isSigned)
 		{
 			number_.resize(size, number_component(0));
 		}

@@ -1,4 +1,5 @@
 #include "RuntimeFieldDescriptor.hpp"
+#include <sstream>
 #include "../Field.hpp"
 #include "../Type.hpp"
 
@@ -14,7 +15,9 @@ cMCompiler::dataStructures::execution::json cMCompiler::dataStructures::executio
 
 std::string cMCompiler::dataStructures::execution::RuntimeFieldDescriptor::toString() const
 {
-	return (std::string) (value_->type()->qualifiedName() + value_->name());
+	std::stringstream result;
+	result << value_->type() << " " << value_->name();
+	return result.str();
 }
 
 std::unique_ptr<IRuntimeValue> cMCompiler::dataStructures::execution::RuntimeFieldDescriptor::copy() const

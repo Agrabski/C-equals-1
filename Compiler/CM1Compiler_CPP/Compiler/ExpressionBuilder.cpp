@@ -141,7 +141,7 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::buildAccessExpression(gsl::not_null<CMinusEqualsMinus1Revision0Parser::ExpressionContext*> ctx, language::runtime_value&& referenceToParent)
 {
 	auto expression = buildExpression(ctx->expression(0), nullptr);
-	not_null type = language::getExpressionType(expression);
+	auto type = language::getExpressionType(expression);
 	if (ctx->functionCall() != nullptr)
 	{
 		auto methodName = ctx->functionCall()->identifier()->getText();
@@ -162,7 +162,7 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 	{
 		assert(ctx->identifier() != nullptr);
 		auto fieldName = ctx->identifier()->getText();
-		auto fields = type->fields();
+		auto fields = type.type->fields();
 		auto field = std::find_if(fields.begin(), fields.end(), [&](auto const e) noexcept {return e->name() == fieldName; });
 		assert(field != fields.end());
 		auto result = language::buildFieldAccessExpression(
@@ -191,12 +191,12 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 	std::vector<not_null<dataStructures::Function*>> candidates;
 	if (ctx->genericUsage() != nullptr)
 	{
-		auto genericParameters = std::vector<dataStructures::GenericParameter>();
+		auto genericParameters = std::vector<dataStructures::TypeReference>();
 		for (auto g : ctx->genericUsage()->typeSpecifier())
 			genericParameters.push_back(
 				{
-					.value_ = nameResolver_.resolve<dataStructures::Type>(g->identifier()->getText(), context_),
-					.referenceLevel_ = gsl::narrow<unsigned char>(g->ref().size())
+					nameResolver_.resolve<dataStructures::Type>(g->identifier()->getText(), context_),
+					gsl::narrow<unsigned char>(g->ref().size())
 				}
 		);
 
@@ -237,14 +237,14 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 		return language::buildConstructorInvocationExpression(
 			language::getValueFor(compileTime),
 			language::getValueFor(runtime),
-			language::convertCollection(std::move(arguments), language::getExpressionDescriptor(), 1),
+			language::convertCollection(std::move(arguments), { language::getExpressionDescriptor(), 1 }),
 			language::buildSourcePointer(filepath_.string(), *ctx)
 		);
 	}
 	return language::buildFunctionCallExpression(
 		language::getValueFor(compileTime),
 		language::getValueFor(runtime),
-		language::convertCollection(std::move(arguments), language::getExpressionDescriptor(), 1),
+		language::convertCollection(std::move(arguments), { language::getExpressionDescriptor(), 1 }),
 		language::buildSourcePointer(filepath_.string(), *ctx)
 	);
 }

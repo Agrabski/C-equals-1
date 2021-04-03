@@ -2,18 +2,18 @@
 using namespace cMCompiler::language;
 using namespace cMCompiler::dataStructures;
 
-std::optional<CoercionStrategy> cMCompiler::language::coerce(gsl::not_null<Type*> valueType, unsigned char valueReferenceLevel, unsigned char sinkReferenceLevel, gsl::not_null<Type*> sinkType)
+std::optional<CoercionStrategy> cMCompiler::language::coerce(TypeReference const& valueType, TypeReference const& sinkType)
 {
-	if (valueReferenceLevel != sinkReferenceLevel)
+	if (valueType.referenceCount != sinkType.referenceCount)
 		return std::optional<CoercionStrategy>();
-	if (valueType == sinkType )
+	if (valueType == sinkType)
 		return CoercionStrategy{};
-	if (valueReferenceLevel < 1)
+	if (valueType.referenceCount < 1)
 		return std::optional<CoercionStrategy>();
-	auto interfaces = valueType->interfaces();
-	for (auto interf : valueType->interfaces())
+	auto interfaces = valueType.type->interfaces();
+	for (auto interf : valueType.type->interfaces())
 	{
-		auto strategy = coerce(interf, valueReferenceLevel, sinkReferenceLevel, sinkType);
+		auto strategy = coerce({ interf, valueType.referenceCount }, sinkType);
 		if (strategy)
 			return strategy; // todo: merge strategies
 	}

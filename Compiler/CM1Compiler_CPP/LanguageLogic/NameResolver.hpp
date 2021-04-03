@@ -114,7 +114,7 @@ namespace cMCompiler::language
 			return functions;
 		}
 
-		std::vector<not_null<dataStructures::Function*>> resolveOperatorOverloadSet(std::string const& op, not_null<dataStructures::Type*> arg1, not_null<dataStructures::Type*> arg2, NameResolutionContext const& context)
+		std::vector<not_null<dataStructures::Function*>> resolveOperatorOverloadSet(std::string const& op, dataStructures::TypeReference arg1, dataStructures::TypeReference arg2, NameResolutionContext const& context)
 		{
 			auto result = std::vector<not_null<dataStructures::Function*>>();
 			auto name = "operator_" + op;

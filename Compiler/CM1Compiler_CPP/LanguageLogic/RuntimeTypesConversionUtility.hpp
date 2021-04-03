@@ -21,10 +21,10 @@ namespace cMCompiler::language
 	runtime_value convertToCollection(std::vector<std::string> const& strings);
 	
 	[[nodiscard]]
-	runtime_value convertToCollection(std::vector<runtime_value> && values, not_null<dataStructures::Type*> type, unsigned char referenceLevel);
+	runtime_value convertToCollection(std::vector<runtime_value> && values, dataStructures::TypeReference type);
 
 	[[nodiscard]]
-	runtime_value convertCollection(std::vector<runtime_value>&& collection, gsl::not_null<dataStructures::Type*> elementType, unsigned char referenceLevel);
+	runtime_value convertCollection(std::vector<runtime_value>&& collection, dataStructures::TypeReference elementType);
 
 	[[nodiscard]]
 	bool canCastReference(gsl::not_null<dataStructures::Type*> from, gsl::not_null<dataStructures::Type*> to);

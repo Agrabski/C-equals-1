@@ -9,11 +9,7 @@ namespace cMCompiler::language
 	{
 
 	};
-	extern std::optional<CoercionStrategy> coerce(
-		gsl::not_null<dataStructures::Type*> valueType,
-		unsigned char valueReferenceLevel,
-		unsigned char sinkReferenceLevel,
-		gsl::not_null<dataStructures::Type*> sinkType);
+	extern std::optional<CoercionStrategy> coerce(dataStructures::TypeReference const& valueType, dataStructures::TypeReference const& sinkType);
 	extern unsigned char countReferenceLevel(dataStructures::execution::IRuntimeValue const* value);
 
 }
@@ -31,7 +27,7 @@ cMCompiler::dataStructures::execution::json cMCompiler::dataStructures::executio
 std::string cMCompiler::dataStructures::execution::ObjectValue::toString() const
 {
 	auto stream = std::stringstream();
-	stream << "{type = " << type()->qualifiedName() << " ";
+	stream << "{type = " << type() << " ";
 	for (auto const& kv : values_)
 	{
 
@@ -48,17 +44,17 @@ bool cMCompiler::dataStructures::execution::ObjectValue::validate(IRuntimeValue*
 {
 	if (value == nullptr)
 		return true;
-	auto fields = type()->fields();
+	auto fields = type().type->fields();
 	auto field = std::find_if(fields.begin(), fields.end(), [&](auto const& e) noexcept {return e->name() == name; });
-	if (field->get()->type() == nullptr)
+	if (field->get()->type().type == nullptr)
 		return true; // allow any type in interpreted mode if type is null. Only for compiler internals
 	return field != fields.end() &&
-		language::coerce(value->type(), language::countReferenceLevel(value), (*field)->referenceLevel(), (*field)->type());
+		language::coerce(value->type(), (*field)->type());
 }
 
-cMCompiler::dataStructures::Type* cMCompiler::dataStructures::execution::ObjectValue::getMemberType(std::string const& name)
+cMCompiler::dataStructures::TypeReference const& cMCompiler::dataStructures::execution::ObjectValue::getMemberType(std::string const& name) const
 {
-	auto fields = type()->fields();
+	auto fields = type().type->fields();
 	auto field = (std::find_if(fields.begin(), fields.end(), [&](const auto e) noexcept {return e->name() == name; }));
 	assert(field != fields.end());
 	return (*field)->type();

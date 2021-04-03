@@ -17,7 +17,7 @@ namespace cMCompiler::dataStructures::execution
 		json emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const final;
 		std::string toString() const final;
 	public:
-		RuntimeFunctionDescriptor(Type* descriptorType, Function* value) noexcept : IRuntimeValue(descriptorType), value_(value) {}
+		RuntimeFunctionDescriptor(TypeReference descriptorType, Function* value) noexcept : IRuntimeValue(descriptorType), value_(value) {}
 		Function* value() const noexcept { return value_; }
 
 		// Inherited via IRuntimeValue

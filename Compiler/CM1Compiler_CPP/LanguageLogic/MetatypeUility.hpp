@@ -12,7 +12,7 @@
 
 namespace cMCompiler::language
 {
-	dataStructures::Type* getExpressionType(std::unique_ptr<dataStructures::execution::IRuntimeValue>& expression);
+	dataStructures::TypeReference getExpressionType(std::unique_ptr<dataStructures::execution::IRuntimeValue>& expression);
 
 	runtime_value buildVariableDeclaration(gsl::not_null<dataStructures::Variable*> variable, runtime_value&& expression, runtime_value&& pointerToSource);
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildScopeTermination(runtime_value&& variables, runtime_value&& pointerToSource);
@@ -28,7 +28,7 @@ namespace cMCompiler::language
 	);
 
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> createVariableDescriptor(not_null<dataStructures::Variable*> variable);
-	std::unique_ptr<dataStructures::execution::IRuntimeValue> createTypeDescriptor(not_null<dataStructures::Type*> type);
+	std::unique_ptr<dataStructures::execution::IRuntimeValue> createTypeDescriptor(dataStructures::TypeReference  type);
 
 
 	void suplyParent(runtime_value& instruction, runtime_value&& referenceToParent);
@@ -37,7 +37,8 @@ namespace cMCompiler::language
 
 
 
-	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(gsl::not_null<dataStructures::Type*>);
+	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(dataStructures::TypeReference);
+	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(not_null<dataStructures::Type*> t);
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(gsl::not_null<dataStructures::Function*>);
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(gsl::not_null<dataStructures::Field*>);
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(gsl::not_null<dataStructures::Variable*>);

@@ -52,6 +52,12 @@ std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::
 	return ReferenceValue::make(&variableLookupFunction_(variable->value()->name()), variable->value()->type());
 }
 
+std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::ExpressionEvaluator::evaluateGetAddress(dataStructures::execution::IRuntimeValue& expression)
+{
+	auto exp = language::dereferenceAs<ObjectValue>(&expression)->getMemberValue("_expression");
+	return evaluateCommon(*exp);
+}
+
 std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::ExpressionEvaluator::evaluateCommon(dataStructures::execution::IRuntimeValue& expression)
 {
 	not_null e = language::dereference(&expression);
@@ -66,6 +72,8 @@ std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::
 		return evaluateVariable(*e);
 	if (isOfType(e, language::getBinaryOperatorExpressionDescriptor()))
 		return evaluateBinaryOperator(*e);
+	if (isOfType(e, language::getAdressofExpressionDescriptor()))
+		return evaluateGetAddress(*e);
 
 	std::terminate();
 }

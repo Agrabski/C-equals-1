@@ -9,11 +9,7 @@ namespace cMCompiler::language
 	{
 
 	};
-	extern std::optional<CoercionStrategy> coerce(
-		gsl::not_null<Type*> valueType,
-		unsigned char valueReferenceLevel,
-		unsigned char sinkReferenceLevel, 
-		gsl::not_null<Type*> sinkType);
+	extern std::optional<CoercionStrategy> coerce(TypeReference const& valueType, TypeReference const& sinkType);
 	extern unsigned char countReferenceLevel(dataStructures::execution::IRuntimeValue const* value);
 
 }
@@ -23,9 +19,9 @@ std::unique_ptr<ReferenceValue> cMCompiler::dataStructures::execution::ArrayValu
 	return std::unique_ptr<ReferenceValue>();
 }
 
-Type* cMCompiler::dataStructures::execution::ArrayValue::getMemberType(std::string const& name)
+TypeReference const& cMCompiler::dataStructures::execution::ArrayValue::getMemberType(std::string const& name) const
 {
-	return nullptr;
+	std::terminate();
 }
 
 void cMCompiler::dataStructures::execution::ArrayValue::setValue(std::string const& name, std::unique_ptr<IRuntimeValue>&& value)
@@ -34,7 +30,7 @@ void cMCompiler::dataStructures::execution::ArrayValue::setValue(std::string con
 
 void cMCompiler::dataStructures::execution::ArrayValue::push(std::unique_ptr<IRuntimeValue>&& value)
 {
-	assert(language::coerce(value->type(), language::countReferenceLevel(value.get()) ,elementReferenceLevel_, elementType_));
+	assert(language::coerce(value->type(), elementType_));
 	allocated_.push_back(std::move(value));
 }
 

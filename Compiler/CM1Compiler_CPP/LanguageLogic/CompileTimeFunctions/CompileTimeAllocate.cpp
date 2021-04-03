@@ -9,7 +9,7 @@ std::unique_ptr<IRuntimeValue>
 cMCompiler::language::compileTimeFunctions::compileTimeAllocate
 (
 	std::map<std::string, std::unique_ptr<IRuntimeValue>>&& valueMap,
-	std::map<std::string, gsl::not_null<dataStructures::Type*>> genericParameters
+	std::map<std::string, dataStructures::TypeReference> genericParameters
 )
 {
 	assert(valueMap.empty());

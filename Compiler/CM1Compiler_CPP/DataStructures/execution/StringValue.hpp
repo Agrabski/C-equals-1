@@ -13,7 +13,7 @@ namespace cMCompiler::dataStructures::execution
 		json emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const final;
 	public:
 		std::string toString() const final;
-		StringValue(Type* type) noexcept : IRuntimeValue(type) {}
+		StringValue(TypeReference type) noexcept : IRuntimeValue(type) {}
 		std::string const& value() const noexcept { return value_; }
 		void setValue(std::string const& value) { value_ = value; }
 

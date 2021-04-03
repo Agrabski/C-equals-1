@@ -12,7 +12,7 @@
 
 std::string cMCompiler::compiler::FunctionBodyBuilder::decorateTemporary(not_null<antlr4::tree::ParseTree*>tree, int index)
 {
-	return "$$_temporary" + language::getLineNumber(tree)+ std::to_string(index);
+	return "$$_temporary" + language::getLineNumber(tree) + std::to_string(index);
 }
 
 std::string cMCompiler::compiler::FunctionBodyBuilder::decorateRangeLoopEndVariableName(std::string const& original)
@@ -29,9 +29,9 @@ void cMCompiler::compiler::FunctionBodyBuilder::enterScope(instruction_pointer& 
 [[nodiscard]]
 cMCompiler::language::runtime_value cMCompiler::compiler::FunctionBodyBuilder::leaveScope(unsigned long long line)
 {
-	auto collection = std::make_unique<dataStructures::execution::ArrayValue>(language::getCollectionTypeFor(language::getVariableDescriptor()), language::getVariableDescriptor(), 0);
+	auto collection = std::make_unique<dataStructures::execution::ArrayValue>(dataStructures::TypeReference{ language::getCollectionTypeFor({ language::getVariableDescriptor(),0 }), 0 }, dataStructures::TypeReference{ language::getVariableDescriptor(), 0 });
 	for (auto var : variables_.back())
-		collection->push(std::make_unique<dataStructures::execution::RuntimeVariableDescriptor>(language::getVariableDescriptor(), var));
+		collection->push(std::make_unique<dataStructures::execution::RuntimeVariableDescriptor>(dataStructures::TypeReference{ language::getVariableDescriptor(), 0 }, var));
 	auto instruction = language::buildScopeTermination(
 		std::move(collection),
 		language::buildPointerToSource(filePath_.filename().string(), line)
@@ -72,8 +72,7 @@ void cMCompiler::compiler::FunctionBodyBuilder::buildForLoop(
 	// todo: reference level
 	not_null variable = function_->appendLocalVariable(
 		variableName,
-		language::getExpressionType(initialisationExpression),
-		0
+		language::getExpressionType(initialisationExpression)
 	);
 
 	auto testExpression = testExpressionFactory(variable);
@@ -130,13 +129,12 @@ void cMCompiler::compiler::FunctionBodyBuilder::buildForRangeLoop(
 	language::runtime_value&& expression,
 	not_null<antlr4::tree::ParseTree*> body)
 {
-	not_null expressionType = language::getExpressionType(expression);
-	auto expressionMethods = expressionType->methods();
+	auto expressionType = language::getExpressionType(expression);
+	auto expressionMethods = expressionType.type->methods();
 	auto iterateMethod = std::find_if(expressionMethods.begin(), expressionMethods.end(), [](const auto e) {return e->name() == "iterate"; });
 	not_null rangeObjectVariable = function_->appendLocalVariable(
 		decorateTemporary(body, 0),
-		(*iterateMethod)->returnType(),
-		0
+		(*iterateMethod)->returnType()
 	);
 	{
 		auto assigment = language::buildVariableDeclaration(
@@ -156,16 +154,16 @@ void cMCompiler::compiler::FunctionBodyBuilder::buildForRangeLoop(
 		variables_.back().push_back(rangeObjectVariable);
 	}
 
-	auto methods = rangeObjectVariable->type()->methods();
+	auto methods = rangeObjectVariable->type().type->methods();
 	auto begin = std::find_if(methods.begin(), methods.end(), [](auto e) {return e->name() == "begin"; });
-	auto beginMethods = (*begin)->returnType()->methods();
+	auto beginMethods = (*begin)->returnType().type->methods();
 	auto get = std::find_if(beginMethods.begin(), beginMethods.end(), [](auto const e)
 		{
 			return e->name() == "get";
 		});
 
 	// todo: reference level
-	auto variable = function_->appendLocalVariable(variableName, (*get)->returnType(), 0);
+	auto variable = function_->appendLocalVariable(variableName, (*get)->returnType());
 
 	// todo: jesus fucking christ
 
@@ -254,13 +252,13 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitVariableDeclaratio
 {
 	//todo: attributes
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> expression;
-	dataStructures::Type* type = nullptr;
+	dataStructures::TypeReference type;
 	auto typeAnnotationPresent = ctx->typeSpecifier() != nullptr;
-	auto referenceLevel = 0;
+	size_t referenceLevel;
 	if (typeAnnotationPresent)
 	{
 		referenceLevel = ctx->typeSpecifier()->ref().size();
-		type = nr_.resolve<dataStructures::Type>(ctx->typeSpecifier()->identifier()->getText(), context_);
+		type = { nr_.resolve<dataStructures::Type>(ctx->typeSpecifier()->identifier()->getText(), context_), referenceLevel };
 	}
 	if (!typeAnnotationPresent || ctx->functionCallParameter())
 	{
@@ -270,7 +268,7 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitVariableDeclaratio
 
 	auto name = ctx->identifier()->getText();
 	// todo: infer reference
-	not_null variable = function_->appendLocalVariable(name, type, referenceLevel);
+	not_null variable = function_->appendLocalVariable(name, type);
 
 	auto instruction = language::buildVariableDeclaration(
 		variable,
@@ -288,10 +286,9 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitVariableDeclaratio
 antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitFunctionBody(CMinusEqualsMinus1Revision0Parser::FunctionBodyContext* ctx)
 {
 	function_->setIrCollection(
-		std::make_unique<dataStructures::execution::ArrayValue>(language::getCollectionTypeFor(
-			language::getIInstruction()),
-			language::getIInstruction(),
-			1
+		std::make_unique<dataStructures::execution::ArrayValue>(dataStructures::TypeReference{ language::getCollectionTypeFor(
+			dataStructures::TypeReference{ language::getIInstruction(), 1 }), 0 },
+			dataStructures::TypeReference{ language::getIInstruction() ,1 }
 			)
 	);
 	auto x = language::getValueFor(function_);
@@ -354,7 +351,7 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitFunctionCallStatem
 	if (ctx->Period())
 	{
 		auto expression = getBuilder().buildExpression(ctx->expression(), nullptr);
-		not_null type = language::getExpressionType(expression);
+		auto type = language::getExpressionType(expression);
 
 		auto methodName = ctx->functionCall()->identifier()->getText();
 

@@ -33,8 +33,8 @@ gsl::not_null<Type*> buildTypeDescriptor(gsl::not_null<Namespace*> compilerNs)
 	auto type = compilerNs->append<Type>("typeDescriptor");
 	type->setTypeClassifier(TypeClassifier::Class);
 	type->setAccessibility(Accessibility::Public);
-	type->appendField("name", cMCompiler::language::getString(), 0)->setAccessibility(Accessibility::Public);
-	type->appendField("qualifiedName", cMCompiler::language::getString(), 0)->setAccessibility(Accessibility::Public);
+	type->appendField("name", {cMCompiler::language::getString(), 0})->setAccessibility(Accessibility::Public);
+	type->appendField("qualifiedName", { cMCompiler::language::getString(), 0 })->setAccessibility(Accessibility::Public);
 	return type;
 }
 
@@ -59,25 +59,25 @@ gsl::not_null<Type*> buildPointerToSource(gsl::not_null<Namespace*> compilerNs)
 	auto t = compilerNs->append<Type>("pointerToSource");
 	t->setTypeClassifier(TypeClassifier::Class);
 	t->setAccessibility(Accessibility::Public);
-	t->appendField("filename", cMCompiler::language::getString(), 0)->setAccessibility(Accessibility::Public);
-	t->appendField("lineNumber", cMCompiler::language::getUsize(), 0)->setAccessibility(Accessibility::Public);
+	t->appendField("filename", { cMCompiler::language::getString(), 0 })->setAccessibility(Accessibility::Public);
+	t->appendField("lineNumber", { cMCompiler::language::getUsize(), 0 })->setAccessibility(Accessibility::Public);
 
 	return t;
 }
 
 void completeBuildingType(gsl::not_null<Type*> t)
 {
-	t->appendField("parent", cMCompiler::language::getNamespaceDescriptor(), 1)->setAccessibility(Accessibility::Public);
+	t->appendField("parent", { cMCompiler::language::getNamespaceDescriptor(), 1 })->setAccessibility(Accessibility::Public);
 }
 
 void completeBuildingNamespace(gsl::not_null<Type*> t)
 {
-	t->appendField("parent", cMCompiler::language::getNamespaceDescriptor(), 1)->setAccessibility(Accessibility::Public);
+	t->appendField("parent", { cMCompiler::language::getNamespaceDescriptor(), 1 })->setAccessibility(Accessibility::Public);
 }
 
 void completeBuildingFunction(gsl::not_null<Type*> t)
 {
-	t->appendField("parent", cMCompiler::language::getNamespaceDescriptor(), 1)->setAccessibility(Accessibility::Public);
+	t->appendField("parent", { cMCompiler::language::getNamespaceDescriptor(), 1 })->setAccessibility(Accessibility::Public);
 }
 
 void buildCompilerLibrary(gsl::not_null<Namespace*> rootNamespace)
@@ -97,49 +97,49 @@ void buildCompilerLibrary(gsl::not_null<Namespace*> rootNamespace)
 	{
 		auto replace = ns->append<Function>("replaceWithCompilerFunction");
 		replace->setAccessibility(Accessibility::Public);
-		replace->appendVariable("function", function, 1);
-		replace->appendVariable("name", cMCompiler::language::getString(), 0);
+		replace->appendVariable("function", { function, 0 });
+		replace->appendVariable("name", { cMCompiler::language::getString(), 0 });
 		FuntionLibrary::instance().addFunctionDefinition(replace, replaceWithCompilerFunction);
 	}
 	{
 		auto replace = ns->append<Function>("replaceWithCompilerType");
 		replace->setAccessibility(Accessibility::Public);
-		replace->appendVariable("type", type, 1);
-		replace->appendVariable("name", cMCompiler::language::getString(), 0);
+		replace->appendVariable("type", { type, 0 });
+		replace->appendVariable("name", { cMCompiler::language::getString(), 0 });
 
 		FuntionLibrary::instance().addFunctionDefinition(replace, replaceWithCompilerType);
 	}
 	{
 		auto replace = ns->append<Function>("markCompileTimeOnly");
 		replace->setAccessibility(Accessibility::Public);
-		replace->appendVariable("function", function, 1);
+		replace->appendVariable("function", { function, 0 });
 		FuntionLibrary::instance().addFunctionDefinition(replace, markCompileTimeOnly);
 	}
 	{
 		auto replace = ns->append<Function>("replaceWithSymbol");
 		replace->setAccessibility(Accessibility::Public);
-		replace->appendVariable("function", function, 1);
-		replace->appendVariable("symbolName", getString(), 0);
-		replace->appendVariable("assemblyPath", getString(), 0);
+		replace->appendVariable("function", { function, 0 });
+		replace->appendVariable("symbolName", { getString(), 0 });
+		replace->appendVariable("assemblyPath", { getString(), 0 });
 		FuntionLibrary::instance().addFunctionDefinition(replace, ReplaceWithExternalSymbol);
 	}
 	{
 		auto replace = ns->append<Function>("replaceWithSymbol");
 		replace->setAccessibility(Accessibility::Public);
-		replace->appendVariable("type", type, 1);
-		replace->appendVariable("symbolName", getString(), 0);
-		replace->appendVariable("assemblyPath", getString(), 0);
+		replace->appendVariable("type", { type, 0 });
+		replace->appendVariable("symbolName", { getString(), 0 });
+		replace->appendVariable("assemblyPath", { getString(), 0 });
 		FuntionLibrary::instance().addFunctionDefinition(replace, ReplaceWithExternalSymbol);
 	}
 	{
 		auto raise = ns->append<Function>("raiseError");
 		raise->setAccessibility(Accessibility::Public);
-		raise->appendVariable("pointerToSource", getPointerToSource(), 1);
-		raise->appendVariable("message", getString(), 1);
-		raise->appendVariable("code", getUsize(), 0);
+		raise->appendVariable("pointerToSource", { getPointerToSource(), 1 });
+		raise->appendVariable("message", { getString(), 0 });
+		raise->appendVariable("code", { getUsize(), 0 });
 		FuntionLibrary::instance().addFunctionDefinition(raise, raiseError);
 	}
-	createCustomFunction(function->append<Function>("overridenLLVMIR")->setReturnType(getString()), function,
+	createCustomFunction(function->append<Function>("overridenLLVMIR")->setReturnType({ getString(), 0 }), function,
 		[](value_map&& a, generic_parameters)->runtime_value
 		{
 			auto llvm = dereferenceAs<execution::RuntimeFunctionDescriptor>(a["self"].get())->value()->metadata().overrideLLVMIR_;
@@ -147,7 +147,7 @@ void buildCompilerLibrary(gsl::not_null<Namespace*> rootNamespace)
 				return buildStringValue(*llvm);
 			return buildStringValue();
 		})->setAccessibility(Accessibility::Public);
-		auto setter = createCustomFunction(function->append<Function>("overridenLLVMIR")->setReturnType(getString()), function,
+		auto setter = createCustomFunction(function->append<Function>("overridenLLVMIR")->setReturnType({ getString(), 0 }), function,
 			[](value_map&& a, generic_parameters)->runtime_value
 			{
 				auto llvm = dereferenceAs<execution::StringValue>(a["ir"].get())->value();
@@ -157,7 +157,7 @@ void buildCompilerLibrary(gsl::not_null<Namespace*> rootNamespace)
 				return runtime_value();
 			});
 		setter->setAccessibility(Accessibility::Public);
-		setter->appendVariable("ir", getString(), 0);
+		setter->appendVariable("ir", { getString(), 0 });
 
 }
 
@@ -172,9 +172,9 @@ void buildUsize(gsl::not_null<Type*> usize_type)
 	createOperator(
 		ns,
 		"+",
-		usize_type, 0,
-		usize_type, 0,
-		usize_type,
+		{ usize_type, 0 },
+		{ usize_type, 0 },
+		{ usize_type, 0 },
 		[usize_type](auto& a, auto& b)
 		{
 			auto result = convertToIntegral<usize>(*a) + convertToIntegral<usize>(*b);
@@ -184,9 +184,9 @@ void buildUsize(gsl::not_null<Type*> usize_type)
 	createOperator(
 		ns,
 		"-",
-		usize_type, 0,
-		usize_type, 0,
-		usize_type,
+		{ usize_type, 0 },
+		{ usize_type, 0 },
+		{ usize_type, 0 },
 		[usize_type](auto& a, auto& b)
 		{
 			auto result = convertToIntegral<usize>(*a) - convertToIntegral<usize>(*b);
@@ -196,9 +196,9 @@ void buildUsize(gsl::not_null<Type*> usize_type)
 	createOperator(
 		ns,
 		"*",
-		usize_type, 0,
-		usize_type, 0,
-		usize_type,
+		{ usize_type, 0 },
+		{ usize_type, 0 },
+		{ usize_type, 0 },
 		[usize_type](auto& a, auto& b)
 		{
 			auto result = convertToIntegral<usize>(*a) * convertToIntegral<usize>(*b);
@@ -208,9 +208,9 @@ void buildUsize(gsl::not_null<Type*> usize_type)
 	createOperator(
 		ns,
 		"/",
-		usize_type, 0,
-		usize_type, 0,
-		usize_type,
+		{ usize_type, 0 },
+		{ usize_type, 0 },
+		{ usize_type, 0 },
 		[usize_type](auto& a, auto& b)
 		{
 			auto result = convertToIntegral<usize>(*a) / convertToIntegral<usize>(*b);
@@ -221,9 +221,9 @@ void buildUsize(gsl::not_null<Type*> usize_type)
 	createOperator(
 		ns,
 		"!=",
-		usize_type, 0,
-		usize_type, 0,
-		getBool(),
+		{ usize_type, 0 },
+		{ usize_type, 0 },
+		{ getBool(), 0 },
 		[usize_type](auto& a, auto& b)
 		{
 			auto result = convertToIntegral<usize>(*a) != convertToIntegral<usize>(*b);
@@ -242,16 +242,16 @@ void buildString(gsl::not_null<Type*> string)
 			auto to = dereferenceAs<StringValue>(a["to"].get())->value();
 			return buildStringValue(boost::replace_all_copy(self->value(), what, to));
 		});
-	replace->appendVariable("what", string, 0);
-	replace->appendVariable("to", string, 0);
-	replace->setReturnType(string)->setAccessibility(Accessibility::Public);
+	replace->appendVariable("what", { string, 0 });
+	replace->appendVariable("to", { string, 0 });
+	replace->setReturnType({ string, 0 })->setAccessibility(Accessibility::Public);
 	replace->metadata().appendFlag(FunctionFlags::ExcludeAtRuntime);
 
 
 	auto plus = getDefaultPackage()->rootNamespace()->append<Function>("operator_+");
-	plus->setReturnType(string);
-	plus->appendVariable("arg1", string, 0);
-	plus->appendVariable("arg2", string, 0);
+	plus->setReturnType({ string, 0 });
+	plus->appendVariable("arg1", { string, 0 });
+	plus->appendVariable("arg2", { string, 0 });
 	cMCompiler::language::compileTimeFunctions::FuntionLibrary::instance().addFunctionDefinition(
 		plus,
 		[](value_map&& a, generic_parameters)->runtime_value
@@ -263,7 +263,7 @@ void buildString(gsl::not_null<Type*> string)
 	);
 
 	auto length = string->append<Function>("length");
-	length->setReturnType(getUsize());
+	length->setReturnType({ getUsize(), 0 });
 	createCustomFunction(
 		length,
 		string,
@@ -275,7 +275,7 @@ void buildString(gsl::not_null<Type*> string)
 	);
 	auto indexOperator = string->append<Function>("operator_[]");
 	indexOperator->setAccessibility(Accessibility::Public);
-	indexOperator->setReturnType(getChar());
+	indexOperator->setReturnType({ getChar(), 0 });
 	createCustomFunction(
 		indexOperator,
 		string,
@@ -285,7 +285,7 @@ void buildString(gsl::not_null<Type*> string)
 			return buildCharValue(self->value()[convertToIntegral<size_t>(*a["index"])]);
 		}
 	);
-	indexOperator->appendVariable("index", getUsize(), 0);
+	indexOperator->appendVariable("index", { getUsize(), 0 });
 }
 
 void buildPackage()
@@ -304,8 +304,8 @@ void buildPackage()
 	buildString(string);
 	buildUsize(usize);
 	auto readFile = result->rootNamespace()->append<Function>("read_all_file");
-	readFile->appendVariable("path", string, 0);
-	readFile->setReturnType(string);
+	readFile->appendVariable("path", { string, 0 });
+	readFile->setReturnType({ string, 0 });
 	functionLibrary.addFunctionDefinition(readFile, compileTimeFunctions::readAllFile);
 }
 
@@ -365,10 +365,10 @@ gsl::not_null<Type*> cMCompiler::language::getPointerToSource()
 	return defaultPackage__->rootNamespace()->get<Namespace>("compiler")->get<Type>("pointerToSource");
 }
 
-gsl::not_null< cMCompiler::dataStructures::Type*> cMCompiler::language::getCollectionTypeFor(gsl::not_null<dataStructures::Type*> elementType)
+gsl::not_null< cMCompiler::dataStructures::Type*> cMCompiler::language::getCollectionTypeFor(cMCompiler::dataStructures::TypeReference elementType)
 {
 	auto arr = defaultPackage__->rootNamespace()->get<Generic<Type>>("array");
-	std::vector<gsl::not_null<dataStructures::Type*>> types;
+	std::vector<dataStructures::TypeReference> types;
 	types.push_back(elementType);
 	return instantiate(*arr, types);
 }

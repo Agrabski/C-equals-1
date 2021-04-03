@@ -9,7 +9,7 @@ namespace cMCompiler::dataStructures::execution
 	{
 		bool value_;
 	public:
-		BooleanValue(Type* type) noexcept : IRuntimeValue(type) {}
+		BooleanValue(TypeReference type) noexcept : IRuntimeValue(type) {}
 		std::string toString() const final;
 		std::unique_ptr<IRuntimeValue> copy() const final;
 		bool value() const noexcept { return value_; }

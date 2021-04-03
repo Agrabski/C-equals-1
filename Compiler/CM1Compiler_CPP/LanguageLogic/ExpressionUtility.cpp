@@ -5,6 +5,15 @@
 #include "RuntimeTypesConversionUtility.hpp"
 #include "OverloadResolutionUtility.hpp"
 
+cMCompiler::language::runtime_value cMCompiler::language::buildAdressofExpression(runtime_value&& value, runtime_value&& pointerToSource)
+{
+	auto [result, object] = heapAllocateObject(getAdressofExpressionDescriptor());
+	object.setValue("_expression", std::move(value));
+	object.setValue("_pointerToSource", std::move(pointerToSource));
+
+	return std::move(result);
+}
+
 cMCompiler::language::runtime_value cMCompiler::language::buildValueLiteralExpression(runtime_value&& value, runtime_value&& pointerToSource)
 {
 	auto [result, object] = heapAllocateObject(getLiteralExpressionDescriptor());
@@ -36,18 +45,18 @@ cMCompiler::language::runtime_value cMCompiler::language::buildWhileLoop(runtime
 
 cMCompiler::language::runtime_value cMCompiler::language::buildMethodCallExpression(
 	runtime_value&& expression,
-	gsl::not_null<dataStructures::Type*> type,
+	dataStructures::TypeReference type,
 	std::vector<runtime_value>&& argumentExpressions,
 	std::string const& methodName,
 	runtime_value&& pointerToSource)
 {
-	argumentExpressions.insert(argumentExpressions.begin(), std::move(expression));
+	argumentExpressions.insert(argumentExpressions.begin(), buildAdressofExpression(std::move(expression), pointerToSource->copy()));
 
 	std::vector<not_null<dataStructures::execution::IRuntimeValue*>> expressions;
 	for (auto& e : argumentExpressions)
 		expressions.push_back(e.get());
 
-	auto methods = type->methods();
+	auto methods = type.type->methods();
 	auto remove = std::remove_if(methods.begin(), methods.end(), [&](auto const e) {return e->name() != methodName; });
 	if (remove != methods.end())
 		methods.erase(remove);
@@ -57,7 +66,7 @@ cMCompiler::language::runtime_value cMCompiler::language::buildMethodCallExpress
 	auto result = buildFunctionCallExpression(
 		compile != nullptr ? getValueFor(compile) : nullptr,
 		run != nullptr ? getValueFor(run) : nullptr,
-		language::convertToCollection(std::move(argumentExpressions), getExpressionDescriptor(), 1),
+		language::convertToCollection(std::move(argumentExpressions), { getExpressionDescriptor(), 1 }),
 		std::move(pointerToSource));
 	assert(dynamic_cast<dataStructures::execution::ReferenceValue*>(result.get()) != nullptr);
 	for (auto arg : expressions)

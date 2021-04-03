@@ -6,7 +6,7 @@ namespace cMCompiler::language
 {
 	struct Parameter
 	{
-		not_null<dataStructures::Type*> type_;
+		dataStructures::TypeReference type_;
 		std::vector<not_null<dataStructures::AttributeInstance*>> attributes_;
 	};
 

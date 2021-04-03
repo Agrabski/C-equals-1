@@ -7,7 +7,7 @@ using namespace cMCompiler::language;
 std::unique_ptr<execution::IntegerValue> cMCompiler::language::buildIntegerValue(dataStructures::Type* ofType)
 {
 	if (ofType == getUsize() || ofType == nullptr)
-		return std::make_unique<execution::IntegerValue>(8, false, getUsize());
+		return std::make_unique<execution::IntegerValue>(8, false, TypeReference{ getUsize(), 0 });
 	std::terminate(); // todo: handle custom integer types
 }
 
@@ -28,7 +28,7 @@ std::unique_ptr<execution::IntegerValue> cMCompiler::language::buildIntegerValue
 std::unique_ptr<execution::StringValue> cMCompiler::language::buildStringValue()
 {
 	auto string = getDefaultPackage()->rootNamespace()->get<Type>("string");
-	return std::make_unique<execution::StringValue>(string);
+	return std::make_unique<execution::StringValue>(TypeReference{ string, 0 });
 }
 
 std::unique_ptr<execution::StringValue> cMCompiler::language::buildStringValue(std::string const& value)
@@ -40,7 +40,7 @@ std::unique_ptr<execution::StringValue> cMCompiler::language::buildStringValue(s
 
 std::unique_ptr<cMCompiler::dataStructures::execution::BooleanValue> cMCompiler::language::buildBooleanValue(bool value)
 {
-	auto result = std::make_unique<execution::BooleanValue>(getBool());
+	auto result = std::make_unique<execution::BooleanValue>(TypeReference{ getBool(), 0 });
 	result->value(value);
 	return result;
 }

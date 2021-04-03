@@ -18,7 +18,7 @@ namespace cMCompiler::dataStructures::execution
 		virtual std::string toString() const override;
 		bool validate(IRuntimeValue* value, std::string const& name) const;
 	public:
-		ObjectValue(Type* t) noexcept : IRuntimeValue(t)
+		ObjectValue(TypeReference t) noexcept : IRuntimeValue(t)
 		{
 		}
 
@@ -27,7 +27,7 @@ namespace cMCompiler::dataStructures::execution
 			return ReferenceValue::make(&values_[name], getMemberType(name));
 		}
 
-		Type* getMemberType(std::string const& name) final;
+		TypeReference const& getMemberType(std::string const& name) const final;
 
 		void setValue(std::string const& name, std::unique_ptr<IRuntimeValue>&& value) final
 		{

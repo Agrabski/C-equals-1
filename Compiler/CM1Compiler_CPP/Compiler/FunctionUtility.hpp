@@ -14,7 +14,7 @@ namespace cMCompiler::compiler
 {
 	std::string getName(gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx);
 
-	dataStructures::Type* returnType(
+	dataStructures::TypeReference returnType(
 		gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx,
 		language::NameResolver& resolver,
 		language::NameResolutionContext& context,
@@ -26,9 +26,14 @@ namespace cMCompiler::compiler
 		language::NameResolver& resolver,
 		language::NameResolutionContext& context,
 		gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx,
+		std::filesystem::path file,
 		std::optional<dataStructures::ObjectState> state = std::optional<dataStructures::ObjectState>());
 
-	std::vector<dataStructures::Type*> getParameterTypes(language::NameResolver& resolver, language::NameResolutionContext& context, gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx);
+	std::vector<dataStructures::TypeReference> getParameterTypes(
+		language::NameResolver& resolver,
+		language::NameResolutionContext& context,
+		gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx,
+		std::filesystem::path file);
 	bool compatible(dataStructures::Function* definition, std::vector<dataStructures::Type*> parametrTypes);
 
 

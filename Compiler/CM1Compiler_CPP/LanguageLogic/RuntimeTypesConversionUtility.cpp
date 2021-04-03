@@ -22,9 +22,9 @@ std::string cMCompiler::language::convertToString(dataStructures::execution::IRu
 	return string.toString();
 }
 
-cMCompiler::language::runtime_value cMCompiler::language::convertToCollection(std::vector<runtime_value>&& values, not_null<dataStructures::Type*> type, unsigned char referenceLevel)
+cMCompiler::language::runtime_value cMCompiler::language::convertToCollection(std::vector<runtime_value>&& values, dataStructures::TypeReference type)
 {
-	auto result = std::make_unique<execution::ArrayValue>(getCollectionTypeFor(type), type, referenceLevel);
+	auto result = std::make_unique<execution::ArrayValue>(TypeReference{ getCollectionTypeFor(type),0 }, type);
 	for (auto& v : values)
 		result->push(std::move(v));
 	return result;
@@ -33,15 +33,15 @@ cMCompiler::language::runtime_value cMCompiler::language::convertToCollection(st
 
 cMCompiler::language::runtime_value cMCompiler::language::convertToCollection(std::vector<std::string> const& strings)
 {
-	auto result = std::make_unique<execution::ArrayValue>(getCollectionTypeFor(getString()), getString(), 0);
+	auto result = std::make_unique<execution::ArrayValue>(TypeReference{ getCollectionTypeFor({ getString(), 0 }),0 }, dataStructures::TypeReference{ getString(), 0 });
 	for (auto const& s : strings)
 		result->push(buildStringValue(s));
 	return result;
 }
 
-cMCompiler::language::runtime_value cMCompiler::language::convertCollection(std::vector<runtime_value>&& collection, gsl::not_null<dataStructures::Type*> elementType, unsigned char referenceLevel)
+cMCompiler::language::runtime_value cMCompiler::language::convertCollection(std::vector<runtime_value>&& collection, dataStructures::TypeReference elementType)
 {
-	auto result = std::make_unique<dataStructures::execution::ArrayValue>(getCollectionTypeFor(elementType), elementType, referenceLevel);
+	auto result = std::make_unique<dataStructures::execution::ArrayValue>(TypeReference{ getCollectionTypeFor(elementType),0 }, elementType);
 	for (auto& e : collection)
 		result->push(std::move(e));
 	return result;

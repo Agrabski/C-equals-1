@@ -18,9 +18,9 @@ namespace cMCompiler::compiler
 namespace cMCompiler::language
 {
 	template<typename T>
-	gsl::not_null<T*> convert(runtime_value&& value) = delete;
+	T convert(runtime_value&& value) = delete;
 	template<>
-	inline gsl::not_null<dataStructures::Type*> convert(runtime_value&& value)
+	inline dataStructures::TypeReference convert(runtime_value&& value)
 	{
 		not_null v = dereference(value.get());
 		not_null typeReference = dynamic_cast<dataStructures::execution::RuntimeTypeDescriptor*>(v.get());
@@ -28,16 +28,17 @@ namespace cMCompiler::language
 	}
 
 	template<typename T>
-	gsl::not_null<T*> executeGetter(std::unique_ptr<dataStructures::execution::IRuntimeValue>& object, std::string const& name)
+	T executeGetter(std::unique_ptr<dataStructures::execution::IRuntimeValue>& object, std::string const& name)
 	{
 		std::unique_ptr<dataStructures::execution::IRuntimeValue> self;
 		if (dynamic_cast<dataStructures::execution::ReferenceValue*>(object.get()) == nullptr)
 			self = dataStructures::execution::ReferenceValue::make(&object, object->type());
 		else
 			self = object->copy();
+		assert(self->type().referenceCount == 1);
 		std::vector<runtime_value> params;
 		params.push_back(std::move(self));
-		auto methods = object->type()->methods();
+		auto methods = dereference(object.get())->type().type->methods();
 		auto function = std::find_if(
 			methods.begin(),
 			methods.end(),

@@ -22,7 +22,7 @@ std::string cMCompiler::compiler::getName(gsl::not_null<CMinusEqualsMinus1Revisi
 		return result + name->binaryOperator()->getText();
 }
 
-cMCompiler::dataStructures::Type* cMCompiler::compiler::returnType(
+cMCompiler::dataStructures::TypeReference cMCompiler::compiler::returnType(
 	gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx,
 	language::NameResolver& resolver,
 	language::NameResolutionContext& context,
@@ -37,7 +37,7 @@ cMCompiler::dataStructures::Type* cMCompiler::compiler::returnType(
 			id,
 			file
 		);
-	return nullptr;
+	return {};
 }
 
 cMCompiler::dataStructures::Function* cMCompiler::compiler::getCompatibleFunction(
@@ -45,9 +45,10 @@ cMCompiler::dataStructures::Function* cMCompiler::compiler::getCompatibleFunctio
 	language::NameResolver& resolver,
 	language::NameResolutionContext& context,
 	gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx,
+	std::filesystem::path file,
 	std::optional<dataStructures::ObjectState> state)
 {
-	auto parameters = getParameterTypes(resolver, context, ctx);
+	auto parameters = getParameterTypes(resolver, context, ctx, file);
 	auto allFunctions = resolver.resolveOverloadSet(name, context);
 	auto result = std::find_if(allFunctions.begin(), allFunctions.end(), [&](auto const f)
 		{
@@ -66,15 +67,20 @@ cMCompiler::dataStructures::Function* cMCompiler::compiler::getCompatibleFunctio
 	return nullptr;
 }
 
-std::vector<cMCompiler::dataStructures::Type*> cMCompiler::compiler::getParameterTypes(
+std::vector<cMCompiler::dataStructures::TypeReference> cMCompiler::compiler::getParameterTypes(
 	language::NameResolver& resolver,
 	language::NameResolutionContext& context,
-	gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx)
+	gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx,
+	std::filesystem::path file)
 {
-	auto result = std::vector<cMCompiler::dataStructures::Type*>();
+	auto result = std::vector<cMCompiler::dataStructures::TypeReference>();
 	for (not_null<CMinusEqualsMinus1Revision0Parser::ParameterContext*> variable : ctx->parameterList()->parameter())
-		result.push_back(resolver.resolve<dataStructures::Type>(variable->typeSpecifier()->identifier()->getText(), context));
-	return result;
+		result.push_back(getType(
+			resolver,
+			context,
+			variable->typeSpecifier(),
+			file));
+		return result;
 }
 
 void cMCompiler::compiler::confirmFunction(
@@ -87,19 +93,18 @@ void cMCompiler::compiler::confirmFunction(
 {
 	for (not_null<CMinusEqualsMinus1Revision0Parser::ParameterContext*> variable : ctx->parameterList()->parameter())
 	{
-		auto typeName = variable->typeSpecifier()->identifier()->getText();
-		not_null const type = resolver.resolve<dataStructures::Type>(typeName, context);
+		auto name = variable->identifier()->getText();
 		f->appendVariable(
-			variable->identifier()->getText(),
-			type,
-			variable->typeSpecifier()->ref().size()
+			name,
+			getType(
+				resolver,
+				context,
+				variable->typeSpecifier(),
+				file)
 		);
 	}
 	auto type = returnType(ctx, resolver, context, file);
-	if (type)
-		f->setReturnType(type);
-	else
-		f->setReturnType(nullptr);
+	f->setReturnType(type);
 	f->confirm();
 }
 
@@ -107,7 +112,7 @@ using namespace cMCompiler;
 
 void cMCompiler::compiler::appendSpecialVariable(not_null<dataStructures::Type*> target, not_null<dataStructures::Function*> f)
 {
-	f->appendVariable("self", target, 1);
+	f->appendVariable("self", { target, 1 });
 }
 
 dataStructures::Function* cMCompiler::compiler::createFunction(not_null<dataStructures::Type*> target, std::string const& name)
@@ -128,7 +133,7 @@ dataStructures::Function* cMCompiler::compiler::createFunction(not_null<dataStru
 
 void cMCompiler::compiler::appendSpecialVariable(not_null<dataStructures::Attribute*> target, not_null<dataStructures::Function*> f)
 {
-	f->appendVariable("self", target->describingType(), 1);
+	f->appendVariable("self", { target->describingType(), 1 });
 }
 
 void cMCompiler::compiler::appendSpecialVariable(not_null<dataStructures::Namespace*> target, not_null<dataStructures::Function*> f) noexcept
@@ -161,7 +166,13 @@ void cMCompiler::compiler::finalizeFunction(
 	if (ctx->genericSpecifier() != nullptr)
 		return;
 	auto name = getName(ctx);
-	auto* const function = getCompatibleFunction(name, resolver, context, ctx, dataStructures::ObjectState::Confirmed);
+	auto* const function = getCompatibleFunction(
+		name,
+		resolver,
+		context,
+		ctx,
+		file,
+		dataStructures::ObjectState::Confirmed);
 	if (function == nullptr)
 		std::terminate(); //todo: report error
 	finalizeFunction(resolver, context, function, ctx, file);

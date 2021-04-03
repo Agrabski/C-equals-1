@@ -38,12 +38,12 @@ namespace cMCompiler::dataStructures
 			return std::vector<validation::ValidationError>();
 		}
 
-		not_null<Field*> appendField(std::string const& name, Type* type, unsigned char referenceLevel);
+		not_null<Field*> appendField(std::string const& name, TypeReference type);
 		Function* appendFunction(std::string const& name);
 
 		std::vector<gsl::not_null<Function*>> methods();
 
-		Type* describingType() noexcept { return describingType_.get(); }
+		Type * describingType() noexcept { return describingType_.get(); }
 		template<typename T>
 		gsl::not_null<Generic<T>*> appendGeneric(
 			std::vector<std::string>&& parameterNames, 

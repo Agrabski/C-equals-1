@@ -46,7 +46,7 @@ gsl::not_null<cMCompiler::dataStructures::Function*> cMCompiler::language::getAt
 			break;
 		}
 	for (auto f : attribute->basedOn()->methods())
-		if (f->name() == attachment_function_name__ && f->parameters().size() == 2 && f->parameters().back()->type() == descriptor)
+		if (f->name() == attachment_function_name__ && f->parameters().size() == 2 && f->parameters().back()->type().type == descriptor)
 			return f;
 	std::terminate();
 }

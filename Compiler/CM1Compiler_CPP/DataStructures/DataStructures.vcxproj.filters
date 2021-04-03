@@ -153,6 +153,9 @@
     <ClInclude Include="NameResolutionContext.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TypeReference.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -234,6 +237,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="execution\BooleanValue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TypeReference.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

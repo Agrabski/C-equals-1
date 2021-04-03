@@ -8,18 +8,19 @@ namespace cMCompiler::dataStructures::execution
 		std::unique_ptr<IRuntimeValue>* value_;
 		std::function<void(ReferenceValue&)> dealocator_;
 	public:
-		ReferenceValue(std::unique_ptr<IRuntimeValue>* value, Type* type, std::function<void(ReferenceValue&)> dealocator) noexcept :
+		ReferenceValue(std::unique_ptr<IRuntimeValue>* value, TypeReference type, std::function<void(ReferenceValue&)> dealocator) noexcept :
 			IRuntimeValue(type),
 			value_(value),
 			dealocator_(dealocator) {}
 		template<typename T>
-		ReferenceValue(std::unique_ptr<T>* value, Type type) : IRuntimeValue(type)
+		ReferenceValue(std::unique_ptr<T>* value, TypeReference type) : IRuntimeValue(type)
 		{
 			value_ = static_cast<std::unique_ptr<IRuntimeValue>*>(value);
 		}
 		std::unique_ptr<IRuntimeValue>* value() const noexcept { return value_; }
-		static std::unique_ptr<ReferenceValue> make(std::unique_ptr<IRuntimeValue>* value, Type* type)
+		static std::unique_ptr<ReferenceValue> make(std::unique_ptr<IRuntimeValue>* value, TypeReference type)
 		{
+			type.referenceCount += 1;
 			return std::make_unique<ReferenceValue>(value, type, std::function<void(ReferenceValue&)>());
 		}
 

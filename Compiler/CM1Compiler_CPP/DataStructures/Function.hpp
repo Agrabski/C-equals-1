@@ -54,19 +54,19 @@ namespace cMCompiler::dataStructures
 		std::unique_ptr<execution::ArrayValue> intermidiateRepresentation_;
 		std::vector<std::unique_ptr<Variable>> parameters_;
 		std::vector<std::unique_ptr<Variable>> localVariables_;
-		Type* returnType_ = nullptr;
+		TypeReference returnType_;
 	public:
 		virtual ~Function() = default;
 		Function(std::string name, INamedObject* parent)
 			: AttributeTarget(Target::Function), INamedObject(name, parent) {}
-		Variable* appendVariable(std::string name, not_null<Type*> type, unsigned char referenceLevel);
-		Variable* appendLocalVariable(std::string name, not_null<Type*> type, unsigned char referenceLevel);
+		Variable* appendVariable(std::string name, TypeReference type);
+		Variable* appendLocalVariable(std::string name, TypeReference type);
 		std::vector<Variable*> parameters();
 		std::vector<INamedObject*> children() noexcept final
 		{
 			return std::vector<INamedObject*>();
 		};
-		not_null<Function*> setReturnType(Type* t) noexcept
+		not_null<Function*> setReturnType(TypeReference t) noexcept
 		{
 			returnType_ = t;
 			return this;
@@ -76,7 +76,7 @@ namespace cMCompiler::dataStructures
 		{
 			intermidiateRepresentation_ = std::move(collection);
 		}
-		Type* returnType() noexcept { return returnType_; }
+		TypeReference returnType() noexcept { return returnType_; }
 		std::unique_ptr<execution::ArrayValue>& code() noexcept { return intermidiateRepresentation_; }
 		void pushInstruction(std::unique_ptr<execution::IRuntimeValue>&& instruction)
 		{

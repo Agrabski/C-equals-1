@@ -21,11 +21,11 @@ namespace cMCompiler::dataStructures
 	}
 	class Type;
 	class AttributeTarget;
-	class Variable : public AttributeTarget, public INamedObject, public IValueHolder
+	class Variable : public AttributeTarget, public INamedObject
 	{
 		std::unique_ptr<execution::IRuntimeValue> scopeBegin_;
 		std::unique_ptr<execution::IRuntimeValue> scopeEnd_;
-		not_null<Type*> type_;
+		TypeReference type_;
 	public:
 		void provideScopeBegin(std::unique_ptr<execution::IRuntimeValue>&& value)
 		{
@@ -36,9 +36,9 @@ namespace cMCompiler::dataStructures
 			scopeEnd_ = std::move(value);
 		}
 
-		Variable(std::string name, not_null<Type*> type, not_null<Function*> parent, unsigned char referenceLevel) :
-			AttributeTarget(Target::Variable), INamedObject(name, (INamedObject*)parent.get()), type_(type), IValueHolder(referenceLevel) {}
-		not_null<Type*> type() noexcept;
+		Variable(std::string name, TypeReference type, not_null<Function*> parent) :
+			AttributeTarget(Target::Variable), INamedObject(name, (INamedObject*)parent.get()), type_(type){}
+		TypeReference type() noexcept;
 		std::vector<validation::ValidationError> validateContent() const final { return {}; }
 		std::vector<INamedObject*> children() final { return {}; };
 
