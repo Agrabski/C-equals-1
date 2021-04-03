@@ -45,7 +45,8 @@ parameterList: | parameter | (parameter ',')+ parameter;
 
 parameter: attributeSequence? identifier ':' typeSpecifier;
 
-typeSpecifier: identifier genericUsage? ref* (Array)?;
+typeSpecifier: identifier genericUsage? modifier*;
+modifier: (ref | Array);
 
 genericUsage: Less typeSpecifier (',' typeSpecifier)* Greater;
 

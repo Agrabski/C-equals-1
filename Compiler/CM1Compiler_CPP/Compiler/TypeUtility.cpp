@@ -97,7 +97,7 @@ void cMCompiler::compiler::finalizeType(
 	std::filesystem::path const& file)
 {
 	assert(ctx != nullptr);
-	auto const generic = ctx->genericSpecifier();
+	auto const * const generic = ctx->genericSpecifier();
 	if (generic == nullptr)
 	{
 		auto name = ::name(ctx);
@@ -126,6 +126,7 @@ cMCompiler::dataStructures::TypeReference cMCompiler::compiler::getType(
 {
 	auto name = ctx->identifier()->getText();
 	std::cout << ctx->getText() << std::endl;
+	// todo: arrays
 	if (ctx->genericUsage())
 	{
 		std::vector<dataStructures::TypeReference> parameters;
