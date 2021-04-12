@@ -38,7 +38,7 @@ namespace cMCompiler::dataStructures
 
 		Variable(std::string name, TypeReference type, not_null<Function*> parent) :
 			AttributeTarget(Target::Variable), INamedObject(name, (INamedObject*)parent.get()), type_(type){}
-		TypeReference type() noexcept;
+		TypeReference type() const noexcept;
 		std::vector<validation::ValidationError> validateContent() const final { return {}; }
 		std::vector<INamedObject*> children() final { return {}; };
 

@@ -8,6 +8,7 @@ namespace cMCompiler::dataStructures
 	class Function;
 	class Field;
 	class Variable;
+	struct TypeReference;
 }
 namespace cMCompiler::dataStructures::ir
 {

@@ -47,6 +47,7 @@
     <ClInclude Include="PackageBuildUtility.hpp" />
     <ClInclude Include="PackageDiscoveryUtility.hpp" />
     <ClInclude Include="Preprocessor.hpp" />
+    <ClInclude Include="Serialization\NameGetter.hpp" />
     <ClInclude Include="Serialization\SerializationManager.hpp" />
     <ClInclude Include="StatementEvaluator.hpp" />
     <ClInclude Include="TypeUtility.hpp" />
@@ -64,6 +65,7 @@
     <ClCompile Include="PackageBuildUtility.cpp" />
     <ClCompile Include="PackageDiscoveryUtility.cpp" />
     <ClCompile Include="Preprocessor.cpp" />
+    <ClCompile Include="Serialization\NameGetter.cpp" />
     <ClCompile Include="StatementEvaluator.cpp" />
     <ClCompile Include="TypeUtility.cpp" />
   </ItemGroup>

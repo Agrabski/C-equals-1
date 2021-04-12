@@ -3,6 +3,8 @@
 
 std::ostream& cMCompiler::dataStructures::operator<<(std::ostream& s, TypeReference const& ref)
 {
+	if (ref.type == nullptr)
+		return s;
 	s << ref.type->name();
 	for (auto x = ref.referenceCount; x > 0; x--)
 		s << '*';

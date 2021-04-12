@@ -16,3 +16,9 @@ std::vector<gsl::not_null<AttributeInstance*>> cMCompiler::dataStructures::Attri
 		result.push_back(att.get());
 	return result;
 }
+
+execution::json cMCompiler::dataStructures::AttributeTarget::emmitAttributes(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const
+{
+	//todo: do
+	return execution::json();
+}

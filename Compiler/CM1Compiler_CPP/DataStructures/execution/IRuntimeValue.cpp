@@ -5,6 +5,7 @@ cMCompiler::dataStructures::execution::json cMCompiler::dataStructures::executio
 	return {
 		{"implementation_typename", typeName()},
 		{"type", nameLookupFunction.get(type_)},
-		{"value", emmit(nameLookupFunction, manager)}
+		{"value", emmit(nameLookupFunction, manager)},
+		{"serialization_id", manager.getId(this)}
 	};
 }

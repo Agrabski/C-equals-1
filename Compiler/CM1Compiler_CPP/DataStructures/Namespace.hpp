@@ -131,7 +131,6 @@ namespace cMCompiler::dataStructures
 		virtual std::vector<validation::ValidationError> validateContent() const override;
 
 
-		// Inherited via INamedObject
 		execution::json emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const final;
 
 };

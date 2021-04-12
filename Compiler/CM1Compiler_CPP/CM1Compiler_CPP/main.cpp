@@ -20,7 +20,11 @@ int main(int argc, char* argv[])
 		packages.push_back(cMCompiler::compiler::getPackageDefinitionAndFileSet(context->file, files, dependencyNames));
 		cMCompiler::compiler::buildAndFillPackage(*packages.back(), dependencies, files);
 		auto emiter = cMCompiler::compiler::IntermidiateRepresentationEmmiter();
-		emiter.emmit(std::cout, *packages.back(), dependencies);
+		
+		std::filesystem::create_directory("out");
+		auto outputFile = std::ofstream("out\\package.json");
+		emiter.emmit(outputFile, *packages.back(), dependencies);
+		outputFile.close();
 	}
 	else
 		options.print(std::cout);

@@ -18,7 +18,8 @@ cMCompiler::dataStructures::execution::json cMCompiler::dataStructures::executio
 {
 	std::vector<json> properties;
 	for (const auto& v : values_)
-		properties.push_back({ v.first, v.second->serialize(nameLookupFunction, manager) });
+		if (v.second != nullptr)
+			properties.push_back({ v.first, v.second->serialize(nameLookupFunction, manager) });
 	return {
 		{"fields", properties}
 	};

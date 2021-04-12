@@ -26,9 +26,28 @@ std::vector<Variable*> cMCompiler::dataStructures::Function::parameters()
 	return result;
 }
 
+std::vector<Variable const*> cMCompiler::dataStructures::Function::parameters() const
+{
+	auto result = std::vector<Variable const*>();
+	for (auto& x : parameters_)
+		result.push_back(x.get());
+	return result;
+}
 std::vector<validation::ValidationError> cMCompiler::dataStructures::Function::validateContent() const
 {
 	return std::vector<validation::ValidationError>();
+}
+
+execution::json cMCompiler::dataStructures::Function::emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const
+{
+	return {
+		{"name", name()},
+		{"attributes", emmitAttributes(nameLookupFunction, manager)},
+		{"parameters", execution::serializeArray(parameters_, nameLookupFunction, manager)},
+		{"locals", execution::serializeArray(localVariables_, nameLookupFunction, manager)},
+		{"body", intermidiateRepresentation_->emmit(nameLookupFunction, manager)},
+		{"return_type", nameLookupFunction.get(returnType_)}
+	};
 }
 
 

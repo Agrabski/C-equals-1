@@ -1,4 +1,5 @@
 #pragma once
+#include <gsl.h>
 #include <memory>
 
 namespace cMCompiler::dataStructures
@@ -13,5 +14,6 @@ namespace cMCompiler::dataStructures
 	{
 	public:
 		virtual serialzation_id serializeReference(std::unique_ptr<execution::IRuntimeValue> const& referenceValue) = 0;
+		virtual dataStructures::serialzation_id getId(gsl::not_null<dataStructures::execution::IRuntimeValue const*> key) = 0;
 	};
 }

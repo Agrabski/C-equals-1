@@ -62,6 +62,7 @@ namespace cMCompiler::dataStructures
 		Variable* appendVariable(std::string name, TypeReference type);
 		Variable* appendLocalVariable(std::string name, TypeReference type);
 		std::vector<Variable*> parameters();
+		std::vector<Variable const*> parameters() const;
 		std::vector<INamedObject*> children() noexcept final
 		{
 			return std::vector<INamedObject*>();
