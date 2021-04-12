@@ -6,7 +6,7 @@ namespace cMCompiler::language
 	std::string getGenericMangledName(dataStructures::Generic<T> const& g, std::vector<cMCompiler::dataStructures::TypeReference> const& parameters)
 	{
 		std::stringstream stream;
-		stream << g.qualifiedName() << "<";
+		stream << g.name() << "<";
 		for (auto const param : parameters)
 			stream << param << ",";
 		auto result = stream.str();

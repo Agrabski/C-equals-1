@@ -9,6 +9,16 @@
 namespace cMCompiler::dataStructures::execution
 {
 	using json = nlohmann::json;
+
+	template<typename T>
+	nlohmann::json serializeArray(std::vector<T> const& elements, ir::INameGetter const& nameLookupFunction, ISerializationManager& manager)
+	{
+		auto result = json::array();
+		for (auto const& element : elements)
+			result.push_back(element->emmit(nameLookupFunction, manager));
+		return result;
+	}
+
 	class IRuntimeValue
 	{
 		TypeReference type_;

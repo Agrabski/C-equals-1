@@ -45,8 +45,11 @@ parameterList: | parameter | (parameter ',')+ parameter;
 
 parameter: attributeSequence? identifier ':' typeSpecifier;
 
-typeSpecifier: identifier genericUsage? modifier*;
-modifier: (ref | Array);
+typeSpecifier: identifier genericUsage? modifier;
+
+modifier:  arraySpecifier? ref*;
+
+arraySpecifier: '[' modifier']';
 
 genericUsage: Less typeSpecifier (',' typeSpecifier)* Greater;
 
@@ -144,7 +147,6 @@ ParamOpen: '(';
 ParamClose: ')';
 ATTROBITEOPEN: '[';
 ATTROBITECLOSE: ']';
-Array: '['']';
 
 arithmeticBinaryOperator:
 	| Plus

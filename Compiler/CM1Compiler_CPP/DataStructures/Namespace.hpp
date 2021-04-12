@@ -112,10 +112,27 @@ namespace cMCompiler::dataStructures
 			getAppropriate<Generic<T>>().push_back(std::move(tmp));
 			return result;
 		}
+		template<typename T>
+		gsl::not_null<Generic<T>*> appendGeneric(
+			std::vector<std::string>&& parameterNames,
+			std::function<not_null<T*>(std::vector<TypeReference> const&)> customFill,
+			std::string name,
+			NameResolutionContext const& context)
+		{
+			auto tmp = std::make_unique<Generic<T>>(std::move(parameterNames), customFill, name, this, context);
+			not_null const result = tmp.get();
+			getAppropriate<Generic<T>>().push_back(std::move(tmp));
+			return result;
+		}
+
 
 
 		// Inherited via INamedObject
 		virtual std::vector<validation::ValidationError> validateContent() const override;
 
-	};
+
+		// Inherited via INamedObject
+		execution::json emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const final;
+
+};
 }

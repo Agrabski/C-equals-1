@@ -31,6 +31,7 @@ std::vector<validation::ValidationError> cMCompiler::dataStructures::Function::v
 	return std::vector<validation::ValidationError>();
 }
 
+
 FunctionFlags cMCompiler::dataStructures::operator|(FunctionFlags lhs, FunctionFlags rhs)
 {
 	return static_cast<FunctionFlags>(static_cast<char>(lhs) | static_cast<char>(rhs));

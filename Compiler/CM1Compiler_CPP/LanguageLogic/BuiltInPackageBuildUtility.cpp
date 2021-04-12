@@ -299,7 +299,11 @@ void buildPackage()
 	result->rootNamespace()->append<Type>("bool");
 	result->rootNamespace()->append<Type>("char");
 	auto usize = result->rootNamespace()->append<Type>("usize");
-	result->rootNamespace()->appendGeneric<Type>({ "T" }, nullptr, "array", NameResolutionContext(defaultPackage__.get()));
+	result->rootNamespace()->appendGeneric<Type>({ "T" }, 
+		[](auto a)
+		{
+			return getCollectionTypeFor(a.front());
+		}, "array", NameResolutionContext(defaultPackage__.get()));
 	buildCompilerLibrary(result->rootNamespace());
 	buildString(string);
 	buildUsize(usize);
@@ -323,6 +327,11 @@ gsl::not_null<PackageDatabase*> cMCompiler::language::getDefaultPackage()
 gsl::not_null<Type*> cMCompiler::language::getBool()
 {
 	return defaultPackage__->rootNamespace()->get<Type>("bool");
+}
+
+gsl::not_null<cMCompiler::dataStructures::Generic<cMCompiler::dataStructures::Type>*> cMCompiler::language::getArray()
+{
+	return defaultPackage__->rootNamespace()->get<Generic<Type>>("array");
 }
 
 gsl::not_null<Type*> cMCompiler::language::getChar()
@@ -367,7 +376,7 @@ gsl::not_null<Type*> cMCompiler::language::getPointerToSource()
 
 gsl::not_null< cMCompiler::dataStructures::Type*> cMCompiler::language::getCollectionTypeFor(cMCompiler::dataStructures::TypeReference elementType)
 {
-	auto arr = defaultPackage__->rootNamespace()->get<Generic<Type>>("array");
+	auto arr = getArray();
 	std::vector<dataStructures::TypeReference> types;
 	types.push_back(elementType);
 	return instantiate(*arr, types);

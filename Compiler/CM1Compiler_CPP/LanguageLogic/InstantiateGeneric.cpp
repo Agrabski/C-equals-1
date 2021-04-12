@@ -17,7 +17,7 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::instantia
 	{
 		auto newType = getDefaultPackage()->rootNamespace()->append<dataStructures::Type>(name);
 		newType->setAccessibility(dataStructures::Accessibility::Public);
-		auto indexOperator = newType->append<dataStructures::Function>("operator[]");
+		auto indexOperator = newType->append<dataStructures::Function>("operator_[]");
 		createIndexer(indexOperator, newType, genericParameters[0]);
 		// todo: finish
 

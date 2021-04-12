@@ -76,7 +76,7 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildWhil
 	impl->appendInterface(interface);
 	impl->appendField("_pointerToSource", { getPointerToSource(), 0 });
 	impl->appendField("_expression", { expression, 1 });
-	impl->appendField("_body", { getCollectionTypeFor({expression, 1}), 0 });
+	impl->appendField("_body", { getCollectionTypeFor({baseStatement, 1}), 0 });
 	return interface;
 }
 
@@ -201,6 +201,7 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildAssi
 	auto result = irns->append<Type>("assigmentStatement");
 	result->appendInterface(getIInstruction());
 	result->appendField("_lExpression", { getExpressionDescriptor(), 1 });
+	result->appendField("_parent", { getIInstruction(), 1 })->setAccessibility(Accessibility::Private);
 	createGetter(result->append<Function>("lExpression"), result);
 	result->appendField("_rExpression", { getExpressionDescriptor(), 1 });
 	createGetter(result->append<Function>("rExpression"), result);

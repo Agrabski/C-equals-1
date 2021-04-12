@@ -9,6 +9,7 @@
 #include "../LanguageLogic/RuntimeTypesConversionUtility.hpp"
 #include "../LanguageLogic/SpecialFunctionUtility.hpp"
 #include "../LanguageLogic/ExpressionUtility.hpp"
+#include "TypeUtility.hpp"
 
 std::string cMCompiler::compiler::FunctionBodyBuilder::decorateTemporary(not_null<antlr4::tree::ParseTree*>tree, int index)
 {
@@ -202,7 +203,7 @@ void cMCompiler::compiler::FunctionBodyBuilder::buildForRangeLoop(
 			auto instruction = language::buildFunctionCallStatement(
 				language::buildMethodCallExpression(
 					language::buildVariableReferenceExpressionDescriptor(e),
-					rangeObjectVariable->type(),
+					e->type(),
 					{},
 					"advance",
 					language::buildSourcePointer(filePath_.string(), *body->parent)),
@@ -254,12 +255,12 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitVariableDeclaratio
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> expression;
 	dataStructures::TypeReference type;
 	auto typeAnnotationPresent = ctx->typeSpecifier() != nullptr;
-	size_t referenceLevel;
 	if (typeAnnotationPresent)
-	{
-		referenceLevel = ctx->typeSpecifier()->ref().size();
-		type = { nr_.resolve<dataStructures::Type>(ctx->typeSpecifier()->identifier()->getText(), context_), referenceLevel };
-	}
+		type = getType(
+			nr_,
+			context_,
+			ctx->typeSpecifier(),
+			filePath_);
 	if (!typeAnnotationPresent || ctx->functionCallParameter())
 	{
 		expression = getBuilder().buildExpression(ctx->functionCallParameter());

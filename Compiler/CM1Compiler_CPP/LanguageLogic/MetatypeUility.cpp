@@ -223,7 +223,7 @@ void cMCompiler::language::supplyScopeBegin(runtime_value& scopeBegin, dataStruc
 
 void cMCompiler::language::pushIf(runtime_value& conditionalInstruction, runtime_value&& newInstruction)
 {
-	auto object = castToObject(conditionalInstruction);
+	auto object = dereferenceAs<ObjectValue>(conditionalInstruction.get());
 	assert(coerce(newInstruction->type(), { getIInstruction(), 1 }));
 	auto collection = castToArray(object->getMemberValue("_ifBranch").get());
 	collection->push(std::move(newInstruction));
@@ -231,7 +231,7 @@ void cMCompiler::language::pushIf(runtime_value& conditionalInstruction, runtime
 
 void cMCompiler::language::pushElse(runtime_value& conditionalInstruction, runtime_value&& newInstruction)
 {
-	auto object = castToObject(conditionalInstruction);
+	auto object = dereferenceAs<ObjectValue>(conditionalInstruction.get());
 	assert(coerce(newInstruction->type(), { getIInstruction(), 1 }));
 	auto collection = castToArray(object->getMemberValue("_elseBranch").get());
 	collection->push(std::move(newInstruction));
@@ -239,8 +239,8 @@ void cMCompiler::language::pushElse(runtime_value& conditionalInstruction, runti
 
 void cMCompiler::language::pushWhile(runtime_value& whileInstruction, runtime_value&& newInstruction)
 {
-	auto object = castToObject(whileInstruction);
+	auto object = dereferenceAs<ObjectValue>(whileInstruction.get());
 	assert(coerce(newInstruction->type(), { getIInstruction(), 1 }));
-	auto collection = castToArray(object->getMemberValue("_body").get());
+	auto collection = dereferenceAs<ArrayValue>(object->getMemberValue("_body").get());
 	collection->push(std::move(newInstruction));
 }

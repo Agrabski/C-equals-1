@@ -1,0 +1,33 @@
+\section{Istniejące rozwiązania}
+Wśród przemysłowo zastosowanych języków programowania istnieje szeroka gama mechanizmów meta-programistycznych. Stosuje się w nich zarówno statyczną jak i dynamiczną refleksję. W popularnie używanych językach, mechanizmy dynamiczne są zwykle dużo bardziej rozbudowane, przyjazne użytkownikowi i potężne.
+\subsection{C\#}
+\subsubsection{Atrybuty}
+W języku C\# atrybuty służą głównie do przechowywania metadanych.
+\subsubsection{Refleksja}
+\subsubsection{Analizatory kodu}
+\subsubsection{Generatory kodu}
+C\#9 wprowadził możliwość pisania generatorów kodu. Jest to bardzo podobne rozwiązanie do makr w języku Rust. Generatory kodu to specjalne klasy, których kod jest wykonywany w trakcie kompilacji. 
+Mechanizm C\# jest jednak bardziej zaawansowany. Umożliwia generowanie kodu używając wszystkich elementów języka, zamiast zapewniać prosty szablon. Te generatory, tak jak w Rust, nie mają jednak dostępu do informacji zbieranych przez kompilator, poza drzewem składniowym oraz nie mogą modyfikować istniejącego kodu.\par
+Generatory kodu nadal są rozwijane i w najbliższym czasie nie wejdą do stabilnego C\#. Stanowią one jednak ciekawą zmianę w kierunku języka, w stronę większego wsparcia dla statycznego meta-programowania.
+\subsection {Rust}
+Ponieważ Rust jest stosunkowo młody, jego projektanci mogli czerpać z doświadczeń innych języków. Wyraźnie widać to w jego składni, zintegrowanym systemie zarządzania zależnościami oraz bardzo przyjaznym kompilatorze.\par
+Z tego powodu, nie zawiera on też tradycyjnego preprocesora, takiego jak w C/C++ czy C\#. Makra w Rust są tak naprawdę funkcjami operującymi na drzewie składniowym programu. Jest to zdecydowany postęp względem prostego zastępowania tekstu jak w C/C++, lecz ma też swoje wady.\par
+Makra w języku Rust nadal operują na, co prawda ustrukturyzowanym, ale nadal, tekście. Oznacza to, że nie mają one dostępu do systemu typów ani żadnych innych informacji zgromadzonych przez kompilator.\par
+\subsection{C++20}
+C++ zawiera szeroką gamę mechanizmów meta-programistycznych oraz technik do statycznej walidacji kodu. Były one stopniowo wprowadzane do języka przez cały czas jego istnienia, bez spójnego planu.\par
+\subsubsection{Szablony}
+Szablony w C++ można rozumieć jako oddzielny, funkcyjny, zdolny do symulacji maszyny Turinga, język programowania \cite{template_turing_complete}. Meta-programowanie szablonowe powstało nie jako świadomy wysiłek twórców języka, lecz jako naturalna, nieprzewidziana konsekwencja jego zasad.\par
+\subsubsection{Koncepty}
+Koncepty zostały wprowadzone w C++20 jako sposób na lepsze dokumentowanie szablonów, oraz czytelniejsze komunikaty o błędzie w wypadku niepoprawnego użycia. Używa się ich do ograniczania, które typy mogą zostać wykorzystane w danym szablonie.\par
+Koncepty są definiowane jako zbiór wymagań, które typ musi spełnić. Mogą to być proste wyrażenia logiczne jak i weryfikowanie czy dana metoda istnieje oraz jaki typ zwraca. W przeciwieństwie do pozostałych omawianych mechanizmów, koncepty bronią programistę przed niezrozumiałymi błędami kompilacji zamiast przed błędami czasu uruchomienia.\par
+\subsubsection{Atrybuty}
+Atrybuty zostały oficjalnie wprowadzone do języka w C++11. Umożliwiają one przekazanie kompilatorowi dodatkowych informacji na temat kodu źródłowego. Te dane są potem wykorzystywane w trakcie kompilacji do wydawania lub ignorowania ostrzeżeń. Dwa przykłady warte omówienia to fallthrough oraz no\_discard, ponieważ prezentują obydwa przypadki zastosowania atrybutu.\par
+Atrybut fallthrough powstał, aby rozwiązać typowy problem języków zawierających konstrukcję switch. W większości zastosowań, celem programisty jest stworzenie zestawu niezależnych od siebie przypadków, spośród których zostanie wykonany jeden na podstawie wartości jakiejś zmiennej.\par
+Niestety domyślnym zachowaniem konstrukcji switch, po wykonaniu bloku jest przejście do następnego (tak zwany fallthrough). Kompilatory zaczęły więc wydawać ostrzeżenie, jeśli blok case nie zostanie zakończony instrukcją break. To tworzy jednak inny problem: czasami programista chce osiągnąć dokładnie takie zachowanie. Niektóre kompilatory zaczęły przez to zwracać uwagę na komentarze, szukając tam wyrażenia fallthrough (w GCC flaga -Wimplicit-fallthrough=3) \cite{gcc_warnings}.\par
+W C++11 sformalizowano to zachowanie, tworząc atrybut fallthrough \cite{ISO:2012:III}. Zaaplikowanie go do przypadku konstrukcji switch, powstrzymuje kompilator przed wydaniem ostrzeżenia.\par
+Atrybut no\_discard zamiast uciszać ostrzeżenie, generuje je. Jego zadaniem jest wykrywanie sytuacji w których programista ignoruje wartość zwracaną przez funkcję. Można go zaaplikować zarówno do typów (wtedy każda funkcja zwracająca ten typ staje się no\_discard) lub do funkcji.\par
+Typowym przykładem zastosowanie tego atrybutu są kody błędów. Ze względu na duży koszt mechanizmu wyjątków w C++, w niektórych projektach się ich nie stosuje. Zamiast tego, funkcje których wykonanie może się nie powieść, zwracają strukturę informującą o błędzie. Ponieważ programista wołający taką funkcję, nie ma obowiązku sprawdzić wyniku tego wywołania, łatwo było o błąd. Stąd konieczność atrybutu no\_discard.\par
+Podstawową wadą atrybutów w C++ jest fakt, że są one zachowaniem bezpośrednio wpisanym w kompilator. Nie istnieje możliwość napisania własnego atrybutu a ich lista jest bardzo krótka.\par
+\subsubsection{Funkcje constexpr}
+Język C++11 wprowadził koncepcję constexpr. Zaaplikowanie tego modyfikatora do zmiennej lub funkcji, informuje kompilator że mogą one być ewaluowane w trakcie kompilacji. Funkcje constexpr mają też nałożony szereg ograniczeń co do swojej struktury. Z każdą kolejną wersją języka są one rozluźniane, jednak nie każda funkcja może być ewaluowana w trakcie kompilacji.\par
+Ponadto, funkcje constexpr nie mają większego dostępu do struktury programu niż normalny program. Nie dają one możliwości modyfikowania istniejącego ani generowania nowego kodu. Stanowią one więc jedynie sposób na optymalizację programu.\par

@@ -1,0 +1,68 @@
+\section{Wyzwania}
+\subsection{Integracja z back-endem}
+Przy pierwszym podejściu dobudowy reprezentacji pośredniej, użyto dedykowanych struktur danych. Było to podejście najbardziej naturalne i dające najwięcej bezpieczeństwa dzięki silnemu typowaniu. Wszystkie struktury danych opisane w rozdziale \ref{reprezentacja_posrednia} miały powiązane ze sobą klasy C++.
+
+
+To podejście tworzy jednak duży problem. Reprezentacja pośrednia musi zostać wyeksponowana użytkownikowi. Ponieważ nie istniała możliwość stworzenia binarnego interfejsu między kompilatorem a interpretowanym kodem, struktury danych CIR musiały być dodatkowo reprezentowane za pomocą struktur danych interpretera.
+
+
+Użytkownik może dokonywać modyfikacji w CIR, co oznacza że może dojść do rozbieżności między strukturami danych interpretera a kompilatora. Utrzymywanie tych dwóch reprezentacji stanowiło poważne wyzwanie, dlatego postanowiono zmienić podejście. Użycie wyłącznie struktur danych interpretera do reprezentacji CIR usunęło ten problem, kosztem bezpieczeństwa kodu.
+
+
+Ponieważ w nowym podejściu, z perspektywy C++ niemalże wszystkie obiekty miały ten sam typ, kompilator stracił możliwość statycznej weryfikacji kodu.
+Aby zapewnić poprawność programu, koniecznym stało się dodawanie walidacji argumentów do wszystkich funkcji.
+
+\subsection{Informacje dodatkowe o obiektach}
+Na wczesnej fazie projektu koniecznym okazało się przechowywanie informacji które nie zostały uwzględnione w modelu semantycznym.
+Potrzeba ta powstała przy implementacji operatora \mintinline{Cpp}{sizeof}.
+Ponieważ rozmiar obiektów jest ustalany dopiero przez LLVM, koniecznym stało się zastąpienie kodu funkcji, reprezentacją pośrednią backendu.
+
+Rozwiązanie tego problemu wymaga wzięcia pod uwagę kilku istotnych aspektów.
+Zostały one opisane w rozdziałach \ref{frontend_responsibility}, \ref{compiler_extensibility} oraz \ref{frontend_backend_complexity}.
+Rozdziały \ref{original_solution} i \ref{final_solution}
+
+\subsubsection{Oryginalne rozwiązanie}\label{original_solution}
+
+Naturalnym podejściem do problemu, było zawarcie metadanych o obiekcie, wewnątrz jego definicji.
+W ten sposób frontend miał do nich łatwy dostęp.
+
+\subsubsection{Zakres odpowiedzialności frontendu} \label{frontend_responsibility}
+
+\subsubsection{Rozszerzalność kompilatora}\label{compiler_extensibility}
+
+\subsubsection{Złożoność granicy frontend-backend interface} \label{frontend_backend_complexity}
+
+\subsubsection{Ostateczne rozwiązanie}\label{final_solution}
+Po przeanalizowaniu rozwiązania z rozdziału \ref{original_solution} pod kątem problemów wymienionych w rozdziałach \ref{frontend_responsibility}, \ref{compiler_extensibility} oraz \ref{frontend_backend_complexity}, postanowiono radykalnie zmienić podejście.
+Zamiast definiować metadane obiektów po stronie struktur danych frontendu, postanowiono zdefiniować interfejs umożliwiający zapis i metadanych o elementach modelu semantycznego. 
+Listing \ref{lst:IMetadataHolder} zawiera jego deklarację.
+Metody store i get zdefiniowane na liniach 2 i 3 umożliwiają zapis i odczyt metadanych.
+
+Ten interfejs został zaimplementowany po stronie frontendu.
+Ponieważ w tym kontekście sprawdzanie typów jest opcjonalne, nie wymagało to wprowadzania dodatkowych mechanizmów do języka takich jak \mintinline{Cpp}{std::any}.
+
+W porównaniu z rozwiązaniem z oryginalny rozwiązaniem, to podejście znacząco zmniejsza granice między frontendem a interfejsem backendu.
+Ponadto, podział odpowiedzialności pomiędzy tymi komponentami jest dużo bardziej logiczny.
+Frontend nie wiedzieć o tym jakie informacje są potrzebne przy kompilacji.
+Ponadto, ponieważ metadane które mogą być przechowywane nie są zdefiniowane odgórnie, znacząco zwiększa też rozszerzalność kompilatora.
+
+\begin{lstlisting}[
+    language=Cm1,
+    numbers=left,
+    firstnumber=0,
+    caption={Interfejs obiektu przechowującego metadane},
+    aboveskip=0pt,
+    label={lst:IMetadataHolder}
+]
+class IMetadataHolder
+{
+    public fn store<T>(key: string, value: T);
+    public fn get<T>(key: string) -> T;
+    public fn has(key: string) -> bool;
+}
+
+class functionDescriptor : IMetadataHolder;
+class typeDescriptor : IMetadataHolder;
+class fieldDescriptor : IMetadataHolder;
+class variableDescriptor : IMetadataHolder;
+\end{lstlisting}

@@ -42,6 +42,10 @@ namespace cMCompiler::dataStructures
 		std::vector<validation::ValidationError> validateContent() const final { return {}; }
 		std::vector<INamedObject*> children() final { return {}; };
 
+
+		// Inherited via INamedObject
+		execution::json emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const final;
+
 	};
 
 }

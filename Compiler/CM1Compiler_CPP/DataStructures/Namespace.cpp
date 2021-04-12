@@ -31,3 +31,17 @@ std::vector<validation::ValidationError> cMCompiler::dataStructures::Namespace::
 {
 	return std::vector<validation::ValidationError>();
 }
+
+execution::json cMCompiler::dataStructures::Namespace::emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const
+{
+	return {
+		{"name", name()},
+		{"types", execution::serializeArray(types_, nameLookupFunction, manager)},
+		{"functions", execution::serializeArray(functions_, nameLookupFunction, manager)},
+		{"namespaces", execution::serializeArray(namespaces_, nameLookupFunction, manager)},
+		{"attributes", execution::serializeArray(attributes_, nameLookupFunction, manager)},
+		{"enums", execution::serializeArray(enums_, nameLookupFunction, manager)},
+		{"generic_types", execution::serializeArray(genericTypes_, nameLookupFunction, manager)},
+		{"generic_functions", execution::serializeArray(genericFunction_, nameLookupFunction, manager)},
+	};
+}

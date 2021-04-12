@@ -17,5 +17,6 @@ namespace cMCompiler::dataStructures
 
 		std::vector<gsl::not_null<AttributeInstance*>> attributes();
 		Target allowedTarget() const noexcept { return allowedTarget_; }
+		execution::json emmitAttributes(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const;
 	};
 }

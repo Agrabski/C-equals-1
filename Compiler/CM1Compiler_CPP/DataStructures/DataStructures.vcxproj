@@ -224,6 +224,7 @@
     <ClCompile Include="execution\RuntimeTypeDescriptor.cpp" />
     <ClCompile Include="execution\RuntimeVariableDescriptor.cpp" />
     <ClCompile Include="execution\StringValue.cpp" />
+    <ClCompile Include="Field.cpp" />
     <ClCompile Include="Function.cpp" />
     <ClCompile Include="Generic\GenericObject.cpp" />
     <ClCompile Include="INamedObject.cpp" />

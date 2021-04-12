@@ -1,0 +1,70 @@
+\section{Porównanie z innymi językami}
+Ponieważ C-=-1 jest językiem badawczym, nie można go porównywać z językami stosowanymi w przemyśle pod względem wygody użycia. Warto jednak przeanalizować, w jaki sposób zaproponowane mechanizmy wpływają na jego użyteczność.
+\subsection{Wsparcie dla paradygmatów programowania}
+Teoretycznie niemalże w każdym języku da się programować w każdym paradygmacie. Jednak w zależności od struktury tego języka, może być to zadanie prostsze lub trudniejsze. 
+\subsubsection{Aspect oriented programming}
+Nieoczekiwanym skutkiem zaproponowanych mechanizmów jest wsparcie dla AOP.
+\subsubsection{Obiektowe}
+C-=-1 został zaprojektowany z myślą o wsparciu stylu obiektowego. Użytkownik może deklarować typy, metody oraz interfejsy. W przeciwieństwie do C++ czy C\#, w C-=-1 nie ma jednak koncepcji dziedziczenia między konkretnymi klasami.
+
+Klasy i interfejsy mogą implementować inne interfejsy. To jest jedyny mechanizm dynamicznego polimorfizmu w C-=-1. Ta decyzja została podjęta częściowo w celu uproszczenia języka, a częściowo ponieważ dziedziczenie między konkretnymi klasami jest uważane za złą praktykę.
+
+\subsection{Walidacja kodu}
+Podstawowym celem C-=-1 było zbadanie możliwości statycznej walidacji kodu, używając zaproponowanych mechanizmów meta-programowania. W kolejnych rozdziałach omówione zostaną ich konkretne zastosowania 
+\subsubsection{Atrybut noDiscard}
+
+\subsection{Generowanie kodu}
+
+\subsubsection{Atrybut Flags}
+
+\subsection{Testowanie kodu}
+
+\subsection{Rozszerzalność języka}
+Jedną z konsekwencji zaproponowanych mechanizmów jest możliwość rozszerzania języka bez modyfikacji kompilatora.
+Oznacza to że pewne elementy składni, obecne w innych językach, stają się zbędnę w C-=-1.
+\subsubsection{Symbole zewnętrzne}
+Większość języków programowania zawiera mechanizm umożliwiający import symboli zewnętrznych.
+Mogą one pochodzić z kodu napisanego w innym języku lub z już skompilowanej biblioteki.
+
+W wypadku C/C++, wymaga to użycia słowa \mintinline{Cpp}{external}, do zdefiniowania symbolu zewnętrznego oraz przekazania odpowiedniego argumentu do linkera.
+W C-=-1 ten sam rezultat można osiągnąć, przypisując funkcji odpowiednie metadane, które potem zostaną odczytane przez interfejs backendu.
+Wbudowana wersja tego programu obsługuje wczytywanie definicji funkcji z plików lib oraz zastępowanie jej ciała kodem LLVM.
+Mechanizm metadanych został dokładniej opisany w rozdziale \ref{final_solution}.
+
+Listing \ref{lst:replaceWithLLVMAttribute} przedstawia atrybut \mintinline{Cpp}{replaceWithLLVMIR} z biblioteki standardowej C-=-1. 
+Pobiera on kod LLVMIR z pliku wskazanego przez użytkownika, a następnie ustawia w definicji wybranej funkcji zmienną "llvm-representation".
+Backend interface może potem odczytać tą wartość i wykorzystać ją do wygenerowania kodu dla backendu.
+
+\begin{lstlisting}[
+    language=Cm1,
+    numbers=left,
+    firstnumber=0,
+    caption={Atrybut zastępujący ciało funkcji kodem LLVM},
+    aboveskip=0pt,
+    label={lst:replaceWithLLVMAttribute}
+]
+public att<function> ReplaceWithLLVMIR
+{
+  private _filename: string;
+  private _nameOftypeToReplace: string;
+  private _nameToReplace: string;
+
+  public fn construct(
+    filename: string,
+    nameOfTypeToReplace: string,
+    nameToReplace: string)
+  {
+    self._filename = filename;
+    self._nameOftypeToReplace = nameOfTypeToReplace;
+    self._nameToReplace = nameToReplace
+  }
+
+  public fn attach(f: functionDescriptor)
+  {
+    let ir = read_all_file(self._filename);
+    ir = ir.replace("$" + self._nameOftypeToReplace, self._nameToReplace);
+    f.store("llvm-representation", ir);
+  }
+}
+
+\end{lstlisting}

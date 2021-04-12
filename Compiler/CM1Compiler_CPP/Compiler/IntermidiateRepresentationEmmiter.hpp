@@ -7,10 +7,13 @@ namespace cMCompiler::compiler
 {
 	class IntermidiateRepresentationEmmiter
 	{
+		using json = dataStructures::execution::json;
+		json emmitPackageMetadata(
+			dataStructures::PackageDatabase const& package,
+			std::vector<gsl::not_null<dataStructures::PackageDatabase*>> dependencies
+		);
+		
 	public:
-		void emmit(std::ostream& stream, dataStructures::PackageDatabase& package, std::vector<gsl::not_null<dataStructures::PackageDatabase*>> dependencies)
-		{
-			std::terminate();
-		}
+		void emmit(std::ostream& stream, dataStructures::PackageDatabase& package, std::vector<gsl::not_null<dataStructures::PackageDatabase*>> dependencies);
 	};
 }

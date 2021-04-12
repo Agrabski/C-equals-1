@@ -9,6 +9,7 @@
 #include "../LanguageLogic/OverloadResolutionUtility.hpp"
 #include "../LanguageLogic/IRUtility.hpp"
 #include "Generic/GenericInstantiationUtility.cpp"
+#include "TypeUtility.hpp"
 
 using namespace cMCompiler::dataStructures::ir;
 using namespace cMCompiler::compiler;
@@ -193,12 +194,12 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 	{
 		auto genericParameters = std::vector<dataStructures::TypeReference>();
 		for (auto g : ctx->genericUsage()->typeSpecifier())
-			genericParameters.push_back(
-				{
-					nameResolver_.resolve<dataStructures::Type>(g->identifier()->getText(), context_),
-					gsl::narrow<unsigned char>(g->ref().size())
-				}
-		);
+			genericParameters.push_back(getType(
+				nameResolver_,
+				context_,
+				g,
+				filepath_
+			));
 
 		auto genericCandidates = nameResolver_.resolveGenericOverloadSet(name, context_);
 		for (auto gen : genericCandidates)

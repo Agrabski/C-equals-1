@@ -27,6 +27,7 @@ namespace cMCompiler::dataStructures
 		INamedObject* parent() const noexcept { return parent_; }
 		QualifiedName qualifiedName() const;
 		virtual std::vector<INamedObject*> children() = 0;
+		virtual execution::json emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const = 0;
 		std::vector<validation::ValidationError> validate() const;
 	};
 }

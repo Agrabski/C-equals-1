@@ -9,6 +9,7 @@
 #include "../LanguageLogic/TypeInstantiationUtility.hpp"
 #include "ExpressionEvaluator.hpp"
 #include "ExpressionBuilder.hpp"
+#include "TypeUtility.hpp"
 using cMCompiler::compiler::ExpressionEvaluator;
 using namespace cMCompiler::dataStructures::execution;
 
@@ -16,7 +17,7 @@ using namespace cMCompiler;
 
 void cMCompiler::compiler::createAttribute(
 	gsl::not_null<CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext*> ctx,
-	gsl::not_null<dataStructures::Namespace*> parent, 
+	gsl::not_null<dataStructures::Namespace*> parent,
 	language::NameResolutionContext const& context)
 {
 	auto name = ctx->identifier()->getText();
@@ -43,8 +44,12 @@ void cMCompiler::compiler::confirmAttribute(
 	not_null attribute = parent->get<dataStructures::Attribute>(ctx->identifier()->getText());
 	for (not_null<CMinusEqualsMinus1Revision0Parser::FieldDeclarationContext*> member : ctx->classContentSequence()->fieldDeclaration())
 	{
-		auto type = resolver.resolve<dataStructures::Type>(member->typeSpecifier()->identifier()->getText(), context);
-		auto var = attribute->appendField(member->identifier()->getText(), { type, member->typeSpecifier()->ref().size() });
+		auto type = getType(
+			resolver,
+			context,
+			member->typeSpecifier(),
+			file);
+		auto var = attribute->appendField(member->identifier()->getText(), type);
 		auto access = dataStructures::parse(member->AccessSpecifier()->getText());
 		var->setAccessibility(access);
 	}
@@ -53,9 +58,9 @@ void cMCompiler::compiler::confirmAttribute(
 	for (not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> member : ctx->classContentSequence()->functionDeclaration())
 	{
 		not_null f = *std::find_if(functions.begin(), functions.end(), [&](const auto f) noexcept
-		{
-			return f->state() == dataStructures::ObjectState::Cretated;
-		});
+			{
+				return f->state() == dataStructures::ObjectState::Cretated;
+			});
 		confirmFunction(resolver, context, f, member, file);
 	}
 
@@ -76,9 +81,9 @@ void cMCompiler::compiler::finalizeAttribute(
 	for (not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> member : ctx->classContentSequence()->functionDeclaration())
 	{
 		not_null f = *std::find_if(functions.begin(), functions.end(), [&](const auto f)
-		{
-			return f->state() == dataStructures::ObjectState::Confirmed;
-		});
+			{
+				return f->state() == dataStructures::ObjectState::Confirmed;
+			});
 		finalizeFunction(resolver, context, f, member, file);
 	}
 	attribute->finalize();

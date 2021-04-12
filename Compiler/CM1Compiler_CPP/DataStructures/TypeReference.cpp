@@ -3,7 +3,7 @@
 
 std::ostream& cMCompiler::dataStructures::operator<<(std::ostream& s, TypeReference const& ref)
 {
-	s << ref.type->qualifiedName();
+	s << ref.type->name();
 	for (auto x = ref.referenceCount; x > 0; x--)
 		s << '*';
 	return s;

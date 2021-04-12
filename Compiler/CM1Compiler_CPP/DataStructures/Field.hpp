@@ -28,6 +28,9 @@ namespace cMCompiler::dataStructures
 			: INamedObject(name, (INamedObject*)parent.get()),
 			AttributeTarget(Target::Variable), type_(type) {}
 		TypeReference const& type() const noexcept { return type_; }
+
+		// Inherited via INamedObject
+		execution::json emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const final;
 	};
 
 }

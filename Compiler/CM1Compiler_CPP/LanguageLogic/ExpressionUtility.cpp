@@ -4,6 +4,7 @@
 #include "MetatypeUility.hpp"
 #include "RuntimeTypesConversionUtility.hpp"
 #include "OverloadResolutionUtility.hpp"
+#include "BuiltInPackageBuildUtility.hpp"
 
 cMCompiler::language::runtime_value cMCompiler::language::buildAdressofExpression(runtime_value&& value, runtime_value&& pointerToSource)
 {
@@ -39,6 +40,7 @@ cMCompiler::language::runtime_value cMCompiler::language::buildWhileLoop(runtime
 	auto [result, object] = heapAllocateObject(getWhileDescriptor());
 	object.setValue("_expression", std::move(expression));
 	object.setValue("_pointerToSource", std::move(pointerToSource));
+	object.setValue("_body", std::make_unique<dataStructures::execution::ArrayValue>(dataStructures::TypeReference{ getCollectionTypeFor({ getIInstruction(), 1 }),0 }, dataStructures::TypeReference{ getIInstruction(), 1 }));
 	return std::move(result);
 }
 
@@ -50,7 +52,12 @@ cMCompiler::language::runtime_value cMCompiler::language::buildMethodCallExpress
 	std::string const& methodName,
 	runtime_value&& pointerToSource)
 {
-	argumentExpressions.insert(argumentExpressions.begin(), buildAdressofExpression(std::move(expression), pointerToSource->copy()));
+	auto self = runtime_value();
+	if (getExpressionType(expression).referenceCount < 1)
+		self = buildAdressofExpression(std::move(expression), pointerToSource->copy());
+	else
+		self = std::move(expression);
+	argumentExpressions.insert(argumentExpressions.begin(), std::move(self));
 
 	std::vector<not_null<dataStructures::execution::IRuntimeValue*>> expressions;
 	for (auto& e : argumentExpressions)

@@ -36,22 +36,48 @@ namespace cMCompiler::dataStructures
 		using TreeType = typename antlr4::tree::ParseTree;
 		Generic(
 			std::vector<std::string>&& parameterNames,
+			std::function<not_null<TargetType*>(std::vector<TypeReference> const&)> customFill,
+			std::string name,
+			not_null<INamedObject*> parent,
+			NameResolutionContext const& context) :
+			parameterNames_(std::move(parameterNames)), customFill_(customFill),
+			INamedObject(name, parent), context_(context)
+		{
+		}
+
+		Generic(
+			std::vector<std::string>&& parameterNames,
 			std::unique_ptr<TreeType>&& parseTree,
 			std::string name,
 			not_null<INamedObject*> parent,
 			NameResolutionContext const& context) :
 			parameterNames_(std::move(parameterNames)), parseTree_(std::move(parseTree)),
 			INamedObject(name, parent), context_(context)
-		{}
+		{
+		}
+
+		bool isSpecial() const noexcept { return parseTree_ == nullptr; }
+
+		not_null<TargetType*> fillSpecial(std::vector<TypeReference> const& parameters)
+		{
+			return customFill_(parameters);
+		}
 
 		std::unique_ptr<TreeType> fillGeneric(std::vector<TypeReference> const& parameters)
 		{
 			auto result = parseTree_->clone(nullptr);
 			struct Visitor : public CMinusEqualsMinus1Revision0BaseVisitor
 			{
+				std::string buildModifier(CMinusEqualsMinus1Revision0Parser::ModifierContext* ctx, size_t refCount)
+				{
+					if (ctx->arraySpecifier())
+						return "[" + buildModifier(ctx->arraySpecifier()->modifier(), refCount) + "]" + std::string(ctx->ref().size(), '*');
+					else
+						return std::string(refCount + ctx->ref().size(), '*');
+				}
 				std::vector<std::string>& parameterNames_;
 				std::vector<TypeReference> const& parameters_;
-				Visitor(std::vector<std::string>& parameterNames, std::vector<TypeReference> const& parameters) :
+				Visitor(std::vector<std::string>& parameterNames, std::vector<TypeReference> const& parameters) noexcept :
 					parameterNames_(parameterNames), parameters_(parameters) {}
 
 				antlrcpp::Any visitTypeSpecifier(CMinusEqualsMinus1Revision0Parser::TypeSpecifierContext* ctx) final
@@ -61,8 +87,9 @@ namespace cMCompiler::dataStructures
 					if (paramName != parameterNames_.end())
 					{
 						auto type = parameters_[std::distance(parameterNames_.begin(), paramName)];
-						auto refLevel = gsl::narrow<unsigned char>(ctx->ref().size() + type.referenceCount);
-						auto stream = std::stringstream(type.type->name() + std::string(refLevel, '*'));
+						auto stream = std::stringstream();
+						stream << type.type->name();
+						stream << buildModifier(ctx->modifier(), type.referenceCount);
 						auto identifier = Parser::ParserAdapter().parseType(stream);
 
 						*std::find_if(ctx->parent->children.begin(), ctx->parent->children.end(), [ctx](const auto& e) -> bool {return e.get() == ctx; }) = std::move(identifier);
@@ -89,17 +116,26 @@ namespace cMCompiler::dataStructures
 			return {};
 		}
 
-		std::vector<INamedObject*> children() final
+		std::vector<INamedObject*> children() noexcept final
 		{
 			return {};
 		}
 
 		NameResolutionContext& context() { return context_; }
+		execution::json emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const final
+		{
+			return {};
+			// todo: do
+		}
 
 	private:
 		std::vector<std::string> parameterNames_;
 		std::unique_ptr<TreeType> parseTree_;
 		NameResolutionContext context_;
+		std::function<not_null<TargetType*>(std::vector<TypeReference> const&)> customFill_;
+
+
+		// Inherited via INamedObject
 
 	};
 }

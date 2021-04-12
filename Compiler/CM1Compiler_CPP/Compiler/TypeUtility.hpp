@@ -25,4 +25,10 @@ namespace cMCompiler::compiler
 		gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeSpecifierContext*> ctx,
 		std::filesystem::path file
 	);
+
+	dataStructures::TypeReference processModifier(
+		gsl::not_null<dataStructures::Type*> baseType,
+		gsl::not_null<CMinusEqualsMinus1Revision0Parser::ModifierContext*> ctx,
+		language::NameResolutionContext& context);
+		
 }

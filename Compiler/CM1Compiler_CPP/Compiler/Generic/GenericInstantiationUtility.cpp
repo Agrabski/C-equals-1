@@ -19,6 +19,8 @@ not_null<dataStructures::Function*> cMCompiler::compiler::instantiate
 	std::filesystem::path const& file
 )
 {
+	if (function.isSpecial())
+		return function.fillSpecial(genericParameters);
 	auto tree = function.fillGeneric(genericParameters);
 	auto x = tree->getText();
 	not_null functionTree = dynamic_cast<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*>(tree.get());
@@ -48,9 +50,12 @@ not_null<dataStructures::Type*> cMCompiler::compiler::instantiate
 	std::filesystem::path const& file
 )
 {
+	if (genericType.isSpecial())
+		return genericType.fillSpecial(genericParameters);
 	auto context = NameResolutionContext::merge(genericType.context(), c);
 	auto x = genericType.fillGeneric(genericParameters);
 	not_null ast = dynamic_cast<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*>(x.get());
+	std::cout << ast->getText();
 	not_null type = createType(
 		dynamic_cast<Namespace*>(genericType.parent()),
 		resolver,

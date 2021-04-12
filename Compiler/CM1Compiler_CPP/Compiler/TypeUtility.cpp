@@ -1,6 +1,7 @@
 #include "TypeUtility.hpp"
 #include "FunctionUtility.hpp"
 #include "../DataStructures/Accessibility.hpp"
+#include "../LanguageLogic/BuiltInPackageBuildUtility.hpp"
 #include "Generic/GenericInstantiationUtility.hpp"
 
 std::string name(gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*> ctx)
@@ -97,9 +98,12 @@ void cMCompiler::compiler::finalizeType(
 	std::filesystem::path const& file)
 {
 	assert(ctx != nullptr);
-	auto const * const generic = ctx->genericSpecifier();
+	auto const* const generic = ctx->genericSpecifier();
 	if (generic == nullptr)
 	{
+		int a[3];
+		auto x = &a;
+
 		auto name = ::name(ctx);
 		auto type = context.namespaceStack_.back()->get<dataStructures::Type>(name);
 		assert(type != nullptr);
@@ -126,6 +130,7 @@ cMCompiler::dataStructures::TypeReference cMCompiler::compiler::getType(
 {
 	auto name = ctx->identifier()->getText();
 	std::cout << ctx->getText() << std::endl;
+	dataStructures::Type* type;
 	// todo: arrays
 	if (ctx->genericUsage())
 	{
@@ -142,7 +147,34 @@ cMCompiler::dataStructures::TypeReference cMCompiler::compiler::getType(
 				));
 		}
 		not_null g = resolver.resolve<dataStructures::Generic<dataStructures::Type>>(name, context);
-		return { instantiate(*g, parameters, resolver, context, file), ctx->ref().size() };
+		type = instantiate(*g, parameters, resolver, context, file);
 	}
-	return {resolver.resolve<dataStructures::Type>(name, context), ctx->ref().size() };
+	else
+		type = resolver.resolve<dataStructures::Type>(name, context);
+	return processModifier(type, ctx->modifier(), context);
+}
+
+cMCompiler::dataStructures::TypeReference cMCompiler::compiler::processModifier(
+	gsl::not_null<dataStructures::Type*> baseType,
+	gsl::not_null<CMinusEqualsMinus1Revision0Parser::ModifierContext*> ctx,
+	language::NameResolutionContext& context)
+{
+	auto referenceCount = ctx->ref().size();
+	if (ctx->arraySpecifier())
+	{
+		if (!context.objectMap_.contains("array")) // todo: stop hardcoding shit fuckface!
+			context.objectMap_["array"].push_back(language::getArray());
+		return {
+			language::getCollectionTypeFor(
+				processModifier(
+						baseType,
+						ctx->arraySpecifier()->modifier(),
+					context
+				)
+			),
+			referenceCount
+		};
+	}
+
+	return { baseType, referenceCount };
 }

@@ -54,5 +54,10 @@ namespace cMCompiler::dataStructures
 			std::terminate();
 			throw 0;
 		}
+
+
+
+		execution::json emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const final;
+
 	};
 }

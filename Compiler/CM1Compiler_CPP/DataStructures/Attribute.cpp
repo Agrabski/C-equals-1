@@ -28,3 +28,12 @@ std::vector<gsl::not_null<Function*>> cMCompiler::dataStructures::Attribute::met
 {
 	return describingType_->methods();
 }
+
+execution::json cMCompiler::dataStructures::Attribute::emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const
+{
+	return {
+		{"name", name()},
+		{"type", describingType_->emmit(nameLookupFunction, manager)},
+		{"target", attributeTarget_}
+	};
+}
