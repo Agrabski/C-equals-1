@@ -6,13 +6,9 @@
 		{
 			"label": "Build",
 			"type": "shell",
-			"command": "latexmk -pdf -output-directory='out'",
+			"command": "./build.ps1",
 			"group": "build",
-			"problemMatcher": [],
-			"options": {
-				"cwd": "${workspaceFolder}"
-			}
-			
+			"problemMatcher": []
 		}
 	]
 }

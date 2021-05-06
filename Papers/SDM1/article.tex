@@ -16,22 +16,22 @@
 }
 
 \author{\IEEEauthorblockN{1\textsuperscript{st} Adam Grabski}
-\IEEEauthorblockA{\textit{Wydział Elektroniki i Technik Informatycznych} \\
-\textit{Politechnika Warszawska}\\
-Warszawa, Polska \\
-adam.grabski.stud@pw.edu.pl}
+    \IEEEauthorblockA{\textit{Wydział Elektroniki i Technik Informatycznych} \\
+        \textit{Politechnika Warszawska}\\
+        Warszawa, Polska \\
+        adam.grabski.stud@pw.edu.pl}
 }
 
 \maketitle
 
 \begin{abstract}
-Statyczne metaprogramowanie to technika programistyczna umożliwiająca analizę, modyfikację lub generację kodu w czasie kompilacji.
-Współczesne, niskopoziomowe języki programowania wprowadzają wsparcie dla tych mechanizmów, w ograniczonym zakresie.
-W ramach tej pracy, zaproponowano nowy język programowania: C-=-1, zaprojektowany od początku z myślą o metaprogramowaniu, oraz nowe podejście do konstrukcji kompilatora: kompilacja przez interpretację.
+    Statyczne metaprogramowanie to technika programistyczna umożliwiająca analizę, modyfikację lub generację kodu w czasie kompilacji.
+    Współczesne, niskopoziomowe języki programowania wprowadzają wsparcie dla tych mechanizmów, w ograniczonym zakresie.
+    W ramach tej pracy, zaproponowano nowy język programowania: C-=-1, zaprojektowany od początku z myślą o metaprogramowaniu, oraz nowe podejście do konstrukcji kompilatora: kompilacja przez interpretację.
 \end{abstract}
 
 \begin{IEEEkeywords}
-Metaprogramowanie, język programowania, kompilator, kompilacja
+    Metaprogramowanie, język programowania, kompilator, kompilacja
 \end{IEEEkeywords}
 
 \section{Wstęp}
@@ -52,18 +52,43 @@ W ten sposób, dowolny fragment kodu może być wykonany w czasie kompilacji ora
 \section{Struktura języka}
 
 Język C-=-1 bazuje na C++, z elementami składni Rust.
-Program może składać się z przestrzeni nazw, funkcji oraz typów takich jak klasy, typy enumeracyjne oraz interfejsy.
+Program może składać się z przestrzeni nazw, funkcji oraz typów takich jak klasy, typy enumeracyjne, atrybuty oraz interfejsy.
 Tak jak C++, C-=-1 jest językiem programowania ogólnego przeznaczenia, ze wsparciem dla programowania obiektowego.
 
 \subsection{System typów}
+
 W przeciwieństwie do C++, C-=-1 nie pozwala na dziedziczenie po klasach.
 Zamiast tego, wprowadza koncepcję interfejsu z języków takich jak C\#.
 Interfejs może zawierać wyłącznie nagłówki metod, które implementująca klasa musi zdefiniować.
 Klasy i interfejsy mogą dziedziczyć po dowolnej ilości interfejsów.
 
+Klasyczne dziedziczenie zostało usunięte aby uprościć model języka.
+Możliwość definiowania metod oraz pól na każdym poziomie hierarchi dziedziczenia, powodowałoby nieoczywiste zachowanie przy pobieraniu listy członków klasy.
+Na przykład, nie jest jasnym czy metoda zwracająca listę pól klasy, powinna uwzględniać pola z klasy bazowej.
+W ostatecznie wybranym modelu języka, wszystkie pola i metody muszą być zdefiniowane w typie konkretnym, natomiast wcześniej wspomniany problem jest ograniczony do iterowania po metodach interfejsów.
+
+Atrybuty w języku C-=-1 są bardzo podobne do tych które  można znaleźć w języku C\#.
+Można nimi adnotować deklaracje typów, zmiennych oraz funkcji.
+Deklarując atrybut, użytkownik może zaimplementować szereg specjalnych metod, reagujących na użycie adnotowanego elementu.
+Na przykład dla atrybutu dołączanego do funkcji, użytkownik może napisać metodę która będzie wykonywana za każdym razem kiedy dana funkcja jest wywoływana w kodzie.
+Wewnątrz tej metody, można wykonywać dowolne transformacje na reprezentacji pośredniej.
+
 \section{Proces kompilacji}
 
-\subsection{Reprezentacja pośrednia}
+Projekt procesu kompilacji jest najważniejszą częścią tej pracy.
+W porównaniu z typowym kompilatorem, w którym wykonywanie kodu jest tylko niewielkim fragmentem całego procesu kompilacji, w C-=-1 interpreter jest głównym modułem kompilatora.
+Najogólniej, proces kompilacji programu składa się z następujących kroków:
+\begin{enumerate}
+    \item Budowa reprezentacji pośredniej.
+    \item Wykonanie operacji metaprogramistycznych w kodzie.
+    \item Wykonanie metod atrybutów.
+    \item Wykonanie kodu w interfejsie backendu.
+\end{enumerate}
+
+Reprezentacja pośrednia kodu użytkownika, jest budowana używając struktur danych interpretera.
+Utrudnia to znacząco pisanie kompilatora, ponieważ efektywnie usuwa z języka statyczne typowanie.
+Ta decyzja została podjęta aby uniknąć konieczności konwersji pomiędzy reprezentacją pośrednią widzianą przez kompilator i kod użytkownika oraz synchronizowania tych dwóch struktur danych.
+
 
 \subsection{Interpreter}
 \subsection{Kompilator}
@@ -71,13 +96,13 @@ Klasy i interfejsy mogą dziedziczyć po dowolnej ilości interfejsów.
 \section{Możliwa krytyka}
 
 \begin{thebibliography}{00}
-\bibitem{b1} G. Eason, B. Noble, and I. N. Sneddon, ``On certain integrals of Lipschitz-Hankel type involving products of Bessel functions,'' Phil. Trans. Roy. Soc. London, vol. A247, pp. 529--551, April 1955.
-\bibitem{b2} J. Clerk Maxwell, A Treatise on Electricity and Magnetism, 3rd ed., vol. 2. Oxford: Clarendon, 1892, pp.68--73.
-\bibitem{b3} I. S. Jacobs and C. P. Bean, ``Fine particles, thin films and exchange anisotropy,'' in Magnetism, vol. III, G. T. Rado and H. Suhl, Eds. New York: Academic, 1963, pp. 271--350.
-\bibitem{b4} K. Elissa, ``Title of paper if known,'' unpublished.
-\bibitem{b5} R. Nicole, ``Title of paper with only first word capitalized,'' J. Name Stand. Abbrev., in press.
-\bibitem{b6} Y. Yorozu, M. Hirano, K. Oka, and Y. Tagawa, ``Electron spectroscopy studies on magneto-optical media and plastic substrate interface,'' IEEE Transl. J. Magn. Japan, vol. 2, pp. 740--741, August 1987 [Digests 9th Annual Conf. Magnetics Japan, p. 301, 1982].
-\bibitem{b7} M. Young, The Technical Writer's Handbook. Mill Valley, CA: University Science, 1989.
+    \bibitem{b1} G. Eason, B. Noble, and I. N. Sneddon, ``On certain integrals of Lipschitz-Hankel type involving products of Bessel functions,'' Phil. Trans. Roy. Soc. London, vol. A247, pp. 529--551, April 1955.
+    \bibitem{b2} J. Clerk Maxwell, A Treatise on Electricity and Magnetism, 3rd ed., vol. 2. Oxford: Clarendon, 1892, pp.68--73.
+    \bibitem{b3} I. S. Jacobs and C. P. Bean, ``Fine particles, thin films and exchange anisotropy,'' in Magnetism, vol. III, G. T. Rado and H. Suhl, Eds. New York: Academic, 1963, pp. 271--350.
+    \bibitem{b4} K. Elissa, ``Title of paper if known,'' unpublished.
+    \bibitem{b5} R. Nicole, ``Title of paper with only first word capitalized,'' J. Name Stand. Abbrev., in press.
+    \bibitem{b6} Y. Yorozu, M. Hirano, K. Oka, and Y. Tagawa, ``Electron spectroscopy studies on magneto-optical media and plastic substrate interface,'' IEEE Transl. J. Magn. Japan, vol. 2, pp. 740--741, August 1987 [Digests 9th Annual Conf. Magnetics Japan, p. 301, 1982].
+    \bibitem{b7} M. Young, The Technical Writer's Handbook. Mill Valley, CA: University Science, 1989.
 \end{thebibliography}
 \vspace{12pt}
 \color{red}
