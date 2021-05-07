@@ -68,17 +68,11 @@ namespace cMCompiler::dataStructures
 			auto result = parseTree_->clone(nullptr);
 			struct Visitor : public CMinusEqualsMinus1Revision0BaseVisitor
 			{
-				std::string buildModifier(CMinusEqualsMinus1Revision0Parser::ModifierContext* ctx, size_t refCount)
-				{
-					if (ctx->arraySpecifier())
-						return "[" + buildModifier(ctx->arraySpecifier()->modifier(), refCount) + "]" + std::string(ctx->ref().size(), '*');
-					else
-						return std::string(refCount + ctx->ref().size(), '*');
-				}
 				std::vector<std::string>& parameterNames_;
 				std::vector<TypeReference> const& parameters_;
-				Visitor(std::vector<std::string>& parameterNames, std::vector<TypeReference> const& parameters) noexcept :
-					parameterNames_(parameterNames), parameters_(parameters) {}
+				Generic& parent_;
+				Visitor(std::vector<std::string>& parameterNames, std::vector<TypeReference> const& parameters, Generic& parent) noexcept :
+					parameterNames_(parameterNames), parameters_(parameters), parent_(parent) {}
 
 				antlrcpp::Any visitTypeSpecifier(CMinusEqualsMinus1Revision0Parser::TypeSpecifierContext* ctx) final
 				{
@@ -88,8 +82,7 @@ namespace cMCompiler::dataStructures
 					{
 						auto type = parameters_[std::distance(parameterNames_.begin(), paramName)];
 						auto stream = std::stringstream();
-						stream << type.type->name();
-						stream << buildModifier(ctx->modifier(), type.referenceCount);
+						stream << parent_.getAliasedType(type, ctx);
 						auto identifier = Parser::ParserAdapter().parseType(stream);
 
 						*std::find_if(ctx->parent->children.begin(), ctx->parent->children.end(), [ctx](const auto& e) -> bool {return e.get() == ctx; }) = std::move(identifier);
@@ -107,7 +100,7 @@ namespace cMCompiler::dataStructures
 					return {};
 				}
 			};
-			Visitor(parameterNames_, parameters).visit(not_null(result.get()));
+			Visitor(parameterNames_, parameters, *this).visit(not_null(result.get()));
 			return std::unique_ptr<TreeType>(result.release());
 		}
 
@@ -129,6 +122,21 @@ namespace cMCompiler::dataStructures
 		}
 
 	private:
+		std::string buildModifier(CMinusEqualsMinus1Revision0Parser::ModifierContext* ctx, size_t refCount)
+		{
+			if (ctx->arraySpecifier())
+				return "[" + buildModifier(ctx->arraySpecifier()->modifier(), refCount) + "]" + std::string(ctx->ref().size(), '*');
+			else
+				return std::string(refCount + ctx->ref().size(), '*');
+		}
+
+		std::string getAliasedType(TypeReference const& type, not_null<CMinusEqualsMinus1Revision0Parser::TypeSpecifierContext*> ctx)
+		{
+			for (auto const& bucket : context_.objectMap_)
+				if (std::find(bucket.second.begin(), bucket.second.end(), type.type) != bucket.second.end())
+					return bucket.first + buildModifier(ctx->modifier(), type.referenceCount);
+			std::terminate();
+		}
 		std::vector<std::string> parameterNames_;
 		std::unique_ptr<TreeType> parseTree_;
 		NameResolutionContext context_;

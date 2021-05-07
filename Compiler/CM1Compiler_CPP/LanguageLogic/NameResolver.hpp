@@ -132,7 +132,12 @@ namespace cMCompiler::language
 
 		}
 
-		void addImport(std::string const& name, dataStructures::QualifiedName ns, dataStructures::PackageDatabase* currentPackage, NameResolutionContext& context)
+		void addImport(
+			std::string const& aliasName,
+			std::string const& name,
+			dataStructures::QualifiedName ns,
+			dataStructures::PackageDatabase* currentPackage,
+			NameResolutionContext& context)
 		{
 			dataStructures::PackageDatabase* package = nullptr;
 			dataStructures::QualifiedName const n = ns;
@@ -167,11 +172,11 @@ namespace cMCompiler::language
 				context.unconfirmedNames_[name] = unconfirmedNamespace;
 				return;
 			}
-			context.objectMap_[name];
+			context.objectMap_[aliasName];
 			auto children = current->children();
 			for (not_null const child : children)
 				if (child->name() == name)
-					context.objectMap_[name].push_back(child);
+					context.objectMap_[aliasName].push_back(child);
 		}
 
 	};

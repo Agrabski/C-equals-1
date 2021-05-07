@@ -15,7 +15,9 @@ attributeDeclaration : (AccessSpecifier)? 'att' Less attributeTarget+ Greater id
 
 attributeTarget: ('type' | 'variable' | 'function');
 
-importDeclaration : 'import' '{' identifier+ '}' 'from' '{' qualifiedIdentifier '}';
+importDeclaration : 'import' '{' importAliasDeclaration+ '}' 'from' '{' qualifiedIdentifier '}';
+
+importAliasDeclaration: identifier (':'identifier)?;
 
 typeDeclaration:
 	(attributeSequence)? AccessSpecifier? classTypeSpecifier identifier genericSpecifier? (':' implementedInterfacesSequence)? OpenBracket
