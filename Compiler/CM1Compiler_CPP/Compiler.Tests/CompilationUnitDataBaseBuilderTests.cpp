@@ -7,7 +7,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace CompilerTests
 {
-	TEST_CLASS(CompilerTests)
+	TEST_CLASS(CompilationUnitDataBaseBuilderTests)
 	{
 	public:
 		
