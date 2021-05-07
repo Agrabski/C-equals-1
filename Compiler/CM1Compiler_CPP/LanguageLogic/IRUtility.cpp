@@ -183,7 +183,7 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildCons
 		[](value_map&& a, generic_parameters)->runtime_value
 		{
 			auto self = dereferenceAs<ObjectValue>(a["self"].get());
-			return getValueFor(dynamic_cast<Type*>(dereferenceAs<RuntimeFunctionDescriptor>(self->getMemberValue("_runtimeFunction").get())->value()->parent()));
+			return getValueFor(dynamic_cast<Type*>(dereferenceAs<RuntimeFunctionDescriptor>(self->getMemberValue("_runtimeConstructor").get())->value()->parent()));
 		}
 	);
 	createGetter(result->append<Function>("parentExpression"), result);

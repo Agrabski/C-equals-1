@@ -1,5 +1,6 @@
 #include "OverloadResolutionUtility.hpp"
 #include "GetterExecution.hpp"
+#include "SpecialFunctionUtility.hpp"
 
 using namespace cMCompiler::dataStructures;
 
@@ -56,10 +57,13 @@ Function* cMCompiler::language::resolveOverload(
 	auto result = std::find_if(candidates.begin(), candidates.end(), [&](gsl::not_null<Function*> candidate)
 		{
 			auto functionParameters = candidate->parameters();
-			if (functionParameters.size() != parameters.size())
+			auto isconstructor = isConstructor(candidate);
+			if (functionParameters.size() != parameters.size() && !isconstructor
+				|| (isconstructor && functionParameters.size() != parameters.size() + 1))
 				return false;
+			if(!isconstructor || parameters.size() > 0)
 			for (auto i = 0; i < functionParameters.size(); i++)
-				if (!verifyParameterMatch(parameters[i], *functionParameters[i]))
+				if (!verifyParameterMatch(parameters[i], *functionParameters[i + isconstructor ? 1 : 0]))
 					return false;
 
 			return predicate(candidate);

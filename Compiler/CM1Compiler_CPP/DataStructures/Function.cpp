@@ -26,6 +26,14 @@ std::vector<Variable*> cMCompiler::dataStructures::Function::parameters()
 	return result;
 }
 
+std::vector<Variable*> cMCompiler::dataStructures::Function::variables()
+{
+	auto result = std::vector<Variable*>();
+	for (auto& x : localVariables_)
+		result.push_back(x.get());
+	return result;
+}
+
 std::vector<Variable const*> cMCompiler::dataStructures::Function::parameters() const
 {
 	auto result = std::vector<Variable const*>();

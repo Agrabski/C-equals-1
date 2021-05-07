@@ -8,11 +8,14 @@
 #include "../LanguageLogic/LiteralUtility.hpp"
 #include "../LanguageLogic/OverloadResolutionUtility.hpp"
 #include "../LanguageLogic/IRUtility.hpp"
-#include "Generic/GenericInstantiationUtility.cpp"
+#include "../LanguageLogic/SpecialFunctionUtility.hpp"
+#include "Generic/GenericInstantiationUtility.hpp"
 #include "TypeUtility.hpp"
+
 
 using namespace cMCompiler::dataStructures::ir;
 using namespace cMCompiler::compiler;
+using namespace cMCompiler::dataStructures;
 
 
 cMCompiler::language::runtime_value ExpressionBuilder::buildExpression(gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionCallParameterContext*> ctx)
@@ -27,7 +30,7 @@ bool cMCompiler::compiler::ExpressionBuilder::hasBinaryOperator(gsl::not_null<CM
 	return ctx->binaryOperator() != nullptr;
 }
 
-std::optional<language::runtime_value> cMCompiler::compiler::ExpressionBuilder::buildSpecialFunction(gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionCallContext*> ctx, std::string const& functionName)
+std::optional<cMCompiler::language::runtime_value> cMCompiler::compiler::ExpressionBuilder::buildSpecialFunction(gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionCallContext*> ctx, std::string const& functionName)
 {
 	// todo: awful KYS
 	if (functionName == "nameof")
@@ -210,7 +213,7 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 				context_,
 				filepath_
 			));
-		auto genericType = nameResolver_.resolve<Generic<Type>>(name, context_);
+		auto genericType = nameResolver_.resolve<dataStructures::Generic<dataStructures::Type>>(name, context_);
 		if (genericType != nullptr)
 			for (auto c : instantiate(
 				*genericType,
