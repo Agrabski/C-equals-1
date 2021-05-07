@@ -138,5 +138,57 @@ fn func1()
 			Assert::IsTrue(usize.get() == package->rootNamespace()->get<cMCompiler::dataStructures::Function>("func1")->variables()[0]->type().type->fields()[0]->type().type);
 
 		}
+
+		TEST_METHOD(AliasedMultipleImportsFieldType)
+		{
+			auto program = std::stringstream(R"___(
+import {usize: int string} from {cm1mLang}
+class T 
+{
+	public _field: int;
+}
+)___");
+			auto package = compile("file", program);
+			auto usize = cMCompiler::language::getUsize();
+			Assert::IsTrue(usize.get() == package->rootNamespace()->get<cMCompiler::dataStructures::Type>("T")->fields()[0]->type().type);
+
+		}
+
+		TEST_METHOD(AliasedMultipleImportsGenericFunctionReturnType)
+		{
+			auto program = std::stringstream(R"___(
+import {usize: int string} from {cm1mLang}
+fn func<T>() -> T {}
+fn func1() 
+{
+	let x = func<int>();
+}
+)___");
+			auto package = compile("file", program);
+			auto usize = cMCompiler::language::getUsize();
+			Assert::IsTrue(usize.get() == package->rootNamespace()->get<cMCompiler::dataStructures::Function>("func1")->variables()[0]->type().type);
+
+		}
+
+		TEST_METHOD(AliasedMultipleImportsGenericFieldType)
+		{
+			auto program = std::stringstream(R"___(
+import {usize: int string} from {cm1mLang}
+class C<T>
+{
+	public _field: T;
+	public fn construct() {}
+}
+
+fn func1() 
+{
+	let x = C<int>();
+}
+)___");
+			auto package = compile("file", program);
+			auto usize = cMCompiler::language::getUsize();
+			Assert::IsTrue(usize.get() == package->rootNamespace()->get<cMCompiler::dataStructures::Function>("func1")->variables()[0]->type().type->fields()[0]->type().type);
+
+		}
 	};
 }
