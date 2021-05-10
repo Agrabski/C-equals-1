@@ -190,5 +190,40 @@ fn func1()
 			Assert::IsTrue(usize.get() == package->rootNamespace()->get<cMCompiler::dataStructures::Function>("func1")->variables()[0]->type().type->fields()[0]->type().type);
 
 		}
+
+		TEST_METHOD(AliasedImportGenericFunctionReturnTypeWithSwappedNames)
+		{
+			auto program = std::stringstream(R"___(
+import {usize: string string:usize} from {cm1mLang}
+fn func<T>() -> T {}
+fn func1() 
+{
+	let x = func<string>();
+	let y = func<usize>();
+}
+)___");
+			auto package = compile("file", program);
+			auto usize = cMCompiler::language::getUsize();
+			auto string = cMCompiler::language::getString();
+			Assert::IsTrue(usize.get() == package->rootNamespace()->get<cMCompiler::dataStructures::Function>("func1")->variables()[0]->type().type);
+			Assert::IsTrue(string.get() == package->rootNamespace()->get<cMCompiler::dataStructures::Function>("func1")->variables()[1]->type().type);
+
+		}
+
+
+		TEST_METHOD(AliasedImportFunctionReturnTypeWithSwappedNames)
+		{
+			auto program = std::stringstream(R"___(
+import {usize: string string:usize} from {cm1mLang}
+fn func() -> string {}
+fn func1() -> usize {}
+)___");
+			auto package = compile("file", program);
+			auto usize = cMCompiler::language::getUsize();
+			auto string = cMCompiler::language::getString();
+			Assert::IsTrue(usize.get() == package->rootNamespace()->get<cMCompiler::dataStructures::Function>("func")->returnType().type);
+			Assert::IsTrue(string.get() == package->rootNamespace()->get<cMCompiler::dataStructures::Function>("func1")->returnType().type);
+
+		}
 	};
 }
