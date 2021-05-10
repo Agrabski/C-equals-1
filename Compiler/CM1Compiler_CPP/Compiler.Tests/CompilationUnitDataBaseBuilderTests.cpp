@@ -225,5 +225,36 @@ fn func1() -> usize {}
 			Assert::IsTrue(string.get() == package->rootNamespace()->get<cMCompiler::dataStructures::Function>("func1")->returnType().type);
 
 		}
+
+		TEST_METHOD(TypeFromSameNamespaceFunctionReturnType)
+		{
+			auto program = std::stringstream(R"___(
+namespace X
+{
+	fn func() -> G {}
+	class G {}
+)___");
+			auto package = compile("file", program);
+			auto ns = package->rootNamespace()->get<cMCompiler::dataStructures::Namespace>("X");
+			auto t = ns->get<cMCompiler::dataStructures::Type>("G");
+			Assert::IsTrue(t == ns->get<cMCompiler::dataStructures::Function>("func")->returnType().type);
+
+		}
+
+		TEST_METHOD(TypeFromSameNamespaceGenericFunctionReturnType)
+		{
+			auto program = std::stringstream(R"___(
+namespace X
+{
+	fn func<T>() -> T {}
+	fn func1() {let x = func<G>();}
+	class G {}
+)___");
+			auto package = compile("file", program);
+			auto ns = package->rootNamespace()->get<cMCompiler::dataStructures::Namespace>("X");
+			auto t = ns->get<cMCompiler::dataStructures::Type>("G");
+			Assert::IsTrue(t == ns->get<cMCompiler::dataStructures::Function>("func1")->variables()[0]->type().type);
+
+		}
 	};
 }

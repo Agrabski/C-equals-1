@@ -98,11 +98,11 @@ std::unique_ptr<dataStructures::AttributeInstance> cMCompiler::compiler::createA
 {
 	auto t = language::instantiate({ attribute->describingType(), 0 });
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> self = std::move(t);
-	values.insert(values.begin(), dataStructures::execution::ReferenceValue::make(&self, self->type()));
 	auto constructors = language::getConstructors(attribute->methods());
 	if (constructors.size() != 0)
 	{
 		auto function = language::resolveOverloadForExecution(constructors, values, true, true);
+		values.insert(values.begin(), dataStructures::execution::ReferenceValue::make(&self, self->type()));
 		execute(function, std::move(values));
 	}
 

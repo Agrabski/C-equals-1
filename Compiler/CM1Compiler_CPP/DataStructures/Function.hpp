@@ -43,7 +43,6 @@ namespace cMCompiler::dataStructures
 	std::istream& operator>>(std::istream& stream, FunctionFlags& flags);
 
 	class Variable;
-	class Type;
 
 	class Function :
 		public INamedObject,

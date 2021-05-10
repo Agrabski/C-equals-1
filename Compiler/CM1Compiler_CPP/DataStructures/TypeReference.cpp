@@ -20,3 +20,8 @@ bool operator==(cMCompiler::dataStructures::TypeReference const& a, cMCompiler::
 {
 	return !(a != b);
 }
+
+std::string cMCompiler::dataStructures::TypeReference::typeName() const
+{
+	return type->name();
+}

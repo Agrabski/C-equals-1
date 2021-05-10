@@ -1,14 +1,14 @@
 #pragma once
 #include <string>
 #include <memory>
+#include "Type.hpp"
+#include "NameResolutionContext.hpp"
 #include "../Utilities/pointer_cast.hpp"
 #include "../Utilities/algorithm.hpp"
 #include "../antlr_runtime/src/antlr4-runtime.h"
 #include "../Parser/CMinusEqualsMinus1Revision0Parser.h"
 #include "../Parser/CMinusEqualsMinus1Revision0BaseVisitor.h"
 #include "../ParserAdapter/ParserAdapter.hpp"
-#include "Type.hpp"
-#include "NameResolutionContext.hpp"
 
 
 namespace cMCompiler::dataStructures
@@ -135,7 +135,8 @@ namespace cMCompiler::dataStructures
 			for (auto const& bucket : context_.objectMap_)
 				if (std::find(bucket.second.begin(), bucket.second.end(), type.type) != bucket.second.end())
 					return bucket.first + buildModifier(ctx->modifier(), type.referenceCount);
-			std::terminate();
+			// name comes from the same namespace
+			return type.typeName() + buildModifier(ctx->modifier(), type.referenceCount);
 		}
 		std::vector<std::string> parameterNames_;
 		std::unique_ptr<TreeType> parseTree_;

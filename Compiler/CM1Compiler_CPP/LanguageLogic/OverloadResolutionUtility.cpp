@@ -62,7 +62,7 @@ Function* cMCompiler::language::resolveOverload(
 				|| (isconstructor && functionParameters.size() != parameters.size() + 1))
 				return false;
 			if(!isconstructor || parameters.size() > 0)
-			for (auto i = 0; i < functionParameters.size(); i++)
+			for (auto i = 0; i < parameters.size(); i++)
 				if (!verifyParameterMatch(parameters[i], *functionParameters[i + isconstructor ? 1 : 0]))
 					return false;
 

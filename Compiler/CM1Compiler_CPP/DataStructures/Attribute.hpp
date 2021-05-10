@@ -12,6 +12,7 @@
 #include "Generic.hpp"
 #include "execution/ObjectValue.hpp"
 #include "NameResolutionContext.hpp"
+#include "../Parser/antlr4-runtime.h"
 
 using gsl::not_null;
 
