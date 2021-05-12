@@ -27,7 +27,7 @@
 \begin{abstract}
     Statyczne metaprogramowanie to technika programistyczna umożliwiająca analizę, modyfikację lub generację kodu w czasie kompilacji.
     Współczesne, niskopoziomowe języki programowania wprowadzają wsparcie dla tych mechanizmów, w ograniczonym zakresie.
-    W ramach tej pracy, zaproponowano nowy język programowania: C-=-1, zaprojektowany od początku z myślą o metaprogramowaniu, oraz nowe podejście do konstrukcji kompilatora: kompilacja przez interpretację.
+    W ramach tej pracy zaproponowano nowy język programowania: C-=-1, zaprojektowany od początku z myślą o metaprogramowaniu, oraz nowe podejście do konstrukcji kompilatora: kompilacja przez interpretację.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -40,13 +40,13 @@ Mechanizmy takie jak system makr w Rust oraz szablony w C++ umożliwiają genero
 Dają one niewielki wgląd w strukturę programu oraz wykorzystują składnię odrębną od reszty języka, co utrudnia ich efektywne wykorzystanie.
 
 Te języki, umożliwiają też wykonywanie kodu w czasie kompilacji, jednak tutaj programista także spotyka się ze znacznymi ograniczeniami.
-C++ wprowadził tą możliwość jako pierwszy, tworząc funkcje constexpr w C++11.
+C++ wprowadził tę możliwość jako pierwszy, tworząc funkcje constexpr w C++11.
 Na początku dawały dostęp wyłącznie do najbardziej podstawowych elementów języka, jendak z czasem te ograniczenia były znoszone.
 W C++20, funkcje constepxr mają już tylko jedno, poważne ograniczenie: nie mogą zwracać dynamicznie alokowanej pamięci.
 Rust podąża śladami C++, wprowadzając funkcje const.
 
 Celem C-=-1 jest umożliwienie wykonywania oraz dowolnego modyfikowania kodu w czasie kompilacji.
-Osiągnięto to poprzez stworzenie interpretera tego języka a następnie udostępnienie mu programu jako modyfikowalnej struktury danych.
+Osiągnięto to poprzez stworzenie interpretera tego języka, a następnie udostępnienie mu programu jako modyfikowalnej struktury danych.
 W ten sposób, dowolny fragment kodu może być wykonany w czasie kompilacji oraz użytkownik może dowolnie modyfikować swój program, używając normalnej składni.
 
 \section{Struktura języka}
@@ -65,12 +65,12 @@ Klasy i interfejsy mogą dziedziczyć po dowolnej ilości interfejsów.
 Klasyczne dziedziczenie zostało usunięte aby uprościć model języka.
 Możliwość definiowania metod oraz pól na każdym poziomie hierarchi dziedziczenia, powodowałoby nieoczywiste zachowanie przy pobieraniu listy członków klasy.
 Na przykład, nie jest jasnym czy metoda zwracająca listę pól klasy, powinna uwzględniać pola z klasy bazowej.
-W ostatecznie wybranym modelu języka, wszystkie pola i metody muszą być zdefiniowane w typie konkretnym, natomiast wcześniej wspomniany problem jest ograniczony do iterowania po metodach interfejsów.
+W ostatecznie wybranym modelu języka wszystkie pola i metody muszą być zdefiniowane w typie konkretnym, natomiast wcześniej wspomniany problem jest ograniczony do iterowania po metodach interfejsów.
 
 Atrybuty w języku C-=-1 są bardzo podobne do tych które  można znaleźć w języku C\#.
 Można nimi adnotować deklaracje typów, zmiennych oraz funkcji.
 Deklarując atrybut, użytkownik może zaimplementować szereg specjalnych metod, reagujących na użycie adnotowanego elementu.
-Na przykład dla atrybutu dołączanego do funkcji, użytkownik może napisać metodę która będzie wykonywana za każdym razem kiedy dana funkcja jest wywoływana w kodzie.
+Na przykład dla atrybutu dołączanego do funkcji, użytkownik może napisać metodę, która będzie wykonywana za każdym razem kiedy dana funkcja jest wywoływana w kodzie.
 Wewnątrz tej metody, można wykonywać dowolne transformacje na reprezentacji pośredniej.
 
 \section{Proces kompilacji}
@@ -87,13 +87,23 @@ Najogólniej, proces kompilacji programu składa się z następujących kroków:
 
 Reprezentacja pośrednia kodu użytkownika, jest budowana używając struktur danych interpretera.
 Utrudnia to znacząco pisanie kompilatora, ponieważ efektywnie usuwa z języka statyczne typowanie.
-Ta decyzja została podjęta aby uniknąć konieczności konwersji pomiędzy reprezentacją pośrednią widzianą przez kompilator i kod użytkownika oraz synchronizowania tych dwóch struktur danych.
+Ta decyzja została podjęta, aby uniknąć konieczności konwersji pomiędzy reprezentacją pośrednią widzianą przez kompilator i kod użytkownika oraz synchronizowania tych dwóch struktur danych.
 
 
 \subsection{Interpreter}
 \subsection{Kompilator}
 \section{Zalety nowego podejścia}
 \section{Możliwa krytyka}
+
+Użycie metaprogramowania zwiększa złożoność kodu.
+Wymaga dobrego zrozumienia modelu języka oraz rozumowania na wyższym poziomie abstrakcji.
+Ta wada jest szczególnie widoczna w zaproponowanym języku.
+
+Kod napisany przez użytkownika może być w trakcie kompilacji modyfikowany nadpisywany bądź nawet usuwany.
+Użycie C-=-1 jest więc dużo bardziej wymagające niż typowego języka programowania.
+
+
+\section{Podsumowanie}
 
 \begin{thebibliography}{00}
     \bibitem{b1} G. Eason, B. Noble, and I. N. Sneddon, ``On certain integrals of Lipschitz-Hankel type involving products of Bessel functions,'' Phil. Trans. Roy. Soc. London, vol. A247, pp. 529--551, April 1955.
