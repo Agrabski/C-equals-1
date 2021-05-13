@@ -63,14 +63,14 @@ Interfejs może zawierać wyłącznie nagłówki metod, które implementująca k
 Klasy i interfejsy mogą dziedziczyć po dowolnej ilości interfejsów.
 
 Klasyczne dziedziczenie zostało usunięte aby uprościć model języka.
-Możliwość definiowania metod oraz pól na każdym poziomie hierarchi dziedziczenia, powodowałoby nieoczywiste zachowanie przy pobieraniu listy członków klasy.
+Możliwość definiowania metod oraz pól na każdym poziomie hierarchi dziedziczenia powodowałoby nieoczywiste zachowanie przy pobieraniu listy członków klasy.
 Na przykład, nie jest jasnym czy metoda zwracająca listę pól klasy, powinna uwzględniać pola z klasy bazowej.
 W ostatecznie wybranym modelu języka wszystkie pola i metody muszą być zdefiniowane w typie konkretnym, natomiast wcześniej wspomniany problem jest ograniczony do iterowania po metodach interfejsów.
 
 Atrybuty w języku C-=-1 są bardzo podobne do tych które  można znaleźć w języku C\#.
 Można nimi adnotować deklaracje typów, zmiennych oraz funkcji.
 Deklarując atrybut, użytkownik może zaimplementować szereg specjalnych metod, reagujących na użycie adnotowanego elementu.
-Na przykład dla atrybutu dołączanego do funkcji, użytkownik może napisać metodę, która będzie wykonywana za każdym razem kiedy dana funkcja jest wywoływana w kodzie.
+Na przykład dla atrybutu dołączanego do funkcji, użytkownik może napisać metodę, która będzie wykonywana za każdym razem, kiedy dana funkcja jest wywoływana w kodzie.
 Wewnątrz tej metody, można wykonywać dowolne transformacje na reprezentacji pośredniej.
 
 \section{Proces kompilacji}
@@ -93,6 +93,35 @@ Ta decyzja została podjęta, aby uniknąć konieczności konwersji pomiędzy re
 \subsection{Interpreter}
 \subsection{Kompilator}
 \section{Zalety nowego podejścia}
+
+Postawienie możliwości wykonania kompilowanego kodu jako pierwszy priorytet ma szereg zalet w porównaniu z typowym podejściem.
+
+\subsubsection{Ewaluacja kodu w czasie kompilacji}
+
+W kompilatorach C++ ewaluacja funkcji w trakcie kompilacji powstaje zwykle na bazie systemów, które miały zapewniać proste optymalizacje takie jak wykonywanie operacji arytmetycznych na stałych.
+Pomimo tego, że te systemy są obecnie bardzo zaawansowane i potrafią ewaluować niemalże dowolny kod, programiści nie mogą ich używać jawnie.
+
+Jest to spowodowane historią języka C++.
+Ewaluacja funkcji w czasie kompilacji została wprowadzona do języka w standardzie C++11.
+Oznacza to, że wykonywanie kodu w czasie kompilacji jest dość nowym pomysłem i nie każdy kompilator ma infrastrukturę, która może je wspierać.
+
+W zaproponowanej architekturze, podstawowym komponentem kompilatora jest interpreter.
+Oznacza to, że nie istnieje wyrażenie, które nie może być ewaluowane w czasie kompilacji, pod warunkiem, że znane są wszystkie jego argumenty.
+W obecnej implementacji niemożliwym jest odczytywanie danych z konsoli oraz wywoływanie funkcji zdefiniowanych jako symbol zewnętrzny.
+
+\subsubsection{Rozszerzalność języka}
+
+\subsubsection{Implementacja pierwszego kompilatora}
+
+Nieoczekiwaną zaletą opisywanego podejścia jest ułatwienie implementacji pierwszego kompilatora.
+W wielu językach programowania kompilator jest napisany w języku, który kompiluje.
+Takie podejście ma wiele zalet, takich jak przyśpieszanie rozwoju języka.
+W wielu wypadkach, na początku istnienia kompilator jest jedynym dużym projektem napisanym w danym języku.
+Takie kompilatory są określane jako Bootstrapping Compiler \cite{b1}.
+
+
+
+
 \section{Możliwa krytyka}
 
 Użycie metaprogramowania zwiększa złożoność kodu.
@@ -101,18 +130,24 @@ Ta wada jest szczególnie widoczna w zaproponowanym języku.
 
 Kod napisany przez użytkownika może być w trakcie kompilacji modyfikowany nadpisywany bądź nawet usuwany.
 Użycie C-=-1 jest więc dużo bardziej wymagające niż typowego języka programowania.
+Można jednak argumentować, że zwiększenie mocy języka dzięki zaproponowanym mechanizmom zmniejszy ilość miejsc, w których mogą się pojawić błędy na tyle, aby przeważyć koszt związany ze zwiększoną złożonością programu.
+
+Innym możliwym źródłem krytyki są struktury danych zastosowane przy implementacji kompilatora.
+Ponieważ z perspektywy kodu kompilatora, wszystkie elementy modelu semantycznego mają ten sam typ, a dostęp do pól odbywa się przez ich nazwę, kod kompilatora może zawierać błędy występujące zwykle wyłącznie w językach skryptowych.
+Rozwój tego programu musi być więc wykonywany bardzo ostrożnie.
+Parametry funkcji muszą być ręcznie walidowane na każdym kroku.
+To podejście zwiększa prawdopodobieństwo wystąpienia błędu w kompilatorze, utrudnia refaktoryzację i wymusza pisanie większej ilości testów niż normalnie.
+
+Ta decyzja została podjęta, ponieważ alternatywą było dokonywanie konwersji pomiędzy modelem semantycznym, na którym operuje kompilator i tym na którym operuje kod użytkownika.
+Takie rozwiązanie zapewniłoby silne typowanie w projekcie, ale wymusiłoby utrzymywanie dwóch struktur danych o tej samej zawartości, niezależnie od siebie.
+Ostatecznie doprowadziłoby to do większej ilości błędów, niż miałoby zapobiec.
+
 
 
 \section{Podsumowanie}
 
 \begin{thebibliography}{00}
-    \bibitem{b1} G. Eason, B. Noble, and I. N. Sneddon, ``On certain integrals of Lipschitz-Hankel type involving products of Bessel functions,'' Phil. Trans. Roy. Soc. London, vol. A247, pp. 529--551, April 1955.
-    \bibitem{b2} J. Clerk Maxwell, A Treatise on Electricity and Magnetism, 3rd ed., vol. 2. Oxford: Clarendon, 1892, pp.68--73.
-    \bibitem{b3} I. S. Jacobs and C. P. Bean, ``Fine particles, thin films and exchange anisotropy,'' in Magnetism, vol. III, G. T. Rado and H. Suhl, Eds. New York: Academic, 1963, pp. 271--350.
-    \bibitem{b4} K. Elissa, ``Title of paper if known,'' unpublished.
-    \bibitem{b5} R. Nicole, ``Title of paper with only first word capitalized,'' J. Name Stand. Abbrev., in press.
-    \bibitem{b6} Y. Yorozu, M. Hirano, K. Oka, and Y. Tagawa, ``Electron spectroscopy studies on magneto-optical media and plastic substrate interface,'' IEEE Transl. J. Magn. Japan, vol. 2, pp. 740--741, August 1987 [Digests 9th Annual Conf. Magnetics Japan, p. 301, 1982].
-    \bibitem{b7} M. Young, The Technical Writer's Handbook. Mill Valley, CA: University Science, 1989.
+    \bibitem{b1} J Reynolds ``Bootstrapping a self-compiling compiler from machine X to machine Y'' Journal of Computing Sciences in Colleges - JCSC, sty 2003.
 \end{thebibliography}
 \vspace{12pt}
 \color{red}

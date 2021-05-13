@@ -1,0 +1,5 @@
+{"rule":"MORFOLOGIK_RULE_PL_PL","sentence":"^\\QWykonanie kodu w interfejsie backendu.\\E$"}
+{"rule":"POZA_TYM","sentence":"^\\QW zaproponowanej architekturze, podstawowym komponentem kompilatora jest interpreter.\\E$"}
+{"rule":"MORFOLOGIK_RULE_PL_PL","sentence":"^\\QJ Reynolds “Bootstrapping a self-compiling compiler from machine X to machine Y” Journal of Computing Sciences in Colleges - JCSC, Jan 2003. IEEE conference templates contain guidance text for composing and formatting conference papers.\\E$"}
+{"rule":"PL_UNPAIRED_BRACKETS","sentence":"^\\QJ Reynolds “Bootstrapping a self-compiling compiler from machine X to machine Y” Journal of Computing Sciences in Colleges - JCSC, Jan 2003. IEEE conference templates contain guidance text for composing and formatting conference papers.\\E$"}
+{"rule":"DYWIZ","sentence":"^\\QJ Reynolds “Bootstrapping a self-compiling compiler from machine X to machine Y” Journal of Computing Sciences in Colleges - JCSC, Jan 2003. IEEE conference templates contain guidance text for composing and formatting conference papers.\\E$"}

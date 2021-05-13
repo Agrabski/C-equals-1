@@ -12,7 +12,7 @@ Dwoma istotnymi elementami klas w C-=-1 są metody specjalne construct oraz fina
 \subsubsection{Atrybuty}
 \subsection{Mechanizm atrybutów}
 \subsection{Reprezentacja pośrednia}\label{reprezentacja_posrednia}
-Programista C-=-1 ma możliwość analizować oraz modyfikować reprezentacje pośrednią swojego programu w czasie kompilacji. C-=-1 Intermidiate Representation, w skrócie CIR jest nieznacznie uproszczoną wersją języka, reprezentowaną jako struktura danych.
+Programista C-=-1 ma możliwość analizować oraz modyfikować reprezentację pośrednią swojego programu w czasie kompilacji. C-=-1 Intermidiate Representation, w skrócie CIR jest nieznacznie uproszczoną wersją języka, reprezentowaną jako struktura danych.
 Użytkownik wchodzi w interakcje z CIR za pomocą zestawu interfejsów opisanych w załączniku 1. Wszystkie typy instrukcji oraz wyrażeń mają ze sobą powiązany konkretny typ. Wyjątkiem jest ScopeTerminationStatement które nie jest powiązane z żadną instrukcją pisaną przez użytkownika. Instrukcja zakończenia zakresu jest wstawiana przez kompilator na koniec każdej instrukcji złożonej i jest odpowiedzialna za wywołanie finalizatorów zmiennych lokalnych (opisane w rozdziale \ref{klasy}).
 \subsection{Zarządzanie pamięcią}
 Zarządzanie pamięcią w C-=-1 jest oparte na C++11. W 2011 do biblioteki standardowej zostały wprowadzone nowe typy „inteligentnych wskaźników”: unique\_ptr, shared\_ptr oraz weak\_ptr [7]. Miały one na celu wprowadzenie do języka mechanizmów umożliwiających tanie i automatyczne zarządzanie pamięcią oraz semantyczne podkreślenie relacji między obiektami.
