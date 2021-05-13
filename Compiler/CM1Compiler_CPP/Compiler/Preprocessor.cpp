@@ -1,5 +1,5 @@
 #include "Preprocessor.hpp"
-#include "../DataStructures/QualifiedName.cpp"
+#include "../DataStructures/QualifiedName.hpp"
 #include "../LanguageLogic/NamespaceBuilder.hpp"
 #include "AttributeUtility.hpp"
 #include "FunctionUtility.hpp"

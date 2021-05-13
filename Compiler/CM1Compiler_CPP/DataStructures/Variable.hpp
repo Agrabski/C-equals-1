@@ -1,7 +1,7 @@
 #pragma once
 #include "INamedObject.hpp"
 #include "AttributeTarget.hpp"
-#include "Type.hpp"
+#include "TypeReference.hpp"
 #include "Target.hpp"
 #include "IValueHolder.hpp"
 #include <vector>
@@ -19,7 +19,6 @@ namespace cMCompiler::dataStructures
 		class ScopeTermination;
 		class VariableDeclaration;
 	}
-	class Type;
 	class AttributeTarget;
 	class Variable : public AttributeTarget, public INamedObject
 	{

@@ -64,9 +64,14 @@ antlrcpp::Any cMCompiler::compiler::CompilationUnitDataBaseBuilder::visitImportD
 {
 	assert(ctx != nullptr);
 	QualifiedName newNamespace = ctx->qualifiedIdentifier()->getText();
-	for (not_null unconfirmedName : ctx->identifier())
+	for (not_null unconfirmedName : ctx->importAliasDeclaration())
 	{
-		nameResolver_.addImport(unconfirmedName->getText(), newNamespace, &database_, resolutionContext_);
+		auto const identifiers = unconfirmedName->identifier();
+		auto const realName = identifiers[0]->getText();
+		auto aliasName = identifiers[0]->getText();
+		if (identifiers.size() == 2)
+			aliasName = identifiers[1]->getText();
+		nameResolver_.addImport(aliasName, realName, newNamespace, &database_, resolutionContext_);
 	}
 	return antlrcpp::Any();
 }
