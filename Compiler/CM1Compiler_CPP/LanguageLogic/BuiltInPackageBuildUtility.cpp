@@ -27,6 +27,19 @@ auto const compile_time_function_descriptor__ = "functionDescriptor";
 static auto defaultPackage__ = std::make_unique<PackageDatabase>("cm1mLang");
 
 
+void buildCompilerEntryPointAttribute(gsl::not_null<Namespace*> compilerNs)
+{
+	auto result = compilerNs->append<Attribute>("compilerEntryPoint");
+	auto f = result->appendFunction("attach");
+	f->appendVariable("self", { result->describingType(), 1 });
+	f->appendVariable("", { getFunctionDescriptor(), 0 });
+	f->setIrCollection(std::make_unique<execution::ArrayValue>(TypeReference{ getCollectionTypeFor(
+			TypeReference{ getIInstruction(), 1 }), 0 },
+		TypeReference{ getIInstruction() ,1 }
+		)
+	);
+	result->addAttributeTarget(Target::Function);
+}
 
 gsl::not_null<Type*> buildTypeDescriptor(gsl::not_null<Namespace*> compilerNs)
 {
@@ -49,6 +62,14 @@ gsl::not_null<Type*> buildFunctionDescriptor(gsl::not_null<Namespace*> compilerN
 gsl::not_null<Type*> buildNamespaceDescriptor(gsl::not_null<Namespace*> compilerNs)
 {
 	auto ns = compilerNs->append<Type>("namespaceDescriptor");
+	ns->setTypeClassifier(TypeClassifier::Class);
+	ns->setAccessibility(Accessibility::Public);
+	return ns;
+}
+
+gsl::not_null<Type*> buildPackageDescriptor(gsl::not_null<Namespace*> compilerNs)
+{
+	auto ns = compilerNs->append<Type>("packageDescriptor");
 	ns->setTypeClassifier(TypeClassifier::Class);
 	ns->setAccessibility(Accessibility::Public);
 	return ns;
@@ -88,12 +109,14 @@ void buildCompilerLibrary(gsl::not_null<Namespace*> rootNamespace)
 	auto function = buildFunctionDescriptor(ns);
 
 	auto nsDescriptor = buildNamespaceDescriptor(ns);
+	buildPackageDescriptor(ns);
 	completeBuildingType(type);
 	completeBuildingNamespace(nsDescriptor);
 	completeBuildingFunction(function);
 	buildPointerToSource(ns);
 	buildFieldDescriptor(ns);
 	buildIrNamespace(ns);
+	buildCompilerEntryPointAttribute(ns);
 	{
 		auto replace = ns->append<Function>("replaceWithCompilerFunction");
 		replace->setAccessibility(Accessibility::Public);
@@ -364,6 +387,11 @@ gsl::not_null<Type*> cMCompiler::language::getNamespaceDescriptor()
 	return defaultPackage__->rootNamespace()->get<Namespace>("compiler")->get<Type>("namespaceDescriptor");
 }
 
+gsl::not_null<Type*> cMCompiler::language::getPackageDescriptor()
+{
+	return defaultPackage__->rootNamespace()->get<Namespace>("compiler")->get<Type>("packageDescriptor");
+}
+
 gsl::not_null<Type*> cMCompiler::language::getFieldDescriptor()
 {
 	return defaultPackage__->rootNamespace()->get<Namespace>("compiler")->get<Type>("fieldDescriptor");
@@ -372,6 +400,11 @@ gsl::not_null<Type*> cMCompiler::language::getFieldDescriptor()
 gsl::not_null<Type*> cMCompiler::language::getPointerToSource()
 {
 	return defaultPackage__->rootNamespace()->get<Namespace>("compiler")->get<Type>("pointerToSource");
+}
+
+gsl::not_null<Attribute*> cMCompiler::language::getCompilerEntryPointAttribute()
+{
+	return defaultPackage__->rootNamespace()->get<Namespace>("compiler")->get<Attribute>("compilerEntryPoint");
 }
 
 gsl::not_null< cMCompiler::dataStructures::Type*> cMCompiler::language::getCollectionTypeFor(cMCompiler::dataStructures::TypeReference elementType)

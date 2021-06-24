@@ -19,6 +19,9 @@
     <Filter Include="Header Files\Serialization">
       <UniqueIdentifier>{1eecac6e-ccbd-4518-9f9b-38a3ffa50824}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\LLVMIntegration">
+      <UniqueIdentifier>{e9fe5ec7-ff48-4bb6-bd92-1a86a6df996e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -69,14 +72,17 @@
     <ClInclude Include="compilerInterfaceUtility.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LLVMIR.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Serialization\SerializationManager.hpp">
       <Filter>Header Files\Serialization</Filter>
     </ClInclude>
     <ClInclude Include="Serialization\NameGetter.hpp">
       <Filter>Header Files\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="LLVMIntegration\LLVMIRUtility.hpp">
+      <Filter>Header Files\LLVMIntegration</Filter>
+    </ClInclude>
+    <ClInclude Include="LLVMIntegration\LLVMIR.hpp">
+      <Filter>Header Files\LLVMIntegration</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -93,12 +99,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FunctionExecutionUtility.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PackageDiscoveryUtility.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PackageBuildUtility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FunctionUtility.cpp">
@@ -123,6 +123,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Serialization\NameGetter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PackageDiscoveryUtility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="compilerInterfaceUtility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PackageBuildUtility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LLVMIntegration\LLVMIRUtility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

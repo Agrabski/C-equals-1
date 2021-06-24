@@ -28,7 +28,7 @@ void cMCompiler::compiler::createAttribute(
 		targets.push_back(c->getText());
 	attribute->addAttributeTarget(dataStructures::parseTarget(targets));
 
-	for (not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> member : ctx->classContentSequence()->functionDeclaration())
+	for (not_null member : ctx->classContentSequence()->functionDeclaration())
 		createFunction<dataStructures::Attribute>(attribute, member, context);
 
 
@@ -39,10 +39,10 @@ void cMCompiler::compiler::confirmAttribute(
 	gsl::not_null<dataStructures::Namespace*> parent,
 	language::NameResolver resolver,
 	language::NameResolutionContext context,
-	std::filesystem::path file)
+	std::filesystem::path const& file)
 {
 	not_null attribute = parent->get<dataStructures::Attribute>(ctx->identifier()->getText());
-	for (not_null<CMinusEqualsMinus1Revision0Parser::FieldDeclarationContext*> member : ctx->classContentSequence()->fieldDeclaration())
+	for (not_null member : ctx->classContentSequence()->fieldDeclaration())
 	{
 		auto type = getType(
 			resolver,
@@ -55,11 +55,11 @@ void cMCompiler::compiler::confirmAttribute(
 	}
 
 	auto functions = attribute->methods();
-	for (not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> member : ctx->classContentSequence()->functionDeclaration())
+	for (not_null member : ctx->classContentSequence()->functionDeclaration())
 	{
-		not_null f = *std::find_if(functions.begin(), functions.end(), [&](const auto f) noexcept
+		not_null f = *std::find_if(functions.begin(), functions.end(), [&](const auto function) noexcept
 			{
-				return f->state() == dataStructures::ObjectState::Cretated;
+				return function->state() == dataStructures::ObjectState::Cretated;
 			});
 		confirmFunction(resolver, context, f, member, file);
 	}
@@ -78,11 +78,11 @@ void cMCompiler::compiler::finalizeAttribute(
 	not_null attribute = parent->get<dataStructures::Attribute>(name);
 
 	auto functions = attribute->methods();
-	for (not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> member : ctx->classContentSequence()->functionDeclaration())
+	for (not_null member : ctx->classContentSequence()->functionDeclaration())
 	{
-		not_null f = *std::find_if(functions.begin(), functions.end(), [&](const auto f)
+		not_null f = *std::find_if(functions.begin(), functions.end(), [&](const auto function) noexcept
 			{
-				return f->state() == dataStructures::ObjectState::Confirmed;
+				return function->state() == dataStructures::ObjectState::Confirmed;
 			});
 		finalizeFunction(resolver, context, f, member, file);
 	}
@@ -91,15 +91,14 @@ void cMCompiler::compiler::finalizeAttribute(
 
 std::unique_ptr<dataStructures::AttributeInstance> cMCompiler::compiler::createAttributeInstance
 (
-	dataStructures::AttributeTarget& target,
+	dataStructures::AttributeTarget const& target,
 	gsl::not_null<dataStructures::Attribute*> attribute,
 	std::vector<std::unique_ptr<dataStructures::execution::IRuntimeValue>>&& values
 )
 {
 	auto t = language::instantiate({ attribute->describingType(), 0 });
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> self = std::move(t);
-	auto constructors = language::getConstructors(attribute->methods());
-	if (constructors.size() != 0)
+	if (auto constructors = language::getConstructors(attribute->methods()); !constructors.empty())
 	{
 		auto function = language::resolveOverloadForExecution(constructors, values, true, true);
 		values.insert(values.begin(), dataStructures::execution::ReferenceValue::make(&self, self->type()));
@@ -121,7 +120,7 @@ void cMCompiler::compiler::attachAttribute(not_null<dataStructures::Function*> f
 	auto parameters = std::vector<std::unique_ptr<dataStructures::execution::IRuntimeValue>>();
 	for (auto p : attribute->functionCall()->functionCallParameter())
 	{
-		auto evaluator = ExpressionEvaluator([&](const auto&) -> std::unique_ptr<dataStructures::execution::IRuntimeValue>&
+		auto evaluator = ExpressionEvaluator([&dummyValue](const auto&) -> std::unique_ptr<dataStructures::execution::IRuntimeValue>&
 			{
 				return dummyValue;
 			});

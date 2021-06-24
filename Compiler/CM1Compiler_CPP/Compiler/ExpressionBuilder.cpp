@@ -204,8 +204,7 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 				filepath_
 			));
 
-		auto genericCandidates = nameResolver_.resolveGenericOverloadSet(name, context_);
-		for (auto gen : genericCandidates)
+		for (auto gen : nameResolver_.resolveGenericOverloadSet(name, context_))
 			candidates.push_back(instantiate(
 				*gen,
 				genericParameters,

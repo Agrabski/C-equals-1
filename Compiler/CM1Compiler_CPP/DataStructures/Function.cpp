@@ -2,7 +2,7 @@
 
 
 using namespace cMCompiler::dataStructures;
-Variable* Function::appendVariable(std::string name, TypeReference type)
+not_null<Variable*> Function::appendVariable(std::string name, TypeReference type)
 {
 	auto tmp = std::make_unique<Variable>(name, type, this);
 	auto result = tmp.get();
@@ -10,7 +10,7 @@ Variable* Function::appendVariable(std::string name, TypeReference type)
 	return result;
 }
 
-Variable* cMCompiler::dataStructures::Function::appendLocalVariable(std::string name, TypeReference type)
+not_null<Variable*> cMCompiler::dataStructures::Function::appendLocalVariable(std::string name, TypeReference type)
 {
 	auto tmp = std::make_unique<Variable>(name, type, this);
 	auto result = tmp.get();
@@ -18,25 +18,25 @@ Variable* cMCompiler::dataStructures::Function::appendLocalVariable(std::string 
 	return result;
 }
 
-std::vector<Variable*> cMCompiler::dataStructures::Function::parameters()
+std::vector<not_null<Variable*>> cMCompiler::dataStructures::Function::parameters()
 {
-	auto result = std::vector<Variable*>();
-	for (auto& x : parameters_)
+	auto result = std::vector<not_null<Variable*>>();
+	for (auto const& x : parameters_)
 		result.push_back(x.get());
 	return result;
 }
 
-std::vector<Variable*> cMCompiler::dataStructures::Function::variables()
+std::vector<not_null<Variable*>> cMCompiler::dataStructures::Function::variables() const
 {
-	auto result = std::vector<Variable*>();
-	for (auto& x : localVariables_)
+	auto result = std::vector<not_null<Variable*>>();
+	for (auto const& x : localVariables_)
 		result.push_back(x.get());
 	return result;
 }
 
-std::vector<Variable const*> cMCompiler::dataStructures::Function::parameters() const
+std::vector<not_null<Variable const*>> cMCompiler::dataStructures::Function::parameters() const
 {
-	auto result = std::vector<Variable const*>();
+	auto result = std::vector<not_null<Variable const*>>();
 	for (auto& x : parameters_)
 		result.push_back(x.get());
 	return result;

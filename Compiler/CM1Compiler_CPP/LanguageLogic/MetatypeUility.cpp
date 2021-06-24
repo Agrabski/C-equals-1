@@ -14,6 +14,7 @@
 #include "ExpressionUtility.hpp"
 #include "OverloadResolutionUtility.hpp"
 #include "TypeCoercionUtility.hpp"
+#include "../DataStructures/execution/RuntimePackageDescriptor.hpp"
 
 using namespace cMCompiler::dataStructures::execution;
 using namespace cMCompiler::dataStructures;
@@ -204,6 +205,11 @@ std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(gsl::not_null<F
 std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(gsl::not_null<Field*> value)
 {
 	return std::make_unique<RuntimeFieldDescriptor>(TypeReference{ getFieldDescriptor(), 0 }, value);
+}
+
+std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(gsl::not_null<PackageDatabase*> value)
+{
+	return std::make_unique<RuntimePackageDescriptor>(TypeReference{ getPackageDescriptor(), 0 }, value);
 }
 
 std::unique_ptr<IRuntimeValue> cMCompiler::language::buildPointerToSource(std::string const& filename, unsigned long long lineNumber)

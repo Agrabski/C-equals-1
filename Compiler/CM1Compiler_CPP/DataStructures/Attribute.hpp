@@ -27,14 +27,14 @@ namespace cMCompiler::dataStructures
 	class Attribute : public INamedObject, public ObjectWithAccessbility
 	{
 		std::unique_ptr<Type> describingType_;
-		Target attributeTarget_;
+		Target attributeTarget_ = Target::None;
 	public:
 		Attribute(std::string name, Namespace* parent);
 		void addAttributeTarget(Target t) noexcept { attributeTarget_ = attributeTarget_ | t; }
 		bool targetValid(Target t) noexcept { return (attributeTarget_ & t) != Target::None; }
 		std::vector<INamedObject*> children() final;
 
-		std::vector<validation::ValidationError> validateContent() const final
+		std::vector<validation::ValidationError> validateContent() const noexcept final
 		{
 			return std::vector<validation::ValidationError>();
 		}

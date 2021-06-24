@@ -181,6 +181,7 @@
     <ClInclude Include="execution\ReferenceValue.hpp" />
     <ClInclude Include="execution\RuntimeFieldDescriptor.hpp" />
     <ClInclude Include="execution\RuntimeFunctionDescriptor.hpp" />
+    <ClInclude Include="execution\RuntimePackageDescriptor.hpp" />
     <ClInclude Include="execution\RuntimeTypeDescriptor.hpp" />
     <ClInclude Include="execution\RuntimeVariableDescriptor.hpp" />
     <ClInclude Include="execution\StringValue.hpp" />
@@ -225,6 +226,7 @@
     <ClCompile Include="execution\ReferenceValue.cpp" />
     <ClCompile Include="execution\RuntimeFieldDescriptor.cpp" />
     <ClCompile Include="execution\RuntimeFunctionDescriptor.cpp" />
+    <ClCompile Include="execution\RuntimePackageDescriptor.cpp" />
     <ClCompile Include="execution\RuntimeTypeDescriptor.cpp" />
     <ClCompile Include="execution\RuntimeVariableDescriptor.cpp" />
     <ClCompile Include="execution\StringValue.cpp" />

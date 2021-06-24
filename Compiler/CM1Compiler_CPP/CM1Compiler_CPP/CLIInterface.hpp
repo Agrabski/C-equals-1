@@ -5,29 +5,31 @@
 
 namespace cMCompiler
 {
-	using OptionDescription = boost::program_options::options_description;
 
-	OptionDescription prepareOptions() noexcept
-	{
-		using boost::program_options::value;
-		auto result = OptionDescription();
-		result.add_options()
-			("help", "print program help")
-			("operation", value<std::string>())
-			("path", value<std::string>());
-		return result;
-	}
-
-	std::optional<dataStructures::CompilationContext> getCompilationContext(int argc, char* argv[], OptionDescription options)
+	std::optional<dataStructures::CompilationContext> getCompilationContext(int argc, char* argv[])
 	{
 		using namespace boost::program_options;
-		auto result = dataStructures::CompilationContext();
+		auto options = options_description();
+		options.add_options()
+			("help", "print program help")
+			("operation", value<std::string>())
+			("compiler-interface", value<std::string>())
+			("input", value<std::string>(), "Path to file to be compiled.");
 		variables_map vm;
-		store(parse_command_line(argc, argv, options), vm);
-		if (vm.contains("help"))
-			return std::optional<dataStructures::CompilationContext>();
+		
+		store(command_line_parser(argc, argv).options(options).run(), vm);
 
-		result.file = vm["path"].as<std::string>();
+		if (vm.contains("help"))
+		{
+			options.print(std::cout);
+			return std::optional<dataStructures::CompilationContext>();
+		}
+
+		auto result = dataStructures::CompilationContext();
+		result.executablePath = std::filesystem::path(argv[0]).parent_path();
+		result.manifestFile = vm["input"].as<std::string>();
+		if (vm.contains("compiler-interface"))
+			result.compilerInterfaceManifestFile = vm["compiler-interface"].as<std::string>();
 
 		return result;
 	}

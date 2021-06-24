@@ -7,7 +7,7 @@ namespace cMCompiler::dataStructures
 	{
 		Namespace rootNamespace_;
 		std::string name_;
-		void getTypes(gsl::not_null<Namespace*> ns, std::vector<gsl::not_null<Type*>>& result)
+		void getTypes(gsl::not_null<Namespace*> ns, std::vector<gsl::not_null<Type*>>& result) const
 		{
 			for (auto child : ns->get<Namespace>())
 				getTypes(child, result);

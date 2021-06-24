@@ -53,6 +53,7 @@ namespace cMCompiler::compiler
 		antlrcpp::Any visitRangeForStatement(CMinusEqualsMinus1Revision0Parser::RangeForStatementContext* ctx) final;
 		antlrcpp::Any visitFunctionCallStatement(CMinusEqualsMinus1Revision0Parser::FunctionCallStatementContext* ctx) final;
 		antlrcpp::Any visitAssigmentStatement(CMinusEqualsMinus1Revision0Parser::AssigmentStatementContext* ctx) final;
+		antlrcpp::Any visitReturnStatement(CMinusEqualsMinus1Revision0Parser::ReturnStatementContext* ctx) final;
 	public:
 		FunctionBodyBuilder(dataStructures::Function* function, language::NameResolver& nr, language::NameResolutionContext& context, std::filesystem::path const& f) noexcept :
 			filePath_(f), function_(function), nr_(nr), context_(context) {}

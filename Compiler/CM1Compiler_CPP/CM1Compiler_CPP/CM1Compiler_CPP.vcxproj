@@ -160,7 +160,14 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <None Include="compiler-interface\**\*.*">
+	  <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <FileType>Text</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+  <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CLIInterface.hpp" />

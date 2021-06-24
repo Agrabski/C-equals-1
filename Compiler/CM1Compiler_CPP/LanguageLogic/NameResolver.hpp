@@ -85,7 +85,7 @@ namespace cMCompiler::language
 			return functions;
 		}
 
-		std::vector<not_null<dataStructures::Function*>> resolveOverloadSet(std::string const& name, NameResolutionContext& context)
+		std::vector<not_null<dataStructures::Function*>> resolveOverloadSet(std::string const& name, NameResolutionContext const& context) const
 		{
 			//todo: fucking disgusting
 			auto r = context.objectMap_.find(name);
@@ -137,7 +137,7 @@ namespace cMCompiler::language
 			std::string const& name,
 			dataStructures::QualifiedName ns,
 			dataStructures::PackageDatabase* currentPackage,
-			NameResolutionContext& context)
+			NameResolutionContext& context) const
 		{
 			dataStructures::PackageDatabase* package = nullptr;
 			dataStructures::QualifiedName const n = ns;

@@ -253,7 +253,7 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitVariableDeclaratio
 {
 	//todo: attributes
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> expression;
-	dataStructures::TypeReference type;
+	dataStructures::TypeReference type{};
 	auto typeAnnotationPresent = ctx->typeSpecifier() != nullptr;
 	if (typeAnnotationPresent)
 		type = getType(

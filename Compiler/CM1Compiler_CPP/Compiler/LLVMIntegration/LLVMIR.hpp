@@ -1,7 +1,6 @@
 #pragma once
 
-
-namespace cMCompiler::compiler
+namespace cMCompiler::compiler::llvmIntegration
 {
 	struct LLVMPackageIR
 	{

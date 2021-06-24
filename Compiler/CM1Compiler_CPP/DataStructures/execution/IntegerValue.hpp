@@ -44,6 +44,6 @@ namespace cMCompiler::dataStructures::execution
 		// Inherited via IRuntimeValue
 		std::unique_ptr<IRuntimeValue> copy() const final;
 
-		gsl::not_null<number_component*> rawNumber() { return number_.data(); }
+		gsl::not_null<number_component*> rawNumber() noexcept { return number_.data(); }
 	};
 }

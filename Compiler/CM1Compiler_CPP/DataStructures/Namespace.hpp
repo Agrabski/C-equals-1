@@ -91,10 +91,10 @@ namespace cMCompiler::dataStructures
 		}
 
 		template<typename T>
-		T* get(std::string name)
+		T* get(std::string const& name)
 		{
 			auto& collection = getAppropriate<T>();
-			auto result = std::find_if(begin(collection), end(collection), [&](auto const& e) {return e->name() == name; });
+			auto result = std::find_if(begin(collection), end(collection), [&](auto const& e) noexcept {return e->name() == name; });
 			if (result != end(collection))
 				return result->get();
 			return nullptr;
@@ -104,7 +104,7 @@ namespace cMCompiler::dataStructures
 		gsl::not_null<Generic<T>*> appendGeneric(
 			std::vector<std::string>&& parameterNames,
 			std::unique_ptr<antlr4::tree::ParseTree>&& parseTree,
-			std::string name,
+			std::string const& name,
 			NameResolutionContext const& context)
 		{
 			auto tmp = std::make_unique<Generic<T>>(std::move(parameterNames), std::move(parseTree), name, this, context);

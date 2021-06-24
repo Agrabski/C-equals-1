@@ -55,7 +55,6 @@ antlrcpp::Any cMCompiler::compiler::CompilationUnitDataBaseBuilder::visitFunctio
 		break;
 	default:
 		std::terminate();
-		break;
 	}
 	return antlrcpp::Any();
 }

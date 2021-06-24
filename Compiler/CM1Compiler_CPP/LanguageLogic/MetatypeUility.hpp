@@ -1,7 +1,10 @@
 #pragma once
 #include <memory>
 #include <gsl.h>
+#include <vector>
 #include "runtime_values.hpp"
+#include "RuntimeTypesConversionUtility.hpp"
+#include "BuiltInPackageBuildUtility.hpp"
 #include "../DataStructures/Field.hpp"
 #include "../DataStructures/Type.hpp"
 #include "../DataStructures/Function.hpp"
@@ -32,7 +35,7 @@ namespace cMCompiler::language
 
 
 	void suplyParent(runtime_value& instruction, runtime_value&& referenceToParent);
-	
+
 
 
 
@@ -42,6 +45,18 @@ namespace cMCompiler::language
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(gsl::not_null<dataStructures::Function*>);
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(gsl::not_null<dataStructures::Field*>);
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(gsl::not_null<dataStructures::Variable*>);
+	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(gsl::not_null<dataStructures::PackageDatabase*>);
+
+	template<typename T>
+	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(std::vector<gsl::not_null<T*>>const& c)
+	{
+		auto result = std::vector<std::unique_ptr<dataStructures::execution::IRuntimeValue>>();
+		for (auto const e : c)
+			result.push_back(getValueFor(e));
+
+		// todo: fix nullptr type
+		return convertToCollection(std::move(result), dataStructures::TypeReference{ getPackageDescriptor(), 0 });
+	}
 
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildPointerToSource(
 		std::string const& filename,

@@ -58,11 +58,11 @@ namespace cMCompiler::dataStructures
 		virtual ~Function() = default;
 		Function(std::string name, INamedObject* parent)
 			: AttributeTarget(Target::Function), INamedObject(name, parent) {}
-		Variable* appendVariable(std::string name, TypeReference type);
-		Variable* appendLocalVariable(std::string name, TypeReference type);
-		std::vector<Variable*> parameters();
-		std::vector<Variable*> variables();
-		std::vector<Variable const*> parameters() const;
+		not_null<Variable*> appendVariable(std::string name, TypeReference type);
+		not_null<Variable*> appendLocalVariable(std::string name, TypeReference type);
+		std::vector<not_null<Variable*>> parameters();
+		std::vector<not_null<Variable*>> variables() const;
+		std::vector<not_null<Variable const*>> parameters() const;
 		std::vector<INamedObject*> children() noexcept final
 		{
 			return std::vector<INamedObject*>();
@@ -73,13 +73,13 @@ namespace cMCompiler::dataStructures
 			return this;
 		}
 
-		void setIrCollection(std::unique_ptr<execution::ArrayValue>&& collection)
+		void setIrCollection(std::unique_ptr<execution::ArrayValue>&& collection) noexcept
 		{
 			intermidiateRepresentation_ = std::move(collection);
 		}
-		TypeReference returnType() noexcept { return returnType_; }
+		TypeReference returnType() const noexcept { return returnType_; }
 		std::unique_ptr<execution::ArrayValue>& code() noexcept { return intermidiateRepresentation_; }
-		void pushInstruction(std::unique_ptr<execution::IRuntimeValue>&& instruction)
+		void pushInstruction(std::unique_ptr<execution::IRuntimeValue>&& instruction) const
 		{
 			intermidiateRepresentation_->push(std::move(instruction));
 		}

@@ -62,10 +62,10 @@ W celu analizy tekstu wejściowego użyto wizytatorów. Jest to typowy wzorzec p
 
 \subsubsection{Reprezentacja pośrednia}
 Reprezentacja pośrednia jest istotnym elementem języka, na którym opiera się meta-programowanie w C-=-1. W związku z czym, każda jej część jest udokumentowana w załączniku 1. Wewnątrz kompilatora, reprezentacja pośrednia jest przechowywana w ramach struktur danych interpretera (rozdział 4.3.1), aby umożliwić interakcję z interpretowanym kodem.
-Ponieważ użytkownik C-=-1 ma operować na CIR (C-=-1 Intermidiate Representation), jej struktura jest bliska językowi który reprezentuje. Poza dodaniem specjalnych typów instrukcji, struktura CIR jest niemal identyczna do C-=-1. Takie podejście ma zarówno wady i zalety. 
-Z jednej strony sprawia ono, że błędy w kompilatorze są łatwiejsze, oraz front-end jest łatwiejszy do implementacji. Przez podobieństwo do kodu źródłowego sprawia że różnice względem poprawnego rezultatu są dużo bardziej oczywiste od bardziej abstrakcyjnych reprezentacji.
-Taka reprezentacja jest jednak dużo trudniejsza do interpretowania. W przeciwieństwie do języków takich jak CIL (Common Intermediate Language) [11], CIR nie operuje abstrakcyjnej maszynie stosowej. Szczegółowy opis działania interpretera znajduje się w rozdziale 4.3.
-Główne różnice w strukturze między C-=-1 a CIR polegają na bardziej dosłownym wyrażeniu programu. W reprezentacji pośredniej, wszystkie odniesienia są w pełni kwalifikowane nazwą paczki i przestrzenią nazw. Finalizatory są wywoływane wprost, używając specjalnej instrukcji. Zamiast rozwiązywania przeciążeń funkcji, CIR odnosi się do konkretnego przeciążenia przez unikatowy identyfikator.
+Ponieważ użytkownik C-=-1 ma operować na CIR (C-=-1 Intermidiate Representation), jej struktura jest bliska językowi który reprezentuje. Poza dodaniem specjalnych typów instrukcji struktura CIR jest niemal identyczna z C-=-1. Takie podejście ma zarówno wady i zalety. 
+Z jednej strony sprawia ono, że błędy w kompilatorze są łatwiejsze, oraz front-end jest łatwiejszy do implementacji. Przez podobieństwo do kodu źródłowego sprawia, że różnice względem poprawnego rezultatu są dużo bardziej oczywiste od bardziej abstrakcyjnych reprezentacji.
+Taka reprezentacja jest jednak dużo trudniejsza do interpretowania. W przeciwieństwie do języków takich jak CIL (Common Intermediate Language) [11], CIR nie operuje abstrakcyjnej maszynie stosownej. Szczegółowy opis działania interpretera znajduje się w rozdziale 4.3.
+Główne różnice w strukturze między C-=-1 a CIR polegają na bardziej dosłownym wyrażeniu programu. W reprezentacji pośredniej wszystkie odniesienia są w pełni kwalifikowane nazwą paczki i przestrzenią nazw. Finalizatory są wywoływane wprost, używając specjalnej instrukcji. Zamiast rozwiązywania przeciążeń funkcji, CIR odnosi się do konkretnego przeciążenia przez unikatowy identyfikator.
 \subsubsection{Szablony}
 
 \subsection{Interpreter}

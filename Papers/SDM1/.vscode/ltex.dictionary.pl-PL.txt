@@ -8,3 +8,8 @@ walidowane
 refaktoryzację
 któym
 metaprogramowania
+rekompilacji
+llvm-representation
+llvm-representation
+llvm-representation
+odpowiedzilanym

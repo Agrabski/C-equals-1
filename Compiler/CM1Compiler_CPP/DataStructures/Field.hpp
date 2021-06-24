@@ -21,7 +21,7 @@ namespace cMCompiler::dataStructures
 			return std::vector<validation::ValidationError>();
 		}
 
-		std::vector<INamedObject*> children() final { return {}; }
+		std::vector<INamedObject*> children() noexcept final { return {}; }
 
 	public:
 		Field(std::string name, TypeReference type, gsl::not_null<Type*> parent)

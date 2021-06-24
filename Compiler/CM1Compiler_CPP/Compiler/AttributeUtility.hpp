@@ -21,7 +21,7 @@ namespace cMCompiler::compiler
 		gsl::not_null<dataStructures::Namespace*> parent,
 		language::NameResolver resolver,
 		language::NameResolutionContext context,
-		std::filesystem::path file);
+		std::filesystem::path const& file);
 
 	void finalizeAttribute(
 		gsl::not_null<CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext*> ctx,
@@ -32,7 +32,7 @@ namespace cMCompiler::compiler
 
 	std::unique_ptr<dataStructures::AttributeInstance> createAttributeInstance
 	(
-		dataStructures::AttributeTarget& target,
+		dataStructures::AttributeTarget const& target,
 		gsl::not_null<dataStructures::Attribute*> attribute,
 		std::vector<std::unique_ptr<dataStructures::execution::IRuntimeValue>>&& values
 	);

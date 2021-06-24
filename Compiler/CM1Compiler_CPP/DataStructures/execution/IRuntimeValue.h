@@ -26,7 +26,7 @@ namespace cMCompiler::dataStructures::execution
 		virtual std::string typeName() const = 0;
 		virtual json emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const = 0;
 	public:
-		IRuntimeValue(TypeReference type) noexcept: type_(type)
+		explicit IRuntimeValue(TypeReference type) noexcept: type_(type)
 		{}
 		json serialize(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const noexcept;
 		TypeReference const& type() const noexcept { return type_; }
