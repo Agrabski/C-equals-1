@@ -42,8 +42,10 @@ std::unique_ptr<IRuntimeValue> cMCompiler::compiler::execute(
 	};
 	auto eval = ExpressionEvaluator(variableLookup);
 	auto statementEvaluator = StatementEvaluator(*functionDefinition, eval, locals);
+	// todo: do finalisation
 	for (auto& instruction : *instructions)
-		statementEvaluator.evaluate(instruction);
+		if (auto result = statementEvaluator.evaluate(instruction); result)
+			return std::move(*result);
 
 	return returnValue;
 }

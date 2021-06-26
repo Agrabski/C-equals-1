@@ -14,9 +14,9 @@ cMCompiler::dataStructures::Function* cMCompiler::language::getFinalizer(std::ve
 std::vector<gsl::not_null<cMCompiler::dataStructures::Function*>> cMCompiler::language::getConstructors(std::vector<gsl::not_null<dataStructures::Function*>> methods)
 {
 	auto result = std::vector<gsl::not_null<cMCompiler::dataStructures::Function*>>();
-	auto f = std::find_if(methods.begin(), methods.end(), isConstructor);
-	if (f != methods.end())
-		result.push_back(*f);
+	for (auto f : methods)
+		if (isConstructor(f))
+			result.push_back(f);
 	return result;
 }
 

@@ -1,0 +1,8 @@
+import {usize} from {cm1mLang}
+import {ReplaceWithLLVMIR} from {std::compiler}
+namespace std
+{
+	[ReplaceWithLLVMIR("sizeof.llvm", "T", nameof(T))]
+	public fn sizeof<T>() -> usize
+	{}
+}

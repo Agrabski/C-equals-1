@@ -1,32 +1,33 @@
+import {null} from {cm1mLang}
 namespace std
 {
 	public class list<T> : ICollection<T>
 	{
-		private unique<listElement<T>> _begin;
-		private listElement<T>& _end;
+		private _begin: @unique<listElement<T>>;
+		private _end:  listElement<T>*;
 
-		public fn push(element: T&)
+		public fn push(element: T*)
 		{
-			let newElement = new<listElement<T>>();
+			let newElement = new unique listElement<T>();
 			newElement._allocated = element;
-			if (_begin == null)
+			if (_begin == null<T>())
 				_begin = newElement.move();
 			else
 			{
 				let currElement = _begin.get();
-				while(currElement._next.get() != null)
-					currElement = currElement._next.get()
+				while(currElement._next.get() != null<T>())
+					currElement = currElement._next.get();
 				currElement._next = newElement.move();
 			}
 		}
 
-		public fn get(index: usize) -> T&
+		public fn get(index: usize) -> T*
 		{
 		
 			let currElement = _begin.get();
-			while(currElement._next.get() != null && index > 0)
+			while(currElement._next.get() != null<T>() && index > 0)
 			{
-				currElement = currElement._next.get()
+				currElement = currElement._next.get();
 				index = index - 1;
 			}
 			return currElement._allocated;
@@ -36,9 +37,9 @@ namespace std
 		{
 			let result = 0;
 			let currElement = _begin.get();
-			while(currElement._next.get() != null )
+			while(currElement._next.get() != null<T>() )
 			{
-				currElement = currElement._next.get()
+				currElement = currElement._next.get();
 				result = result + 1;
 			}
 			return result;
@@ -47,7 +48,7 @@ namespace std
 
 	private class listElement<T>
 	{
-		public T _allocated;
-		public unique<listElement<T>> _next;
+		public _allocated: T;
+		public _next: @unique<listElement<T>>;
 	}
 }

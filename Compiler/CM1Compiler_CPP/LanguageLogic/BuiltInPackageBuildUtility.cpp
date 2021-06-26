@@ -240,6 +240,42 @@ void buildUsize(gsl::not_null<Type*> usize_type)
 			return buildIntegerValue(usize_type, result);
 		}
 	);
+	createOperator(
+		ns,
+		">",
+		{ usize_type, 0 },
+		{ usize_type, 0 },
+		{ usize_type, 0 },
+		[usize_type](auto& a, auto& b)
+		{
+			auto result = convertToIntegral<usize>(*a) > convertToIntegral<usize>(*b);
+			return buildBooleanValue(result);
+		}
+	);
+	createOperator(
+		ns,
+		"<",
+		{ usize_type, 0 },
+		{ usize_type, 0 },
+		{ usize_type, 0 },
+		[usize_type](auto& a, auto& b)
+		{
+			auto result = convertToIntegral<usize>(*a) < convertToIntegral<usize>(*b);
+			return buildBooleanValue(result);
+		}
+	);
+	createOperator(
+		ns,
+		"==",
+		{ usize_type, 0 },
+		{ usize_type, 0 },
+		{ usize_type, 0 },
+		[usize_type](auto& a, auto& b)
+		{
+			auto result = convertToIntegral<usize>(*a) == convertToIntegral<usize>(*b);
+			return buildBooleanValue(result);
+		}
+	);
 
 	createOperator(
 		ns,
@@ -322,11 +358,17 @@ void buildPackage()
 	result->rootNamespace()->append<Type>("bool");
 	result->rootNamespace()->append<Type>("char");
 	auto usize = result->rootNamespace()->append<Type>("usize");
-	result->rootNamespace()->appendGeneric<Type>({ "T" }, 
+	result->rootNamespace()->appendGeneric<Type>({ "T" },
 		[](auto a)
 		{
 			return getCollectionTypeFor(a.front());
 		}, "array", NameResolutionContext(defaultPackage__.get()));
+
+	result->rootNamespace()->appendGeneric<Function>({ "T" },
+		[](auto a) -> Function*
+		{
+			return getNullFor(a.front());
+		}, "null", NameResolutionContext(defaultPackage__.get()));
 	buildCompilerLibrary(result->rootNamespace());
 	buildString(string);
 	buildUsize(usize);
@@ -413,4 +455,20 @@ gsl::not_null< cMCompiler::dataStructures::Type*> cMCompiler::language::getColle
 	std::vector<dataStructures::TypeReference> types;
 	types.push_back(elementType);
 	return instantiate(*arr, types);
+}
+
+gsl::not_null<Function*> cMCompiler::language::getNullFor(cMCompiler::dataStructures::TypeReference elementType)
+{
+	auto returnType = TypeReference{ elementType.type, elementType.referenceCount + 1 };
+	auto existing = getDefaultPackage()->rootNamespace()->get<Function>();
+	for (auto c : existing)
+		if (c->name() == "null" && c->returnType() == returnType)
+			return c;
+	auto result = getDefaultPackage()->rootNamespace()->append<Function>("null");
+	result->setReturnType(returnType);
+	compileTimeFunctions::FuntionLibrary::instance().addFunctionDefinition(result, [=](...)
+		{
+			return ReferenceValue::make(nullptr, returnType);
+		});
+	return result;
 }

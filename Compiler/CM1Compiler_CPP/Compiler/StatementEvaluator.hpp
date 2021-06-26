@@ -1,4 +1,7 @@
 #pragma once
+#include <map>
+#include <optional>
+#include <memory>
 #include "../LanguageLogic/runtime_values.hpp"
 #include "ExpressionEvaluator.hpp"
 
@@ -15,7 +18,7 @@ namespace cMCompiler::compiler
 		void declareVariable(dataStructures::execution::IRuntimeValue& instruction);
 		void terminate(dataStructures::execution::IRuntimeValue& instruction);
 	public:
-		void evaluate(language::runtime_value& instruction);
+		std::optional<language::runtime_value> evaluate(language::runtime_value& instruction);
 		StatementEvaluator
 		(
 			dataStructures::Function& definition,

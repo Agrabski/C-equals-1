@@ -1,4 +1,5 @@
 #include "ExpressionBuilder.hpp"
+#include <boost/regex.hpp>
 #include "../LanguageLogic/ExpressionUtility.hpp"
 #include "../LanguageLogic/MetatypeUility.hpp"
 #include "../LanguageLogic/RuntimeTypesConversionUtility.hpp"
@@ -78,8 +79,7 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 		auto text = ctx->STRING()->getText();
 		text.erase(text.begin());
 		text.erase(text.end() - 1);
-		auto value = language::buildStringValue();
-		value->setValue(text);
+		auto value = language::buildStringValue(boost::regex_replace(text, boost::regex("\\\\(.|\\s)"), "$1"));
 		// todo: parent
 		auto result = language::buildValueLiteralExpression(
 			std::move(value),

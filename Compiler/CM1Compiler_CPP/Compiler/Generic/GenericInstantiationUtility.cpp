@@ -19,12 +19,26 @@ not_null<dataStructures::Function*> cMCompiler::compiler::instantiate
 	std::filesystem::path const& file
 )
 {
+	static std::vector<GenericKey<Function>> instantiations;
+	auto existing = std::find_if(begin(instantiations), end(instantiations), [&](const auto& e)
+		{
+			if (e.prototype != &function)
+				return false;
+			else
+				for (int i = 0; i < e.parameters.size(); i++)
+					if (genericParameters[i] != e.parameters[i])
+						return false;
+			return true;
+		});
+	if (existing != instantiations.end())
+		return existing->value;
 	if (function.isSpecial())
 		return function.fillSpecial(genericParameters);
 	auto tree = function.fillGeneric(genericParameters);
 	auto x = tree->getText();
 	not_null functionTree = dynamic_cast<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*>(tree.get());
 	not_null f = createFunction(dynamic_cast<Namespace*>(function.parent()), function.name());
+	instantiations.emplace_back(&function, genericParameters, f);
 	auto context = NameResolutionContext::merge(function.context(), c);
 	confirmFunction(resolver, context, f, functionTree, file);
 	finalizeFunction(resolver, context, f, functionTree, file);
@@ -50,18 +64,31 @@ not_null<dataStructures::Type*> cMCompiler::compiler::instantiate
 	std::filesystem::path const& file
 )
 {
+	static std::vector<GenericKey<Type>> instantiations;
+	auto existing = std::find_if(begin(instantiations), end(instantiations), [&](const auto& e)
+		{
+			if (e.prototype != &genericType)
+				return false;
+			else
+				for (int i = 0; i < e.parameters.size(); i++)
+					if (genericParameters[i] != e.parameters[i])
+						return false;
+			return true;
+		});
+	if (existing != instantiations.end())
+		return existing->value;
 	if (genericType.isSpecial())
 		return genericType.fillSpecial(genericParameters);
 	auto context = NameResolutionContext::merge(genericType.context(), c);
 	auto x = genericType.fillGeneric(genericParameters);
 	not_null ast = dynamic_cast<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*>(x.get());
-	std::cout << ast->getText();
 	not_null type = createType(
 		dynamic_cast<Namespace*>(genericType.parent()),
 		resolver,
 		context,
 		ast
 	);
+	instantiations.emplace_back(&genericType, genericParameters, type);
 	confirmType(
 		resolver,
 		context,

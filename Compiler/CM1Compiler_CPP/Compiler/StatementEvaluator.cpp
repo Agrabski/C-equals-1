@@ -1,5 +1,7 @@
 #include "StatementEvaluator.hpp"
 #include "../DataStructures/execution/BooleanValue.hpp"
+#include "../DataStructures/execution/ReferenceValue.hpp"
+#include "../DataStructures/execution/IRuntimeValue.h"
 #include "../LanguageLogic/SpecialFunctionUtility.hpp"
 #include "../LanguageLogic/IRUtility.hpp"
 #include "../LanguageLogic/RuntimeTypesConversionUtility.hpp"
@@ -7,30 +9,50 @@
 #include "../DataStructures/execution/RuntimeVariableDescriptor.hpp"
 
 using namespace cMCompiler::dataStructures::execution;
+using namespace cMCompiler::language;
 
-void cMCompiler::compiler::StatementEvaluator::evaluate(language::runtime_value& instruction)
+std::optional<runtime_value> cMCompiler::compiler::StatementEvaluator::evaluate(language::runtime_value& instruction)
 {
 	using language::isOfType;
 	auto inst = language::dereferenceAs<ObjectValue>(instruction.get());
 	if (isOfType(inst, cMCompiler::language::getFunctionCallStatementDescriptor()))
 	{
 		call(*inst);
-		return;
+		return {};
 	}
 	if (isOfType(inst, cMCompiler::language::getAssigmentStatementDescriptor()))
 	{
 		assign(*inst);
-		return;
+		return {};
 	}
 	if (isOfType(inst, language::getScopeTerminationStatementDescriptor()))
 	{
 		terminate(*inst);
-		return;
+		return {};
 	}
 	if (isOfType(inst, language::getVariableDeclarationStatementDescriptor()))
 	{
 		declareVariable(*inst);
-		return;
+		return {};
+	}
+	if (isOfType(inst, language::getReturnStatementDescriptor()))
+	{
+		auto expression = inst->getMemberValue("_expression")->value();
+		return ev_.evaluate(**expression);
+	}
+	if (isOfType(inst, language::getIfDescriptor()))
+	{
+		auto expression = inst->getMemberValue("_expression")->value();
+		auto value = ev_.evaluate(**expression);
+		ArrayValue* code = nullptr;
+		if (language::dereferenceAs<BooleanValue>(value.get())->value())
+			code = dereferenceAs<ArrayValue>(inst->getMemberValue("_ifBranch")->value()->get());
+		else
+			code = dereferenceAs<ArrayValue>(inst->getMemberValue("_elseBranch")->value()->get());
+		for (auto& i : *code)
+			if (auto r = evaluate(i))
+				return r;
+		return {};
 	}
 	std::terminate();
 }

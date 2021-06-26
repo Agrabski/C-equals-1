@@ -2,6 +2,7 @@
 #include "../compilerInterfaceUtility.hpp"
 #include "../FunctionExecutionUtility.hpp"
 #include "../../LanguageLogic/MetatypeUility.hpp"
+#include "../../DataStructures/execution/StringValue.hpp"
 
 using namespace cMCompiler::compiler;
 using namespace cMCompiler::compiler::llvmIntegration;
@@ -17,5 +18,5 @@ LLVMPackageIR cMCompiler::compiler::llvmIntegration::compileToLLVMIr(
 	args.push_back(language::getValueFor(&compiled));
 	args.push_back(language::getValueFor(dependencies));
 	auto result = execute(entryPoint, std::move(args));
-	return LLVMPackageIR();
+	return {language::dereferenceAs<dataStructures::execution::StringValue>(result.get())->value()};
 }

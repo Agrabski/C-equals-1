@@ -1,0 +1,48 @@
+import {string read_all_file} from {cm1mLang}
+import {functionDescriptor} from {cm1mLang::compiler}
+namespace std::compiler
+{
+	public att<function> ReplaceWithLLVMIR
+	{
+		private _filename: string;
+		private _nameOftypeToReplace: string;
+		private _nameToReplace: string;
+		private _nameOftypeToReplace1: string;
+		private _nameToReplace1: string;
+
+		public fn construct(filename: string, nameOfTypeToReplace: string, nameToReplace: string)
+		{
+			self._filename = filename;
+			self._nameOftypeToReplace = nameOfTypeToReplace;
+			self._nameToReplace = nameToReplace;
+			self._nameOftypeToReplace1 = "";
+			self._nameToReplace1 = "";
+		}
+
+		public fn construct(
+			filename: string,
+			nameOfTypeToReplace: string,
+			nameToReplace: string,
+			nameOfTypeToReplace1: string,
+			nameToReplace1: string)
+		{
+			self._filename = filename;
+			self._nameOftypeToReplace = nameOfTypeToReplace;
+			self._nameToReplace = nameToReplace;
+			
+			self._nameOftypeToReplace1 = nameOfTypeToReplace1;
+			self._nameToReplace1 = nameToReplace1;
+		}
+
+		public fn attach(f: functionDescriptor)
+		{
+			let ir = read_all_file(self._filename);
+			ir = ir.replace("$" + self._nameOftypeToReplace, self._nameToReplace);
+			if(self._nameToReplace1.length() > 0)
+			{
+				ir = ir.replace("$" + self._nameOftypeToReplace1, self._nameToReplace1);
+			}
+			f.overridenLLVMIR(ir);
+		}
+	}
+}

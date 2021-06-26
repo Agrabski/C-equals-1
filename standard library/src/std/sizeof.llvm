@@ -1,0 +1,3 @@
+%Size = getelementptr %$T* null, i32 1
+%SizeI = ptrtoint %$T* %Size to i32
+ret i64 %SizeI

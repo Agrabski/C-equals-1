@@ -1,0 +1,2 @@
+%2 = bitcast %$T* %0 to %$Y*
+ret %$Y* %2

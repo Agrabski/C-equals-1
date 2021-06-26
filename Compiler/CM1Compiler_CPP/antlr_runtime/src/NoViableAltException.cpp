@@ -22,7 +22,7 @@ NoViableAltException::NoViableAltException(Parser* recognizer, TokenStream* inpu
 
 NoViableAltException::~NoViableAltException() {
 	if (_deleteConfigs)
-		delete _deadEndConfigs;
+		;// delete _deadEndConfigs;
 }
 
 Token* NoViableAltException::getStartToken() const {

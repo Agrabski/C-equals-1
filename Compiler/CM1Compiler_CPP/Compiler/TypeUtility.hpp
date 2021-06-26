@@ -26,6 +26,13 @@ namespace cMCompiler::compiler
 		std::filesystem::path file
 	);
 
+	dataStructures::TypeReference getType(
+		language::NameResolver& resolver,
+		language::NameResolutionContext& context,
+		gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeReferenceContext*> ctx,
+		std::filesystem::path file
+	);
+
 	dataStructures::TypeReference processModifier(
 		gsl::not_null<dataStructures::Type*> baseType,
 		gsl::not_null<CMinusEqualsMinus1Revision0Parser::ModifierContext*> ctx,

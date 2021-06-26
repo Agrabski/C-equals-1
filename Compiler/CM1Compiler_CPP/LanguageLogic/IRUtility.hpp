@@ -15,6 +15,9 @@ namespace cMCompiler::language
 
 	gsl::not_null<dataStructures::Type*> buildExpressionDescriptor(gsl::not_null<dataStructures::Namespace*> irNs);
 	gsl::not_null<dataStructures::Type*> buidStatementDescriptor(gsl::not_null<dataStructures::Namespace*> irNs);
+	gsl::not_null<dataStructures::Type*> buildReturnDescriptor(gsl::not_null<dataStructures::Namespace*> irNs,
+		gsl::not_null<dataStructures::Type*> baseStatement,
+		gsl::not_null<dataStructures::Type*> expression);
 	gsl::not_null<dataStructures::Type*> buildIfDescriptor(gsl::not_null<dataStructures::Namespace*> irNs,
 		gsl::not_null<dataStructures::Type*> baseStatement,
 		gsl::not_null<dataStructures::Type*> expression);
@@ -57,6 +60,7 @@ namespace cMCompiler::language
 	gsl::not_null<dataStructures::Type*> getScopeTerminationStatementDescriptor();
 	gsl::not_null<dataStructures::Type*> getFunctionCallStatementDescriptor();
 	gsl::not_null<dataStructures::Type*> getVariableDeclarationStatementDescriptor();
+	gsl::not_null<dataStructures::Type*> getReturnStatementDescriptor();
 
 	language::runtime_value buildSourcePointer(std::string const& filename, antlr4::tree::ParseTree& tree);
 }

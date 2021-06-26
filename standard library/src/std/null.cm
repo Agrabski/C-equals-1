@@ -1,0 +1,8 @@
+import {usize} from {cm1mLang}
+import {ReplaceWithLLVMIR} from {std::compiler}
+namespace std
+{
+	[ReplaceWithLLVMIR("null.llvm", "T", nameof(T))]
+	public fn null<T>() -> T*
+	{}
+}

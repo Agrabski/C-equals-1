@@ -2,5 +2,9 @@ import {compilerEntryPoint} from {cm1mLang::compiler}
 
 [compilerEntryPoint()]
 public fn entryPoint() {
-	return "define dso_local i32 @main() local_unnamed_addr #0 !dbg !7 {ret i32 0, !dbg !12}";
+	return 
+"define dso_local i32 @main() local_unnamed_addr #0 !dbg !7\
+{\
+	ret i32 0, !dbg !12\
+}";
 }

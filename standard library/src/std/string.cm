@@ -1,20 +1,20 @@
-
+import {string} from {cm1mLang}
 namespace std
 {
 	class dyn_string
 	{
 		private _text : char[];
 		
-		public construct()
+		public fn construct()
 		{
-			_text = new_array<char>(0);
+			self._text = new_array<char>(0);
 		}
 
-		public construct(text: string)
+		public fn construct(text: string)
 		{
-			_text = new_array<char>(text.length());
-			for(let index in enumerate(0, text.length()))
-				_text[index] = text[index];
+			self._text = new_array<char>(text.length());
+			for(index in enumerate(0, text.length()))
+				self._text[index] = text[index];
 		}
 	}
 }

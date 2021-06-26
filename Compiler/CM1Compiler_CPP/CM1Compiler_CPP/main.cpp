@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <ll>
 #include "CLIInterface.hpp"
 #include "../FileSystem/File.hpp"
 #include "../Compiler/PackageBuildUtility.hpp"
@@ -27,6 +28,7 @@ int main(int argc, char* argv[])
 		auto compiler = cMCompiler::compiler::loadCompilerInterfacePackage(*context);
 
 		auto llvmIr = cMCompiler::compiler::llvmIntegration::compileToLLVMIr(*package, *compiler, dependencies);
+		std::cout << llvmIr.intermidiateRepresentation << std::endl;
 	}
 	return 0;
 }

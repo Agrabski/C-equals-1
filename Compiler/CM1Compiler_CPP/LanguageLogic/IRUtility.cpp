@@ -55,6 +55,15 @@ gsl::not_null<Type*> cMCompiler::language::buidStatementDescriptor(gsl::not_null
 	return interface;
 }
 
+gsl::not_null<Type*> cMCompiler::language::buildReturnDescriptor(gsl::not_null<dataStructures::Namespace*> irNs, gsl::not_null<dataStructures::Type*> baseStatement, gsl::not_null<dataStructures::Type*> expression)
+{
+	auto impl = irNs->append<Type>("returnStatement");
+	impl->appendInterface(baseStatement);
+	impl->appendField("_pointerToSource", { getPointerToSource(), 0 });
+	impl->appendField("_expression", { expression, 1 });
+	return impl;
+}
+
 gsl::not_null<Type*> cMCompiler::language::buildIfDescriptor(gsl::not_null<Namespace*> irNs, gsl::not_null<Type*> baseStatement, gsl::not_null<Type*> expression)
 {
 	auto interface = irNs->append<Type>("IIfStatement"s);
@@ -64,6 +73,8 @@ gsl::not_null<Type*> cMCompiler::language::buildIfDescriptor(gsl::not_null<Names
 	impl->appendInterface(interface);
 	impl->appendField("_pointerToSource", { getPointerToSource(), 0 });
 	impl->appendField("_expression", { expression, 1 });
+	impl->appendField("_ifBranch", { getCollectionTypeFor({getIInstruction(),1}), 0 });
+	impl->appendField("_elseBranch", { getCollectionTypeFor({getIInstruction(),1}), 0 });
 	return interface;
 }
 
@@ -338,6 +349,7 @@ void cMCompiler::language::buildIrNamespace(gsl::not_null<dataStructures::Namesp
 	auto statement = buidStatementDescriptor(ns);
 	auto expression = buildExpressionDescriptor(ns);
 	buildIfDescriptor(ns, statement, expression);
+	buildReturnDescriptor(ns, statement, expression);
 	buildVariableReferenceExpression(ns);
 	buildFunctionCallDescriptor(ns);
 	buildFunctionCallStatementDescriptor(ns);
@@ -425,6 +437,11 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getFuncti
 gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getVariableDeclarationStatementDescriptor()
 {
 	return getDefaultPackage()->rootNamespace()->get<Namespace>("compiler")->get<Namespace>("ir")->get<Type>("variableDeclarationStatement");
+}
+
+gsl::not_null<Type*> cMCompiler::language::getReturnStatementDescriptor()
+{
+	return getDefaultPackage()->rootNamespace()->get<Namespace>("compiler")->get<Namespace>("ir")->get<Type>("returnStatement");
 }
 
 cMCompiler::language::runtime_value cMCompiler::language::buildSourcePointer(std::string const& filename, antlr4::tree::ParseTree& tree)

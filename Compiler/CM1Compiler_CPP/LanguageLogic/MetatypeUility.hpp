@@ -21,6 +21,8 @@ namespace cMCompiler::language
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildScopeTermination(runtime_value&& variables, runtime_value&& pointerToSource);
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildIf(runtime_value&& expression, runtime_value&& pointerToSource);
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildAssigmentStatement(runtime_value&& lExpression, runtime_value&& rExpression, runtime_value&& pointerToSource);
+	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildReturnStatement(runtime_value&& Expression, runtime_value&& pointerToSource);
+	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildReturnStatement(runtime_value&& pointerToSource);
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildFunctionCallStatement(
 		runtime_value&& expression,
 		runtime_value&& pointerToSource);

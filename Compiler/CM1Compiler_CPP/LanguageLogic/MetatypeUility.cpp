@@ -81,6 +81,8 @@ std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler
 	auto [result, object] = heapAllocateObject(getIfDescriptor());
 	object.setValue("_expression", std::move(expression));
 	object.setValue("_pointerToSource", std::move(pointerToSource));
+	object.setValue("_ifBranch", convertCollection({}, {getIInstruction(),1}));
+	object.setValue("_elseBranch", convertCollection({}, { getIInstruction(),1 }));
 	return std::move(result);
 }
 
@@ -92,6 +94,21 @@ cMCompiler::language::runtime_value cMCompiler::language::buildAssigmentStatemen
 	//setParent(rExpression.get(), result->copy());
 	object.setValue("_lExpression", std::move(lExpression));
 	object.setValue("_rExpression", std::move(rExpression));
+	object.setValue("_pointerToSource", std::move(pointerToSource));
+	return std::move(result);
+}
+
+cMCompiler::language::runtime_value cMCompiler::language::buildReturnStatement(runtime_value&& Expression, runtime_value&& pointerToSource)
+{
+	auto result = buildReturnStatement(std::move(pointerToSource));
+	auto object = dereferenceAs<ObjectValue>(result.get());
+	object->setValue("_expression", std::move(Expression));
+	return result;
+}
+
+cMCompiler::language::runtime_value cMCompiler::language::buildReturnStatement(runtime_value&& pointerToSource)
+{
+	auto [result, object] = language::heapAllocateObject(getReturnStatementDescriptor());
 	object.setValue("_pointerToSource", std::move(pointerToSource));
 	return std::move(result);
 }

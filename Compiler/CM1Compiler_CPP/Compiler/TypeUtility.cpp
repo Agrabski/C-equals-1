@@ -2,6 +2,7 @@
 #include "FunctionUtility.hpp"
 #include "../DataStructures/Accessibility.hpp"
 #include "../LanguageLogic/BuiltInPackageBuildUtility.hpp"
+#include "../LanguageLogic/GenericUtility.hpp"
 #include "Generic/GenericInstantiationUtility.hpp"
 
 std::string name(gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*> ctx)
@@ -54,8 +55,9 @@ void cMCompiler::compiler::confirmType(
 		assert(type != nullptr);
 
 		if (ctx->implementedInterfacesSequence() != nullptr)
-			for (not_null interface : ctx->implementedInterfacesSequence()->identifier())
+			for (not_null interface : ctx->implementedInterfacesSequence()->typeReference())
 			{
+				getType(resolver, context, interface, file);
 				auto implementedType = resolver.resolve<dataStructures::Type>(interface->getText(), context);
 				if (implementedType == nullptr)
 					std::terminate(); //todo: report error
@@ -125,13 +127,12 @@ void cMCompiler::compiler::finalizeType(
 cMCompiler::dataStructures::TypeReference cMCompiler::compiler::getType(
 	language::NameResolver& resolver,
 	language::NameResolutionContext& context,
-	gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeSpecifierContext*> ctx,
-	std::filesystem::path file)
+	gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeReferenceContext*> ctx,
+	std::filesystem::path file
+)
 {
 	auto name = ctx->identifier()->getText();
-	std::cout << ctx->getText() << std::endl;
 	dataStructures::Type* type;
-	// todo: arrays
 	if (ctx->genericUsage())
 	{
 		std::vector<dataStructures::TypeReference> parameters;
@@ -151,7 +152,19 @@ cMCompiler::dataStructures::TypeReference cMCompiler::compiler::getType(
 	}
 	else
 		type = resolver.resolve<dataStructures::Type>(name, context);
-	return processModifier(type, ctx->modifier(), context);
+	return { type, 0 };
+}
+
+
+cMCompiler::dataStructures::TypeReference cMCompiler::compiler::getType(
+	language::NameResolver& resolver,
+	language::NameResolutionContext& context,
+	gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeSpecifierContext*> ctx,
+	std::filesystem::path file)
+{
+	auto result = getType(resolver, context, ctx->typeReference(), file);
+
+	return processModifier(result.type, ctx->modifier(), context);
 }
 
 cMCompiler::dataStructures::TypeReference cMCompiler::compiler::processModifier(

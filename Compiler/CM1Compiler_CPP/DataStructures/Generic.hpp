@@ -76,7 +76,7 @@ namespace cMCompiler::dataStructures
 
 				antlrcpp::Any visitTypeSpecifier(CMinusEqualsMinus1Revision0Parser::TypeSpecifierContext* ctx) final
 				{
-					auto name = ctx->identifier()->getText();
+					auto name = ctx->typeReference()->identifier()->getText();
 					auto paramName = std::find(parameterNames_.begin(), parameterNames_.end(), name);
 					if (paramName != parameterNames_.end())
 					{
@@ -114,7 +114,7 @@ namespace cMCompiler::dataStructures
 			return {};
 		}
 
-		NameResolutionContext& context() { return context_; }
+		NameResolutionContext const& context() const noexcept { return context_; }
 		execution::json emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const final
 		{
 			return {};
@@ -142,9 +142,6 @@ namespace cMCompiler::dataStructures
 		std::unique_ptr<TreeType> parseTree_;
 		NameResolutionContext context_;
 		std::function<not_null<TargetType*>(std::vector<TypeReference> const&)> customFill_;
-
-
-		// Inherited via INamedObject
 
 	};
 }

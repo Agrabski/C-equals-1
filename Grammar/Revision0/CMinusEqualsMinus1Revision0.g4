@@ -33,8 +33,10 @@ fieldDeclaration:
 genericSpecifier: Less identifier (',' identifier)* Greater;
 
 implementedInterfacesSequence:
-	identifier
-	| (identifier ',')+ identifier;
+	typeReference
+	| (typeReference ',')+ identifier;
+
+typeReference: identifier genericUsage?;
 
 namespaceDeclaration:
 	'namespace' qualifiedIdentifier OpenBracket declarationSequence CloseBracket;
@@ -47,7 +49,7 @@ parameterList: | parameter | (parameter ',')+ parameter;
 
 parameter: attributeSequence? identifier ':' typeSpecifier;
 
-typeSpecifier: identifier genericUsage? modifier;
+typeSpecifier: typeReference modifier;
 
 modifier:  arraySpecifier? ref*;
 
@@ -227,7 +229,7 @@ SimpleIdentifier: LETTER (LETTER | DIGIT)*;
 
 IntegerLiteral: (DIGIT)+;
 DIGIT: [0-9];
-fragment ESC : '\\"' | '\\\\' ;
+fragment ESC : '\\"' | '\\\\' | '\\\n' ;
 STRING: '"' ( ESC | ~[\\"\r\n] )* '"';
 AnyCharacter:('\\"');
 LETTER: [a-zA-Z_];

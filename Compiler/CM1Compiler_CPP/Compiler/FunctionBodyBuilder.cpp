@@ -392,3 +392,16 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitAssigmentStatement
 	instructionAppenders.back()(std::move(instruction));
 	return antlrcpp::Any();
 }
+
+antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitReturnStatement(CMinusEqualsMinus1Revision0Parser::ReturnStatementContext* ctx)
+{
+	assert(ctx != nullptr);
+	auto sourcePointer = language::buildSourcePointer(filePath_.string(), *ctx);
+	if (ctx->expression() != nullptr)
+		instructionAppenders.back()(language::buildReturnStatement(
+			getBuilder().buildExpression(not_null{ ctx->expression() }, nullptr), std::move(sourcePointer)));
+	else
+		instructionAppenders.back()(language::buildReturnStatement(std::move(sourcePointer)));
+	return {};
+
+}
