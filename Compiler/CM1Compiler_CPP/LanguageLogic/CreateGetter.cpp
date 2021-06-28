@@ -30,6 +30,7 @@ gsl::not_null<Function*> cMCompiler::language::createCustomFunction(
 {
 	function->appendVariable("self", { type, 1 });
 	compileTimeFunctions::FuntionLibrary::instance().addFunctionDefinition(function, body);
+	function->metadata().appendFlag(FunctionFlags::ExcludeAtRuntime);
 	return function;
 }
 

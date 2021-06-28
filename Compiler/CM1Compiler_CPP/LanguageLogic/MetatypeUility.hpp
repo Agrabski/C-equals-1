@@ -43,11 +43,11 @@ namespace cMCompiler::language
 
 
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(dataStructures::TypeReference);
-	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(not_null<dataStructures::Type*> t);
-	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(gsl::not_null<dataStructures::Function*>);
-	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(gsl::not_null<dataStructures::Field*>);
-	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(gsl::not_null<dataStructures::Variable*>);
-	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(gsl::not_null<dataStructures::PackageDatabase*>);
+	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(dataStructures::Type* t);
+	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(dataStructures::Function*);
+	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(dataStructures::Field*);
+	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(dataStructures::Variable*);
+	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(dataStructures::PackageDatabase*);
 
 	template<typename T>
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(std::vector<gsl::not_null<T*>>const& c)

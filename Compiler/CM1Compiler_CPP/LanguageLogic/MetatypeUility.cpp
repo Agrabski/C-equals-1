@@ -204,27 +204,27 @@ std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(TypeReference v
 	return std::make_unique<RuntimeTypeDescriptor>(TypeReference{ getTypeDescriptor(), 0 }, value);
 }
 
-std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(gsl::not_null<Variable*> value)
+std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(Variable* value)
 {
 	return std::make_unique<RuntimeVariableDescriptor>(TypeReference{ getVariableDescriptor(),0 }, value);
 }
 
-std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(gsl::not_null<dataStructures::Type*> t)
+std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(dataStructures::Type* t)
 {
 		return getValueFor({ t, 0 });
 }
 
-std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(gsl::not_null<Function*> value)
+std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(Function* value)
 {
 	return std::make_unique<RuntimeFunctionDescriptor>(TypeReference{ getFunctionDescriptor(), 0 }, value);
 }
 
-std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(gsl::not_null<Field*> value)
+std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(Field* value)
 {
 	return std::make_unique<RuntimeFieldDescriptor>(TypeReference{ getFieldDescriptor(), 0 }, value);
 }
 
-std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(gsl::not_null<PackageDatabase*> value)
+std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(PackageDatabase* value)
 {
 	return std::make_unique<RuntimePackageDescriptor>(TypeReference{ getPackageDescriptor(), 0 }, value);
 }

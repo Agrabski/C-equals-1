@@ -1,10 +1,7 @@
-import {compilerEntryPoint} from {cm1mLang::compiler}
+import {compilerEntryPoint packageDescriptor} from {cm1mLang::compiler}
+import {compilationResult} from {cm1mLang::compiler::backend}
 
 [compilerEntryPoint()]
-public fn entryPoint() {
-	return 
-"define dso_local i32 @main() local_unnamed_addr #0 !dbg !7\
-{\
-	ret i32 0, !dbg !12\
-}";
+public fn entryPoint(packages: packageDescriptor[], result: compilationResult) {
+	result.appendModule("test");
 }

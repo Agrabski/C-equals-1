@@ -1,6 +1,5 @@
 #pragma once
 #include <memory>
-#include "LLVMIntegration/LLVMIR.hpp"
 #include "../DataStructures/PackageDatabase.hpp"
 #include "../DataStructures/CompilationContext.hpp"
 

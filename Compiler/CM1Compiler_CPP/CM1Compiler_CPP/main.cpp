@@ -1,6 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include <ll>
+#include <llvm/Support/Host.h>
 #include "CLIInterface.hpp"
 #include "../FileSystem/File.hpp"
 #include "../Compiler/PackageBuildUtility.hpp"
@@ -26,9 +26,13 @@ int main(int argc, char* argv[])
 		outputFile.close();
 
 		auto compiler = cMCompiler::compiler::loadCompilerInterfacePackage(*context);
+		dependencies.push_back(package.get());
 
-		auto llvmIr = cMCompiler::compiler::llvmIntegration::compileToLLVMIr(*package, *compiler, dependencies);
-		std::cout << llvmIr.intermidiateRepresentation << std::endl;
+		auto llvmIr = cMCompiler::compiler::llvmIntegration::compileToLLVMIr(*compiler, dependencies);
+
+		auto tripple = llvm::sys::getDefaultTargetTriple();
+		cMCompiler::compiler::llvmIntegration::compileToBinary(llvmIr.get(), "out", tripple);
+
 	}
 	return 0;
 }

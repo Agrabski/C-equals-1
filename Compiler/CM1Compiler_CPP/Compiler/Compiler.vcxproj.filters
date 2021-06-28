@@ -81,9 +81,6 @@
     <ClInclude Include="LLVMIntegration\LLVMIRUtility.hpp">
       <Filter>Header Files\LLVMIntegration</Filter>
     </ClInclude>
-    <ClInclude Include="LLVMIntegration\LLVMIR.hpp">
-      <Filter>Header Files\LLVMIntegration</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CompilationUnitDatabaseBuilder.cpp">

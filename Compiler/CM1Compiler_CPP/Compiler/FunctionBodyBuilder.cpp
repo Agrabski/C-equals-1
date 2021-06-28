@@ -365,6 +365,14 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitFunctionCallStatem
 			methodName,
 			language::buildSourcePointer(filePath_.string(), *ctx)
 		);
+
+		auto instruction = language::buildFunctionCallStatement(
+			std::move(result),
+			language::buildSourcePointer(filePath_.string(), *ctx)
+		);
+
+		language::suplyParent(instruction, getReferenceToParent());
+		instructionAppenders.back()(std::move(instruction));
 	}
 	else
 	{

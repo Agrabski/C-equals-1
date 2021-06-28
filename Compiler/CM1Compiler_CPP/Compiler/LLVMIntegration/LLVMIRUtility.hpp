@@ -1,14 +1,18 @@
 #pragma once
 #include <vector>
 #include <gsl.h>
-#include "LLVMIR.hpp"
+#include "../../DataStructures/CompilationResult.hpp"
 #include "../../DataStructures/PackageDatabase.hpp"
 
 namespace cMCompiler::compiler::llvmIntegration
 {
-	LLVMPackageIR compileToLLVMIr(
-		dataStructures::PackageDatabase& compiled, 
+	std::unique_ptr<cMCompiler::dataStructures::CompilationResult> compileToLLVMIr(
 		dataStructures::PackageDatabase& compilerInterface,
-		std::vector<gsl::not_null<dataStructures::PackageDatabase*>>const& dependencies
+		std::vector<gsl::not_null<dataStructures::PackageDatabase*>>const& packages
 	);
+
+	void compileToBinary(
+		not_null<dataStructures::CompilationResult*> result, 
+		std::filesystem::path outputDirectory,
+		std::string const& triplet);
 }

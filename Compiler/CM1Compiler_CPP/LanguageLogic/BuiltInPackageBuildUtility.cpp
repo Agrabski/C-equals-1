@@ -15,6 +15,7 @@
 #include "CreateGetter.hpp"
 #include "RuntimeTypesConversionUtility.hpp"
 #include "CompileTimeFunctions/ReadAllFile.hpp"
+#include "LLVMBindings.hpp"
 using namespace cMCompiler::dataStructures::execution;
 
 using namespace std::string_literals;
@@ -117,6 +118,7 @@ void buildCompilerLibrary(gsl::not_null<Namespace*> rootNamespace)
 	buildFieldDescriptor(ns);
 	buildIrNamespace(ns);
 	buildCompilerEntryPointAttribute(ns);
+	buildLLVMBindings(ns);
 	{
 		auto replace = ns->append<Function>("replaceWithCompilerFunction");
 		replace->setAccessibility(Accessibility::Public);

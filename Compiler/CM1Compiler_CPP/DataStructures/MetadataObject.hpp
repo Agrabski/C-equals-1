@@ -5,7 +5,7 @@ namespace cMCompiler::dataStructures
 	struct MetadataObject
 	{
 	public:
-		Flags flags_;
+		Flags flags_ = noneValue;
 		void appendFlag(Flags flag) noexcept
 		{
 			flags_ = flags_ | flag;
