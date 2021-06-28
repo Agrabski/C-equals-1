@@ -50,11 +50,11 @@ namespace cMCompiler::language
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(dataStructures::PackageDatabase*);
 
 	template<typename T>
-	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(std::vector<gsl::not_null<T*>>const& c)
+	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(std::vector<T>const& c)
 	{
 		auto result = std::vector<std::unique_ptr<dataStructures::execution::IRuntimeValue>>();
-		for (auto const e : c)
-			result.push_back(getValueFor(e));
+		for (auto const& e : c)
+			result.push_back(getValueFor(e.get()));
 
 		// todo: fix nullptr type
 		return convertToCollection(std::move(result), dataStructures::TypeReference{ getPackageDescriptor(), 0 });

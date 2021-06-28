@@ -8,7 +8,7 @@ namespace cMCompiler::compiler::llvmIntegration
 {
 	std::unique_ptr<cMCompiler::dataStructures::CompilationResult> compileToLLVMIr(
 		dataStructures::PackageDatabase& compilerInterface,
-		std::vector<gsl::not_null<dataStructures::PackageDatabase*>>const& packages
+		std::vector<std::unique_ptr<dataStructures::PackageDatabase>>const& packages
 	);
 
 	void compileToBinary(

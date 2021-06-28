@@ -25,7 +25,7 @@ using namespace cMCompiler::compiler::llvmIntegration;
 
 std::unique_ptr<CompilationResult> cMCompiler::compiler::llvmIntegration::compileToLLVMIr(
 	dataStructures::PackageDatabase& compilerInterface,
-	std::vector<gsl::not_null<dataStructures::PackageDatabase*>> const& packages)
+	std::vector<std::unique_ptr<dataStructures::PackageDatabase>> const& packages)
 {
 	auto entryPoint = getCompilerInterfaceEntryPoint(compilerInterface);
 	auto result = std::make_unique<CompilationResult>();

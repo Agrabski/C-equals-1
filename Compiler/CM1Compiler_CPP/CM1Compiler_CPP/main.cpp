@@ -16,19 +16,22 @@ int main(int argc, char* argv[])
 	auto context = cMCompiler::getCompilationContext(argc, argv);
 	if (context)
 	{
-		std::vector<gsl::not_null<cMCompiler::dataStructures::PackageDatabase*>> dependencies;
-		auto package = cMCompiler::compiler::buildByManifest(context->manifestFile, dependencies);
+		using namespace cMCompiler::dataStructures;
+		using namespace std::filesystem;
+		auto packages = cMCompiler::compiler::buildByManifest(context->manifestFile);
 		auto emiter = cMCompiler::compiler::IntermidiateRepresentationEmmiter();
 		
 		std::filesystem::create_directory("out");
-		auto outputFile = std::ofstream("out\\package.json");
-		emiter.emmit(outputFile, *package, dependencies);
-		outputFile.close();
+		for (auto& package : packages)
+		{
+			auto outputFile = std::ofstream(path("out") / (package->name() + ".json"));
+			emiter.emmit(outputFile, *package);
+			outputFile.close();
+		}
 
 		auto compiler = cMCompiler::compiler::loadCompilerInterfacePackage(*context);
-		dependencies.push_back(package.get());
 
-		auto llvmIr = cMCompiler::compiler::llvmIntegration::compileToLLVMIr(*compiler, dependencies);
+		auto llvmIr = cMCompiler::compiler::llvmIntegration::compileToLLVMIr(*compiler.front(), packages);
 
 		auto tripple = llvm::sys::getDefaultTargetTriple();
 		cMCompiler::compiler::llvmIntegration::compileToBinary(llvmIr.get(), "out", tripple);

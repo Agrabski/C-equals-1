@@ -1,19 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LocalDebuggerCommandArguments>--input "D:\Programming\C-equals-1\standard library\manifest.mn"</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>--input "standard library"</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerWorkingDirectory>D:\Programming\C-equals-1</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LocalDebuggerCommandArguments>--input "D:\Programming\C-equals-1\standard library\manifest.mn"</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>--input "standard library"</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerWorkingDirectory>D:\Programming\C-equals-1</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LocalDebuggerCommandArguments>--input "D:\Programming\C-equals-1\standard library\manifest.mn"</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>--input "standard library"</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerWorkingDirectory>D:\Programming\C-equals-1</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LocalDebuggerCommandArguments>--input "D:\Programming\C-equals-1\standard library\manifest.mn"</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>--input "standard library"</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerWorkingDirectory>D:\Programming\C-equals-1</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
 </Project>

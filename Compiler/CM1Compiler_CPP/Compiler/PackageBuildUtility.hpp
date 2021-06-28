@@ -45,8 +45,6 @@ namespace cMCompiler::compiler
 		runThroughFiles(dbBuilder, files);
 	}
 
-	std::unique_ptr<dataStructures::PackageDatabase> buildByManifest(
-		std::filesystem::path const& pathToManifest,
-		std::vector<gsl::not_null<dataStructures::PackageDatabase*>>& dependencies);
+	std::vector<std::unique_ptr<dataStructures::PackageDatabase>> buildByManifest(std::filesystem::path const& pathToManifest);
 
 }

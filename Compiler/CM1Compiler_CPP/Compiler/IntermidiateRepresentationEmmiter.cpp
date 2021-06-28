@@ -11,13 +11,10 @@ using namespace cMCompiler::compiler;
 using namespace cMCompiler::dataStructures;
 using gsl::not_null;
 
-IntermidiateRepresentationEmmiter::json IntermidiateRepresentationEmmiter::emmitPackageMetadata(
-	PackageDatabase const& package,
-	std::vector<gsl::not_null<PackageDatabase*>> dependencies
-)
+IntermidiateRepresentationEmmiter::json IntermidiateRepresentationEmmiter::emmitPackageMetadata(PackageDatabase const& package)
 {
 	auto dependencyNames = std::vector<std::string>();
-	for (auto d : dependencies)
+	for (auto d : package.dependencies())
 		dependencyNames.push_back(d->name());
 	return {
 		{
@@ -33,8 +30,7 @@ IntermidiateRepresentationEmmiter::json IntermidiateRepresentationEmmiter::emmit
 
 void cMCompiler::compiler::IntermidiateRepresentationEmmiter::emmit(
 	std::ostream& stream,
-	dataStructures::PackageDatabase& package,
-	std::vector<gsl::not_null<dataStructures::PackageDatabase*>> dependencies)
+	dataStructures::PackageDatabase& package)
 {
 	auto ng = serialization::NameGetter();
 	auto manager = serialization::SerializationManager();
@@ -43,7 +39,7 @@ void cMCompiler::compiler::IntermidiateRepresentationEmmiter::emmit(
 
 	dataStructures::execution::json result
 	{
-		{"header", emmitPackageMetadata(package, dependencies)},
+		{"header", emmitPackageMetadata(package)},
 		{"root_namespace", package.rootNamespace()->emmit(ng, manager)}
 	};
 

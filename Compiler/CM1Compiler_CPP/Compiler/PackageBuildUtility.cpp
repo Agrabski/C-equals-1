@@ -4,14 +4,14 @@
 
 using namespace cMCompiler;
 
-std::unique_ptr<dataStructures::PackageDatabase> cMCompiler::compiler::buildByManifest(
-	std::filesystem::path const& pathToManifest,
-	std::vector<gsl::not_null<dataStructures::PackageDatabase*>>& dependencies)
+std::vector<std::unique_ptr<dataStructures::PackageDatabase>> cMCompiler::compiler::buildByManifest(std::filesystem::path const& pathToManifest)
 {
 	std::vector<cMCompiler::fileSystem::File> files;
 	std::vector<std::string> dependencyNames;
 	auto result = getPackageDefinitionAndFileSet(pathToManifest, files, dependencyNames);
-	dependencies = { cMCompiler::language::getDefaultPackage() };
+	auto dependencies = { cMCompiler::language::getDefaultPackage() };
 	buildAndFillPackage(*result, dependencies, files);
-	return result;
+	auto r = std::vector<std::unique_ptr<dataStructures::PackageDatabase>>();
+	r.push_back(std::move(result));
+	return r;
 }

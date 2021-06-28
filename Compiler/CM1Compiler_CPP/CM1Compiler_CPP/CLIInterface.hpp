@@ -27,7 +27,7 @@ namespace cMCompiler
 
 		auto result = dataStructures::CompilationContext();
 		result.executablePath = std::filesystem::path(argv[0]).parent_path();
-		result.manifestFile = vm["input"].as<std::string>();
+		result.manifestFile = std::filesystem::path(vm["input"].as<std::string>()) / "manifest.mn";
 		if (vm.contains("compiler-interface"))
 			result.compilerInterfaceManifestFile = vm["compiler-interface"].as<std::string>();
 

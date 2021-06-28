@@ -4,13 +4,12 @@
 
 using namespace cMCompiler;
 
-std::unique_ptr<dataStructures::PackageDatabase> cMCompiler::compiler::loadCompilerInterfacePackage(
+std::vector<std::unique_ptr<dataStructures::PackageDatabase>> cMCompiler::compiler::loadCompilerInterfacePackage(
 	dataStructures::CompilationContext const& context)
 {
-	std::vector<gsl::not_null<dataStructures::PackageDatabase*>> _;
 	if (context.compilerInterfaceManifestFile)
-		return buildByManifest(*context.compilerInterfaceManifestFile, _);
-	return buildByManifest(context.executablePath / "compiler-interface/compilerInterface.mn", _);
+		return buildByManifest(*context.compilerInterfaceManifestFile);
+	return buildByManifest(context.executablePath / "compiler-interface/compilerInterface.mn");
 }
 
 gsl::not_null<dataStructures::Function*> cMCompiler::compiler::getCompilerInterfaceEntryPoint(dataStructures::PackageDatabase& interfacePackage)

@@ -6,6 +6,7 @@ namespace cMCompiler::dataStructures
 	class PackageDatabase
 	{
 		Namespace rootNamespace_;
+		std::vector<not_null<PackageDatabase*>> dependencies_;
 		std::string name_;
 		void getTypes(gsl::not_null<Namespace*> ns, std::vector<gsl::not_null<Type*>>& result) const
 		{
@@ -54,6 +55,7 @@ namespace cMCompiler::dataStructures
 		Namespace* rootNamespace() noexcept { return &rootNamespace_; }
 		PackageDatabase(std::string name) : name_(std::move(name)), rootNamespace_("",nullptr) {}
 		PackageDatabase(PackageDatabase&&) = default;
+		std::vector<not_null<PackageDatabase*>>const& dependencies() const noexcept { return dependencies_; }
 		std::vector<gsl::not_null<Type*>> getAllTypes()
 		{
 			auto result = std::vector<gsl::not_null<Type*>>();
