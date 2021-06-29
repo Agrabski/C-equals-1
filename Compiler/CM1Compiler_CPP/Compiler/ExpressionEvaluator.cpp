@@ -7,12 +7,29 @@
 #include "../DataStructures/execution/RuntimeFieldDescriptor.hpp"
 #include "../DataStructures/execution/RuntimeFunctionDescriptor.hpp"
 #include "../DataStructures/execution/RuntimeVariableDescriptor.hpp"
+#include "../DataStructures/execution/RuntimeTypeDescriptor.hpp"
 using namespace cMCompiler;
 using namespace cMCompiler::dataStructures::execution;
 
 std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::ExpressionEvaluator::evaluateLiteral(dataStructures::execution::IRuntimeValue& expression)
 {
 	return (*language::dereferenceAs<ObjectValue>(&expression)->getMemberValue("_value")->value())->copy();
+}
+
+std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::ExpressionEvaluator::evaluateArrayLiteral(dataStructures::execution::IRuntimeValue& expression)
+{
+	auto value = language::dereferenceAs<ObjectValue>(&expression)->getMemberValue("_value");
+	auto values = language::dereferenceAs<ArrayValue>(value.get());
+
+	auto type = language::dereferenceAs<RuntimeTypeDescriptor>(language::dereferenceAs<ObjectValue>(&expression)->getMemberValue("_type").get());
+
+
+	std::vector<language::runtime_value> result;
+
+	for (auto& exp : *values)
+		result.push_back(evaluate(*exp));
+
+	return language::convertCollection(std::move(result), type->value());
 }
 
 std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::ExpressionEvaluator::evaluateBinaryOperator(dataStructures::execution::IRuntimeValue& expression)
@@ -74,6 +91,8 @@ std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::
 		return evaluateBinaryOperator(*e);
 	if (isOfType(e, language::getAdressofExpressionDescriptor()))
 		return evaluateGetAddress(*e);
+	if (isOfType(e, language::getArrayLiteralExpression()))
+		return evaluateArrayLiteral(*e);
 
 	std::terminate();
 }

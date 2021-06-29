@@ -15,7 +15,7 @@
 #include "CreateGetter.hpp"
 #include "RuntimeTypesConversionUtility.hpp"
 #include "CompileTimeFunctions/ReadAllFile.hpp"
-#include "LLVMBindings.hpp"
+#include "LLVMBindings/LLVMBindings.hpp"
 using namespace cMCompiler::dataStructures::execution;
 
 using namespace std::string_literals;

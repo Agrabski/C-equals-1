@@ -24,6 +24,17 @@ cMCompiler::language::runtime_value cMCompiler::language::buildValueLiteralExpre
 	return std::move(result);
 }
 
+cMCompiler::language::runtime_value cMCompiler::language::buildArrayLiteralExpression(runtime_value&& expressions, dataStructures::TypeReference valueType, runtime_value&& pointerToSource)
+{
+
+	auto [result, object] = heapAllocateObject(getArrayLiteralExpression());
+	object.setValue("_value", std::move(expressions));
+	object.setValue("_pointerToSource", std::move(pointerToSource));
+	object.setValue("_type", getValueFor({ getCollectionTypeFor(valueType), 0 }));
+
+	return std::move(result);
+}
+
 std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler::language::buildFunctionCallStatement(
 	runtime_value&& expression,
 	runtime_value&& pointerToSource)
@@ -69,6 +80,8 @@ cMCompiler::language::runtime_value cMCompiler::language::buildMethodCallExpress
 		methods.erase(remove);
 	auto compile = resolveOverload(methods, argumentExpressions, true, false);
 	auto run = resolveOverload(methods, argumentExpressions, false, true);
+
+	assert(compile != nullptr || run != nullptr);
 
 	auto result = buildFunctionCallExpression(
 		compile != nullptr ? getValueFor(compile) : nullptr,

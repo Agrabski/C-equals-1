@@ -62,6 +62,8 @@ std::string cMCompiler::dataStructures::execution::ArrayValue::toString() const
 
 std::unique_ptr<IRuntimeValue> cMCompiler::dataStructures::execution::ArrayValue::copy() const
 {
-	std::terminate();
-	return std::unique_ptr<IRuntimeValue>();
+	auto result = std::make_unique<ArrayValue>(type(), elementType_);
+	for (auto& e : allocated_)
+		result->push(e->copy());
+	return result;
 }

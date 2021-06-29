@@ -54,6 +54,26 @@ std::vector<cMCompiler::language::runtime_value> cMCompiler::compiler::Expressio
 	return result;
 }
 
+cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::buildExpression(gsl::not_null<CMinusEqualsMinus1Revision0Parser::ArrayLiteralContext*> ctx, language::runtime_value&& referenceToParent)
+{
+	std::vector< cMCompiler::language::runtime_value> expressions;
+
+	for (auto expr : ctx->expression())
+		expressions.push_back(buildExpression(expr, nullptr));
+
+	auto result = language::buildArrayLiteralExpression(
+		language::convertCollection(std::move(expressions), { language::getExpressionDescriptor(),1 }),
+		getType(
+			nameResolver_,
+			context_,
+			ctx->typeReference(),
+			filepath_),
+		language::buildSourcePointer(filepath_.string(), *ctx)
+	);
+	return result;
+}
+
+
 cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::buildExpression(gsl::not_null<CMinusEqualsMinus1Revision0Parser::ExpressionContext*> ctx, language::runtime_value&& referenceToParent)
 {
 	if (ctx->Period() != nullptr)
@@ -66,6 +86,8 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 		return buildExpression(ctx->newExpression(), std::move(referenceToParent));
 	if (hasBinaryOperator(ctx))
 		return buildBinaryOperatorExpression(ctx, std::move(referenceToParent));
+	if (ctx->arrayLiteral())
+		return buildExpression(ctx->arrayLiteral(), std::move(referenceToParent));
 	if (ctx->identifier() != nullptr)
 	{
 		auto variableName = ctx->identifier()->getText();
@@ -187,7 +209,7 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 	if (special)
 	{
 		language::setParent(special->get(), std::move(referenceToParent));
-		return std::move(*special);
+		return std::move(*special);	
 	}
 	auto arguments = buildParameters(ctx);
 	// todo: generics
@@ -244,6 +266,8 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 			language::buildSourcePointer(filepath_.string(), *ctx)
 		);
 	}
+	assert((compileTime != nullptr) || (runtime != nullptr ));
+
 	return language::buildFunctionCallExpression(
 		language::getValueFor(compileTime),
 		language::getValueFor(runtime),

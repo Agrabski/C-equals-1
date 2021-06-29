@@ -10,6 +10,10 @@ namespace cMCompiler::language
 
 
 	runtime_value buildValueLiteralExpression(runtime_value&& value, runtime_value&& pointerToSource);
+	runtime_value buildArrayLiteralExpression(
+		runtime_value&& expressions,
+		dataStructures::TypeReference valueType,
+		runtime_value&& pointerToSource);
 	runtime_value buildMethodCallExpression(
 		runtime_value&& expression,
 		dataStructures::TypeReference type,

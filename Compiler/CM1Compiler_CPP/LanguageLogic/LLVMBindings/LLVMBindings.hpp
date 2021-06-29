@@ -2,9 +2,9 @@
 #include <gsl.h>
 #include <llvm/IR/Module.h>
 #include <llvm/IR/LLVMContext.h>
-#include "../DataStructures/Namespace.hpp"
-#include "../DataStructures/CompilationResult.hpp"
-#include "runtime_values.hpp"
+#include "../../DataStructures/Namespace.hpp"
+#include "../../DataStructures/CompilationResult.hpp"
+#include "../runtime_values.hpp"
 
 
 namespace cMCompiler::language
@@ -17,5 +17,6 @@ namespace cMCompiler::language
 	runtime_value getValueFor(dataStructures::CompilationResult*);
 
 	not_null<dataStructures::Type*> getLLVMModuleDescriptor();
+	not_null<dataStructures::Type*> getCompilationResult();
 	not_null<dataStructures::Type*> getLLVMContextDescriptor();
 }

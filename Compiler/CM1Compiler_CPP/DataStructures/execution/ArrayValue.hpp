@@ -44,6 +44,8 @@ namespace cMCompiler::dataStructures::execution
 			return allocated_.end();
 		}
 
+		std::size_t size() const noexcept { return allocated_.size(); }
+
 		// Inherited via IRuntimeValue
 		std::string typeName() const final
 		{

@@ -1,23 +1,19 @@
 #include "LLVMBindings.hpp"
-#include "TypeInstantiationUtility.hpp"
-#include "../DataStructures/execution/GenericRuntimeWrapper.hpp"
-#include "../DataStructures/execution/StringValue.hpp"
-#include "../DataStructures/CompilationResult.hpp"
-#include "CreateGetter.hpp"
-#include "BuiltInPackageBuildUtility.hpp"
-#include "RuntimeTypesConversionUtility.hpp"
+#include"Module.hpp"
+#include "../CreateGetter.hpp"
+#include "../BuiltInPackageBuildUtility.hpp"
+#include "../RuntimeTypesConversionUtility.hpp"
+#include "../TypeInstantiationUtility.hpp"
+#include "../../DataStructures/execution/GenericRuntimeWrapper.hpp"
+#include "../../DataStructures/execution/StringValue.hpp"
+#include "../../DataStructures/CompilationResult.hpp"
+#include "Function.hpp"
+#include "Type.hpp"
+#include "Types.hpp"
 
 using namespace cMCompiler::dataStructures;
 using namespace cMCompiler::dataStructures::execution;
 using namespace cMCompiler::language;
-
-not_null<Type*> buildLLVMModuleDescriptor(gsl::not_null<Namespace*> backendNs)
-{
-	auto result = backendNs->append<Type>("llvmModule");
-	result->append<Function>("appendFunction");
-
-	return result;
-}
 
 not_null<Type*> buildCompilationResultDescriptor(
 	gsl::not_null<Namespace*> backendNs,
@@ -51,9 +47,14 @@ void cMCompiler::language::buildLLVMBindings(gsl::not_null<dataStructures::Names
 {
 	not_null backendNs = compilerNs->append<Namespace>("backend");
 
-	auto llvmModule = buildLLVMModuleDescriptor(backendNs);
+	auto type = buildTypeDescriptor(backendNs);
 
+	auto function = buildFunctionDescriptor(backendNs, type);
+
+	auto llvmModule = buildModuleDescriptor(backendNs, function, type);
+	
 	buildCompilationResultDescriptor(backendNs, llvmModule);
+	buildTypeFunctions(backendNs, type, getCompilationResult());
 }
 
 runtime_value cMCompiler::language::getValueFor(llvm::Module* value)
@@ -63,7 +64,7 @@ runtime_value cMCompiler::language::getValueFor(llvm::Module* value)
 
 runtime_value cMCompiler::language::getValueFor(dataStructures::CompilationResult*value)
 {
-	return std::make_unique<GenericRuntimeWrapper<dataStructures::CompilationResult>>(value, TypeReference{ getLLVMModuleDescriptor(), 0 });
+	return std::make_unique<GenericRuntimeWrapper<dataStructures::CompilationResult>>(value, TypeReference{ getCompilationResult(), 0 });
 }
 
 not_null<Type*> cMCompiler::language::getLLVMModuleDescriptor()
@@ -72,4 +73,9 @@ not_null<Type*> cMCompiler::language::getLLVMModuleDescriptor()
 		->get<Namespace>("compiler")
 		->get<Namespace>("backend")
 		->get<Type>("llvmModule");
+}
+
+not_null<Type*> cMCompiler::language::getCompilationResult()
+{
+	return getDefaultPackage()->rootNamespace()->get<Namespace>("compiler")->get<Namespace>("backend")->get<Type>("compilationResult");
 }

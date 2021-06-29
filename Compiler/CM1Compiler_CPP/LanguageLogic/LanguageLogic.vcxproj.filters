@@ -22,6 +22,9 @@
     <Filter Include="Header Files\CompileTimeInfrastrucutre">
       <UniqueIdentifier>{a8469a1d-c623-4521-8f36-a7b32d65c182}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\LLVMBindings">
+      <UniqueIdentifier>{076e66b5-58cc-491f-8fd0-591acf6daccd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NameResolver.hpp">
@@ -120,8 +123,20 @@
     <ClInclude Include="CompileTimeFunctions\ReadAllFile.hpp">
       <Filter>Header Files\CompileTimeFunctions</Filter>
     </ClInclude>
-    <ClInclude Include="LLVMBindings.hpp">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="LLVMBindings\LLVMBindings.hpp">
+      <Filter>Header Files\LLVMBindings</Filter>
+    </ClInclude>
+    <ClInclude Include="LLVMBindings\Module.hpp">
+      <Filter>Header Files\LLVMBindings</Filter>
+    </ClInclude>
+    <ClInclude Include="LLVMBindings\Function.hpp">
+      <Filter>Header Files\LLVMBindings</Filter>
+    </ClInclude>
+    <ClInclude Include="LLVMBindings\Type.hpp">
+      <Filter>Header Files\LLVMBindings</Filter>
+    </ClInclude>
+    <ClInclude Include="LLVMBindings\Types.hpp">
+      <Filter>Header Files\LLVMBindings</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -209,7 +224,19 @@
     <ClCompile Include="CompileTimeFunctions\ReadAllFile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LLVMBindings.cpp">
+    <ClCompile Include="LLVMBindings\LLVMBindings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LLVMBindings\Module.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LLVMBindings\Function.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LLVMBindings\Type.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LLVMBindings\Types.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

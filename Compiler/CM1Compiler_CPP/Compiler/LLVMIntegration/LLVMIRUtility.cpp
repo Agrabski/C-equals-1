@@ -16,7 +16,7 @@
 #include "../compilerInterfaceUtility.hpp"
 #include "../FunctionExecutionUtility.hpp"
 #include "../../LanguageLogic/MetatypeUility.hpp"
-#include "../../LanguageLogic/LLVMBindings.hpp"
+#include "../../LanguageLogic/LLVMBindings/LLVMBindings.hpp"
 #include "../../DataStructures/execution/StringValue.hpp"
 
 using namespace cMCompiler::compiler;
@@ -25,11 +25,11 @@ using namespace cMCompiler::compiler::llvmIntegration;
 
 std::unique_ptr<CompilationResult> cMCompiler::compiler::llvmIntegration::compileToLLVMIr(
 	dataStructures::PackageDatabase& compilerInterface,
-	std::vector<std::unique_ptr<dataStructures::PackageDatabase>> const& packages)
+	std::vector<std::unique_ptr<dataStructures::PackageDatabase>> const& packages,
+	llvm::LLVMContext& context)
 {
 	auto entryPoint = getCompilerInterfaceEntryPoint(compilerInterface);
 	auto result = std::make_unique<CompilationResult>();
-	auto context = llvm::LLVMContext{};
 
 	std::vector<language::runtime_value> args;
 	args.push_back(language::getValueFor(packages));
@@ -62,7 +62,6 @@ void cMCompiler::compiler::llvmIntegration::compileToBinary(
 		module->setDataLayout(machine->createDataLayout());
 		module->setTargetTriple(triplet);
 
-
 		auto pass = llvm::legacy::PassManager();
 
 		std::error_code ec;
@@ -75,7 +74,7 @@ void cMCompiler::compiler::llvmIntegration::compileToBinary(
 			std::cerr << "TargetMachine can't emit a file of this type";
 			std::terminate();
 		}
-
+		module->dump();
 		pass.run(*module);
 		dest.flush();
 	}

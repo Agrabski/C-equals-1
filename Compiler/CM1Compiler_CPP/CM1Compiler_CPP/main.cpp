@@ -31,10 +31,14 @@ int main(int argc, char* argv[])
 
 		auto compiler = cMCompiler::compiler::loadCompilerInterfacePackage(*context);
 
-		auto llvmIr = cMCompiler::compiler::llvmIntegration::compileToLLVMIr(*compiler.front(), packages);
+		auto context = llvm::LLVMContext();
+
+		auto llvmIr = cMCompiler::compiler::llvmIntegration::compileToLLVMIr(*compiler.front(), packages, context);
 
 		auto tripple = llvm::sys::getDefaultTargetTriple();
 		cMCompiler::compiler::llvmIntegration::compileToBinary(llvmIr.get(), "out", tripple);
+
+		llvmIr.release();
 
 	}
 	return 0;

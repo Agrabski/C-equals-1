@@ -117,6 +117,7 @@ qualifiedIdentifier: identifier (DoubleColon identifier)*;
 
 expression
     : STRING
+    | arrayLiteral
     | ParamOpen expression ParamClose
     | expression Period identifier
     | expression Period functionCall
@@ -129,6 +130,8 @@ expression
     | LogicalUnaryOperator expression
     | expression indexExpression
     ;
+
+arrayLiteral: typeReference '[' ((expression ',')* expression)? ']';
 
 indexExpression: '[' expression+']';
 
@@ -152,8 +155,8 @@ ParamClose: ')';
 ATTROBITEOPEN: '[';
 ATTROBITECLOSE: ']';
 
-arithmeticBinaryOperator:
-	| Plus
+arithmeticBinaryOperator
+    : Plus
 	| Minus
 	| Star
 	| PlusEquals
