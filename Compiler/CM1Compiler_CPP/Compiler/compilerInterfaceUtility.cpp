@@ -8,8 +8,8 @@ std::vector<std::unique_ptr<dataStructures::PackageDatabase>> cMCompiler::compil
 	dataStructures::CompilationContext const& context)
 {
 	if (context.compilerInterfaceManifestFile)
-		return buildByManifest(*context.compilerInterfaceManifestFile);
-	return buildByManifest(context.executablePath / "compiler-interface/compilerInterface.mn");
+		return buildByManifest({ *context.compilerInterfaceManifestFile });
+	return buildByManifest({ context.executablePath / "compiler-interface/manifest.mn" });
 }
 
 gsl::not_null<dataStructures::Function*> cMCompiler::compiler::getCompilerInterfaceEntryPoint(dataStructures::PackageDatabase& interfacePackage)

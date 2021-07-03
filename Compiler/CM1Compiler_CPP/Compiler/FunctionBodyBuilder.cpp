@@ -311,7 +311,7 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitIfStatement(CMinus
 	auto expression = getBuilder().buildExpression(ctx->expression(), nullptr);
 	auto conditional = language::buildIf(
 		std::move(expression),
-		language::buildPointerToSource(filePath_.filename().string(), ctx->compoundStatement(0)->OpenBracket()->getSymbol()->getLine())
+		language::buildSourcePointer(filePath_.string(), *ctx)
 	);
 	enterScope(conditional);
 	instructionAppenders.push_back([&](auto&& e)

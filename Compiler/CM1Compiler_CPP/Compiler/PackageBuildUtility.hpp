@@ -33,18 +33,27 @@ namespace cMCompiler::compiler
 	void buildAndFillPackage
 	(
 		dataStructures::PackageDatabase& package,
-		std::vector<gsl::not_null<dataStructures::PackageDatabase*>> const& dependencies,
 		std::vector<FileType> const& files
 	)
 	{
 
-		cMCompiler::language::NameResolver nameResolver(dependencies);
+		cMCompiler::language::NameResolver nameResolver(package.dependencies());
 		cMCompiler::compiler::CompilationUnitDataBaseBuilder dbBuilder(package, nameResolver);
 		runThroughFiles(dbBuilder, files);
 		dbBuilder.finishAttributes();
 		runThroughFiles(dbBuilder, files);
 	}
 
-	std::vector<std::unique_ptr<dataStructures::PackageDatabase>> buildByManifest(std::filesystem::path const& pathToManifest);
+	std::vector<std::unique_ptr<dataStructures::PackageDatabase>> buildByManifest(std::vector<std::filesystem::path> const& pathToManifest);
 
+	void supplyDependencies(
+		gsl::not_null<dataStructures::PackageDatabase*>package,
+		std::vector<std::unique_ptr<dataStructures::PackageDatabase>>& packages,
+		std::map<dataStructures::PackageDatabase*, std::vector<std::string>>const& depNames);
+
+	void supplyDependencies(
+		std::vector<std::unique_ptr<dataStructures::PackageDatabase>>& packages,
+		std::map<dataStructures::PackageDatabase*, std::vector<std::string>>const& depNames);
+
+	dataStructures::PackageDatabase* getGlobalPackage(std::string const& name);
 }

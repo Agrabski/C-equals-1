@@ -81,6 +81,8 @@ cMCompiler::language::runtime_value cMCompiler::language::buildMethodCallExpress
 	auto compile = resolveOverload(methods, argumentExpressions, true, false);
 	auto run = resolveOverload(methods, argumentExpressions, false, true);
 
+	if (compile == nullptr && run == nullptr)
+		std::cerr << "Method " << methodName << " does not exist on type " << type.type->qualifiedName() << std::endl;
 	assert(compile != nullptr || run != nullptr);
 
 	auto result = buildFunctionCallExpression(

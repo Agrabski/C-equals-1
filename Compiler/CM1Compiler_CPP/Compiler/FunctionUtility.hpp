@@ -9,6 +9,7 @@
 #include "../DataStructures/Function.hpp"
 #include "../DataStructures/Accessibility.hpp"
 #include "../LanguageLogic/NameResolver.hpp"
+#include "../LanguageLogic/IRUtility.hpp"
 
 namespace cMCompiler::compiler
 {

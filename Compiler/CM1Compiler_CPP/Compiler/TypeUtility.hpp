@@ -19,6 +19,18 @@ namespace cMCompiler::compiler
 		gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*> ctx,
 		std::filesystem::path const& file);
 
+
+	void confirmType(language::NameResolver& resolver,
+		language::NameResolutionContext& context,
+		dataStructures::Type* type,
+		gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*> ctx,
+		std::filesystem::path file);
+	void finalizeType(language::NameResolver& resolver,
+		language::NameResolutionContext& context,
+		dataStructures::Type* type,
+		gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*> ctx,
+		std::filesystem::path const& file);
+
 	dataStructures::TypeReference getType(
 		language::NameResolver& resolver,
 		language::NameResolutionContext& context,

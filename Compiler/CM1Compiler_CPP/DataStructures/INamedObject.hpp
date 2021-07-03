@@ -24,6 +24,7 @@ namespace cMCompiler::dataStructures
 		void finalize() noexcept { state_ = ObjectState::Finalized; }
 		virtual ~INamedObject() = default;
 		std::string const& name() const noexcept { return name_; }
+		std::string & name() noexcept { return name_; }
 		INamedObject* parent() const noexcept { return parent_; }
 		QualifiedName qualifiedName() const;
 		virtual std::vector<INamedObject*> children() = 0;

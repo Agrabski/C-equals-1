@@ -154,6 +154,7 @@ void cMCompiler::compiler::confirmFunction(
 	if (freeDeclaration == functions.end())
 		std::terminate(); //todo: report error
 	not_null function = *freeDeclaration;
+	function->setSourceLocation(language::buildSourcePointer(file.string(), *ctx));
 	confirmFunction(resolver, context, function, ctx, file);
 }
 

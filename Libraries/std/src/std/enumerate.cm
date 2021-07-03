@@ -65,6 +65,6 @@ namespace std
 
 	public fn enumerate(fr: usize, to: usize) -> atHocCollection<integerIterator, integerIterator>
 	{
-		return atHocCollection<usize, usize>(integerIterator(fr, 1), integerIterator(to, 1));
+		return atHocCollection<integerIterator, integerIterator>(integerIterator(fr, 1), integerIterator(to, 1));
 	}
 }

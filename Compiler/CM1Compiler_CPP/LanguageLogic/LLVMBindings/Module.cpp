@@ -9,6 +9,7 @@
 #include "../../DataStructures/execution/StringValue.hpp"
 #include "../../DataStructures/execution/RuntimeTypeDescriptor.hpp"
 #include "Function.hpp"
+#include "../LiteralUtility.hpp"
 
 using namespace cMCompiler::dataStructures;
 using namespace cMCompiler::dataStructures::execution;
@@ -45,9 +46,6 @@ void appendFunction(
 				llvm::Function::ExternalLinkage,
 				llvm::Twine(name),
 				*self);
-			auto block = llvm::BasicBlock::Create(self->getContext(), "entry", fu);
-			auto builder = llvm::IRBuilder(block);
-			builder.CreateRet(llvm::ConstantInt::get(returnType, 5));
 			return std::make_unique<GenericRuntimeWrapper<llvm::Function>>(fu, TypeReference{ getLLVMFunctionDescriptor(), 0 });
 		})
 		->setReturnType({ llvmFunction, 0 });
@@ -57,6 +55,18 @@ void appendFunction(
 		f->appendVariable("returnType", { llvmType, 0 });
 }
 
+void appendName(
+	not_null<Type*> mod)
+{
+	auto result = mod->append<Function>("name");
+	result->setReturnType({ getString(), 0 });
+	createCustomFunction(result, mod, [](auto&& params, auto)
+		{
+			auto self = dereferenceAs<GenericRuntimeWrapper<llvm::Module>>(params["self"].get())->value();
+
+			return buildStringValue(self->getModuleIdentifier());
+		});
+}
 
 gsl::not_null<Type*> cMCompiler::language::buildModuleDescriptor(
 	gsl::not_null<Namespace*> backendns,

@@ -47,7 +47,7 @@ gsl::not_null<Type*> buildTypeDescriptor(gsl::not_null<Namespace*> compilerNs)
 	auto type = compilerNs->append<Type>("typeDescriptor");
 	type->setTypeClassifier(TypeClassifier::Class);
 	type->setAccessibility(Accessibility::Public);
-	type->appendField("name", {cMCompiler::language::getString(), 0})->setAccessibility(Accessibility::Public);
+	type->appendField("name", { cMCompiler::language::getString(), 0 })->setAccessibility(Accessibility::Public);
 	type->appendField("qualifiedName", { cMCompiler::language::getString(), 0 })->setAccessibility(Accessibility::Public);
 	return type;
 }
@@ -171,7 +171,8 @@ void buildCompilerLibrary(gsl::not_null<Namespace*> rootNamespace)
 			if (llvm)
 				return buildStringValue(*llvm);
 			return buildStringValue();
-		})->setAccessibility(Accessibility::Public);
+		})
+		->setAccessibility(Accessibility::Public);
 		auto setter = createCustomFunction(function->append<Function>("overridenLLVMIR")->setReturnType({ getString(), 0 }), function,
 			[](value_map&& a, generic_parameters)->runtime_value
 			{
@@ -183,6 +184,11 @@ void buildCompilerLibrary(gsl::not_null<Namespace*> rootNamespace)
 			});
 		setter->setAccessibility(Accessibility::Public);
 		setter->appendVariable("ir", { getString(), 0 });
+		createCustomFunction(function->append<Function>("sourceLocation")->setReturnType({ getPointerToSource(), 0 }), function,
+			[](auto&& a, auto)
+			{
+				return dereferenceAs<RuntimeFunctionDescriptor>(a["self"].get())->value()->sourcePointer();
+			});
 
 }
 

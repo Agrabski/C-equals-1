@@ -46,9 +46,30 @@ void cMCompiler::compiler::confirmType(
 	gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*> ctx,
 	std::filesystem::path file)
 {
-	assert(ctx != nullptr);
 	auto name = ::name(ctx);
 	auto type = context.namespaceStack_.back()->get<dataStructures::Type>(name);
+	return confirmType(resolver, context, type, ctx, file);
+}
+
+void cMCompiler::compiler::finalizeType(
+	language::NameResolver& resolver,
+	language::NameResolutionContext& context,
+	gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*> ctx,
+	std::filesystem::path const& file)
+{
+	auto name = ::name(ctx);
+	auto type = context.namespaceStack_.back()->get<dataStructures::Type>(name);
+	finalizeType(resolver, context, type, ctx, file);
+}
+
+void cMCompiler::compiler::confirmType(
+	language::NameResolver& resolver, 
+	language::NameResolutionContext& context,
+	dataStructures::Type* type,
+	gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*> ctx,
+	std::filesystem::path file)
+{
+	assert(ctx != nullptr);
 	auto const generic = ctx->genericSpecifier();
 	if (generic == nullptr)
 	{
@@ -93,11 +114,7 @@ void cMCompiler::compiler::confirmType(
 	}
 }
 
-void cMCompiler::compiler::finalizeType(
-	language::NameResolver& resolver,
-	language::NameResolutionContext& context,
-	gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*> ctx,
-	std::filesystem::path const& file)
+void cMCompiler::compiler::finalizeType(language::NameResolver& resolver, language::NameResolutionContext& context, dataStructures::Type* type, gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*> ctx, std::filesystem::path const& file)
 {
 	assert(ctx != nullptr);
 	auto const* const generic = ctx->genericSpecifier();
@@ -106,8 +123,6 @@ void cMCompiler::compiler::finalizeType(
 		int a[3];
 		auto x = &a;
 
-		auto name = ::name(ctx);
-		auto type = context.namespaceStack_.back()->get<dataStructures::Type>(name);
 		assert(type != nullptr);
 
 		auto functions = type->methods();
@@ -152,7 +167,7 @@ cMCompiler::dataStructures::TypeReference cMCompiler::compiler::getType(
 	}
 	else
 		type = resolver.resolve<dataStructures::Type>(name, context);
-	return { type, 0 };
+	return dataStructures::TypeReference{ type, 0 };
 }
 
 

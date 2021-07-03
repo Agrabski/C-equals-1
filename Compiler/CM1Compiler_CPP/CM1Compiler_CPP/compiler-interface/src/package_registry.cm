@@ -1,0 +1,39 @@
+import {compilerEntryPoint packageDescriptor string null} from {cm1mLang}
+import {llvmModule compilationResult} from {cm1mLang::compiler::backend}
+import {functionDescriptor} from {cm1mLang::compiler}
+import {enumerate} from {std::std}
+
+private struct pathPackagePair
+{
+	public path: string;
+	public module: llvmModule;
+	public fn construct(p: string, m:llvmModule)
+	{
+		self.path = p;
+		self.module = m;
+	}
+}
+
+private class packageRegistry
+{
+	private _data: pathPackagePair[];
+	private _compilationResult: compilationResult;
+
+	public fn construct(cr: compilationResult)
+	{
+		self._data = pathPackagePair[];
+		self._compilationResult = cr;
+	}
+
+	public fn getModuleFor(f: functionDescriptor) -> llvmModule
+	{
+		let file = f.sourceLocation();
+
+		for(i in enumerate(0, self._data.length()))
+			if(self._data[i].path == file.filename)
+				return self._data[i].module;
+		let newModule = self._compilationResult.appendModule(file.filename);
+		self._data.push(pathPackagePair(file.filename, newModule));
+		return newModule;
+	}
+}

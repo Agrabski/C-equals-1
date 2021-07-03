@@ -61,6 +61,8 @@ gsl::not_null<Type*> cMCompiler::language::buildReturnDescriptor(gsl::not_null<d
 	impl->appendInterface(baseStatement);
 	impl->appendField("_pointerToSource", { getPointerToSource(), 0 });
 	impl->appendField("_expression", { expression, 1 });
+	impl->appendField("_parent", { getIInstruction(), 1 })->setAccessibility(Accessibility::Private);
+
 	return impl;
 }
 
@@ -75,6 +77,7 @@ gsl::not_null<Type*> cMCompiler::language::buildIfDescriptor(gsl::not_null<Names
 	impl->appendField("_expression", { expression, 1 });
 	impl->appendField("_ifBranch", { getCollectionTypeFor({getIInstruction(),1}), 0 });
 	impl->appendField("_elseBranch", { getCollectionTypeFor({getIInstruction(),1}), 0 });
+	impl->appendField("_parent", { getIInstruction(), 1 })->setAccessibility(Accessibility::Private);
 	return interface;
 }
 

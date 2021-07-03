@@ -1,6 +1,7 @@
 #include "GenericInstantiationUtility.hpp"
 #include "../../ParserAdapter/ParserAdapter.hpp"
 #include "../FunctionUtility.hpp"
+#include "../../LanguageLogic/GenericUtility.hpp"
 #include "../FunctionBodyBuilder.hpp"
 #include "../Preprocessor.hpp"
 #include "../AttributeUtility.hpp"
@@ -39,6 +40,7 @@ not_null<dataStructures::Function*> cMCompiler::compiler::instantiate
 	not_null functionTree = dynamic_cast<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*>(tree.get());
 	not_null f = createFunction(dynamic_cast<Namespace*>(function.parent()), function.name());
 	instantiations.emplace_back(&function, genericParameters, f);
+	f->name() = language::getGenericMangledName(function, genericParameters);
 	auto context = NameResolutionContext::merge(function.context(), c);
 	confirmFunction(resolver, context, f, functionTree, file);
 	finalizeFunction(resolver, context, f, functionTree, file);
@@ -88,16 +90,20 @@ not_null<dataStructures::Type*> cMCompiler::compiler::instantiate
 		context,
 		ast
 	);
+	type->name() = language::getGenericMangledName(genericType, genericParameters);
+
 	instantiations.emplace_back(&genericType, genericParameters, type);
 	confirmType(
 		resolver,
 		context,
+		type,
 		ast,
 		file
 	);
 	finalizeType(
 		resolver,
 		context,
+		type,
 		ast,
 		file
 	);

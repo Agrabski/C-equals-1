@@ -1,9 +1,14 @@
 import {compilerEntryPoint packageDescriptor} from {cm1mLang::compiler}
-import {compilerEntryPoint packageDescriptor string null} from {cm1mLang}
+import {string null} from {cm1mLang}
 import {compilationResult llvmType llvmInt32Type} from {cm1mLang::compiler::backend}
 
 [compilerEntryPoint()]
 public fn entryPoint(packages: packageDescriptor[], result: compilationResult) {
 	let module = result.appendModule("test");
 	let f = module.appendFunction("test_function", llvmType[], string[], llvmInt32Type(result));
+}
+
+private fn compilePackage(package: packageDescriptor, result: compilationResult)
+{
+
 }
