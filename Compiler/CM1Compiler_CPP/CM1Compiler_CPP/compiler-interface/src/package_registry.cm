@@ -1,6 +1,6 @@
 import {compilerEntryPoint packageDescriptor string null} from {cm1mLang}
-import {llvmModule compilationResult} from {cm1mLang::compiler::backend}
-import {functionDescriptor} from {cm1mLang::compiler}
+import {llvmModule compilationResult llvmType} from {cm1mLang::compiler::backend}
+import {functionDescriptor typeDescriptor packageDescriptor} from {cm1mLang::compiler}
 import {enumerate} from {std::std}
 
 private struct pathPackagePair
@@ -14,26 +14,57 @@ private struct pathPackagePair
 	}
 }
 
+private struct typeMapPair
+{
+	public ctype: typeDescriptor;
+	public llvmType: llvmType;
+
+	public fn construct(t: typeDescriptor, lt: llvmType)
+	{
+		self.ctype = t;
+		self.llvmType = lt;
+	}
+}
+
 private class packageRegistry
 {
 	private _data: pathPackagePair[];
+	private _types: typeMapPair[];
 	private _compilationResult: compilationResult;
 
 	public fn construct(cr: compilationResult)
 	{
-		self._data = pathPackagePair[];
+		self._data = <pathPackagePair>[];
+		self._types = <typeMapPair>[];
 		self._compilationResult = cr;
+	}
+
+	private fn getModuleForFile(path: string) -> llvmModule
+	{
+		for(i in enumerate(0, self._data.length()))
+			if(self._data[i].path == path)
+				return self._data[i].module;
+		let newModule = self._compilationResult.appendModule(path);
+		self._data.push(pathPackagePair(path, newModule));
+		return newModule;
+
 	}
 
 	public fn getModuleFor(f: functionDescriptor) -> llvmModule
 	{
 		let file = f.sourceLocation();
+		return self.getModuleForFile(file.filename);
+	}
 
-		for(i in enumerate(0, self._data.length()))
-			if(self._data[i].path == file.filename)
-				return self._data[i].module;
-		let newModule = self._compilationResult.appendModule(file.filename);
-		self._data.push(pathPackagePair(file.filename, newModule));
-		return newModule;
+	public fn getLLVMTypeFor(t: typeDescriptor, package: packageDescriptor) -> llvmType
+	{
+		let file = t.sourceLocation();
+		let module = self.getModuleForFile(file.filename);
+		for(i in enumerate(0, self._types.length()))
+			if(self._types[i].ctype == t)
+				return self._types[i].llvmType;
+		let llvmType = module.appendType(package.name() + t.qualifiedName());
+		self._types.push(typeMapPair(t, llvmType));
+		return llvmType;
 	}
 }

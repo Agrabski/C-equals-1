@@ -1,6 +1,7 @@
 #include "BuiltInPackageBuildUtility.hpp"
 #include <boost/algorithm/string/replace.hpp>
 #include "../DataStructures/execution/RuntimeFunctionDescriptor.hpp"
+#include "../DataStructures/execution/RuntimeTypeDescriptor.hpp"
 #include "LiteralUtility.hpp"
 #include "CompileTimeFunctions/FunctionLibrary.hpp"
 #include "CompileTimeFunctions/Print.hpp"
@@ -16,6 +17,8 @@
 #include "RuntimeTypesConversionUtility.hpp"
 #include "CompileTimeFunctions/ReadAllFile.hpp"
 #include "LLVMBindings/LLVMBindings.hpp"
+#include "../DataStructures/execution/RuntimePackageDescriptor.hpp"
+#include "SpecialFunctionUtility.hpp"
 using namespace cMCompiler::dataStructures::execution;
 
 using namespace std::string_literals;
@@ -48,7 +51,6 @@ gsl::not_null<Type*> buildTypeDescriptor(gsl::not_null<Namespace*> compilerNs)
 	type->setTypeClassifier(TypeClassifier::Class);
 	type->setAccessibility(Accessibility::Public);
 	type->appendField("name", { cMCompiler::language::getString(), 0 })->setAccessibility(Accessibility::Public);
-	type->appendField("qualifiedName", { cMCompiler::language::getString(), 0 })->setAccessibility(Accessibility::Public);
 	return type;
 }
 
@@ -70,9 +72,31 @@ gsl::not_null<Type*> buildNamespaceDescriptor(gsl::not_null<Namespace*> compiler
 
 gsl::not_null<Type*> buildPackageDescriptor(gsl::not_null<Namespace*> compilerNs)
 {
+	using cMCompiler::dataStructures::execution::RuntimePackageDescriptor;
 	auto ns = compilerNs->append<Type>("packageDescriptor");
 	ns->setTypeClassifier(TypeClassifier::Class);
 	ns->setAccessibility(Accessibility::Public);
+
+	createCustomFunction(
+		ns->append<Function>("getAllTypes")->setReturnType({ getCollectionTypeFor({ getTypeDescriptor(), 0 }), 1 }),
+		ns,
+		[](auto&& args, auto)
+		{
+			auto self = dereferenceAs<RuntimePackageDescriptor>(args["self"].get())->value();
+			return convertCollection(self->getAllTypes(), { getTypeDescriptor(), 0 });
+		}
+	);
+
+	createCustomFunction(
+		ns->append<Function>("name")->setReturnType({ getString(), 0 }),
+		ns,
+		[](auto&& args, auto)
+		{
+			auto self = dereferenceAs<RuntimePackageDescriptor>(args["self"].get())->value();
+			return buildStringValue(self->name());
+		}
+	);
+
 	return ns;
 }
 
@@ -87,9 +111,58 @@ gsl::not_null<Type*> buildPointerToSource(gsl::not_null<Namespace*> compilerNs)
 	return t;
 }
 
-void completeBuildingType(gsl::not_null<Type*> t)
+void completeBuildingType(gsl::not_null<Type*> type)
 {
-	t->appendField("parent", { cMCompiler::language::getNamespaceDescriptor(), 1 })->setAccessibility(Accessibility::Public);
+	type->appendField("parent", { cMCompiler::language::getNamespaceDescriptor(), 1 })->setAccessibility(Accessibility::Public);
+	createCustomFunction(
+		type
+		->append<Function>("qualifiedName")
+		->setReturnType({ cMCompiler::language::getString(), 0 }),
+		type,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<RuntimeTypeDescriptor>(a["self"].get())->value();
+			return buildStringValue((std::string)self.type->qualifiedName());
+		}
+	)->setAccessibility(Accessibility::Public);
+	createCustomFunction(
+		type
+		->append<Function>("constructors")
+		->setReturnType({ getCollectionTypeFor({ cMCompiler::language::getFunctionDescriptor(), 0 }),0 }),
+		type,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<RuntimeTypeDescriptor>(a["self"].get())->value();
+			auto methods = self.type->methods();
+			if (!methods.empty())
+				methods.erase(std::remove_if(methods.begin(), methods.end(), isConstructor));
+			return convertCollection(methods, { getFunctionDescriptor(), 0 });
+		}
+	)->setAccessibility(Accessibility::Public);
+	createOperator(
+		getDefaultPackage()->rootNamespace(),
+		"==",
+		{ type, 0 },
+		{ type, 0 },
+		{ getBool(), 0 },
+		[](auto& a, auto& b)
+		{
+			auto arg1 = dereferenceAs<execution::RuntimeTypeDescriptor>(a.get());
+			auto arg2 = dereferenceAs<execution::RuntimeTypeDescriptor>(b.get());
+			return buildBooleanValue(arg1->value() == arg2->value());
+		});
+	createCustomFunction(
+		type
+		->append<Function>("fields")
+		->setReturnType({ getCollectionTypeFor({type,0}),0 }),
+		type,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<RuntimeTypeDescriptor>(a["self"].get())->value();
+			auto fields = self.type->fields();
+			return convertCollection(fields, { getFieldDescriptor(), 0 });
+		}
+	);
 }
 
 void completeBuildingNamespace(gsl::not_null<Type*> t)
@@ -171,24 +244,30 @@ void buildCompilerLibrary(gsl::not_null<Namespace*> rootNamespace)
 			if (llvm)
 				return buildStringValue(*llvm);
 			return buildStringValue();
-		})
-		->setAccessibility(Accessibility::Public);
-		auto setter = createCustomFunction(function->append<Function>("overridenLLVMIR")->setReturnType({ getString(), 0 }), function,
-			[](value_map&& a, generic_parameters)->runtime_value
-			{
-				auto llvm = dereferenceAs<execution::StringValue>(a["ir"].get())->value();
-				auto function = dereferenceAs<execution::RuntimeFunctionDescriptor>(a["self"].get())->value();
-				function->metadata().overrideLLVMIR_ = llvm;
-				function->metadata().appendFlag(FunctionFlags::ExcludeAtCompileTime);
-				return runtime_value();
-			});
-		setter->setAccessibility(Accessibility::Public);
-		setter->appendVariable("ir", { getString(), 0 });
-		createCustomFunction(function->append<Function>("sourceLocation")->setReturnType({ getPointerToSource(), 0 }), function,
-			[](auto&& a, auto)
-			{
-				return dereferenceAs<RuntimeFunctionDescriptor>(a["self"].get())->value()->sourcePointer();
-			});
+		}
+	)->setAccessibility(Accessibility::Public);
+	auto setter = createCustomFunction(function->append<Function>("overridenLLVMIR")->setReturnType({ getString(), 0 }), function,
+		[](value_map&& a, generic_parameters)->runtime_value
+		{
+			auto llvm = dereferenceAs<execution::StringValue>(a["ir"].get())->value();
+			auto function = dereferenceAs<execution::RuntimeFunctionDescriptor>(a["self"].get())->value();
+			function->metadata().overrideLLVMIR_ = llvm;
+			function->metadata().appendFlag(FunctionFlags::ExcludeAtCompileTime);
+			return runtime_value();
+		});
+	setter->setAccessibility(Accessibility::Public);
+	setter->appendVariable("ir", { getString(), 0 });
+	createCustomFunction(function->append<Function>("sourceLocation")->setReturnType({ getPointerToSource(), 0 }), function,
+		[](auto&& a, auto)
+		{
+			return dereferenceAs<RuntimeFunctionDescriptor>(a["self"].get())->value()->sourcePointer();
+		});
+
+	createCustomFunction(type->append<Function>("sourceLocation")->setReturnType({ getPointerToSource(), 0 }), type,
+		[](auto&& a, auto)
+		{
+			return dereferenceAs<execution::RuntimeTypeDescriptor>(a["self"].get())->value().type->sourcePointer();
+		});
 
 }
 
@@ -293,7 +372,9 @@ void buildUsize(gsl::not_null<Type*> usize_type)
 		{ getBool(), 0 },
 		[usize_type](auto& a, auto& b)
 		{
-			auto result = convertToIntegral<usize>(*a) != convertToIntegral<usize>(*b);
+			auto arg1 = convertToIntegral<usize>(*a);
+			auto arg2 = convertToIntegral<usize>(*b);
+			auto result = arg1 != arg2;
 			return buildBooleanValue(result);
 		}
 	);
@@ -353,6 +434,19 @@ void buildString(gsl::not_null<Type*> string)
 		}
 	);
 	indexOperator->appendVariable("index", { getUsize(), 0 });
+
+	cMCompiler::language::createOperator(
+		defaultPackage__->rootNamespace(),
+		"==",
+		{ string, 0 },
+		{ string, 0 },
+		{ getBool(), 0 },
+		[](auto& a, auto& b)
+		{
+			auto arg1 = dereferenceAs<StringValue>(a.get())->value();
+			auto arg2 = dereferenceAs<StringValue>(b.get())->value();
+			return buildBooleanValue(arg1 == arg2);
+		});
 }
 
 void buildPackage()

@@ -29,7 +29,7 @@ namespace cMCompiler
 		result.executablePath = std::filesystem::path(argv[0]).parent_path();
 		result.manifestFile = std::filesystem::path(vm["input"].as<std::string>()) / "manifest.mn";
 		if (vm.contains("compiler-interface"))
-			result.compilerInterfaceManifestFile = vm["compiler-interface"].as<std::string>();
+			result.compilerInterfaceManifestFile = std::filesystem::path(vm["compiler-interface"].as<std::string>()) / "manifest.mn";
 
 		return result;
 	}

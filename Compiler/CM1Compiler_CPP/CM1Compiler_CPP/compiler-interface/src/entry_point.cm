@@ -1,14 +1,50 @@
-import {compilerEntryPoint packageDescriptor} from {cm1mLang::compiler}
+import {compilerEntryPoint functionDescriptor packageDescriptor typeDescriptor} from {cm1mLang::compiler}
 import {string null} from {cm1mLang}
-import {compilationResult llvmType llvmInt32Type} from {cm1mLang::compiler::backend}
+import {compilationResult llvmType llvmInt32Type llvmModule} from {cm1mLang::compiler::backend}
+import {enumerate} from {std::std}
 
 [compilerEntryPoint()]
 public fn entryPoint(packages: packageDescriptor[], result: compilationResult) {
-	let module = result.appendModule("test");
-	let f = module.appendFunction("test_function", llvmType[], string[], llvmInt32Type(result));
+	let registry = packageRegistry(result);
+	for(i in enumerate(0, packages.length()))
+		compilePackage(packages[i], &registry);
 }
 
-private fn compilePackage(package: packageDescriptor, result: compilationResult)
+private fn compilePackage(package: packageDescriptor, registry: packageRegistry*)
 {
+	let types = package.getAllTypes();
+	for(i in enumerate(0, types.length()))
+		createType(types[i], package, registry);
+	for(i in enumerate(0, types.length()))
+		completeType(types[i], package, registry);
+}
 
+private fn createType(t: typeDescriptor, package: packageDescriptor, registry: packageRegistry*)
+{
+	let lt = registry.getLLVMTypeFor(t, package);
+}
+
+private fn completeType(t: typeDescriptor, package: packageDescriptor, registry: packageRegistry*)
+{
+	let fields = t.fields();
+	let lt = registry.getLLVMTypeFor(t, package);
+	let types = <llvmType>[llvmInt32Type(registry._compilationResult)];
+	lt.setFields(types);
+	for(i in enumerate(0, fields.length()))
+	{
+
+	}
+	let cons = t.constructors();
+	for(i in enumerate(0, cons.length()))
+	{
+		let mod = registry.getModuleFor(cons[i]);
+		buildConstructor(t, cons[i], package, registry, mod);
+	}
+}
+
+private fn buildConstructor(t: typeDescriptor, f: functionDescriptor, package: packageDescriptor, registry: packageRegistry*, mod: llvmModule)
+{
+	let lt = registry.getLLVMTypeFor(t, package);
+	let f = mod.appendFunction("construct", <llvmType>[], <string>[], lt);
+	f.appendAlloca(lt);
 }

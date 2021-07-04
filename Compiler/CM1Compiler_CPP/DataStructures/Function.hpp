@@ -51,7 +51,6 @@ namespace cMCompiler::dataStructures
 		public ObjectWithMetadata<FunctionMetadata>
 	{
 		std::unique_ptr<execution::ArrayValue> intermidiateRepresentation_;
-		std::unique_ptr<execution::IRuntimeValue> sourcePointer_;
 		std::vector<std::unique_ptr<Variable>> parameters_;
 		std::vector<std::unique_ptr<Variable>> localVariables_;
 		TypeReference returnType_;
@@ -64,14 +63,6 @@ namespace cMCompiler::dataStructures
 		std::vector<not_null<Variable*>> parameters();
 		std::vector<not_null<Variable*>> variables() const;
 		std::vector<not_null<Variable const*>> parameters() const;
-		void setSourceLocation(std::unique_ptr<execution::IRuntimeValue>&& sourceLocation) noexcept
-		{
-			sourcePointer_ = std::move(sourceLocation);
-		}
-		std::unique_ptr<execution::IRuntimeValue> sourcePointer() const
-		{
-			return sourcePointer_->copy();
-		}
 		std::vector<INamedObject*> children() noexcept final
 		{
 			return std::vector<INamedObject*>();

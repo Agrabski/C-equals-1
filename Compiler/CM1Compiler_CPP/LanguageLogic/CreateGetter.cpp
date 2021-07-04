@@ -46,8 +46,8 @@ void cMCompiler::language::createIndexer(gsl::not_null<dataStructures::Function*
 		)->std::unique_ptr<dataStructures::execution::IRuntimeValue>
 	{
 		auto index = convertToIntegral<size_t>(*valueMap["index"]);
-		auto reference = dynamic_cast<dataStructures::execution::ReferenceValue*>(valueMap["self"].get());
-		return dynamic_cast<dataStructures::execution::ArrayValue*>(reference->value()->get())->get(index);
+		auto arr = dereferenceAs<dataStructures::execution::ArrayValue>(valueMap["self"].get());
+		return arr->get(index);
 	};
 	compileTimeFunctions::FuntionLibrary::instance().addFunctionDefinition(function, f);
 }

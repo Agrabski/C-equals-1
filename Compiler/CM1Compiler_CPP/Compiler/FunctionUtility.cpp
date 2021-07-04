@@ -154,7 +154,6 @@ void cMCompiler::compiler::confirmFunction(
 	if (freeDeclaration == functions.end())
 		std::terminate(); //todo: report error
 	not_null function = *freeDeclaration;
-	function->setSourceLocation(language::buildSourcePointer(file.string(), *ctx));
 	confirmFunction(resolver, context, function, ctx, file);
 }
 
@@ -196,5 +195,6 @@ void cMCompiler::compiler::finalizeFunction(
 	//todo: function attributes
 	auto builder = FunctionBodyBuilder(f, resolver, context, file);
 	ctx->functionBody()->accept(&builder);
+	f->setSourceLocation(language::buildSourcePointer(file.string(), *ctx));
 	f->finalize();
 }

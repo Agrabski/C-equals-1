@@ -26,11 +26,12 @@ cMCompiler::language::runtime_value cMCompiler::language::buildValueLiteralExpre
 
 cMCompiler::language::runtime_value cMCompiler::language::buildArrayLiteralExpression(runtime_value&& expressions, dataStructures::TypeReference valueType, runtime_value&& pointerToSource)
 {
-
+	assert(valueType.type != nullptr);
 	auto [result, object] = heapAllocateObject(getArrayLiteralExpression());
 	object.setValue("_value", std::move(expressions));
 	object.setValue("_pointerToSource", std::move(pointerToSource));
 	object.setValue("_type", getValueFor({ getCollectionTypeFor(valueType), 0 }));
+	object.setValue("_elementType", getValueFor(valueType));
 
 	return std::move(result);
 }

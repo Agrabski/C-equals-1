@@ -50,6 +50,15 @@ namespace cMCompiler::language
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(dataStructures::PackageDatabase*);
 
 	template<typename T>
+	runtime_value convertCollection(std::vector<not_null<T*>>const& collection, dataStructures::TypeReference elementType)
+	{
+		auto result = std::make_unique<dataStructures::execution::ArrayValue>(dataStructures::TypeReference{ getCollectionTypeFor(elementType),0 }, elementType);
+		for (auto e : collection)
+			result->push(getValueFor(e.get()));
+		return result;
+	}
+
+	template<typename T>
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(std::vector<T>const& c)
 	{
 		auto result = std::vector<std::unique_ptr<dataStructures::execution::IRuntimeValue>>();

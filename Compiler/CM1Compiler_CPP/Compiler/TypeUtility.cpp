@@ -111,6 +111,7 @@ void cMCompiler::compiler::confirmType(
 				confirmFunction(resolver, context, f, member, file);
 			}
 		type->confirm();
+		type->setSourceLocation(language::buildSourcePointer(file.string(), *ctx));
 	}
 }
 

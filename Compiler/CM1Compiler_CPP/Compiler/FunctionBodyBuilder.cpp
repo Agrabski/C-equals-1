@@ -110,12 +110,12 @@ void cMCompiler::compiler::FunctionBodyBuilder::buildWhileLoop(
 {
 	auto loop = language::buildWhileLoop(std::move(expression), language::buildSourcePointer(filePath_.string(), *body->parent));
 	enterScope(loop);
-	actionInNewScope();
 	instructionAppenders.push_back([&](auto&& e)
 		{
 			language::suplyParent(e, getReferenceToParent());
 			language::pushWhile(loop, std::move(e));
 		});
+	actionInNewScope();
 	body->accept(this);
 	actionAtEndOfNewScope();
 	auto scopeExit = leaveScope(22); // todo: line number
@@ -123,6 +123,7 @@ void cMCompiler::compiler::FunctionBodyBuilder::buildWhileLoop(
 	language::pushWhile(loop, std::move(scopeExit));
 	instructionAppenders.pop_back();
 	parents_.pop_back();
+	instructionAppenders.back()(std::move(loop));
 }
 
 void cMCompiler::compiler::FunctionBodyBuilder::buildForRangeLoop(
@@ -198,7 +199,7 @@ void cMCompiler::compiler::FunctionBodyBuilder::buildForRangeLoop(
 				language::buildSourcePointer(filePath_.string(), *body->parent)
 			);
 		},
-			[=](auto e)
+			[this, body](auto e)
 		{
 			auto instruction = language::buildFunctionCallStatement(
 				language::buildMethodCallExpression(

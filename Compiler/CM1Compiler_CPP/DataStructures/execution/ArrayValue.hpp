@@ -28,7 +28,7 @@ namespace cMCompiler::dataStructures::execution
 
 			for (auto& e : allocated_)
 			{
-				if ((--index) == 0)
+				if ((index--) == 0)
 					return ReferenceValue::make(&(e), e->type());
 			}
 			std::terminate();

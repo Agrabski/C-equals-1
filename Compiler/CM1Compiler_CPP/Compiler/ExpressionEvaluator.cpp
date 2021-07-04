@@ -8,6 +8,7 @@
 #include "../DataStructures/execution/RuntimeFunctionDescriptor.hpp"
 #include "../DataStructures/execution/RuntimeVariableDescriptor.hpp"
 #include "../DataStructures/execution/RuntimeTypeDescriptor.hpp"
+#include "../LanguageLogic/TypeInstantiationUtility.hpp"
 using namespace cMCompiler;
 using namespace cMCompiler::dataStructures::execution;
 
@@ -21,7 +22,7 @@ std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::
 	auto value = language::dereferenceAs<ObjectValue>(&expression)->getMemberValue("_value");
 	auto values = language::dereferenceAs<ArrayValue>(value.get());
 
-	auto type = language::dereferenceAs<RuntimeTypeDescriptor>(language::dereferenceAs<ObjectValue>(&expression)->getMemberValue("_type").get());
+	auto type = language::dereferenceAs<RuntimeTypeDescriptor>(language::dereferenceAs<ObjectValue>(&expression)->getMemberValue("_elementType").get());
 
 
 	std::vector<language::runtime_value> result;
@@ -48,7 +49,7 @@ std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::
 {
 	auto exp = language::dereferenceAs<ObjectValue>(&expression)->getMemberValue("_expression");
 	not_null field = language::dereferenceAs<RuntimeFieldDescriptor>(language::dereferenceAs<ObjectValue>(&expression)->getMemberValue("_field").get());
-	auto result = evaluate(*exp.get());
+	auto result = evaluateLeftExpression(*exp.get());
 	return language::dereferenceAs<IComplexRuntimeValue>(result.get())->getMemberValue(field->value()->name());
 }
 
@@ -75,6 +76,22 @@ std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::
 	return evaluateCommon(*exp);
 }
 
+std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::ExpressionEvaluator::evaluateConstructor(dataStructures::execution::IRuntimeValue& expression)
+{
+	using language::dereferenceAs;
+	not_null exp = dereferenceAs<ObjectValue>(&expression);
+	not_null constructor = dereferenceAs<RuntimeFunctionDescriptor>(exp->getMemberValue("_compiletimeConstructor").get())->value();
+	not_null arguments = dereferenceAs<ArrayValue>(exp->getMemberValue("_arguments").get());
+	auto argValues = std::vector<language::runtime_value>();
+	auto result = language::instantiate(constructor->parameters().front()->type());
+	argValues.push_back(ReferenceValue::make(&result, result->type()));
+	for (auto const& arg : *arguments)
+		argValues.push_back(evaluate(*arg));
+	compiler::execute(constructor, std::move(argValues));
+	return result;
+
+}
+
 std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::ExpressionEvaluator::evaluateCommon(dataStructures::execution::IRuntimeValue& expression)
 {
 	not_null e = language::dereference(&expression);
@@ -93,6 +110,8 @@ std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::
 		return evaluateGetAddress(*e);
 	if (isOfType(e, language::getArrayLiteralExpression()))
 		return evaluateArrayLiteral(*e);
+	if (isOfType(e, language::getConstructorInvocationExpressionDescriptor()))
+		return evaluateConstructor(*e);
 
 	std::terminate();
 }
@@ -103,7 +122,10 @@ std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::
 	auto result = evaluateCommon(expression);
 	if (result == nullptr)
 		return nullptr;
-	return language::dereferenceOnce(result.get())->copy();
+	if (!language::isOfType(&expression, language::getAdressofExpressionDescriptor()))
+		return language::dereferenceOnce(result.get())->copy();
+	else
+		return result;
 }
 
 std::unique_ptr<dataStructures::execution::ReferenceValue> cMCompiler::compiler::ExpressionEvaluator::evaluateLeftExpression(dataStructures::execution::IRuntimeValue& expression)

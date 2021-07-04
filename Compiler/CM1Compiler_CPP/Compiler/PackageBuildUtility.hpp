@@ -23,7 +23,7 @@ namespace cMCompiler::compiler
 			for (auto& file : files)
 			{
 				auto parseTree = parse(file);
-				builder.setFile(file.path());
+				builder.setFile(std::filesystem::relative(file.path()));
 				builder.buildDatabase(*parseTree);
 			}
 		while (builder.advance());

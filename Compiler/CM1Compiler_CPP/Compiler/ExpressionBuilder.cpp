@@ -73,9 +73,18 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 	return result;
 }
 
+cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::buildExpression(
+	gsl::not_null<CMinusEqualsMinus1Revision0Parser::AdressOfExpressionContext*> ctx,
+	language::runtime_value&& referenceToParent)
+{
+	return language::buildAdressofExpression(buildExpression(ctx->expression(), nullptr), std::move(referenceToParent));
+}
+
 
 cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::buildExpression(gsl::not_null<CMinusEqualsMinus1Revision0Parser::ExpressionContext*> ctx, language::runtime_value&& referenceToParent)
 {
+	if (ctx->adressOfExpression() != nullptr)
+		return buildExpression(ctx->adressOfExpression(), std::move(referenceToParent));
 	if (ctx->Period() != nullptr)
 		return buildAccessExpression(ctx, std::move(referenceToParent));
 	if (ctx->functionCall() != nullptr)
@@ -266,6 +275,8 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 			language::buildSourcePointer(filepath_.string(), *ctx)
 		);
 	}
+	if (compileTime == nullptr && runtime == nullptr)
+		std::cerr << "Function " << name << " does not exist";
 	assert((compileTime != nullptr) || (runtime != nullptr ));
 
 	return language::buildFunctionCallExpression(

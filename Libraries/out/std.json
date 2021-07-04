@@ -17498,7 +17498,7 @@
     },
     {
       "implementation_typename": "object",
-      "serialization_id": 1542,
+      "serialization_id": 29,
       "type": "whileStatement",
       "value": {
         "fields": [
@@ -17506,7 +17506,7 @@
             "_body",
             {
               "implementation_typename": "array_value",
-              "serialization_id": 1537,
+              "serialization_id": 1539,
               "type": "array<IInstruction*>",
               "value": {
                 "element_type": "IInstruction*",
@@ -17514,7 +17514,7 @@
                   {
                     "implementation_typename": "reference_value",
                     "serialization_id": 1532,
-                    "type": "assigmentStatement*",
+                    "type": "variableDeclarationStatement*",
                     "value": {
                       "value": 1531
                     }
@@ -17522,7 +17522,7 @@
                   {
                     "implementation_typename": "reference_value",
                     "serialization_id": 1534,
-                    "type": "functionCallStatement*",
+                    "type": "assigmentStatement*",
                     "value": {
                       "value": 1533
                     }
@@ -17530,9 +17530,17 @@
                   {
                     "implementation_typename": "reference_value",
                     "serialization_id": 1536,
-                    "type": "scopeTerminationStatement*",
+                    "type": "functionCallStatement*",
                     "value": {
                       "value": 1535
+                    }
+                  },
+                  {
+                    "implementation_typename": "reference_value",
+                    "serialization_id": 1538,
+                    "type": "scopeTerminationStatement*",
+                    "value": {
+                      "value": 1537
                     }
                   }
                 ]
@@ -17543,7 +17551,7 @@
             "_expression",
             {
               "implementation_typename": "reference_value",
-              "serialization_id": 1538,
+              "serialization_id": 1540,
               "type": "binaryOperatorExpression*",
               "value": {
                 "value": 1509
@@ -17554,7 +17562,7 @@
             "_pointerToSource",
             {
               "implementation_typename": "object",
-              "serialization_id": 1541,
+              "serialization_id": 1543,
               "type": "pointerToSource",
               "value": {
                 "fields": [
@@ -17562,7 +17570,7 @@
                     "filename",
                     {
                       "implementation_typename": "string_value",
-                      "serialization_id": 1539,
+                      "serialization_id": 1541,
                       "type": "string",
                       "value": {
                         "value": "std\\src\\std\\string.cm"
@@ -17573,7 +17581,7 @@
                     "lineNumber",
                     {
                       "implementation_typename": "integer_value",
-                      "serialization_id": 1540,
+                      "serialization_id": 1542,
                       "type": "usize",
                       "value": {
                         "signed": false,
@@ -17599,7 +17607,7 @@
     },
     {
       "implementation_typename": "object",
-      "serialization_id": 1545,
+      "serialization_id": 1546,
       "type": "variableReferenceExpression",
       "value": {
         "fields": [
@@ -17607,7 +17615,7 @@
             "_type",
             {
               "implementation_typename": "runtime_type_descriptor",
-              "serialization_id": 1543,
+              "serialization_id": 1544,
               "type": "typeDescriptor",
               "value": {
                 "value": "integerIterator"
@@ -17618,7 +17626,7 @@
             "_variable",
             {
               "implementation_typename": "runtime_variable_descriptor",
-              "serialization_id": 1544,
+              "serialization_id": 1545,
               "type": "variableDescriptor",
               "value": {
                 "value": "::std::dyn_string::construct::$_1"
@@ -17630,7 +17638,7 @@
     },
     {
       "implementation_typename": "object",
-      "serialization_id": 1552,
+      "serialization_id": 1553,
       "type": "adressofExpression",
       "value": {
         "fields": [
@@ -17638,10 +17646,10 @@
             "_expression",
             {
               "implementation_typename": "reference_value",
-              "serialization_id": 1546,
+              "serialization_id": 1547,
               "type": "variableReferenceExpression*",
               "value": {
-                "value": 1545
+                "value": 1546
               }
             }
           ],
@@ -17649,10 +17657,10 @@
             "_parentExpression",
             {
               "implementation_typename": "reference_value",
-              "serialization_id": 1548,
+              "serialization_id": 1549,
               "type": "functionCallExpression*",
               "value": {
-                "value": 1547
+                "value": 1548
               }
             }
           ],
@@ -17660,7 +17668,7 @@
             "_pointerToSource",
             {
               "implementation_typename": "object",
-              "serialization_id": 1551,
+              "serialization_id": 1552,
               "type": "pointerToSource",
               "value": {
                 "fields": [
@@ -17668,7 +17676,7 @@
                     "filename",
                     {
                       "implementation_typename": "string_value",
-                      "serialization_id": 1549,
+                      "serialization_id": 1550,
                       "type": "string",
                       "value": {
                         "value": "std\\src\\std\\string.cm"
@@ -17679,7 +17687,7 @@
                     "lineNumber",
                     {
                       "implementation_typename": "integer_value",
-                      "serialization_id": 1550,
+                      "serialization_id": 1551,
                       "type": "usize",
                       "value": {
                         "signed": false,
@@ -17705,7 +17713,7 @@
     },
     {
       "implementation_typename": "object",
-      "serialization_id": 1547,
+      "serialization_id": 1548,
       "type": "functionCallExpression",
       "value": {
         "fields": [
@@ -17713,17 +17721,17 @@
             "_arguments",
             {
               "implementation_typename": "array_value",
-              "serialization_id": 1554,
+              "serialization_id": 1555,
               "type": "array<IExpression*>",
               "value": {
                 "element_type": "IExpression*",
                 "value": [
                   {
                     "implementation_typename": "reference_value",
-                    "serialization_id": 1553,
+                    "serialization_id": 1554,
                     "type": "adressofExpression*",
                     "value": {
-                      "value": 1552
+                      "value": 1553
                     }
                   }
                 ]
@@ -17734,7 +17742,7 @@
             "_compiletimeFunction",
             {
               "implementation_typename": "runtime_function_descriptor",
-              "serialization_id": 1555,
+              "serialization_id": 1556,
               "type": "functionDescriptor",
               "value": {
                 "value": "::std::integerIterator::get|integerIterator* |"
@@ -17745,7 +17753,7 @@
             "_pointerToSource",
             {
               "implementation_typename": "object",
-              "serialization_id": 1558,
+              "serialization_id": 1559,
               "type": "pointerToSource",
               "value": {
                 "fields": [
@@ -17753,7 +17761,7 @@
                     "filename",
                     {
                       "implementation_typename": "string_value",
-                      "serialization_id": 1556,
+                      "serialization_id": 1557,
                       "type": "string",
                       "value": {
                         "value": "std\\src\\std\\string.cm"
@@ -17764,7 +17772,7 @@
                     "lineNumber",
                     {
                       "implementation_typename": "integer_value",
-                      "serialization_id": 1557,
+                      "serialization_id": 1558,
                       "type": "usize",
                       "value": {
                         "signed": false,
@@ -17789,7 +17797,7 @@
             "_runtimeFunction",
             {
               "implementation_typename": "runtime_function_descriptor",
-              "serialization_id": 1559,
+              "serialization_id": 1560,
               "type": "functionDescriptor",
               "value": {
                 "value": "::std::integerIterator::get|integerIterator* |"
@@ -17801,7 +17809,7 @@
     },
     {
       "implementation_typename": "object",
-      "serialization_id": 29,
+      "serialization_id": 1531,
       "type": "variableDeclarationStatement",
       "value": {
         "fields": [
@@ -17809,10 +17817,10 @@
             "_expression",
             {
               "implementation_typename": "reference_value",
-              "serialization_id": 1560,
+              "serialization_id": 1561,
               "type": "functionCallExpression*",
               "value": {
-                "value": 1547
+                "value": 1548
               }
             }
           ],
@@ -17820,10 +17828,10 @@
             "_parent",
             {
               "implementation_typename": "reference_value",
-              "serialization_id": 1561,
+              "serialization_id": 1562,
               "type": "whileStatement*",
               "value": {
-                "value": 1542
+                "value": 29
               }
             }
           ],
@@ -17831,7 +17839,7 @@
             "_sourcePointer",
             {
               "implementation_typename": "object",
-              "serialization_id": 1564,
+              "serialization_id": 1565,
               "type": "pointerToSource",
               "value": {
                 "fields": [
@@ -17839,7 +17847,7 @@
                     "filename",
                     {
                       "implementation_typename": "string_value",
-                      "serialization_id": 1562,
+                      "serialization_id": 1563,
                       "type": "string",
                       "value": {
                         "value": "std\\src\\std\\string.cm"
@@ -17850,7 +17858,7 @@
                     "lineNumber",
                     {
                       "implementation_typename": "integer_value",
-                      "serialization_id": 1563,
+                      "serialization_id": 1564,
                       "type": "usize",
                       "value": {
                         "signed": false,
@@ -17875,7 +17883,7 @@
             "_variable",
             {
               "implementation_typename": "runtime_variable_descriptor",
-              "serialization_id": 1565,
+              "serialization_id": 1566,
               "type": "variableDescriptor",
               "value": {
                 "value": "::std::dyn_string::construct::index"
@@ -17887,7 +17895,7 @@
     },
     {
       "implementation_typename": "object",
-      "serialization_id": 1568,
+      "serialization_id": 1569,
       "type": "variableReferenceExpression",
       "value": {
         "fields": [
@@ -17895,7 +17903,49 @@
             "_type",
             {
               "implementation_typename": "runtime_type_descriptor",
-              "serialization_id": 1566,
+              "serialization_id": 1567,
+              "type": "typeDescriptor",
+              "value": {
+                "value": "string"
+              }
+            }
+          ],
+          [
+            "_variable",
+            {
+              "implementation_typename": "runtime_variable_descriptor",
+              "serialization_id": 1568,
+              "type": "variableDescriptor",
+              "value": {
+                "value": "::std::dyn_string::construct::text"
+              }
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "implementation_typename": "object",
+      "serialization_id": 1574,
+      "type": "variableReferenceExpression",
+      "value": {
+        "fields": [
+          [
+            "_parentExpression",
+            {
+              "implementation_typename": "reference_value",
+              "serialization_id": 1571,
+              "type": "functionCallExpression*",
+              "value": {
+                "value": 1570
+              }
+            }
+          ],
+          [
+            "_type",
+            {
+              "implementation_typename": "runtime_type_descriptor",
+              "serialization_id": 1572,
               "type": "typeDescriptor",
               "value": {
                 "value": "usize"
@@ -17906,7 +17956,7 @@
             "_variable",
             {
               "implementation_typename": "runtime_variable_descriptor",
-              "serialization_id": 1567,
+              "serialization_id": 1573,
               "type": "variableDescriptor",
               "value": {
                 "value": "::std::dyn_string::construct::index"
@@ -17918,15 +17968,37 @@
     },
     {
       "implementation_typename": "object",
-      "serialization_id": 1575,
-      "type": "arrayLiteralExpression",
+      "serialization_id": 1580,
+      "type": "adressofExpression",
       "value": {
         "fields": [
+          [
+            "_expression",
+            {
+              "implementation_typename": "reference_value",
+              "serialization_id": 1575,
+              "type": "variableReferenceExpression*",
+              "value": {
+                "value": 1569
+              }
+            }
+          ],
+          [
+            "_parentExpression",
+            {
+              "implementation_typename": "reference_value",
+              "serialization_id": 1576,
+              "type": "functionCallExpression*",
+              "value": {
+                "value": 1570
+              }
+            }
+          ],
           [
             "_pointerToSource",
             {
               "implementation_typename": "object",
-              "serialization_id": 1571,
+              "serialization_id": 1579,
               "type": "pointerToSource",
               "value": {
                 "fields": [
@@ -17934,7 +18006,7 @@
                     "filename",
                     {
                       "implementation_typename": "string_value",
-                      "serialization_id": 1569,
+                      "serialization_id": 1577,
                       "type": "string",
                       "value": {
                         "value": "std\\src\\std\\string.cm"
@@ -17945,7 +18017,7 @@
                     "lineNumber",
                     {
                       "implementation_typename": "integer_value",
-                      "serialization_id": 1570,
+                      "serialization_id": 1578,
                       "type": "usize",
                       "value": {
                         "signed": false,
@@ -17965,35 +18037,96 @@
                 ]
               }
             }
-          ],
+          ]
+        ]
+      }
+    },
+    {
+      "implementation_typename": "object",
+      "serialization_id": 1570,
+      "type": "functionCallExpression",
+      "value": {
+        "fields": [
           [
-            "_type",
-            {
-              "implementation_typename": "runtime_type_descriptor",
-              "serialization_id": 1572,
-              "type": "typeDescriptor",
-              "value": {
-                "value": "array<>"
-              }
-            }
-          ],
-          [
-            "_value",
+            "_arguments",
             {
               "implementation_typename": "array_value",
-              "serialization_id": 1574,
+              "serialization_id": 1583,
               "type": "array<IExpression*>",
               "value": {
                 "element_type": "IExpression*",
                 "value": [
                   {
                     "implementation_typename": "reference_value",
-                    "serialization_id": 1573,
+                    "serialization_id": 1581,
+                    "type": "adressofExpression*",
+                    "value": {
+                      "value": 1580
+                    }
+                  },
+                  {
+                    "implementation_typename": "reference_value",
+                    "serialization_id": 1582,
                     "type": "variableReferenceExpression*",
                     "value": {
-                      "value": 1568
+                      "value": 1574
                     }
                   }
+                ]
+              }
+            }
+          ],
+          [
+            "_compiletimeFunction",
+            {
+              "implementation_typename": "runtime_function_descriptor",
+              "serialization_id": 1584,
+              "type": "functionDescriptor",
+              "value": {
+                "value": "::string::operator_[]|string* usize |"
+              }
+            }
+          ],
+          [
+            "_pointerToSource",
+            {
+              "implementation_typename": "object",
+              "serialization_id": 1587,
+              "type": "pointerToSource",
+              "value": {
+                "fields": [
+                  [
+                    "filename",
+                    {
+                      "implementation_typename": "string_value",
+                      "serialization_id": 1585,
+                      "type": "string",
+                      "value": {
+                        "value": "std\\src\\std\\string.cm"
+                      }
+                    }
+                  ],
+                  [
+                    "lineNumber",
+                    {
+                      "implementation_typename": "integer_value",
+                      "serialization_id": 1586,
+                      "type": "usize",
+                      "value": {
+                        "signed": false,
+                        "value": [
+                          17,
+                          0,
+                          0,
+                          0,
+                          0,
+                          0,
+                          0,
+                          0
+                        ]
+                      }
+                    }
+                  ]
                 ]
               }
             }
@@ -18003,7 +18136,7 @@
     },
     {
       "implementation_typename": "object",
-      "serialization_id": 1578,
+      "serialization_id": 1590,
       "type": "variableReferenceExpression",
       "value": {
         "fields": [
@@ -18011,7 +18144,7 @@
             "_type",
             {
               "implementation_typename": "runtime_type_descriptor",
-              "serialization_id": 1576,
+              "serialization_id": 1588,
               "type": "typeDescriptor",
               "value": {
                 "value": "dyn_string*"
@@ -18022,7 +18155,7 @@
             "_variable",
             {
               "implementation_typename": "runtime_variable_descriptor",
-              "serialization_id": 1577,
+              "serialization_id": 1589,
               "type": "variableDescriptor",
               "value": {
                 "value": "::std::dyn_string::construct::self"
@@ -18034,7 +18167,7 @@
     },
     {
       "implementation_typename": "object",
-      "serialization_id": 1584,
+      "serialization_id": 1596,
       "type": "fieldAccessExpression",
       "value": {
         "fields": [
@@ -18042,10 +18175,10 @@
             "_expression",
             {
               "implementation_typename": "reference_value",
-              "serialization_id": 1579,
+              "serialization_id": 1591,
               "type": "variableReferenceExpression*",
               "value": {
-                "value": 1578
+                "value": 1590
               }
             }
           ],
@@ -18053,7 +18186,7 @@
             "_field",
             {
               "implementation_typename": "runtime_type",
-              "serialization_id": 1580,
+              "serialization_id": 1592,
               "type": "fieldDescriptor",
               "value": [
                 "value",
@@ -18065,7 +18198,7 @@
             "_pointerToSource",
             {
               "implementation_typename": "object",
-              "serialization_id": 1583,
+              "serialization_id": 1595,
               "type": "pointerToSource",
               "value": {
                 "fields": [
@@ -18073,7 +18206,7 @@
                     "filename",
                     {
                       "implementation_typename": "string_value",
-                      "serialization_id": 1581,
+                      "serialization_id": 1593,
                       "type": "string",
                       "value": {
                         "value": "std\\src\\std\\string.cm"
@@ -18084,7 +18217,7 @@
                     "lineNumber",
                     {
                       "implementation_typename": "integer_value",
-                      "serialization_id": 1582,
+                      "serialization_id": 1594,
                       "type": "usize",
                       "value": {
                         "signed": false,
@@ -18110,7 +18243,7 @@
     },
     {
       "implementation_typename": "object",
-      "serialization_id": 1589,
+      "serialization_id": 1601,
       "type": "variableReferenceExpression",
       "value": {
         "fields": [
@@ -18118,10 +18251,10 @@
             "_parentExpression",
             {
               "implementation_typename": "reference_value",
-              "serialization_id": 1586,
+              "serialization_id": 1598,
               "type": "functionCallExpression*",
               "value": {
-                "value": 1585
+                "value": 1597
               }
             }
           ],
@@ -18129,7 +18262,7 @@
             "_type",
             {
               "implementation_typename": "runtime_type_descriptor",
-              "serialization_id": 1587,
+              "serialization_id": 1599,
               "type": "typeDescriptor",
               "value": {
                 "value": "usize"
@@ -18140,7 +18273,7 @@
             "_variable",
             {
               "implementation_typename": "runtime_variable_descriptor",
-              "serialization_id": 1588,
+              "serialization_id": 1600,
               "type": "variableDescriptor",
               "value": {
                 "value": "::std::dyn_string::construct::index"
@@ -18152,7 +18285,7 @@
     },
     {
       "implementation_typename": "object",
-      "serialization_id": 1595,
+      "serialization_id": 1607,
       "type": "adressofExpression",
       "value": {
         "fields": [
@@ -18160,10 +18293,10 @@
             "_expression",
             {
               "implementation_typename": "reference_value",
-              "serialization_id": 1590,
+              "serialization_id": 1602,
               "type": "fieldAccessExpression*",
               "value": {
-                "value": 1584
+                "value": 1596
               }
             }
           ],
@@ -18171,10 +18304,10 @@
             "_parentExpression",
             {
               "implementation_typename": "reference_value",
-              "serialization_id": 1591,
+              "serialization_id": 1603,
               "type": "functionCallExpression*",
               "value": {
-                "value": 1585
+                "value": 1597
               }
             }
           ],
@@ -18182,7 +18315,7 @@
             "_pointerToSource",
             {
               "implementation_typename": "object",
-              "serialization_id": 1594,
+              "serialization_id": 1606,
               "type": "pointerToSource",
               "value": {
                 "fields": [
@@ -18190,7 +18323,7 @@
                     "filename",
                     {
                       "implementation_typename": "string_value",
-                      "serialization_id": 1592,
+                      "serialization_id": 1604,
                       "type": "string",
                       "value": {
                         "value": "std\\src\\std\\string.cm"
@@ -18201,7 +18334,7 @@
                     "lineNumber",
                     {
                       "implementation_typename": "integer_value",
-                      "serialization_id": 1593,
+                      "serialization_id": 1605,
                       "type": "usize",
                       "value": {
                         "signed": false,
@@ -18227,7 +18360,7 @@
     },
     {
       "implementation_typename": "object",
-      "serialization_id": 1585,
+      "serialization_id": 1597,
       "type": "functionCallExpression",
       "value": {
         "fields": [
@@ -18235,25 +18368,25 @@
             "_arguments",
             {
               "implementation_typename": "array_value",
-              "serialization_id": 1598,
+              "serialization_id": 1610,
               "type": "array<IExpression*>",
               "value": {
                 "element_type": "IExpression*",
                 "value": [
                   {
                     "implementation_typename": "reference_value",
-                    "serialization_id": 1596,
+                    "serialization_id": 1608,
                     "type": "adressofExpression*",
                     "value": {
-                      "value": 1595
+                      "value": 1607
                     }
                   },
                   {
                     "implementation_typename": "reference_value",
-                    "serialization_id": 1597,
+                    "serialization_id": 1609,
                     "type": "variableReferenceExpression*",
                     "value": {
-                      "value": 1589
+                      "value": 1601
                     }
                   }
                 ]
@@ -18264,7 +18397,7 @@
             "_compiletimeFunction",
             {
               "implementation_typename": "runtime_function_descriptor",
-              "serialization_id": 1599,
+              "serialization_id": 1611,
               "type": "functionDescriptor",
               "value": {
                 "value": "::array<char>::operator_[]|array<char>* usize |"
@@ -18275,7 +18408,7 @@
             "_pointerToSource",
             {
               "implementation_typename": "object",
-              "serialization_id": 1602,
+              "serialization_id": 1614,
               "type": "pointerToSource",
               "value": {
                 "fields": [
@@ -18283,7 +18416,7 @@
                     "filename",
                     {
                       "implementation_typename": "string_value",
-                      "serialization_id": 1600,
+                      "serialization_id": 1612,
                       "type": "string",
                       "value": {
                         "value": "std\\src\\std\\string.cm"
@@ -18294,7 +18427,7 @@
                     "lineNumber",
                     {
                       "implementation_typename": "integer_value",
-                      "serialization_id": 1601,
+                      "serialization_id": 1613,
                       "type": "usize",
                       "value": {
                         "signed": false,
@@ -18319,7 +18452,7 @@
             "_runtimeFunction",
             {
               "implementation_typename": "runtime_function_descriptor",
-              "serialization_id": 1603,
+              "serialization_id": 1615,
               "type": "functionDescriptor",
               "value": {
                 "value": "::array<char>::operator_[]|array<char>* usize |"
@@ -18331,7 +18464,7 @@
     },
     {
       "implementation_typename": "object",
-      "serialization_id": 1531,
+      "serialization_id": 1533,
       "type": "assigmentStatement",
       "value": {
         "fields": [
@@ -18339,10 +18472,10 @@
             "_lExpression",
             {
               "implementation_typename": "reference_value",
-              "serialization_id": 1604,
+              "serialization_id": 1616,
               "type": "functionCallExpression*",
               "value": {
-                "value": 1585
+                "value": 1597
               }
             }
           ],
@@ -18350,10 +18483,10 @@
             "_parent",
             {
               "implementation_typename": "reference_value",
-              "serialization_id": 1605,
+              "serialization_id": 1617,
               "type": "whileStatement*",
               "value": {
-                "value": 1542
+                "value": 29
               }
             }
           ],
@@ -18361,7 +18494,7 @@
             "_pointerToSource",
             {
               "implementation_typename": "object",
-              "serialization_id": 1608,
+              "serialization_id": 1620,
               "type": "pointerToSource",
               "value": {
                 "fields": [
@@ -18369,7 +18502,7 @@
                     "filename",
                     {
                       "implementation_typename": "string_value",
-                      "serialization_id": 1606,
+                      "serialization_id": 1618,
                       "type": "string",
                       "value": {
                         "value": "std\\src\\std\\string.cm"
@@ -18380,7 +18513,7 @@
                     "lineNumber",
                     {
                       "implementation_typename": "integer_value",
-                      "serialization_id": 1607,
+                      "serialization_id": 1619,
                       "type": "usize",
                       "value": {
                         "signed": false,
@@ -18405,10 +18538,10 @@
             "_rExpression",
             {
               "implementation_typename": "reference_value",
-              "serialization_id": 1609,
-              "type": "arrayLiteralExpression*",
+              "serialization_id": 1621,
+              "type": "functionCallExpression*",
               "value": {
-                "value": 1575
+                "value": 1570
               }
             }
           ]
@@ -18417,7 +18550,7 @@
     },
     {
       "implementation_typename": "object",
-      "serialization_id": 1612,
+      "serialization_id": 1624,
       "type": "variableReferenceExpression",
       "value": {
         "fields": [
@@ -18425,7 +18558,7 @@
             "_type",
             {
               "implementation_typename": "runtime_type_descriptor",
-              "serialization_id": 1610,
+              "serialization_id": 1622,
               "type": "typeDescriptor",
               "value": {
                 "value": "integerIterator"
@@ -18436,7 +18569,7 @@
             "_variable",
             {
               "implementation_typename": "runtime_variable_descriptor",
-              "serialization_id": 1611,
+              "serialization_id": 1623,
               "type": "variableDescriptor",
               "value": {
                 "value": "::std::dyn_string::construct::$_1"
@@ -18448,7 +18581,7 @@
     },
     {
       "implementation_typename": "object",
-      "serialization_id": 1619,
+      "serialization_id": 1631,
       "type": "adressofExpression",
       "value": {
         "fields": [
@@ -18456,10 +18589,10 @@
             "_expression",
             {
               "implementation_typename": "reference_value",
-              "serialization_id": 1613,
+              "serialization_id": 1625,
               "type": "variableReferenceExpression*",
               "value": {
-                "value": 1612
+                "value": 1624
               }
             }
           ],
@@ -18467,10 +18600,10 @@
             "_parentExpression",
             {
               "implementation_typename": "reference_value",
-              "serialization_id": 1615,
+              "serialization_id": 1627,
               "type": "functionCallExpression*",
               "value": {
-                "value": 1614
+                "value": 1626
               }
             }
           ],
@@ -18478,7 +18611,7 @@
             "_pointerToSource",
             {
               "implementation_typename": "object",
-              "serialization_id": 1618,
+              "serialization_id": 1630,
               "type": "pointerToSource",
               "value": {
                 "fields": [
@@ -18486,7 +18619,7 @@
                     "filename",
                     {
                       "implementation_typename": "string_value",
-                      "serialization_id": 1616,
+                      "serialization_id": 1628,
                       "type": "string",
                       "value": {
                         "value": "std\\src\\std\\string.cm"
@@ -18497,7 +18630,7 @@
                     "lineNumber",
                     {
                       "implementation_typename": "integer_value",
-                      "serialization_id": 1617,
+                      "serialization_id": 1629,
                       "type": "usize",
                       "value": {
                         "signed": false,
@@ -18523,7 +18656,7 @@
     },
     {
       "implementation_typename": "object",
-      "serialization_id": 1614,
+      "serialization_id": 1626,
       "type": "functionCallExpression",
       "value": {
         "fields": [
@@ -18531,17 +18664,17 @@
             "_arguments",
             {
               "implementation_typename": "array_value",
-              "serialization_id": 1621,
+              "serialization_id": 1633,
               "type": "array<IExpression*>",
               "value": {
                 "element_type": "IExpression*",
                 "value": [
                   {
                     "implementation_typename": "reference_value",
-                    "serialization_id": 1620,
+                    "serialization_id": 1632,
                     "type": "adressofExpression*",
                     "value": {
-                      "value": 1619
+                      "value": 1631
                     }
                   }
                 ]
@@ -18552,7 +18685,7 @@
             "_compiletimeFunction",
             {
               "implementation_typename": "runtime_function_descriptor",
-              "serialization_id": 1622,
+              "serialization_id": 1634,
               "type": "functionDescriptor",
               "value": {
                 "value": "::std::integerIterator::advance|integerIterator* |"
@@ -18563,7 +18696,7 @@
             "_pointerToSource",
             {
               "implementation_typename": "object",
-              "serialization_id": 1625,
+              "serialization_id": 1637,
               "type": "pointerToSource",
               "value": {
                 "fields": [
@@ -18571,7 +18704,7 @@
                     "filename",
                     {
                       "implementation_typename": "string_value",
-                      "serialization_id": 1623,
+                      "serialization_id": 1635,
                       "type": "string",
                       "value": {
                         "value": "std\\src\\std\\string.cm"
@@ -18582,7 +18715,7 @@
                     "lineNumber",
                     {
                       "implementation_typename": "integer_value",
-                      "serialization_id": 1624,
+                      "serialization_id": 1636,
                       "type": "usize",
                       "value": {
                         "signed": false,
@@ -18607,7 +18740,7 @@
             "_runtimeFunction",
             {
               "implementation_typename": "runtime_function_descriptor",
-              "serialization_id": 1626,
+              "serialization_id": 1638,
               "type": "functionDescriptor",
               "value": {
                 "value": "::std::integerIterator::advance|integerIterator* |"
@@ -18619,7 +18752,7 @@
     },
     {
       "implementation_typename": "object",
-      "serialization_id": 1533,
+      "serialization_id": 1535,
       "type": "functionCallStatement",
       "value": {
         "fields": [
@@ -18627,10 +18760,10 @@
             "_function",
             {
               "implementation_typename": "reference_value",
-              "serialization_id": 1627,
+              "serialization_id": 1639,
               "type": "functionCallExpression*",
               "value": {
-                "value": 1614
+                "value": 1626
               }
             }
           ],
@@ -18638,10 +18771,10 @@
             "_parent",
             {
               "implementation_typename": "reference_value",
-              "serialization_id": 1628,
+              "serialization_id": 1640,
               "type": "whileStatement*",
               "value": {
-                "value": 1542
+                "value": 29
               }
             }
           ]
@@ -18650,7 +18783,7 @@
     },
     {
       "implementation_typename": "object",
-      "serialization_id": 1535,
+      "serialization_id": 1537,
       "type": "scopeTerminationStatement",
       "value": {
         "fields": [
@@ -18658,10 +18791,10 @@
             "_parent",
             {
               "implementation_typename": "reference_value",
-              "serialization_id": 1629,
+              "serialization_id": 1641,
               "type": "whileStatement*",
               "value": {
-                "value": 1542
+                "value": 29
               }
             }
           ],
@@ -18669,7 +18802,7 @@
             "_pointerToSource",
             {
               "implementation_typename": "object",
-              "serialization_id": 1632,
+              "serialization_id": 1644,
               "type": "pointerToSource",
               "value": {
                 "fields": [
@@ -18677,7 +18810,7 @@
                     "filename",
                     {
                       "implementation_typename": "string_value",
-                      "serialization_id": 1630,
+                      "serialization_id": 1642,
                       "type": "string",
                       "value": {
                         "value": "string.cm"
@@ -18688,7 +18821,7 @@
                     "lineNumber",
                     {
                       "implementation_typename": "integer_value",
-                      "serialization_id": 1631,
+                      "serialization_id": 1643,
                       "type": "usize",
                       "value": {
                         "signed": false,
@@ -18713,14 +18846,14 @@
             "_variables",
             {
               "implementation_typename": "array_value",
-              "serialization_id": 1634,
+              "serialization_id": 1646,
               "type": "array<variableDescriptor>",
               "value": {
                 "element_type": "variableDescriptor",
                 "value": [
                   {
                     "implementation_typename": "runtime_variable_descriptor",
-                    "serialization_id": 1633,
+                    "serialization_id": 1645,
                     "type": "variableDescriptor",
                     "value": {
                       "value": "::std::dyn_string::construct::index"
@@ -18743,7 +18876,7 @@
             "_pointerToSource",
             {
               "implementation_typename": "object",
-              "serialization_id": 1637,
+              "serialization_id": 1649,
               "type": "pointerToSource",
               "value": {
                 "fields": [
@@ -18751,7 +18884,7 @@
                     "filename",
                     {
                       "implementation_typename": "string_value",
-                      "serialization_id": 1635,
+                      "serialization_id": 1647,
                       "type": "string",
                       "value": {
                         "value": "string.cm"
@@ -18762,7 +18895,7 @@
                     "lineNumber",
                     {
                       "implementation_typename": "integer_value",
-                      "serialization_id": 1636,
+                      "serialization_id": 1648,
                       "type": "usize",
                       "value": {
                         "signed": false,
@@ -18787,14 +18920,14 @@
             "_variables",
             {
               "implementation_typename": "array_value",
-              "serialization_id": 1640,
+              "serialization_id": 1652,
               "type": "array<variableDescriptor>",
               "value": {
                 "element_type": "variableDescriptor",
                 "value": [
                   {
                     "implementation_typename": "runtime_variable_descriptor",
-                    "serialization_id": 1638,
+                    "serialization_id": 1650,
                     "type": "variableDescriptor",
                     "value": {
                       "value": "::std::dyn_string::construct::$_0"
@@ -18802,7 +18935,7 @@
                   },
                   {
                     "implementation_typename": "runtime_variable_descriptor",
-                    "serialization_id": 1639,
+                    "serialization_id": 1651,
                     "type": "variableDescriptor",
                     "value": {
                       "value": "::std::dyn_string::construct::$_1"
@@ -20040,7 +20173,7 @@
                     {
                       "implementation_typename": "reference_value",
                       "serialization_id": 30,
-                      "type": "variableDeclarationStatement*",
+                      "type": "whileStatement*",
                       "value": {
                         "value": 29
                       }

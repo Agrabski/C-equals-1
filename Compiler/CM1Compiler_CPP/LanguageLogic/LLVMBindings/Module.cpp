@@ -2,6 +2,7 @@
 #include <llvm/IR/Module.h>
 #include <llvm/IR/Function.h>
 #include <llvm/IR/IRBuilder.h>
+#include <llvm/IR/Type.h>
 #include "../BuiltInPackageBuildUtility.hpp"
 #include "../CreateGetter.hpp"
 #include "../RuntimeTypesConversionUtility.hpp"
@@ -46,6 +47,13 @@ void appendFunction(
 				llvm::Function::ExternalLinkage,
 				llvm::Twine(name),
 				*self);
+			auto arg = fu->arg_begin();
+			for (auto& name : *names)
+			{
+				auto n = dereferenceAs<StringValue>(name.get())->value();
+				arg->setName(n);
+				arg++;
+			}
 			return std::make_unique<GenericRuntimeWrapper<llvm::Function>>(fu, TypeReference{ getLLVMFunctionDescriptor(), 0 });
 		})
 		->setReturnType({ llvmFunction, 0 });
@@ -53,6 +61,25 @@ void appendFunction(
 		f->appendVariable("parameterTypes", { getCollectionTypeFor({llvmType, 0}), 0 });
 		f->appendVariable("parameterNames", { getCollectionTypeFor({getString(), 0}), 0 });
 		f->appendVariable("returnType", { llvmType, 0 });
+}
+
+void appendType(
+	not_null<Type*> mod,
+	not_null<Type*> llvmType
+)
+{
+	auto f = mod->append<Function>("appendStruct");
+	createCustomFunction(f, mod, [llvmType](auto&& params, auto)->runtime_value
+		{
+			auto name = dereferenceAs<StringValue>(params["name"].get())->value();
+			auto self = dereferenceAs<GenericRuntimeWrapper<llvm::Module>>(params["self"].get())->value();
+
+			// todo: linkage
+			auto ty = llvm::StructType::create(self->getContext(), name);
+			return std::make_unique<GenericRuntimeWrapper<llvm::Type>>(ty, TypeReference{ llvmType, 0 });
+		})
+		->setReturnType({ llvmType, 0 });
+		f->appendVariable("name", { getString(), 0 });
 }
 
 void appendName(
@@ -76,6 +103,7 @@ gsl::not_null<Type*> cMCompiler::language::buildModuleDescriptor(
 {
 	auto result = backendns->append<Type>("llvmModule");
 	appendFunction(result, llvmFunction, llvmType);
+	appendType(result, llvmType);
 
 
 

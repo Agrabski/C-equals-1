@@ -23,7 +23,8 @@ int cMCompiler::language::getLineNumber(antlr4::tree::ParseTree* tree)
 
 bool cMCompiler::language::isOfType(gsl::not_null<cMCompiler::dataStructures::execution::IRuntimeValue*> value, gsl::not_null<dataStructures::Type*> type)
 {
-	return value->type().type == type;
+	auto concreteValue = dereference(value);
+	return concreteValue->type().type == type;
 }
 
 void cMCompiler::language::implementExpressionInterface(not_null<dataStructures::Type*> type)
@@ -252,6 +253,7 @@ gsl::not_null<Type*> cMCompiler::language::buildArrayLiteralExpressionDescriptor
 	auto t = irNs->append<Type>("arrayLiteralExpression");
 	t->appendField("_value", { nullptr, 1 });
 	t->appendField("_type", { getTypeDescriptor(), 0 });
+	t->appendField("_elementType", { getTypeDescriptor(), 0 });
 	createGetter(t->append<Function>("value"), t);
 	t->appendField("_parentExpression", { getExpressionDescriptor(), 1 });
 	t->appendField("_pointerToSource", { getPointerToSource(), 0 });

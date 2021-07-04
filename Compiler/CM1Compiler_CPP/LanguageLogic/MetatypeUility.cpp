@@ -190,6 +190,9 @@ cMCompiler::language::runtime_value cMCompiler::language::buildBinaryOperatorExp
 	args.push_back(std::move(arg2));
 	auto compileTime = resolveOverload(candidates, args, true, false);
 	auto runTime = resolveOverload(candidates, args, false, true);
+	if (!(compileTime != nullptr || runTime != nullptr))
+		std::cout << "";
+	assert(compileTime != nullptr || runTime != nullptr);
 	return language::buildBinaryOperatorExpression(
 		language::getValueFor(compileTime),
 		language::getValueFor(runTime),

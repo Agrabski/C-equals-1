@@ -54,6 +54,20 @@ std::optional<runtime_value> cMCompiler::compiler::StatementEvaluator::evaluate(
 				return r;
 		return {};
 	}
+	if (isOfType(inst, language::getWhileDescriptor()))
+	{
+		auto expression = inst->getMemberValue("_expression")->value();
+		auto code = dereferenceAs<ArrayValue>(inst->getMemberValue("_body")->value()->get());
+		auto expressionValue = ev_.evaluate(**expression);
+		while (dereferenceAs<BooleanValue>(expressionValue.get())->value())
+		{
+			for (auto& i : *code)
+				if (auto r = evaluate(i))
+					return r;
+			expressionValue = ev_.evaluate(**expression);
+		}
+		return {};
+	}
 	std::terminate();
 }
 
@@ -67,7 +81,9 @@ void cMCompiler::compiler::StatementEvaluator::assign(dataStructures::execution:
 	using utilities::pointer_cast;
 	auto lExpression = pointer_cast<IRuntimeValue>(language::dereferenceAs<ObjectValue>(&instruction)->getMemberValue("_lExpression"));
 	auto rExpression = pointer_cast<IRuntimeValue>(language::dereferenceAs<ObjectValue>(&instruction)->getMemberValue("_rExpression"));
-	ev_.evaluateLeftExpression(*lExpression)->performAssigment(ev_.evaluate(*rExpression));
+	auto lvalue = ev_.evaluateLeftExpression(*lExpression);
+	auto rvalue = ev_.evaluate(*rExpression);
+	lvalue->performAssigment(std::move( rvalue));
 }
 
 void cMCompiler::compiler::StatementEvaluator::declareVariable(dataStructures::execution::IRuntimeValue& instruction)

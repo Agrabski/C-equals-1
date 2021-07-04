@@ -25,6 +25,8 @@ typeDeclaration:
 
 classTypeSpecifier: (Class| Interface | 'struct');
 
+adressOfExpression: '&' expression;
+
 classContentSequence: (functionDeclaration | fieldDeclaration)*;
 
 fieldDeclaration:
@@ -117,6 +119,7 @@ qualifiedIdentifier: identifier (DoubleColon identifier)*;
 
 expression
     : STRING
+    | adressOfExpression
     | arrayLiteral
     | ParamOpen expression ParamClose
     | expression Period identifier
@@ -131,7 +134,7 @@ expression
     | expression indexExpression
     ;
 
-arrayLiteral: typeReference '[' ((expression ',')* expression)? ']';
+arrayLiteral: Less typeReference Greater '[' ((expression ',')* expression)? ']';
 
 indexExpression: '[' expression+']';
 

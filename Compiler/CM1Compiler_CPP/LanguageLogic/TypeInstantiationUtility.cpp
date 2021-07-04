@@ -6,7 +6,7 @@ using namespace cMCompiler::dataStructures::execution;
 std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler::language::instantiate(dataStructures::TypeReference t)
 {
 	//todo: finish
-	return std::make_unique<dataStructures::execution::ObjectValue>(t);
+	return std::make_unique<dataStructures::execution::ObjectValue>(dataStructures::TypeReference{ t.type, 0 });
 }
 
 std::unique_ptr<cMCompiler::dataStructures::execution::ReferenceValue> cMCompiler::language::heapAllocate(dataStructures::TypeReference  type, bool unique)

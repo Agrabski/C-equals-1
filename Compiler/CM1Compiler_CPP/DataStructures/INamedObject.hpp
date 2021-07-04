@@ -10,6 +10,7 @@ namespace cMCompiler::dataStructures
 	enum class ObjectState { Cretated, Confirmed, Finalized };
 	class INamedObject
 	{
+		std::unique_ptr<execution::IRuntimeValue> sourcePointer_;
 		std::string name_;
 		INamedObject* parent_;
 		INamedObject(INamedObject&&) = delete;
@@ -30,5 +31,13 @@ namespace cMCompiler::dataStructures
 		virtual std::vector<INamedObject*> children() = 0;
 		virtual execution::json emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const = 0;
 		std::vector<validation::ValidationError> validate() const;
+		void setSourceLocation(std::unique_ptr<execution::IRuntimeValue>&& sourceLocation) noexcept
+		{
+			sourcePointer_ = std::move(sourceLocation);
+		}
+		std::unique_ptr<execution::IRuntimeValue> sourcePointer() const
+		{
+			return sourcePointer_->copy();
+		}
 	};
 }

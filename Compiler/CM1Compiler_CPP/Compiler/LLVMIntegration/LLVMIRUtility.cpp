@@ -13,6 +13,7 @@
 #include <clang/Driver/Driver.h>
 #include <clang/Driver/Compilation.h>
 #include <clang/Driver/Action.h>
+#include "../IntermidiateRepresentationEmmiter.hpp"
 #include "../compilerInterfaceUtility.hpp"
 #include "../FunctionExecutionUtility.hpp"
 #include "../../LanguageLogic/MetatypeUility.hpp"
@@ -34,6 +35,7 @@ std::unique_ptr<CompilationResult> cMCompiler::compiler::llvmIntegration::compil
 	std::vector<language::runtime_value> args;
 	args.push_back(language::getValueFor(packages));
 	args.push_back(language::getValueFor(result.get()));
+	auto emiter = cMCompiler::compiler::IntermidiateRepresentationEmmiter();
 	execute(entryPoint, std::move(args));
 	return result;
 }
@@ -65,8 +67,9 @@ void cMCompiler::compiler::llvmIntegration::compileToBinary(
 		auto pass = llvm::legacy::PassManager();
 
 		std::error_code ec;
+		auto path = std::filesystem::path(module->getModuleIdentifier()).replace_extension(".o").filename();
 		llvm::raw_fd_ostream dest(
-			(outputDirectory / (module->getModuleIdentifier() + ".o")).string(),
+			(outputDirectory / path).string(),
 			ec,
 			llvm::sys::fs::OpenFlags::OF_None);
 
