@@ -151,10 +151,22 @@ void completeBuildingType(gsl::not_null<Type*> type)
 			auto arg2 = dereferenceAs<execution::RuntimeTypeDescriptor>(b.get());
 			return buildBooleanValue(arg1->value() == arg2->value());
 		});
+	createOperator(
+		getDefaultPackage()->rootNamespace(),
+		"!=",
+		{ type, 0 },
+		{ type, 0 },
+		{ getBool(), 0 },
+		[](auto& a, auto& b)
+		{
+			auto arg1 = dereferenceAs<execution::RuntimeTypeDescriptor>(a.get());
+			auto arg2 = dereferenceAs<execution::RuntimeTypeDescriptor>(b.get());
+			return buildBooleanValue(arg1->value() != arg2->value());
+		});
 	createCustomFunction(
 		type
 		->append<Function>("fields")
-		->setReturnType({ getCollectionTypeFor({type,0}),0 }),
+		->setReturnType({ getCollectionTypeFor({getFieldDescriptor(),0}),0 }),
 		type,
 		[](auto&& a, auto b)
 		{
@@ -183,12 +195,12 @@ void buildCompilerLibrary(gsl::not_null<Namespace*> rootNamespace)
 	auto function = buildFunctionDescriptor(ns);
 
 	auto nsDescriptor = buildNamespaceDescriptor(ns);
+	buildPointerToSource(ns);
+	buildFieldDescriptor(ns);
 	buildPackageDescriptor(ns);
 	completeBuildingType(type);
 	completeBuildingNamespace(nsDescriptor);
 	completeBuildingFunction(function);
-	buildPointerToSource(ns);
-	buildFieldDescriptor(ns);
 	buildIrNamespace(ns);
 	buildCompilerEntryPointAttribute(ns);
 	buildLLVMBindings(ns);
@@ -449,6 +461,13 @@ void buildString(gsl::not_null<Type*> string)
 		});
 }
 
+void supplySourcePointers(not_null<INamedObject*> object, cMCompiler::language::runtime_value const& sourcePointer)
+{
+	object->setSourceLocation(sourcePointer->copy());
+	for (auto child : object->children())
+		supplySourcePointers(child, sourcePointer);
+}
+
 void buildPackage()
 {
 	using namespace cMCompiler::language::compileTimeFunctions;
@@ -478,6 +497,8 @@ void buildPackage()
 	readFile->appendVariable("path", { string, 0 });
 	readFile->setReturnType({ string, 0 });
 	functionLibrary.addFunctionDefinition(readFile, compileTimeFunctions::readAllFile);
+
+	supplySourcePointers(result->rootNamespace(), buildPointerToSource("C-=-1_library_internals.cm", 0));
 }
 
 gsl::not_null<PackageDatabase*> cMCompiler::language::getDefaultPackage()

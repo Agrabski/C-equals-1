@@ -37,6 +37,7 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::instantia
 	if (type.name() == "array")
 	{
 		auto newType = getDefaultPackage()->rootNamespace()->append<dataStructures::Type>(name);
+		newType->setSourceLocation(buildPointerToSource("C-=-1_library_internals.cm", 0));
 		newType->setAccessibility(dataStructures::Accessibility::Public);
 		auto indexOperator = newType->append<dataStructures::Function>("operator_[]");
 		createIndexer(indexOperator, newType, genericParameters[0]);
@@ -51,7 +52,7 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::instantia
 				return nullptr;
 			})->appendVariable("value", genericParameters[0]);
 		createCustomFunction(
-			newType->append<dataStructures::Function>("push"),
+			newType->append<dataStructures::Function>("length"),
 			newType,
 			[](auto&& args, auto)
 			{

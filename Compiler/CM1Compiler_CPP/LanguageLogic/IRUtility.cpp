@@ -7,6 +7,7 @@
 #include "../DataStructures/execution/RuntimeFunctionDescriptor.hpp"
 #include "GetterExecution.hpp"
 #include "../Parser/antlr4-runtime.h"
+#include "LiteralUtility.hpp"
 using namespace cMCompiler::dataStructures::execution;
 
 using namespace cMCompiler::dataStructures;
@@ -92,6 +93,7 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildWhil
 	impl->appendField("_pointerToSource", { getPointerToSource(), 0 });
 	impl->appendField("_expression", { expression, 1 });
 	impl->appendField("_body", { getCollectionTypeFor({baseStatement, 1}), 0 });
+	impl->appendField("_parent", { getIInstruction(), 1 })->setAccessibility(Accessibility::Private);
 	return interface;
 }
 
@@ -106,8 +108,36 @@ gsl::not_null<Type*> cMCompiler::language::buildVariableDescriptor(gsl::not_null
 gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildFieldDescriptor(gsl::not_null<dataStructures::Namespace*> compilerNs)
 {
 	auto result = compilerNs->append<Type>("fieldDescriptor"s);
-	result->append<Function>("name"s)->setReturnType({ getString(), 0 })->setAccessibility(Accessibility::Public);
-	result->append<Function>("type"s)->setReturnType({ getTypeDescriptor(), 0 })->setAccessibility(Accessibility::Public);
+	createCustomFunction(
+		result->append<Function>("name"s)
+		->setReturnType({ getString(), 0 }),
+		result,
+		[](auto&& a, auto)
+		{
+			auto self = dereferenceAs<dataStructures::execution::RuntimeFieldDescriptor>(a["self"].get())->value();
+			return buildStringValue(self->name());
+		}
+	)->setAccessibility(Accessibility::Public);
+	createCustomFunction(
+		result->append<Function>("type"s)
+		->setReturnType({ getTypeDescriptor(), 0 }),
+		result,
+		[](auto&& a, auto)
+		{
+			auto self = dereferenceAs<dataStructures::execution::RuntimeFieldDescriptor>(a["self"].get())->value();
+			return getValueFor(self->type());
+		}
+	)->setAccessibility(Accessibility::Public);
+	createCustomFunction(
+		result->append<Function>("typeReferenceCount"s)
+		->setReturnType({ getUsize(), 0 }),
+		result,
+		[](auto&& a, auto)
+		{
+			auto self = dereferenceAs<dataStructures::execution::RuntimeFieldDescriptor>(a["self"].get())->value();
+			return buildIntegerValue(getUsize(), self->type().referenceCount);
+		}
+	)->setAccessibility(Accessibility::Public);
 	return result;
 }
 
@@ -368,6 +398,43 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildVari
 	return result;
 }
 
+gsl::not_null<Type*> cMCompiler::language::buildNewExpressionDescriptor(gsl::not_null<dataStructures::Namespace*> irNs)
+{
+	auto result = irNs->append<Type>("newExpression");
+	createGetter(result->append<Function>("newOperator")->setReturnType({ getFunctionDescriptor(), 0 }), result)->setAccessibility(Accessibility::Public);
+	createGetter(result->append<Function>("compiletimeConstructor")->setReturnType({ getFunctionDescriptor(), 0 }), result)->setAccessibility(Accessibility::Public);
+	createGetter(result->append<Function>("runtimeConstructor")->setReturnType({ getFunctionDescriptor(), 0 }), result)->setAccessibility(Accessibility::Public);
+	createGetter(result->append<Function>("arguments")->setReturnType({ getCollectionTypeFor({getExpressionDescriptor(), 1}),1 }), result)->setAccessibility(Accessibility::Public);
+	result->appendField("_parentExpression", { getExpressionDescriptor(), 1 });
+	result->appendField("_pointerToSource", { getPointerToSource(), 0 });
+
+	createCustomFunction(result->append<Function>("type"), result,
+		[](value_map&& a, generic_parameters)->runtime_value
+		{
+			auto self = dereferenceAs<ObjectValue>(a["self"].get());
+			auto f = dereferenceAs<RuntimeFunctionDescriptor>(self->getMemberValue("_newOperator").get());
+			if (f == nullptr)
+			{
+				auto returnType = dereferenceAs<RuntimeFunctionDescriptor>(self->getMemberValue("_compiletimeConstructor").get())->value()->returnType();
+				returnType.referenceCount++;
+				return  getValueFor(returnType);
+			}
+			else
+				return getValueFor(f->value()->returnType());
+		}
+	);
+	createGetter(result->append<Function>("parentExpression"), result);
+	createGetter(result->append<Function>("pointerToSource"), result);
+	result->appendInterface(getExpressionDescriptor());
+
+	result->appendField("_newOperator", { getFunctionDescriptor(), 0 })->setAccessibility(Accessibility::Private);
+	result->appendField("_compiletimeConstructor", { getFunctionDescriptor(), 0 })->setAccessibility(Accessibility::Private);
+	result->appendField("_runtimeConstructor", { getFunctionDescriptor(), 0 })->setAccessibility(Accessibility::Private);
+	result->appendField("_sourcePointer", { getPointerToSource(), 0 });
+	result->appendField("_arguments", { getCollectionTypeFor({getExpressionDescriptor(),1}), 0 })->setAccessibility(Accessibility::Private);
+	return result;
+}
+
 void cMCompiler::language::buildIrNamespace(gsl::not_null<dataStructures::Namespace*> compilerNs)
 {
 	auto ns = compilerNs->append<Namespace>("ir"s);
@@ -389,6 +456,7 @@ void cMCompiler::language::buildIrNamespace(gsl::not_null<dataStructures::Namesp
 	buildConstructorInvocationExpressionDescriptor(ns);
 	buildWhileDescriptor(ns, statement, expression);
 	buildAdressofExpressionDescriptor(ns);
+	buildNewExpressionDescriptor(ns);
 }
 
 gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getVariableDescriptor()
@@ -449,6 +517,11 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getConstr
 gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getAdressofExpressionDescriptor()
 {
 	return getDefaultPackage()->rootNamespace()->get<Namespace>("compiler")->get<Namespace>("ir")->get<Type>("adressofExpression");
+}
+
+gsl::not_null<Type*> cMCompiler::language::getNewExpressionDescriptor()
+{
+	return getDefaultPackage()->rootNamespace()->get<Namespace>("compiler")->get<Namespace>("ir")->get<Type>("newExpression");
 }
 
 gsl::not_null<Type*> cMCompiler::language::getArrayLiteralExpression()

@@ -126,6 +126,19 @@ std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler
 	return std::move(expression);
 }
 
+std::unique_ptr<IRuntimeValue> cMCompiler::language::buildNewExpression(runtime_value&& referenceToruntimeNew, runtime_value&& referenceToRuntimeConstructor, runtime_value&& referenceToCompiletimeContructor, runtime_value&& expressions, runtime_value&& pointerToSource)
+{
+	auto [result, object] = heapAllocateObject(getNewExpressionDescriptor());
+
+	object.setValue("_newOperator", std::move(referenceToruntimeNew));
+	object.setValue("_compiletimeConstructor", std::move(referenceToCompiletimeContructor));
+	object.setValue("_runtimeConstructor", std::move(referenceToRuntimeConstructor));
+	object.setValue("_arguments", std::move(expressions));
+	object.setValue("_sourcePointer", std::move(pointerToSource));
+
+	return std::move(result);
+}
+
 cMCompiler::language::runtime_value cMCompiler::language::buildIndexOperatorExpression(
 	runtime_value&& expression,
 	dataStructures::TypeReference type,

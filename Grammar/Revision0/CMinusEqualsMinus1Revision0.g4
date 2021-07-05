@@ -138,7 +138,9 @@ arrayLiteral: Less typeReference Greater '[' ((expression ',')* expression)? ']'
 
 indexExpression: '[' expression+']';
 
-newExpression : New (Unique | Shared) functionCall;
+newExpression : New (Unique | Shared) typeReference ParamOpen (
+                                      		functionCallParameter (Comma functionCallParameter)*
+                                      	)? ParamClose;
 
 assigmentStatement:
 	expression Asssigment expression;
@@ -228,7 +230,7 @@ Shared: 'shared';
 Unique: 'unique';
 New: 'new';
 
-identifier: SimpleIdentifier | '@new' | '@unique' | '@shared' | '@throw' | '@attribute' | '@default';
+identifier: SimpleIdentifier | '@new' | '@unique' | '@shared' | '@throw' | '@attribute' | '@default' | 'type';
 
 SimpleIdentifier: LETTER (LETTER | DIGIT)*;
 

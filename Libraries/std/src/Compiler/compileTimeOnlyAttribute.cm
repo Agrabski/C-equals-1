@@ -1,6 +1,6 @@
 import {markCompileTimeOnly functionDescriptor} from {cm1mLang::compiler}
 
-namespace std::compiler 
+namespace compiler 
 {
 	public att<function> CompileTimeOnly
 	{

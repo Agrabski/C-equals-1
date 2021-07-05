@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <ranges>
 #include "../DataStructures/Function.hpp"
 
 namespace cMCompiler::language

@@ -125,7 +125,7 @@ void cMCompiler::compiler::attachAttribute(not_null<dataStructures::Function*> f
 				return dummyValue;
 			});
 		auto expression = ep.buildExpression(p);
-		parameters.push_back(evaluator.evaluate(*expression.get()));
+		parameters.push_back(evaluator.evaluate(*expression));
 	}
 	auto instance = cMCompiler::compiler::createAttributeInstance(*f, attributeType, std::move(parameters));
 	f->appendAttribute(std::move(instance));

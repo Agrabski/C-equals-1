@@ -1,7 +1,7 @@
-import {compilerEntryPoint packageDescriptor string null} from {cm1mLang}
-import {llvmModule compilationResult llvmType} from {cm1mLang::compiler::backend}
+import {compilerEntryPoint usize packageDescriptor string null} from {cm1mLang}
+import {llvmModule compilationResult llvmType llvmInt32Type} from {cm1mLang::compiler::backend}
 import {functionDescriptor typeDescriptor packageDescriptor} from {cm1mLang::compiler}
-import {enumerate} from {std::std}
+import {enumerate list} from {std}
 
 private struct pathPackagePair
 {
@@ -28,22 +28,22 @@ private struct typeMapPair
 
 private class packageRegistry
 {
-	private _data: pathPackagePair[];
-	private _types: typeMapPair[];
+	private _data: list<pathPackagePair>;
+	private _types: list<typeMapPair>;
 	private _compilationResult: compilationResult;
 
 	public fn construct(cr: compilationResult)
 	{
-		self._data = <pathPackagePair>[];
-		self._types = <typeMapPair>[];
+		self._data = list<pathPackagePair>();
+		self._types = list<typeMapPair>();
 		self._compilationResult = cr;
 	}
 
 	private fn getModuleForFile(path: string) -> llvmModule
 	{
 		for(i in enumerate(0, self._data.length()))
-			if(self._data[i].path == path)
-				return self._data[i].module;
+			if(self._data.get(i).path == path)
+				return self._data.get(i).module;
 		let newModule = self._compilationResult.appendModule(path);
 		self._data.push(pathPackagePair(path, newModule));
 		return newModule;
@@ -58,11 +58,13 @@ private class packageRegistry
 
 	public fn getLLVMTypeFor(t: typeDescriptor, package: packageDescriptor) -> llvmType
 	{
+		if(t == typeof(usize))
+			return llvmInt32Type(self._compilationResult);
 		let file = t.sourceLocation();
 		let module = self.getModuleForFile(file.filename);
 		for(i in enumerate(0, self._types.length()))
-			if(self._types[i].ctype == t)
-				return self._types[i].llvmType;
+			if(self._types.get(i).ctype == t)
+				return self._types.get(i).llvmType;
 		let llvmType = module.appendType(package.name() + t.qualifiedName());
 		self._types.push(typeMapPair(t, llvmType));
 		return llvmType;

@@ -1,6 +1,8 @@
 #pragma once
 #include <vector>
 #include <gsl.h>
+#include <ranges>
+#include <filesystem>
 #include "../DataStructures/PackageDatabase.hpp"
 #include "../DataStructures/QualifiedName.hpp"
 #include "../DataStructures/INamedObject.hpp"
@@ -8,6 +10,22 @@
 #include "../DataStructures/NameResolutionContext.hpp"
 #include "NamespaceBuilder.hpp"
 
+namespace cMCompiler::language
+{
+	using NameResolutionContext = dataStructures::NameResolutionContext;
+
+	class NameResolver;
+}
+namespace cMCompiler::compiler
+{
+	extern not_null<dataStructures::Function*> instantiate(
+		dataStructures::Generic<dataStructures::Function>& function,
+		std::vector<dataStructures::TypeReference> const& genericParameters,
+		language::NameResolver& resolver,
+		dataStructures::NameResolutionContext const& context,
+		std::filesystem::path const& file
+	);
+}
 namespace cMCompiler::dataStructures
 {
 	class PackageDatabase;
@@ -53,8 +71,13 @@ namespace cMCompiler::language
 				return result;
 			}
 
-			auto const& currentNamespace = context.namespaceStack_.back();
-			return currentNamespace->get<T>(name);
+			for (auto const currentNamespace : context.namespaceStack_)
+			{
+				auto result = currentNamespace->get<T>(name);
+				if (result != nullptr)
+					return result;
+			}
+			return nullptr;
 		}
 
 		std::vector<not_null<dataStructures::Generic<dataStructures::Function>*>> resolveGenericOverloadSet(std::string const& name, NameResolutionContext& context)
@@ -73,13 +96,15 @@ namespace cMCompiler::language
 			}
 			else //local function
 			{
-				auto ns = context.namespaceStack_.back();
-				auto objects = ns->children();
-				for (auto o : objects)
+				for (auto ns : context.namespaceStack_)
 				{
-					auto f = dynamic_cast<dataStructures::Generic<dataStructures::Function>*>(o);
-					if (f != nullptr && f->name() == name)
-						functions.push_back(f);
+					auto objects = ns->children();
+					for (auto o : objects)
+					{
+						auto f = dynamic_cast<dataStructures::Generic<dataStructures::Function>*>(o);
+						if (f != nullptr && f->name() == name)
+							functions.push_back(f);
+					}
 				}
 			}
 			return functions;
@@ -102,13 +127,15 @@ namespace cMCompiler::language
 			}
 			else //local function
 			{
-				auto ns = context.namespaceStack_.back();
-				auto objects = ns->children();
-				for (auto o : objects)
+				for (auto ns : context.namespaceStack_)
 				{
-					auto f = dynamic_cast<dataStructures::Function*>(o);
-					if (f != nullptr && f->name() == name)
-						functions.push_back(f);
+					auto objects = ns->children();
+					for (auto o : objects)
+					{
+						auto f = dynamic_cast<dataStructures::Function*>(o);
+						if (f != nullptr && f->name() == name)
+							functions.push_back(f);
+					}
 				}
 			}
 			return functions;
@@ -130,6 +157,24 @@ namespace cMCompiler::language
 			}
 			return result;
 
+		}
+
+		dataStructures::Function* resolveOperatorNewUnique(
+			NameResolutionContext const& context,
+			dataStructures::TypeReference type
+			)
+		{
+			for (auto d : this->dependencies_)
+				if (d->name() == "std")
+				{
+					auto g = d->rootNamespace()->get<dataStructures::Generic<dataStructures::Function>>("operator_new_unique");
+					return compiler::instantiate(
+						*g,
+						{ type },
+						*this,
+						context,
+						std::filesystem::path());
+				}
 		}
 
 		void addImport(

@@ -1,0 +1,67 @@
+import {usize} from {cm1mLang}
+
+
+public class integerIterator
+{
+	private _value: usize;
+	private _step: usize;
+	public fn construct(value: usize, step: usize)
+	{
+		self._value = value;
+		self._step = step;
+	}
+	public fn get() -> usize
+	{
+		return self._value;
+	}
+
+	public fn advance()
+	{
+		self._value = self._value + self._step;
+	}
+}
+
+
+public class enumeration<From, To>
+{
+	private _to: To;
+	private _from: From;
+
+	public fn construct(fr: From, to: To)
+	{
+		self._from = fr;
+		self._to = to;
+	}
+
+	public fn begin() -> From
+	{
+		return self._from;
+	}
+
+	public fn end() -> To
+	{
+		return self._to;
+	}
+}
+
+public class atHocCollection<From, To>
+{
+	private _to: To;
+	private _from: From;
+
+	public fn construct(fr: From, to: To)
+	{
+		self._from = fr;
+		self._to = to;
+	}
+
+	public fn iterate() -> enumeration<From, To>
+	{
+		return enumeration<From, To>(self._from, self._to);
+	}
+}
+
+public fn enumerate(fr: usize, to: usize) -> atHocCollection<integerIterator, integerIterator>
+{
+	return atHocCollection<integerIterator, integerIterator>(integerIterator(fr, 1), integerIterator(to, 1));
+}

@@ -1,8 +1,7 @@
 import {functionDescriptor typeDescriptor replaceWithCompilerFunction replaceWithCompilerType} from {cm1mLang::compiler}
 import {string} from {cm1mLang}
-import {print} from {std}
 
-namespace std::compiler 
+namespace compiler 
 {
 	public att<type> TypeMapsTo
 	{

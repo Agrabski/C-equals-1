@@ -74,12 +74,29 @@ void appendType(
 			auto name = dereferenceAs<StringValue>(params["name"].get())->value();
 			auto self = dereferenceAs<GenericRuntimeWrapper<llvm::Module>>(params["self"].get())->value();
 
-			// todo: linkage
 			auto ty = llvm::StructType::create(self->getContext(), name);
 			return std::make_unique<GenericRuntimeWrapper<llvm::Type>>(ty, TypeReference{ llvmType, 0 });
 		})
 		->setReturnType({ llvmType, 0 });
 		f->appendVariable("name", { getString(), 0 });
+}
+
+void appendArrayType(
+	not_null<Type*> mod,
+	not_null<Type*> llvmType
+)
+{
+/*	auto f = mod->append<Function>("appendArray");
+	createCustomFunction(f, mod, [llvmType](auto&& params, auto)->runtime_value
+		{
+			auto name = dereferenceAs<llvm::Type>(params["type"].get())->value();
+			auto self = dereferenceAs<GenericRuntimeWrapper<llvm::Module>>(params["self"].get())->value();
+
+			auto ty = llvm::ArrayType::create(self->getContext(), name);
+			return std::make_unique<GenericRuntimeWrapper<llvm::Type>>(ty, TypeReference{ llvmType, 0 });
+		})
+		->setReturnType({ llvmType, 0 });
+		f->appendVariable("type", { llvmType, 0 })*/;
 }
 
 void appendName(

@@ -1,0 +1,28 @@
+import {null} from {cm1mLang}
+
+class @unique<T>
+{
+	private _allocated : T*;
+
+	public fn finalize()
+	{
+		delete<T>(self._allocated);
+	}
+
+	public fn move() -> @unique<T>
+	{
+		let result = @unique<T>(self._allocated);
+		self._allocated = null<T>();
+		return result;
+	}
+
+	public fn get() -> T*
+	{
+		return self._allocated;
+	}
+
+	internal fn construct(value: T*)
+	{
+		self._allocated = value;
+	}
+}

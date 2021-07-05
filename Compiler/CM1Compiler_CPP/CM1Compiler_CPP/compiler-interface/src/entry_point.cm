@@ -1,7 +1,7 @@
 import {compilerEntryPoint functionDescriptor packageDescriptor typeDescriptor} from {cm1mLang::compiler}
-import {string null} from {cm1mLang}
+import {string null usize} from {cm1mLang}
 import {compilationResult llvmType llvmInt32Type llvmModule} from {cm1mLang::compiler::backend}
-import {enumerate} from {std::std}
+import {enumerate} from {std}
 
 [compilerEntryPoint()]
 public fn entryPoint(packages: packageDescriptor[], result: compilationResult) {
@@ -26,19 +26,23 @@ private fn createType(t: typeDescriptor, package: packageDescriptor, registry: p
 
 private fn completeType(t: typeDescriptor, package: packageDescriptor, registry: packageRegistry*)
 {
-	let fields = t.fields();
-	let lt = registry.getLLVMTypeFor(t, package);
-	let types = <llvmType>[llvmInt32Type(registry._compilationResult)];
-	lt.setFields(types);
-	for(i in enumerate(0, fields.length()))
+	if(t != typeof(usize))
 	{
-
-	}
-	let cons = t.constructors();
-	for(i in enumerate(0, cons.length()))
-	{
-		let mod = registry.getModuleFor(cons[i]);
-		buildConstructor(t, cons[i], package, registry, mod);
+		let fields = t.fields();
+		let lt = registry.getLLVMTypeFor(t, package);
+		let types = <llvmType>[];
+		for(i in enumerate(0, fields.length()))
+		{
+			let field = fields[i];
+			types.push(registry.getLLVMTypeFor(field.type(), package));
+		}
+		lt.setFields(types);
+		let cons = t.constructors();
+		for(i in enumerate(0, cons.length()))
+		{
+			let mod = registry.getModuleFor(cons[i]);
+			buildConstructor(t, cons[i], package, registry, mod);
+		}
 	}
 }
 
@@ -46,5 +50,5 @@ private fn buildConstructor(t: typeDescriptor, f: functionDescriptor, package: p
 {
 	let lt = registry.getLLVMTypeFor(t, package);
 	let f = mod.appendFunction("construct", <llvmType>[], <string>[], lt);
-	f.appendAlloca(lt);
+	f.appendAlloca(lt, "self");
 }

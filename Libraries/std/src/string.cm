@@ -1,0 +1,18 @@
+import {string} from {cm1mLang}
+
+class dyn_string
+{
+	private _text : char[];
+	
+	public fn construct()
+	{
+		self._text = new_array<char>(0);
+	}
+
+	public fn construct(text: string)
+	{
+		self._text = new_array<char>(text.length());
+		for(index in enumerate(0, text.length()))
+			self._text[index] = text[index];
+	}
+}

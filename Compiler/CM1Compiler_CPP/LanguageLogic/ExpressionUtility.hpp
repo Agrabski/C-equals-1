@@ -30,6 +30,14 @@ namespace cMCompiler::language
 		runtime_value&& pointerToSource
 	);
 
+	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildNewExpression(
+		runtime_value&& referenceToruntimeNew,
+		runtime_value&& referenceToRuntimeConstructor,
+		runtime_value&& referenceToCompiletimeContructor,
+		runtime_value&& expressions,
+		runtime_value&& pointerToSource
+	);
+
 	runtime_value buildIndexOperatorExpression(
 		runtime_value&& expression,
 		dataStructures::TypeReference type,

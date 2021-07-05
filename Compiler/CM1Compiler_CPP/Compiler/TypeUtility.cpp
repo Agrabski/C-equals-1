@@ -3,11 +3,25 @@
 #include "../DataStructures/Accessibility.hpp"
 #include "../LanguageLogic/BuiltInPackageBuildUtility.hpp"
 #include "../LanguageLogic/GenericUtility.hpp"
+#include "../LanguageLogic/SpecialFunctionUtility.hpp"
 #include "Generic/GenericInstantiationUtility.hpp"
 
 std::string name(gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*> ctx)
 {
 	return ctx->identifier()->getText();
+}
+
+void appendDefaultConstructor(not_null<cMCompiler::dataStructures::Type*> type)
+{
+	using namespace cMCompiler::dataStructures;
+	using namespace cMCompiler;
+	auto c = type->append<Function>("construct");
+	c->setIrCollection(std::make_unique<execution::ArrayValue>(TypeReference{ language::getCollectionTypeFor(
+			TypeReference{ language::getIInstruction(), 1 }), 0 },
+		TypeReference{ language::getIInstruction() ,1 }
+	));
+	c->setReturnType({ nullptr, 0 });
+	cMCompiler::compiler::appendSpecialVariable(type, c);
 }
 
 cMCompiler::dataStructures::Type* cMCompiler::compiler::createType(
@@ -112,6 +126,7 @@ void cMCompiler::compiler::confirmType(
 			}
 		type->confirm();
 		type->setSourceLocation(language::buildSourcePointer(file.string(), *ctx));
+
 	}
 }
 
@@ -121,9 +136,6 @@ void cMCompiler::compiler::finalizeType(language::NameResolver& resolver, langua
 	auto const* const generic = ctx->genericSpecifier();
 	if (generic == nullptr)
 	{
-		int a[3];
-		auto x = &a;
-
 		assert(type != nullptr);
 
 		auto functions = type->methods();
@@ -136,6 +148,8 @@ void cMCompiler::compiler::finalizeType(language::NameResolver& resolver, langua
 					});
 				finalizeFunction(resolver, context, f, member, file);
 			}
+		if (auto methods = type->methods(); !std::any_of(methods.begin(), methods.end(), language::isConstructor))
+			appendDefaultConstructor(type);
 		type->finalize();
 	}
 }

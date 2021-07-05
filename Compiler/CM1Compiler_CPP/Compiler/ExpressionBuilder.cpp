@@ -1,5 +1,6 @@
 #include "ExpressionBuilder.hpp"
 #include <boost/regex.hpp>
+#include <ranges>
 #include "../LanguageLogic/ExpressionUtility.hpp"
 #include "../LanguageLogic/MetatypeUility.hpp"
 #include "../LanguageLogic/RuntimeTypesConversionUtility.hpp"
@@ -38,6 +39,21 @@ std::optional<cMCompiler::language::runtime_value> cMCompiler::compiler::Express
 	{
 		return language::buildValueLiteralExpression(
 			language::buildStringValue(ctx->functionCallParameter(0)->getText()),
+			language::buildSourcePointer(filepath_.string(), *ctx)
+		);
+	}
+	if (functionName == "typeof")
+	{
+		std::stringstream ss{ ctx->functionCallParameter(0)->getText() };
+		auto type = Parser::ParserAdapter().parseType(ss);
+		return language::buildValueLiteralExpression(
+			language::getValueFor(
+				getType(
+					nameResolver_,
+					context_,
+					type.get(),
+					filepath_
+				)),
 			language::buildSourcePointer(filepath_.string(), *ctx)
 		);
 	}
@@ -218,7 +234,7 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 	if (special)
 	{
 		language::setParent(special->get(), std::move(referenceToParent));
-		return std::move(*special);	
+		return std::move(*special);
 	}
 	auto arguments = buildParameters(ctx);
 	// todo: generics
@@ -277,7 +293,7 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 	}
 	if (compileTime == nullptr && runtime == nullptr)
 		std::cerr << "Function " << name << " does not exist";
-	assert((compileTime != nullptr) || (runtime != nullptr ));
+	assert((compileTime != nullptr) || (runtime != nullptr));
 
 	return language::buildFunctionCallExpression(
 		language::getValueFor(compileTime),
@@ -300,9 +316,30 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 	std::terminate();
 }
 
-cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::buildExpression(gsl::not_null<CMinusEqualsMinus1Revision0Parser::NewExpressionContext*> ctx, language::runtime_value&& referenceToParent)
+cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::buildExpression(
+	gsl::not_null<CMinusEqualsMinus1Revision0Parser::NewExpressionContext*> ctx,
+	language::runtime_value&& referenceToParent)
 {
-	std::terminate();
+	auto type = getType(nameResolver_, context_, ctx->typeReference(), filepath_);
+	auto methods = type.type->methods();
+	auto e = std::remove_if(methods.begin(), methods.end(), [](auto const& e) {return !language::isConstructor(e); });
+	if (e != methods.end())
+		methods.erase(e);
+	auto params = std::vector<language::runtime_value>();
+
+	for (auto param : ctx->functionCallParameter())
+		params.push_back(buildExpression(param->expression(), nullptr));
+
+	auto compileTime = language::resolveOverload(methods, params, true, false);
+	auto runTime = language::resolveOverload(methods, params, false, true);
+	auto newOperator = nameResolver_.resolveOperatorNewUnique(context_, type);
+	return language::buildNewExpression(
+		language::getValueFor(newOperator),
+		language::getValueFor(runTime),
+		language::getValueFor(compileTime),
+		language::convertCollection(std::move(params), { language::getExpressionDescriptor(), 1 }),
+		language::buildSourcePointer(filepath_.string(), *ctx)
+	);
 }
 
 //cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::buildExpression(gsl::not_null<CMinusEqualsMinus1Revision0Parser::ArithmeticExpressionContext*> ctx, dataStructures::Type* requestedType)

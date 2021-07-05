@@ -1,9 +1,0 @@
-import {string} from {cm1mLang}
-import {FunctionMapsTo} from {std::compiler}
-
-namespace std
-{
-	[FunctionMapsTo("read_all_file")]
-	public fn read_all_file(path: string) -> string
-	{}
-}

@@ -1,4 +1,3 @@
-import {integerIterator} from {std}
 
 public fn operator != (a: integerIterator, b: integerIterator)
 {

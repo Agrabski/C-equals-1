@@ -1,7 +1,7 @@
 import {functionDescriptor typeDescriptor replaceWithSymbol} from {cm1mLang::compiler}
 import {string} from {cm1mLang}
 
-namespace std::compiler
+namespace compiler
 {
 	public att<function type> mapToExternalSymbol
 	{

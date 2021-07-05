@@ -1,0 +1,18 @@
+import {usize} from {cm1mLang}
+public fn new_array<T>(size: usize) -> @unique<T[]>
+{
+	let result = unsafe_cast<char[], T[]>(unsafe_new(sizeof<T>() * size));
+	return @unique<T[]>(result);
+}
+
+public fn operator new unique<T>() -> @unique<T>
+{
+	let result = unsafe_cast<char[], T>(unsafe_new(sizeof<T>()));
+	return @unique<T>(result);
+}
+
+private fn unsafe_new(size: usize) -> char[]*
+{}
+
+internal fn delete<T>(val: T*)
+{}
