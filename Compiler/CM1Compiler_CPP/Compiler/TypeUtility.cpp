@@ -28,7 +28,8 @@ cMCompiler::dataStructures::Type* cMCompiler::compiler::createType(
 	dataStructures::Namespace* target,
 	language::NameResolver& resolver,
 	language::NameResolutionContext& context,
-	gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*> ctx)
+	gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*> ctx,
+	std::filesystem::path const&path)
 {
 	assert(target != nullptr);
 	auto name = ::name(ctx);
@@ -39,7 +40,7 @@ cMCompiler::dataStructures::Type* cMCompiler::compiler::createType(
 		std::vector<std::string> parameters{};
 		for (not_null param : generic->identifier())
 			parameters.push_back(param->getText());
-		auto x = target->appendGeneric<dataStructures::Type>(std::move(parameters), ctx->clone(nullptr), name, context);
+		auto x = target->appendGeneric<dataStructures::Type>(std::move(parameters), ctx->clone(nullptr), name, context, path);
 		return nullptr;
 	}
 	else
@@ -48,7 +49,7 @@ cMCompiler::dataStructures::Type* cMCompiler::compiler::createType(
 			type = target->append<dataStructures::Type>(name);
 		if (ctx->classContentSequence() != nullptr)
 			for (not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> member : ctx->classContentSequence()->functionDeclaration())
-				createFunction(not_null(type), member, context);
+				createFunction(not_null(type), member, context, path);
 		type->setTypeClassifier(dataStructures::parseType(ctx->classTypeSpecifier()->getText()));
 	}
 	return type;

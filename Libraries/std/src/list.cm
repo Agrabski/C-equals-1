@@ -5,7 +5,13 @@ public class list<T> //: ICollection<T>
 	private _begin: @unique<listElement<T>>;
 	private _end:  listElement<T>*;
 
-	public fn push(element: T*)
+	public fn construct()
+	{
+		self._begin = @unique<listElement<T>>();
+		self._end = null<listElement<T>>();
+	}
+
+	public fn push(element: T)
 	{
 		let newElement = new unique listElement<T>();
 		newElement._allocated = element;
@@ -22,14 +28,15 @@ public class list<T> //: ICollection<T>
 
 	public fn get(index: usize) -> T*
 	{
-	
+		if(self._begin.get() == null<listElement<T>>())
+			return null<T>();
 		let currElement = self._begin.get();
 		while(currElement._next.get() != null<T>() && index > 0)
 		{
 			currElement = currElement._next.get();
 			index = index - 1;
 		}
-		return currElement._allocated;
+		return &(currElement._allocated);
 	}
 
 	public fn length() -> usize

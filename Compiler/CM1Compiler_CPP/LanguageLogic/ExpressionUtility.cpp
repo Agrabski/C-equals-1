@@ -27,6 +27,7 @@ cMCompiler::language::runtime_value cMCompiler::language::buildValueLiteralExpre
 cMCompiler::language::runtime_value cMCompiler::language::buildArrayLiteralExpression(runtime_value&& expressions, dataStructures::TypeReference valueType, runtime_value&& pointerToSource)
 {
 	assert(valueType.type != nullptr);
+	assert(dereferenceAs<dataStructures::execution::ObjectValue>(pointerToSource.get()) != nullptr);
 	auto [result, object] = heapAllocateObject(getArrayLiteralExpression());
 	object.setValue("_value", std::move(expressions));
 	object.setValue("_pointerToSource", std::move(pointerToSource));
@@ -40,10 +41,12 @@ std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler
 	runtime_value&& expression,
 	runtime_value&& pointerToSource)
 {
+	assert(dereferenceAs<dataStructures::execution::ObjectValue>(pointerToSource.get()) != nullptr);
 	auto [result, resultObject] = heapAllocateObject(getFunctionCallStatementDescriptor());
 	//todo: parent
 	//dereferenceAs<dataStructures::execution::ObjectValue>(expression.get())->setValue("_parentExpression", result->copy());
 	resultObject.setValue("_function", std::move(expression));
+	resultObject.setValue("_pointerToSource", std::move(pointerToSource));
 	return std::move(result);
 }
 
@@ -64,6 +67,7 @@ cMCompiler::language::runtime_value cMCompiler::language::buildMethodCallExpress
 	std::string const& methodName,
 	runtime_value&& pointerToSource)
 {
+	assert(dereferenceAs<dataStructures::execution::ObjectValue>(pointerToSource.get()) != nullptr);
 	auto self = runtime_value();
 	if (getExpressionType(expression).referenceCount < 1)
 		self = buildAdressofExpression(std::move(expression), pointerToSource->copy());
@@ -99,6 +103,7 @@ cMCompiler::language::runtime_value cMCompiler::language::buildMethodCallExpress
 
 cMCompiler::language::runtime_value cMCompiler::language::buildFieldAccessExpression(runtime_value&& expression, gsl::not_null<dataStructures::Field*> field, runtime_value&& pointerToSource)
 {
+	assert(dereferenceAs<dataStructures::execution::ObjectValue>(pointerToSource.get()) != nullptr);
 	auto [result, object] = heapAllocateObject(getFieldAccessExpressionDescriptor());
 	object.setValue("_field", getValueFor(field));
 	object.setValue("_expression", std::move(expression));

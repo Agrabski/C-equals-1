@@ -15,8 +15,7 @@ gsl::not_null<Function*> cMCompiler::language::createGetter(gsl::not_null<dataSt
 		std::map<std::string, not_null<dataStructures::Type*>> genericParameters
 		) -> std::unique_ptr<dataStructures::execution::IRuntimeValue>
 	{
-		auto reference = dynamic_cast<dataStructures::execution::ReferenceValue*>(valueMap["self"].get());
-		return dynamic_cast<dataStructures::execution::IComplexRuntimeValue*>(reference->value()->get())
+		return dereferenceAs<dataStructures::execution::IComplexRuntimeValue>(valueMap["self"].get())
 			->getMemberValue("_" + function->name());
 	};
 	return createCustomFunction(function, type, f);

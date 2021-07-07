@@ -483,13 +483,15 @@ void buildPackage()
 		[](auto a)
 		{
 			return getCollectionTypeFor(a.front());
-		}, "array", NameResolutionContext(defaultPackage__.get()));
+		}, "array", NameResolutionContext(defaultPackage__.get()),
+			"C-=-1_library_internals.cm");
 
 	result->rootNamespace()->appendGeneric<Function>({ "T" },
 		[](auto a) -> Function*
 		{
 			return getNullFor(a.front());
-		}, "null", NameResolutionContext(defaultPackage__.get()));
+		}, "null", NameResolutionContext(defaultPackage__.get()),
+			"C-=-1_library_internals.cm");
 	buildCompilerLibrary(result->rootNamespace());
 	buildString(string);
 	buildUsize(usize);
@@ -498,6 +500,18 @@ void buildPackage()
 	readFile->setReturnType({ string, 0 });
 	functionLibrary.addFunctionDefinition(readFile, compileTimeFunctions::readAllFile);
 
+	cMCompiler::language::createOperator(
+		defaultPackage__->rootNamespace(),
+		"==",
+		{ nullptr, 1 },
+		{ nullptr, 1 },
+		{ getBool(), 0 },
+		[](auto& a, auto& b)
+		{
+			auto arg1 = dynamic_cast<ReferenceValue*>(a.get())->value();
+			auto arg2 = dynamic_cast<ReferenceValue*>(b.get())->value();
+			return buildBooleanValue(arg1 == arg2);
+		});
 	supplySourcePointers(result->rootNamespace(), buildPointerToSource("C-=-1_library_internals.cm", 0));
 }
 

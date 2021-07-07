@@ -3,6 +3,7 @@
 #include "runtime_values.hpp"
 #include "../DataStructures/Type.hpp"
 #include "../DataStructures/Function.hpp"
+#include "../DataStructures/SourcePointer.hpp"
 #include "../ParserAdapter/ParserAdapter.hpp"
 
 namespace cMCompiler::language
@@ -67,4 +68,5 @@ namespace cMCompiler::language
 	gsl::not_null<dataStructures::Type*> getReturnStatementDescriptor();
 
 	language::runtime_value buildSourcePointer(std::string const& filename, antlr4::tree::ParseTree& tree);
+	dataStructures::SourcePointer getSourcePointerFromInstruction(runtime_value& instruction);
 }

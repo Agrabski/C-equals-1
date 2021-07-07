@@ -14,7 +14,8 @@ namespace cMCompiler::compiler
 	void createAttribute(
 		gsl::not_null<CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext*> ctx,
 		gsl::not_null<dataStructures::Namespace*> parent, 
-		language::NameResolutionContext const& context);
+		language::NameResolutionContext const& context,
+		std::filesystem::path const&file);
 
 	void confirmAttribute(
 		gsl::not_null<CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext*> ctx,

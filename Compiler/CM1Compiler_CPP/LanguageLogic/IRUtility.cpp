@@ -22,6 +22,13 @@ int cMCompiler::language::getLineNumber(antlr4::tree::ParseTree* tree)
 
 }
 
+void implementStatementInterface(not_null<cMCompiler::dataStructures::Type*>type)
+{
+	using namespace cMCompiler::language;
+	createGetter(type->append<Function>("pointerToSource"), type)->setReturnType({ getPointerToSource(), 0 });
+
+}
+
 bool cMCompiler::language::isOfType(gsl::not_null<cMCompiler::dataStructures::execution::IRuntimeValue*> value, gsl::not_null<dataStructures::Type*> type)
 {
 	auto concreteValue = dereference(value);
@@ -64,7 +71,7 @@ gsl::not_null<Type*> cMCompiler::language::buildReturnDescriptor(gsl::not_null<d
 	impl->appendField("_pointerToSource", { getPointerToSource(), 0 });
 	impl->appendField("_expression", { expression, 1 });
 	impl->appendField("_parent", { getIInstruction(), 1 })->setAccessibility(Accessibility::Private);
-
+	implementStatementInterface(impl);
 	return impl;
 }
 
@@ -80,6 +87,8 @@ gsl::not_null<Type*> cMCompiler::language::buildIfDescriptor(gsl::not_null<Names
 	impl->appendField("_ifBranch", { getCollectionTypeFor({getIInstruction(),1}), 0 });
 	impl->appendField("_elseBranch", { getCollectionTypeFor({getIInstruction(),1}), 0 });
 	impl->appendField("_parent", { getIInstruction(), 1 })->setAccessibility(Accessibility::Private);
+	implementStatementInterface(impl);
+
 	return interface;
 }
 
@@ -94,6 +103,8 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildWhil
 	impl->appendField("_expression", { expression, 1 });
 	impl->appendField("_body", { getCollectionTypeFor({baseStatement, 1}), 0 });
 	impl->appendField("_parent", { getIInstruction(), 1 })->setAccessibility(Accessibility::Private);
+	implementStatementInterface(impl);
+
 	return interface;
 }
 
@@ -370,6 +381,10 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildFunc
 	result->appendInterface(interface);
 	result->appendField("_parent", { getIInstruction(), 1 })->setAccessibility(Accessibility::Private);
 	result->appendField("_function", { getFunctionCallExpressionDescriptor(), 1 })->setAccessibility(Accessibility::Private);
+	result->appendField("_pointerToSource", { getPointerToSource(), 0 });
+
+	implementStatementInterface(result);
+
 	return result;
 }
 
@@ -382,6 +397,7 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildScop
 	result->appendField("_parent", { getIInstruction(), 1 })->setAccessibility(Accessibility::Private);
 	result->appendField("_variables", { getCollectionTypeFor({getVariableDescriptor(),0}), 0 })->setAccessibility(Accessibility::Private);
 	result->appendField("_pointerToSource", { getPointerToSource(), 0 })->setAccessibility(Accessibility::Private);
+	implementStatementInterface(result);
 	return result;
 }
 
@@ -394,7 +410,8 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildVari
 	createGetter(result->append<Function>("variable"), result);
 	result->appendField("_expression", { getExpressionDescriptor(), 1 });
 	createGetter(result->append<Function>("expression"), result);
-	result->appendField("_sourcePointer", { getPointerToSource(), 0 });
+	result->appendField("_pointerToSource", { getPointerToSource(), 0 });
+	implementStatementInterface(result);
 	return result;
 }
 
@@ -556,6 +573,11 @@ cMCompiler::language::runtime_value cMCompiler::language::buildSourcePointer(std
 		current = current->children.front().get();
 	assert(current != nullptr);
 	return buildPointerToSource(filename, dynamic_cast<antlr4::tree::TerminalNodeImpl*>(current)->getSymbol()->getLine());
+}
+
+cMCompiler::dataStructures::SourcePointer cMCompiler::language::getSourcePointerFromInstruction(runtime_value& instruction)
+{
+	return executeGetter<SourcePointer>(instruction, "pointerToSource");
 }
 
 

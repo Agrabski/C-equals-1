@@ -123,7 +123,12 @@ std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::
 	if (result == nullptr)
 		return nullptr;
 	if (!language::isOfType(&expression, language::getAdressofExpressionDescriptor()))
-		return language::dereferenceOnce(result.get())->copy();
+	{
+		auto r = language::dereferenceOnce(result.get());
+		if (r != nullptr)
+			return r->copy();
+		return ReferenceValue::make(nullptr, { result->type().type, result->type().referenceCount - 1 });
+	}
 	else
 		return result;
 }

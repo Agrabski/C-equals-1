@@ -5,6 +5,7 @@
 #include "NameResolver.hpp"
 #include "RuntimeTypesConversionUtility.hpp"
 #include "../DataStructures/execution/RuntimeTypeDescriptor.hpp"
+#include "../DataStructures/execution/StringValue.hpp"
 
 namespace cMCompiler::compiler
 {
@@ -25,6 +26,16 @@ namespace cMCompiler::language
 		not_null v = dereference(value.get());
 		not_null typeReference = dynamic_cast<dataStructures::execution::RuntimeTypeDescriptor*>(v.get());
 		return typeReference->value();
+	}
+	template<>
+	inline dataStructures::SourcePointer convert(runtime_value&& value)
+	{
+		using namespace dataStructures::execution;
+		not_null v = dereferenceAs<dataStructures::execution::ObjectValue>(value.get());
+		return dataStructures::SourcePointer(
+			dereferenceAs<StringValue>(v->getMemberValue("filename").get())->value(),
+			convertToIntegral<usize>(*v->getMemberValue("lineNumber"))
+		);
 	}
 
 	template<typename T>

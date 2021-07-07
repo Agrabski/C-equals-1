@@ -44,7 +44,7 @@ antlrcpp::Any cMCompiler::compiler::CompilationUnitDataBaseBuilder::visitFunctio
 	switch (state_)
 	{
 	case cMCompiler::compiler::Create:
-		createFunction(resolutionContext_.namespaceStack_.back(), ctx, resolutionContext_);
+		createFunction(resolutionContext_.namespaceStack_.back(), ctx, resolutionContext_, file_);
 		break;
 	case cMCompiler::compiler::Confirm:
 		confirmFunction(nameResolver_, resolutionContext_, ctx, file_);
@@ -83,7 +83,7 @@ antlrcpp::Any cMCompiler::compiler::CompilationUnitDataBaseBuilder::visitTypeDec
 	switch (state_)
 	{
 	case cMCompiler::compiler::Create:
-		createType(resolutionContext_.namespaceStack_.back(), nameResolver_, resolutionContext_, ctx);
+		createType(resolutionContext_.namespaceStack_.back(), nameResolver_, resolutionContext_, ctx, file_);
 		break;
 	case cMCompiler::compiler::Confirm:
 		confirmType(nameResolver_, resolutionContext_, ctx, file_);
@@ -107,7 +107,7 @@ antlrcpp::Any cMCompiler::compiler::CompilationUnitDataBaseBuilder::visitAttribu
 	switch (state_)
 	{
 	case cMCompiler::compiler::Create:
-		createAttribute(ctx, parent, resolutionContext_);
+		createAttribute(ctx, parent, resolutionContext_, file_);
 		break;
 	case cMCompiler::compiler::Confirm:
 		confirmAttribute(ctx, parent, nameResolver_, resolutionContext_, file_);

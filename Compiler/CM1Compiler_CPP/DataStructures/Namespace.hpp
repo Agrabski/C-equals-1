@@ -105,9 +105,10 @@ namespace cMCompiler::dataStructures
 			std::vector<std::string>&& parameterNames,
 			std::unique_ptr<antlr4::tree::ParseTree>&& parseTree,
 			std::string const& name,
-			NameResolutionContext const& context)
+			NameResolutionContext const& context,
+			std::filesystem::path const& path)
 		{
-			auto tmp = std::make_unique<Generic<T>>(std::move(parameterNames), std::move(parseTree), name, this, context);
+			auto tmp = std::make_unique<Generic<T>>(std::move(parameterNames), std::move(parseTree), name, this, context, path);
 			not_null const result = tmp.get();
 			getAppropriate<Generic<T>>().push_back(std::move(tmp));
 			return result;
@@ -117,9 +118,10 @@ namespace cMCompiler::dataStructures
 			std::vector<std::string>&& parameterNames,
 			std::function<not_null<T*>(std::vector<TypeReference> const&)> customFill,
 			std::string name,
-			NameResolutionContext const& context)
+			NameResolutionContext const& context,
+			std::filesystem::path const& p)
 		{
-			auto tmp = std::make_unique<Generic<T>>(std::move(parameterNames), customFill, name, this, context);
+			auto tmp = std::make_unique<Generic<T>>(std::move(parameterNames), customFill, name, this, context, p);
 			not_null const result = tmp.get();
 			getAppropriate<Generic<T>>().push_back(std::move(tmp));
 			return result;

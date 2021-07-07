@@ -6,6 +6,8 @@ using namespace cMCompiler::dataStructures;
 
 bool cMCompiler::language::verifyParameterMatch(Parameter const& parameter, dataStructures::Variable& functionParameter)
 {
+	if (functionParameter.type().type == nullptr && functionParameter.type().referenceCount == parameter.type_.referenceCount)
+		return true;
 	if (parameter.type_ != functionParameter.type())
 		return false;
 	for (auto attribute : functionParameter.attributes())

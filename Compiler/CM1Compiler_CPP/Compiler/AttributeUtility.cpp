@@ -18,7 +18,8 @@ using namespace cMCompiler;
 void cMCompiler::compiler::createAttribute(
 	gsl::not_null<CMinusEqualsMinus1Revision0Parser::AttributeDeclarationContext*> ctx,
 	gsl::not_null<dataStructures::Namespace*> parent,
-	language::NameResolutionContext const& context)
+	language::NameResolutionContext const& context,
+	std::filesystem::path const& file)
 {
 	auto name = ctx->identifier()->getText();
 	not_null attribute = parent->append<dataStructures::Attribute>(name);
@@ -29,7 +30,7 @@ void cMCompiler::compiler::createAttribute(
 	attribute->addAttributeTarget(dataStructures::parseTarget(targets));
 
 	for (not_null member : ctx->classContentSequence()->functionDeclaration())
-		createFunction<dataStructures::Attribute>(attribute, member, context);
+		createFunction<dataStructures::Attribute>(attribute, member, context, file);
 
 
 }

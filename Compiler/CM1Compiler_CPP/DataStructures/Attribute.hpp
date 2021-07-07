@@ -50,7 +50,8 @@ namespace cMCompiler::dataStructures
 			std::vector<std::string>&& parameterNames, 
 			std::unique_ptr<antlr4::tree::ParseTree>&& parseTree, 
 			std::string name,
-			NameResolutionContext const&)
+			NameResolutionContext const&,
+			std::filesystem::path const&)
 		{
 			std::terminate();
 			throw 0;

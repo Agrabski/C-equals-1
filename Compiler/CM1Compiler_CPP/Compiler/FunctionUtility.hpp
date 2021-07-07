@@ -47,7 +47,11 @@ namespace cMCompiler::compiler
 	dataStructures::Function* createFunction(not_null<dataStructures::Namespace*> target, std::string const& name);
 
 	template<typename T>
-	void createFunction(not_null<T*> target, gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx, language::NameResolutionContext const&context)
+	void createFunction(
+		not_null<T*> target,
+		gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*> ctx,
+		language::NameResolutionContext const&context,
+		std::filesystem::path file)
 	{
 		using dataStructures::Function;
 		using dataStructures::Accessibility;
@@ -60,7 +64,7 @@ namespace cMCompiler::compiler
 			std::vector<std::string> parameters{};
 			for (not_null param : generic->identifier())
 				parameters.push_back(param->getText());
-			auto x = target->appendGeneric<Function>(std::move(parameters), ctx->clone(nullptr), name, context);
+			auto x = target->appendGeneric<Function>(std::move(parameters), ctx->clone(nullptr), name, context, file);
 		}
 		else
 		{

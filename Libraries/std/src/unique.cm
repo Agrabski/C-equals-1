@@ -25,4 +25,9 @@ class @unique<T>
 	{
 		self._allocated = value;
 	}
+	
+	public fn construct()
+	{
+		self._allocated = null<T>();
+	}
 }

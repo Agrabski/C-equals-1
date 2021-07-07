@@ -1,4 +1,5 @@
 #include "GenericInstantiationUtility.hpp"
+#include <ranges>
 #include "../../ParserAdapter/ParserAdapter.hpp"
 #include "../FunctionUtility.hpp"
 #include "../../LanguageLogic/GenericUtility.hpp"
@@ -21,7 +22,7 @@ not_null<dataStructures::Function*> cMCompiler::compiler::instantiate
 )
 {
 	static std::vector<GenericKey<Function>> instantiations;
-	auto existing = std::find_if(begin(instantiations), end(instantiations), [&](const auto& e)
+	auto existing = std::ranges::find_if(begin(instantiations), end(instantiations), [&](const auto& e) noexcept
 		{
 			if (e.prototype != &function)
 				return false;
@@ -42,9 +43,9 @@ not_null<dataStructures::Function*> cMCompiler::compiler::instantiate
 	instantiations.emplace_back(&function, genericParameters, f);
 	f->name() = language::getGenericMangledName(function, genericParameters);
 	auto context = NameResolutionContext::merge(function.context(), c);
-	confirmFunction(resolver, context, f, functionTree, file);
-	finalizeFunction(resolver, context, f, functionTree, file);
-	auto ep = ExpressionBuilder(file, resolver, context, [](const auto&) {return nullptr; });
+	confirmFunction(resolver, context, f, functionTree, function.path());
+	finalizeFunction(resolver, context, f, functionTree, function.path());
+	auto ep = ExpressionBuilder(function.path(), resolver, context, [](const auto&) {return nullptr; });
 
 	if (functionTree->attributeSequence())
 		for (not_null<CMinusEqualsMinus1Revision0Parser::AttributeContext*> attribute : functionTree->attributeSequence()->attribute())
@@ -88,7 +89,8 @@ not_null<dataStructures::Type*> cMCompiler::compiler::instantiate
 		dynamic_cast<Namespace*>(genericType.parent()),
 		resolver,
 		context,
-		ast
+		ast,
+		genericType.path()
 	);
 	type->name() = language::getGenericMangledName(genericType, genericParameters);
 
@@ -98,14 +100,14 @@ not_null<dataStructures::Type*> cMCompiler::compiler::instantiate
 		context,
 		type,
 		ast,
-		file
+		genericType.path()
 	);
 	finalizeType(
 		resolver,
 		context,
 		type,
 		ast,
-		file
+		genericType.path()
 	);
 	auto ep = ExpressionBuilder(file, resolver, context, [](const auto&) {return nullptr; });
 	if (ast->attributeSequence())

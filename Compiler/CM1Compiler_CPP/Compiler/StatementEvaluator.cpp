@@ -83,7 +83,7 @@ void cMCompiler::compiler::StatementEvaluator::assign(dataStructures::execution:
 	auto rExpression = pointer_cast<IRuntimeValue>(language::dereferenceAs<ObjectValue>(&instruction)->getMemberValue("_rExpression"));
 	auto lvalue = ev_.evaluateLeftExpression(*lExpression);
 	auto rvalue = ev_.evaluate(*rExpression);
-	lvalue->performAssigment(std::move( rvalue));
+	lvalue->performAssigment(std::move(rvalue));
 }
 
 void cMCompiler::compiler::StatementEvaluator::declareVariable(dataStructures::execution::IRuntimeValue& instruction)
@@ -95,7 +95,8 @@ void cMCompiler::compiler::StatementEvaluator::declareVariable(dataStructures::e
 	not_null variable = dereferenceAs<RuntimeVariableDescriptor>(i->getMemberValue("_variable").get())->value();
 	auto expression = i->getMemberValue("_expression");
 	auto value = ev_.evaluate(*expression);
-	this->variables_[variable->name()] = dereferenceOnce(value.get())->copy();
+	auto res = dereferenceOnce(value.get());
+	this->variables_[variable->name()] = res != nullptr ? res->copy() : nullptr;
 }
 
 void cMCompiler::compiler::StatementEvaluator::terminate(dataStructures::execution::IRuntimeValue& instruction)

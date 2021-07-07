@@ -49,7 +49,7 @@ std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler
 	auto [result, object] = heapAllocateObject(getVariableDeclarationStatementDescriptor());
 	object.setValue("_variable", getValueFor(variable));
 	object.setValue("_expression", std::move(expression));
-	object.setValue("_sourcePointer", std::move(pointerToSource));
+	object.setValue("_pointerToSource", std::move(pointerToSource));
 	return std::move(result);
 }
 

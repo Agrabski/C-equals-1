@@ -8,6 +8,8 @@ namespace cMCompiler::dataStructures
 		SourcePointer(std::string const& file, unsigned long long line)
 			: filePath_(file), lineNumber_(line)
 		{}
+		SourcePointer() = default;
+
 		std::string filePath_;
 		unsigned long long lineNumber_;
 	};

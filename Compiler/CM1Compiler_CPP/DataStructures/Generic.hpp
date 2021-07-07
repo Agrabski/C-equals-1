@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <memory>
+#include <filesystem>
 #include "Type.hpp"
 #include "NameResolutionContext.hpp"
 #include "../Utilities/pointer_cast.hpp"
@@ -39,22 +40,22 @@ namespace cMCompiler::dataStructures
 			std::function<not_null<TargetType*>(std::vector<TypeReference> const&)> customFill,
 			std::string name,
 			not_null<INamedObject*> parent,
-			NameResolutionContext const& context) :
+			NameResolutionContext const& context,
+			std::filesystem::path const& path) :
 			parameterNames_(std::move(parameterNames)), customFill_(customFill),
-			INamedObject(name, parent), context_(context)
-		{
-		}
+			INamedObject(name, parent), context_(context), filePath_(path)
+		{}
 
 		Generic(
 			std::vector<std::string>&& parameterNames,
 			std::unique_ptr<TreeType>&& parseTree,
 			std::string name,
 			not_null<INamedObject*> parent,
-			NameResolutionContext const& context) :
+			NameResolutionContext const& context,
+			std::filesystem::path const& path) :
 			parameterNames_(std::move(parameterNames)), parseTree_(std::move(parseTree)),
-			INamedObject(name, parent), context_(context)
-		{
-		}
+			INamedObject(name, parent), context_(context), filePath_(path)
+		{ }
 
 		bool isSpecial() const noexcept { return parseTree_ == nullptr; }
 
@@ -121,6 +122,8 @@ namespace cMCompiler::dataStructures
 			// todo: do
 		}
 
+		std::filesystem::path const& path() const noexcept { return filePath_; }
+
 	private:
 		std::string buildModifier(CMinusEqualsMinus1Revision0Parser::ModifierContext* ctx, size_t refCount)
 		{
@@ -140,6 +143,7 @@ namespace cMCompiler::dataStructures
 		}
 		std::vector<std::string> parameterNames_;
 		std::unique_ptr<TreeType> parseTree_;
+		std::filesystem::path filePath_;
 		NameResolutionContext context_;
 		std::function<not_null<TargetType*>(std::vector<TypeReference> const&)> customFill_;
 

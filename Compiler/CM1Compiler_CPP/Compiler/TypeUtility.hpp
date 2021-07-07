@@ -8,7 +8,8 @@ namespace cMCompiler::compiler
 		dataStructures::Namespace* target,
 		language::NameResolver& resolver,
 		language::NameResolutionContext& context,
-		gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*> ctx);
+		gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*> ctx,
+		std::filesystem::path const& path);
 
 	void confirmType(language::NameResolver& resolver,
 		language::NameResolutionContext& context,

@@ -78,5 +78,8 @@ cMCompiler::dataStructures::execution::IRuntimeValue* cMCompiler::language::dere
 	auto ref = dynamic_cast<ReferenceValue*>(value.get());
 	if (ref == nullptr)
 		return value;
+	auto refValue = ref->value();
+	if (refValue == nullptr)
+		return nullptr;
 	return ref->value()->get();
 }
