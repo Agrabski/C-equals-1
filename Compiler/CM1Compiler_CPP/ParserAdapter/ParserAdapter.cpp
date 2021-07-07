@@ -35,3 +35,14 @@ std::unique_ptr<TypeSpecifier> cMCompiler::Parser::ParserAdapter::parseType(std:
 	parser.removeErrorListener(&antlr4::ConsoleErrorListener::INSTANCE);
 	return parser.parsetypeSpecifier();
 }
+
+std::unique_ptr<Function> cMCompiler::Parser::ParserAdapter::parseFunction(std::istream& stream)
+{
+	antlr4::ANTLRInputStream aStream(stream);
+	auto lexer = CMinusEqualsMinus1Revision0Lexer(&aStream);
+	lexer.removeErrorListener(&antlr4::ConsoleErrorListener::INSTANCE);
+	antlr4::BufferedTokenStream tokenStream(&lexer);
+	auto parser = CMinusEqualsMinus1Revision0Parser(&tokenStream);
+	parser.removeErrorListener(&antlr4::ConsoleErrorListener::INSTANCE);
+	return parser.parsefunctionDeclaration();
+}

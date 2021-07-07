@@ -414,3 +414,14 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitReturnStatement(CM
 	return {};
 
 }
+
+antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitWhileStatement(CMinusEqualsMinus1Revision0Parser::WhileStatementContext* ctx)
+{
+	auto expression = getBuilder().buildExpression(ctx->whileHeader()->expression(), nullptr);
+	buildWhileLoop(
+		std::move(expression),
+		ctx->compoundStatement(),
+		[]() {},
+		[]() {});
+	return {};
+}

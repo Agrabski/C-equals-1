@@ -20,7 +20,7 @@ public class list<T> //: ICollection<T>
 		else
 		{
 			let currElement = self._begin.get();
-			while(currElement._next.get() != null<T>())
+			while(currElement._next.get() != null<listElement<T>>())
 				currElement = currElement._next.get();
 			currElement._next = newElement.move();
 		}
@@ -31,7 +31,10 @@ public class list<T> //: ICollection<T>
 		if(self._begin.get() == null<listElement<T>>())
 			return null<T>();
 		let currElement = self._begin.get();
-		while(currElement._next.get() != null<T>() && index > 0)
+		while(
+			(currElement != null<listElement<T>>())
+			&& (currElement._next.get() != null<T>())
+			&& (index > 0))
 		{
 			currElement = currElement._next.get();
 			index = index - 1;
@@ -43,7 +46,7 @@ public class list<T> //: ICollection<T>
 	{
 		let result = 0;
 		let currElement = self._begin.get();
-		while(currElement._next.get() != null<T>() )
+		while(currElement != null<T>())
 		{
 			currElement = currElement._next.get();
 			result = result + 1;
@@ -56,4 +59,8 @@ private class listElement<T>
 {
 	public _allocated: T;
 	public _next: @unique<listElement<T>>;
+	public fn construct()
+	{
+		self._next = @unique<listElement<T>>();
+	}
 }

@@ -112,6 +112,8 @@ std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::
 		return evaluateArrayLiteral(*e);
 	if (isOfType(e, language::getConstructorInvocationExpressionDescriptor()))
 		return evaluateConstructor(*e);
+	if (isOfType(e, language::getNewExpressionDescriptor()))
+		return evaluateNew(*e);
 
 	std::terminate();
 }

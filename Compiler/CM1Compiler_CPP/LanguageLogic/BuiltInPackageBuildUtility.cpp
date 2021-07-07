@@ -344,7 +344,7 @@ void buildUsize(gsl::not_null<Type*> usize_type)
 		">",
 		{ usize_type, 0 },
 		{ usize_type, 0 },
-		{ usize_type, 0 },
+		{ getBool(), 0 },
 		[usize_type](auto& a, auto& b)
 		{
 			auto result = convertToIntegral<usize>(*a) > convertToIntegral<usize>(*b);
@@ -356,7 +356,7 @@ void buildUsize(gsl::not_null<Type*> usize_type)
 		"<",
 		{ usize_type, 0 },
 		{ usize_type, 0 },
-		{ usize_type, 0 },
+		{ getBool(), 0 },
 		[usize_type](auto& a, auto& b)
 		{
 			auto result = convertToIntegral<usize>(*a) < convertToIntegral<usize>(*b);
@@ -368,7 +368,7 @@ void buildUsize(gsl::not_null<Type*> usize_type)
 		"==",
 		{ usize_type, 0 },
 		{ usize_type, 0 },
-		{ usize_type, 0 },
+		{ getBool(), 0 },
 		[usize_type](auto& a, auto& b)
 		{
 			auto result = convertToIntegral<usize>(*a) == convertToIntegral<usize>(*b);
@@ -511,6 +511,42 @@ void buildPackage()
 			auto arg1 = dynamic_cast<ReferenceValue*>(a.get())->value();
 			auto arg2 = dynamic_cast<ReferenceValue*>(b.get())->value();
 			return buildBooleanValue(arg1 == arg2);
+		});
+	cMCompiler::language::createOperator(
+		defaultPackage__->rootNamespace(),
+		"!=",
+		{ nullptr, 1 },
+		{ nullptr, 1 },
+		{ getBool(), 0 },
+		[](auto& a, auto& b)
+		{
+			auto arg1 = dynamic_cast<ReferenceValue*>(a.get())->value();
+			auto arg2 = dynamic_cast<ReferenceValue*>(b.get())->value();
+			return buildBooleanValue(arg1 != arg2);
+		});
+	cMCompiler::language::createOperator(
+		defaultPackage__->rootNamespace(),
+		"&&",
+		{ getBool(), 0 },
+		{ getBool(), 0 },
+		{ getBool(), 0 },
+		[](auto& a, auto& b)
+		{
+			auto arg1 = dereferenceAs<BooleanValue>(a.get())->value();
+			auto arg2 = dereferenceAs<BooleanValue>(b.get())->value();
+			return buildBooleanValue(arg1 && arg2);
+		});
+	cMCompiler::language::createOperator(
+		defaultPackage__->rootNamespace(),
+		"||",
+		{ getBool(), 0 },
+		{ getBool(), 0 },
+		{ getBool(), 0 },
+		[](auto& a, auto& b)
+		{
+			auto arg1 = dereferenceAs<BooleanValue>(a.get())->value();
+			auto arg2 = dereferenceAs<BooleanValue>(b.get())->value();
+			return buildBooleanValue(arg1 || arg2);
 		});
 	supplySourcePointers(result->rootNamespace(), buildPointerToSource("C-=-1_library_internals.cm", 0));
 }

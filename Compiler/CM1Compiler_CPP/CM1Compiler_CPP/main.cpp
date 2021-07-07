@@ -29,7 +29,7 @@ void runWithHandling(std::function<void()> const& f)
 			<< frame.currentInstruction.lineNumber_
 			<< " ("
 			<< frame.currentInstruction.filePath_
-			<< " )"
+			<< ")"
 			<< std::endl;
 		exit(-1);
 	}
