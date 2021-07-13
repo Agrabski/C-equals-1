@@ -1,4 +1,5 @@
 #include "ExpressionUtility.hpp"
+#include <ranges>
 #include "TypeInstantiationUtility.hpp"
 #include "IRUtility.hpp"
 #include "MetatypeUility.hpp"
@@ -76,13 +77,13 @@ cMCompiler::language::runtime_value cMCompiler::language::buildMethodCallExpress
 	argumentExpressions.insert(argumentExpressions.begin(), std::move(self));
 
 	std::vector<not_null<dataStructures::execution::IRuntimeValue*>> expressions;
-	for (auto& e : argumentExpressions)
+	for (auto const& e : argumentExpressions)
 		expressions.push_back(e.get());
 
 	auto methods = type.type->methods();
-	auto remove = std::remove_if(methods.begin(), methods.end(), [&](auto const e) {return e->name() != methodName; });
-	if (remove != methods.end())
-		methods.erase(remove);
+	auto remove = std::ranges::remove_if(methods, [&](auto const e) {return e->name() != methodName; });
+	if (remove.begin() != remove.end())
+		methods.erase(remove.begin(), remove.end());
 	auto compile = resolveOverload(methods, argumentExpressions, true, false);
 	auto run = resolveOverload(methods, argumentExpressions, false, true);
 

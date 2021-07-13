@@ -4,3 +4,6 @@ import {FunctionMapsTo} from {compiler}
 [FunctionMapsTo("read_all_file")]
 public fn read_all_file(path: string) -> string
 {}
+
+[FunctionMapsTo("boobs")]
+public fn boobs() {}

@@ -27,6 +27,7 @@ namespace CompilerTests
 			auto context = NameResolutionContext(cMCompiler::language::getDefaultPackage());
 			auto resolver = cMCompiler::language::NameResolver({});
 			context.objectMap_["usize"].push_back(cMCompiler::language::getUsize());
+			context.objectMap_["null"].push_back(cMCompiler::language::getNull());
 			context.namespaceStack_ = { ns.get() };
 			createFunction(not_null(ns.get()), not_null(ast.get()), context, std::filesystem::path(""));
 			confirmFunction(resolver, context, ast.get(), "");
@@ -50,6 +51,22 @@ public fn count_to_five() -> usize
 
 			auto result = execute(function, {});
 			Assert::AreEqual(cMCompiler::language::convertToIntegral<execution::usize>(*result.get()), execution::usize{ 5 });
+
+		}
+
+		TEST_METHOD(FunctionWithComparisonToNull)
+		{
+			auto function = compileFunction(R"___(
+public fn check_for_null() -> usize
+{
+	let result = null<usize>();
+	if(result != null<usize>())
+		return 1;
+	return 0;
+})___", "check_for_null");
+
+			auto result = execute(function, {});
+			Assert::AreEqual(cMCompiler::language::convertToIntegral<execution::usize>(*result.get()), execution::usize{ 0 });
 
 		}
 	};

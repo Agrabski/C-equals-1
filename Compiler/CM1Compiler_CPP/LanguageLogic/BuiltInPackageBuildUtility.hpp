@@ -23,6 +23,7 @@ namespace cMCompiler::language
 	gsl::not_null<dataStructures::Attribute*> getCompilerEntryPointAttribute();
 	gsl::not_null<dataStructures::Type*> getCollectionTypeFor(cMCompiler::dataStructures::TypeReference elementType);
 	gsl::not_null<dataStructures::Function*> getNullFor(cMCompiler::dataStructures::TypeReference elementType);
+	gsl::not_null<dataStructures::Generic<dataStructures::Function>*> getNull();
 
 
 

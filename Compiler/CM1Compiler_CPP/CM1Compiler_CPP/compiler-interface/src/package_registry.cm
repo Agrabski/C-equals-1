@@ -65,7 +65,7 @@ private class packageRegistry
 		for(i in enumerate(0, self._types.length()))
 			if(self._types.get(i).ctype == t)
 				return self._types.get(i).llvmType;
-		let llvmType = module.appendType(package.name() + t.qualifiedName());
+		let llvmType = module.appendStruct(package.name() + t.qualifiedName());
 		self._types.push(typeMapPair(t, llvmType));
 		return llvmType;
 	}

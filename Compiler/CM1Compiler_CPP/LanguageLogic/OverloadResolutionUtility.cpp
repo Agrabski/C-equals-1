@@ -1,10 +1,12 @@
 #include "OverloadResolutionUtility.hpp"
 #include "GetterExecution.hpp"
 #include "SpecialFunctionUtility.hpp"
+#include "../Utilities/typedRange.hpp"
 
 using namespace cMCompiler::dataStructures;
+using cMCompiler::utilities::typed_range;
 
-bool cMCompiler::language::verifyParameterMatch(Parameter const& parameter, dataStructures::Variable& functionParameter)
+bool cMCompiler::language::verifyParameterMatch(Parameter const& parameter, dataStructures::Variable const& functionParameter)
 {
 	if (functionParameter.type().type == nullptr && functionParameter.type().referenceCount == parameter.type_.referenceCount)
 		return true;
@@ -48,31 +50,6 @@ cMCompiler::dataStructures::Function* cMCompiler::language::resolveOverloadForEx
 	if (candidates.size() == 1)
 		return candidates.front();
 
-}
-
-Function* cMCompiler::language::resolveOverload(
-	std::vector<gsl::not_null<Function*>> const& candidates,
-	std::vector<Parameter> const& parameters,
-	bool forceCompileTime, bool forceRuntime)
-{
-	auto predicate = getFunctionPredicate(forceCompileTime, forceRuntime);
-	auto result = std::find_if(candidates.begin(), candidates.end(), [&](gsl::not_null<Function*> candidate)
-		{
-			auto functionParameters = candidate->parameters();
-			auto isconstructor = isConstructor(candidate);
-			if (functionParameters.size() != parameters.size() && !isconstructor
-				|| (isconstructor && functionParameters.size() != parameters.size() + 1))
-				return false;
-			if(!isconstructor || parameters.size() > 0)
-			for (auto i = 0; i < parameters.size(); i++)
-				if (!verifyParameterMatch(parameters[i], *functionParameters[i + (isconstructor ? 1 : 0)]))
-					return false;
-
-			return predicate(candidate);
-		});
-	if (result != candidates.end())
-		return *result;
-	return nullptr;
 }
 
 bool cMCompiler::language::isCompiletimeExecutable(not_null<Function const*> function)

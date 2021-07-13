@@ -168,6 +168,8 @@
     <ClInclude Include="json.hpp" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="pointer_cast.hpp" />
+    <ClInclude Include="range.hpp" />
+    <ClInclude Include="typedRange.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">

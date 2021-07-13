@@ -19,6 +19,7 @@
 #include "../../LanguageLogic/MetatypeUility.hpp"
 #include "../../LanguageLogic/LLVMBindings/LLVMBindings.hpp"
 #include "../../DataStructures/execution/StringValue.hpp"
+#include "../../DataStructures/RuntimeException.hpp"
 
 using namespace cMCompiler::compiler;
 using namespace cMCompiler::dataStructures;
@@ -36,7 +37,29 @@ std::unique_ptr<CompilationResult> cMCompiler::compiler::llvmIntegration::compil
 	args.push_back(language::getValueFor(packages));
 	args.push_back(language::getValueFor(result.get()));
 	auto emiter = cMCompiler::compiler::IntermidiateRepresentationEmmiter();
-	execute(entryPoint, std::move(args));
+	try
+	{
+		execute(entryPoint, std::move(args));
+	}
+	catch (cMCompiler::dataStructures::RuntimeException const& e)
+	{
+		std::cerr << "exception occured: " << e.what() << std::endl;
+		for (auto const& frame : std::views::reverse(e.trace()))
+			std::cerr
+			<< "[ "
+			<< frame.function->qualifiedName()
+			<< " ]: "
+			<< frame.currentInstruction.lineNumber_
+			<< " ("
+			<< frame.currentInstruction.filePath_
+			<< ")"
+			<< std::endl;
+		exit(-1);
+	}
+	catch (std::exception const& e)
+	{
+		std::cerr << e.what();
+	}
 	return result;
 }
 

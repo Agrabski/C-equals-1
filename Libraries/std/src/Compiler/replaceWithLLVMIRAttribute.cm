@@ -1,5 +1,6 @@
 import {string read_all_file} from {cm1mLang}
 import {functionDescriptor} from {cm1mLang::compiler}
+
 namespace compiler
 {
 	public att<function> ReplaceWithLLVMIR

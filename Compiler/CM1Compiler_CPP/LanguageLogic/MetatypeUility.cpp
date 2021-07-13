@@ -31,7 +31,10 @@ gsl::not_null<ArrayValue*> castToArray(gsl::not_null<ReferenceValue*> reference)
 
 cMCompiler::dataStructures::TypeReference cMCompiler::language::getExpressionType(std::unique_ptr<dataStructures::execution::IRuntimeValue>& expression)
 {
-	return executeGetter<TypeReference>(expression, "type"s);
+	auto x = expression->copy();
+	while (x->type().referenceCount != 1)
+		x = dereferenceOnce(x.get())->copy();
+	return executeGetter<TypeReference>(x, "type"s);
 
 }
 
@@ -46,6 +49,8 @@ void cMCompiler::language::suplyParent(runtime_value& instruction, runtime_value
 
 std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler::language::buildVariableDeclaration(gsl::not_null<dataStructures::Variable*> variable, runtime_value&& expression, runtime_value&& pointerToSource)
 {
+	if (expression != nullptr)
+		assert(variable->type() == getExpressionType(expression));
 	auto [result, object] = heapAllocateObject(getVariableDeclarationStatementDescriptor());
 	object.setValue("_variable", getValueFor(variable));
 	object.setValue("_expression", std::move(expression));
@@ -62,7 +67,7 @@ std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler
 
 std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler::language::createTypeDescriptor(dataStructures::TypeReference  type)
 {
-	auto result = std::make_unique<dataStructures::execution::RuntimeTypeDescriptor>(TypeReference{ getTypeDescriptor(), 0}, type);
+	auto result = std::make_unique<dataStructures::execution::RuntimeTypeDescriptor>(TypeReference{ getTypeDescriptor(), 0 }, type);
 	return utilities::pointer_cast<IRuntimeValue>(std::move(result));
 
 }
@@ -81,7 +86,7 @@ std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler
 	auto [result, object] = heapAllocateObject(getIfDescriptor());
 	object.setValue("_expression", std::move(expression));
 	object.setValue("_pointerToSource", std::move(pointerToSource));
-	object.setValue("_ifBranch", convertCollection({}, {getIInstruction(),1}));
+	object.setValue("_ifBranch", convertCollection({}, { getIInstruction(),1 }));
 	object.setValue("_elseBranch", convertCollection({}, { getIInstruction(),1 }));
 	return std::move(result);
 }
@@ -227,7 +232,7 @@ std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(Variable* value
 
 std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(dataStructures::Type* t)
 {
-		return getValueFor({ t, 0 });
+	return getValueFor({ t, 0 });
 }
 
 std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(Function* value)

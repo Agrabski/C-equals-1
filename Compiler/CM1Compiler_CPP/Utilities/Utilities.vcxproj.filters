@@ -30,6 +30,12 @@
     <ClInclude Include="algorithm.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="range.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="typedRange.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">

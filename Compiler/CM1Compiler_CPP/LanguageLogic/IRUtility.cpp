@@ -432,9 +432,8 @@ gsl::not_null<Type*> cMCompiler::language::buildNewExpressionDescriptor(gsl::not
 			auto f = dereferenceAs<RuntimeFunctionDescriptor>(self->getMemberValue("_newOperator").get());
 			if (f == nullptr)
 			{
-				auto returnType = dereferenceAs<RuntimeFunctionDescriptor>(self->getMemberValue("_compiletimeConstructor").get())->value()->returnType();
-				returnType.referenceCount++;
-				return  getValueFor(returnType);
+				auto returnType = dynamic_cast<Type*>(dereferenceAs<RuntimeFunctionDescriptor>(self->getMemberValue("_compiletimeConstructor").get())->value()->parent());
+				return  getValueFor({ returnType, 1 });
 			}
 			else
 				return getValueFor(f->value()->returnType());

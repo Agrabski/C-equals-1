@@ -13,6 +13,8 @@ std::ostream& cMCompiler::dataStructures::operator<<(std::ostream& s, TypeRefere
 
 bool operator!=(cMCompiler::dataStructures::TypeReference const& a, cMCompiler::dataStructures::TypeReference const& b) noexcept
 {
+	if (a.type == nullptr || b.type == nullptr)
+		return a.referenceCount != b.referenceCount;
 	return a.type != b.type || a.referenceCount != b.referenceCount;
 }
 

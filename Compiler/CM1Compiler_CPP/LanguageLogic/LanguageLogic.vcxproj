@@ -22,6 +22,7 @@
     <ClInclude Include="AttributeUtility.hpp" />
     <ClInclude Include="BuiltInPackageBuildUtility.hpp" />
     <ClInclude Include="CompilerInterface.hpp" />
+    <ClInclude Include="CompileTimeFunctions\Boobs.hpp" />
     <ClInclude Include="CompileTimeFunctions\CompileTimeFunction.hpp" />
     <ClInclude Include="CompileTimeFunctions\CompileTimeFunctionDictionary.hpp" />
     <ClInclude Include="CompileTimeFunctions\CompileTimeAllocate.hpp" />

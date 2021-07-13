@@ -47,6 +47,7 @@ bool cMCompiler::dataStructures::execution::ObjectValue::validate(IRuntimeValue*
 		return true;
 	auto fields = type().type->fields();
 	auto field = std::find_if(fields.begin(), fields.end(), [&](auto const& e) noexcept {return e->name() == name; });
+	assert((*field)->type().referenceCount == value->type().referenceCount);
 	if (field->get()->type().type == nullptr)
 		return true; // allow any type in interpreted mode if type is null. Only for compiler internals
 	return field != fields.end() &&

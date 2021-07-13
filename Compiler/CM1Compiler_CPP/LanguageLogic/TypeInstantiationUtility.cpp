@@ -23,3 +23,11 @@ std::pair<
 	not_null object = dynamic_cast<ObjectValue*>(reference->value()->get());
 	return { std::move(reference), *object };
 }
+
+std::unique_ptr<cMCompiler::dataStructures::execution::ReferenceValue>
+cMCompiler::language::moveToHeap(std::unique_ptr<dataStructures::execution::IRuntimeValue>&& value)
+{
+	auto result = heapAllocate(value->type());
+	result->performAssigment(std::move(value));
+	return result;
+}

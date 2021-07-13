@@ -78,7 +78,7 @@ gsl::not_null<Type*> buildPackageDescriptor(gsl::not_null<Namespace*> compilerNs
 	ns->setAccessibility(Accessibility::Public);
 
 	createCustomFunction(
-		ns->append<Function>("getAllTypes")->setReturnType({ getCollectionTypeFor({ getTypeDescriptor(), 0 }), 1 }),
+		ns->append<Function>("getAllTypes")->setReturnType({ getCollectionTypeFor({ getTypeDescriptor(), 0 }), 0 }),
 		ns,
 		[](auto&& args, auto)
 		{
@@ -548,6 +548,7 @@ void buildPackage()
 			auto arg2 = dereferenceAs<BooleanValue>(b.get())->value();
 			return buildBooleanValue(arg1 || arg2);
 		});
+	
 	supplySourcePointers(result->rootNamespace(), buildPointerToSource("C-=-1_library_internals.cm", 0));
 }
 
@@ -644,4 +645,9 @@ gsl::not_null<Function*> cMCompiler::language::getNullFor(cMCompiler::dataStruct
 			return ReferenceValue::make(nullptr, returnType);
 		});
 	return result;
+}
+
+gsl::not_null<Generic<Function>*> cMCompiler::language::getNull()
+{
+	return getDefaultPackage()->rootNamespace()->get<Generic<Function>>("null");
 }

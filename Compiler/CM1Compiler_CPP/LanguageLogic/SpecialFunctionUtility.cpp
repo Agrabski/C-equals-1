@@ -20,7 +20,7 @@ std::vector<gsl::not_null<cMCompiler::dataStructures::Function*>> cMCompiler::la
 	return result;
 }
 
-bool cMCompiler::language::isConstructor(dataStructures::Function* f)
+bool cMCompiler::language::isConstructor(dataStructures::Function const* f)
 {
 	if (f == nullptr)
 		return false;

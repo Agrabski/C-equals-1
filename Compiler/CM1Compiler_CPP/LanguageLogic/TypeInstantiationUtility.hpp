@@ -13,4 +13,6 @@ namespace cMCompiler::language
 		std::unique_ptr<dataStructures::execution::IRuntimeValue>,
 		dataStructures::execution::ObjectValue&
 	> heapAllocateObject(gsl::not_null<dataStructures::Type*>, bool unique = true);
+
+	std::unique_ptr<dataStructures::execution::ReferenceValue> moveToHeap(std::unique_ptr<dataStructures::execution::IRuntimeValue>&&);
 }

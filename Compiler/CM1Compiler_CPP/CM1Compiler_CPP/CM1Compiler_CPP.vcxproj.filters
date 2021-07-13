@@ -38,6 +38,14 @@
     <None Include="compiler-interface\**\*.*" />
     <None Include="compiler-interface\src\entry_point.cm" />
     <None Include="compiler-interface\src\package_registry.cm" />
+    <None Include="compiler-interface\**\*.*">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="compiler-interface\**\*.*">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="compiler-interface\src\entry_point.cm" />
+    <None Include="compiler-interface\src\package_registry.cm" />
     <None Include="compiler-interface\src\entry_point.cm" />
     <None Include="compiler-interface\src\package_registry.cm" />
     <None Include="compiler-interface\**\*.*">

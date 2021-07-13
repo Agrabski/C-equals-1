@@ -11,10 +11,20 @@ namespace cMCompiler::dataStructures::execution
 		ReferenceValue(std::unique_ptr<IRuntimeValue>* value, TypeReference type, std::function<void(ReferenceValue&)> dealocator) noexcept :
 			IRuntimeValue(type),
 			value_(value),
-			dealocator_(dealocator) {}
+			dealocator_(dealocator)
+		{
+			assert(
+				value == nullptr ||
+				value->get() == nullptr ||
+				value->get()->type().referenceCount == (type.referenceCount - 1));
+		}
 		template<typename T>
 		ReferenceValue(std::unique_ptr<T>* value, TypeReference type) : IRuntimeValue(type)
 		{
+			assert(
+				value == nullptr ||
+				value->get() == nullptr ||
+				value->get()->type().referenceCount == (type.referenceCount - 1));
 			value_ = static_cast<std::unique_ptr<IRuntimeValue>*>(value);
 		}
 		std::unique_ptr<IRuntimeValue>* value() const noexcept { return value_; }

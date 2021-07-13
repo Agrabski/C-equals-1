@@ -9,13 +9,6 @@ AttributeInstance* AttributeTarget::appendAttribute(std::unique_ptr<AttributeIns
 	return result;
 }
 
-std::vector<gsl::not_null<AttributeInstance*>> cMCompiler::dataStructures::AttributeTarget::attributes()
-{
-	auto result = std::vector<gsl::not_null<AttributeInstance*>>();
-	for (auto& att : attributes_)
-		result.push_back(att.get());
-	return result;
-}
 
 execution::json cMCompiler::dataStructures::AttributeTarget::emmitAttributes(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const
 {

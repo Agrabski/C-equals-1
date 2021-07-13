@@ -11,6 +11,7 @@
 #include "../LanguageLogic/OverloadResolutionUtility.hpp"
 #include "../LanguageLogic/IRUtility.hpp"
 #include "../LanguageLogic/SpecialFunctionUtility.hpp"
+#include "../LanguageLogic/TypeInstantiationUtility.hpp"
 #include "Generic/GenericInstantiationUtility.hpp"
 #include "TypeUtility.hpp"
 
@@ -38,7 +39,7 @@ std::optional<cMCompiler::language::runtime_value> cMCompiler::compiler::Express
 	if (functionName == "nameof")
 	{
 		return language::buildValueLiteralExpression(
-			language::buildStringValue(ctx->functionCallParameter(0)->getText()),
+			language::moveToHeap(language::buildStringValue(ctx->functionCallParameter(0)->getText())),
 			language::buildSourcePointer(filepath_.string(), *ctx)
 		);
 	}
@@ -47,13 +48,13 @@ std::optional<cMCompiler::language::runtime_value> cMCompiler::compiler::Express
 		std::stringstream ss{ ctx->functionCallParameter(0)->getText() };
 		auto type = Parser::ParserAdapter().parseType(ss);
 		return language::buildValueLiteralExpression(
-			language::getValueFor(
+			language::moveToHeap(language::getValueFor(
 				getType(
 					nameResolver_,
 					context_,
 					type.get(),
 					filepath_
-				)),
+				))),
 			language::buildSourcePointer(filepath_.string(), *ctx)
 		);
 	}
@@ -78,7 +79,9 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 		expressions.push_back(buildExpression(expr, nullptr));
 
 	auto result = language::buildArrayLiteralExpression(
-		language::convertCollection(std::move(expressions), { language::getExpressionDescriptor(),1 }),
+		language::moveToHeap(
+			language::convertCollection(std::move(expressions), { language::getExpressionDescriptor(),1 })
+		),
 		getType(
 			nameResolver_,
 			context_,
@@ -126,7 +129,11 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 		auto text = ctx->STRING()->getText();
 		text.erase(text.begin());
 		text.erase(text.end() - 1);
-		auto value = language::buildStringValue(boost::regex_replace(text, boost::regex("\\\\(.|\\s)"), "$1"));
+		auto value = language::moveToHeap(
+			utilities::pointer_cast<dataStructures::execution::IRuntimeValue>(
+				language::buildStringValue(boost::regex_replace(text, boost::regex("\\\\(.|\\s)"), "$1"))
+				)
+		);
 		// todo: parent
 		auto result = language::buildValueLiteralExpression(
 			std::move(value),
@@ -142,8 +149,13 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 		{
 			auto lit = language::buildIntegerValue(language::getUsize());
 			lit->fromString(ctx->IntegerLiteral()->getText());
+			auto ref = language::moveToHeap(
+				utilities::pointer_cast<dataStructures::execution::IRuntimeValue>(
+					std::move(lit)
+					)
+			);
 			auto result = language::buildValueLiteralExpression(
-				std::move(lit),
+				std::move(ref),
 				language::buildSourcePointer(filepath_.string(), *ctx)
 			);
 			language::setParent(result.get(), std::move(referenceToParent));

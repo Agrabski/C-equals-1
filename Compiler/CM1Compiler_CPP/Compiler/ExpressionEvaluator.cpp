@@ -8,125 +8,158 @@
 #include "../DataStructures/execution/RuntimeFunctionDescriptor.hpp"
 #include "../DataStructures/execution/RuntimeVariableDescriptor.hpp"
 #include "../DataStructures/execution/RuntimeTypeDescriptor.hpp"
+#include "../DataStructures/execution/ReferenceValue.hpp"
 #include "../LanguageLogic/TypeInstantiationUtility.hpp"
+#include "../LanguageLogic/MetatypeUility.hpp"
 using namespace cMCompiler;
 using namespace cMCompiler::dataStructures::execution;
+using language::runtime_value;
+using utilities::pointer_cast;
+using language::dereferenceAs;
 
-std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::ExpressionEvaluator::evaluateLiteral(dataStructures::execution::IRuntimeValue& expression)
+runtime_value cMCompiler::compiler::ExpressionEvaluator::evaluateLiteral(language::runtime_value& expression)
 {
-	return (*language::dereferenceAs<ObjectValue>(&expression)->getMemberValue("_value")->value())->copy();
+	return (*language::dereferenceAs<ObjectValue>(expression.get())->getMemberValue("_value")->value())->copy();
 }
 
-std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::ExpressionEvaluator::evaluateArrayLiteral(dataStructures::execution::IRuntimeValue& expression)
+runtime_value cMCompiler::compiler::ExpressionEvaluator::evaluateArrayLiteral(language::runtime_value& expression)
 {
-	auto value = language::dereferenceAs<ObjectValue>(&expression)->getMemberValue("_value");
+	auto value = language::dereferenceAs<ObjectValue>(expression.get())->getMemberValue("_value");
 	auto values = language::dereferenceAs<ArrayValue>(value.get());
 
-	auto type = language::dereferenceAs<RuntimeTypeDescriptor>(language::dereferenceAs<ObjectValue>(&expression)->getMemberValue("_elementType").get());
+	auto type = language::dereferenceAs<RuntimeTypeDescriptor>(language::dereferenceAs<ObjectValue>(expression.get())->getMemberValue("_elementType").get());
 
 
 	std::vector<language::runtime_value> result;
 
 	for (auto& exp : *values)
-		result.push_back(evaluate(*exp));
+		result.push_back(evaluate(exp));
 
 	return language::convertCollection(std::move(result), type->value());
 }
 
-std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::ExpressionEvaluator::evaluateBinaryOperator(dataStructures::execution::IRuntimeValue& expression)
+runtime_value cMCompiler::compiler::ExpressionEvaluator::evaluateBinaryOperator(language::runtime_value& expression)
 {
-	not_null exp = language::dereferenceAs<ObjectValue>(&expression);
+	not_null exp = language::dereferenceAs<ObjectValue>(expression.get());
 	not_null function = language::dereferenceAs<RuntimeFunctionDescriptor>(exp->getMemberValue("_compiletimeFunction").get());
-	not_null arg1 = language::dereferenceAs<ObjectValue>(exp->getMemberValue("_arg1").get());
-	not_null arg2 = language::dereferenceAs<ObjectValue>(exp->getMemberValue("_arg2").get());
+	auto arg1 = pointer_cast<IRuntimeValue>(exp->getMemberValue("_arg1"));
+	auto arg2 = pointer_cast<IRuntimeValue>(exp->getMemberValue("_arg2"));
 	std::vector<language::runtime_value> argumentValues;
-	argumentValues.push_back(evaluate(*arg1));
-	argumentValues.push_back(evaluate(*arg2));
+	argumentValues.push_back(evaluate(arg1));
+	argumentValues.push_back(evaluate(arg2));
 	return execute(function->value(), std::move(argumentValues));
 }
 
-std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::ExpressionEvaluator::evaluateFieldAccess(dataStructures::execution::IRuntimeValue& expression)
+runtime_value cMCompiler::compiler::ExpressionEvaluator::evaluateFieldAccess(language::runtime_value& expression)
 {
-	auto exp = language::dereferenceAs<ObjectValue>(&expression)->getMemberValue("_expression");
-	not_null field = language::dereferenceAs<RuntimeFieldDescriptor>(language::dereferenceAs<ObjectValue>(&expression)->getMemberValue("_field").get());
-	auto result = evaluateLeftExpression(*exp.get());
+	auto exp = pointer_cast<IRuntimeValue>(dereferenceAs<ObjectValue>(expression.get())->getMemberValue("_expression"));
+	not_null field = language::dereferenceAs<RuntimeFieldDescriptor>(language::dereferenceAs<ObjectValue>(expression.get())->getMemberValue("_field").get());
+	auto result = evaluateLeftExpression(exp);
 	return language::dereferenceAs<IComplexRuntimeValue>(result.get())->getMemberValue(field->value()->name());
 }
 
-std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::ExpressionEvaluator::evaluateCall(dataStructures::execution::IRuntimeValue& expression)
+runtime_value cMCompiler::compiler::ExpressionEvaluator::evaluateCall(language::runtime_value& expression)
 {
-	not_null exp = language::dereferenceAs<ObjectValue>(&expression);
+	not_null exp = language::dereferenceAs<ObjectValue>(expression.get());
 	not_null function = language::dereferenceAs<RuntimeFunctionDescriptor>(exp->getMemberValue("_compiletimeFunction").get());
 	not_null arguments = language::dereferenceAs<ArrayValue>(exp->getMemberValue("_arguments").get());
 	std::vector<language::runtime_value> argumentValues;
 	for (auto& arg : *arguments)
-		argumentValues.push_back(evaluate(*arg));
+		argumentValues.push_back(evaluate(arg));
 	return execute(function->value(), std::move(argumentValues));
 }
 
-std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::ExpressionEvaluator::evaluateVariable(dataStructures::execution::IRuntimeValue& expression)
+runtime_value cMCompiler::compiler::ExpressionEvaluator::evaluateVariable(language::runtime_value& expression)
 {
-	auto variable = language::dereferenceAs <RuntimeVariableDescriptor>(language::dereferenceAs<ObjectValue>(&expression)->getMemberValue("_variable").get());
+	auto variable = language::dereferenceAs <RuntimeVariableDescriptor>(language::dereferenceAs<ObjectValue>(expression.get())->getMemberValue("_variable").get());
 	return ReferenceValue::make(&variableLookupFunction_(variable->value()->name()), variable->value()->type());
 }
 
-std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::ExpressionEvaluator::evaluateGetAddress(dataStructures::execution::IRuntimeValue& expression)
+runtime_value cMCompiler::compiler::ExpressionEvaluator::evaluateGetAddress(language::runtime_value& expression)
 {
-	auto exp = language::dereferenceAs<ObjectValue>(&expression)->getMemberValue("_expression");
-	return evaluateCommon(*exp);
+	auto exp = pointer_cast<IRuntimeValue>(dereferenceAs<ObjectValue>(expression.get())->getMemberValue("_expression"));
+	auto r = evaluateCommon(exp);
+	if(r->type().referenceCount == 0)
+		return language::moveToHeap(std::move(r));
+	return r;
 }
 
-std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::ExpressionEvaluator::evaluateConstructor(dataStructures::execution::IRuntimeValue& expression)
+runtime_value cMCompiler::compiler::ExpressionEvaluator::evaluateConstructor(language::runtime_value& expression)
 {
 	using language::dereferenceAs;
-	not_null exp = dereferenceAs<ObjectValue>(&expression);
+	not_null exp = dereferenceAs<ObjectValue>(expression.get());
 	not_null constructor = dereferenceAs<RuntimeFunctionDescriptor>(exp->getMemberValue("_compiletimeConstructor").get())->value();
 	not_null arguments = dereferenceAs<ArrayValue>(exp->getMemberValue("_arguments").get());
 	auto argValues = std::vector<language::runtime_value>();
 	auto result = language::instantiate(constructor->parameters().front()->type());
 	argValues.push_back(ReferenceValue::make(&result, result->type()));
-	for (auto const& arg : *arguments)
-		argValues.push_back(evaluate(*arg));
+	for (auto& arg : *arguments)
+		argValues.push_back(evaluate(arg));
 	compiler::execute(constructor, std::move(argValues));
 	return result;
 
 }
 
-std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::ExpressionEvaluator::evaluateCommon(dataStructures::execution::IRuntimeValue& expression)
+runtime_value cMCompiler::compiler::ExpressionEvaluator::evaluateNew(
+	language::runtime_value& expression
+)
 {
-	not_null e = language::dereference(&expression);
+	not_null object = language::dereferenceAs<ObjectValue>(expression.get());
+	not_null constructor = language::dereferenceAs<RuntimeFunctionDescriptor>(
+		object->getMemberValue("_compiletimeConstructor").get()
+		)->value();
+	auto type = dynamic_cast<dataStructures::Type*>(constructor->parent());
+	auto result = language::heapAllocate({ type, 0 }, false);
+	auto params = std::vector<language::runtime_value>();
+	params.emplace_back(result->copy());
+
+	for (
+		not_null args = language::dereferenceAs<ArrayValue>(object->getMemberValue("_arguments").get());
+		auto & arg : *args
+		)
+		params.emplace_back(evaluate(arg));
+
+	assert(execute(constructor, std::move(params)) == nullptr);
+	return result;
+}
+
+runtime_value cMCompiler::compiler::ExpressionEvaluator::evaluateCommon(language::runtime_value& expression)
+{
 	using language::isOfType;
-	if (isOfType(e, language::getLiteralExpressionDescriptor()))
-		return evaluateLiteral(*e);
-	if (isOfType(e, language::getFieldAccessExpressionDescriptor()))
-		return evaluateFieldAccess(*e);
-	if (isOfType(e, language::getFunctionCallExpressionDescriptor()))
-		return evaluateCall(*e);
-	if (isOfType(e, language::getVariableReferenceExpressionDescriptor()))
-		return evaluateVariable(*e);
-	if (isOfType(e, language::getBinaryOperatorExpressionDescriptor()))
-		return evaluateBinaryOperator(*e);
-	if (isOfType(e, language::getAdressofExpressionDescriptor()))
-		return evaluateGetAddress(*e);
-	if (isOfType(e, language::getArrayLiteralExpression()))
-		return evaluateArrayLiteral(*e);
-	if (isOfType(e, language::getConstructorInvocationExpressionDescriptor()))
-		return evaluateConstructor(*e);
-	if (isOfType(e, language::getNewExpressionDescriptor()))
-		return evaluateNew(*e);
+	if (isOfType(expression.get(), language::getLiteralExpressionDescriptor()))
+		return evaluateLiteral(expression);
+	if (isOfType(expression.get(), language::getFieldAccessExpressionDescriptor()))
+		return evaluateFieldAccess(expression);
+	if (isOfType(expression.get(), language::getFunctionCallExpressionDescriptor()))
+		return evaluateCall(expression);
+	if (isOfType(expression.get(), language::getVariableReferenceExpressionDescriptor()))
+		return evaluateVariable(expression);
+	if (isOfType(expression.get(), language::getBinaryOperatorExpressionDescriptor()))
+		return evaluateBinaryOperator(expression);
+	if (isOfType(expression.get(), language::getAdressofExpressionDescriptor()))
+		return evaluateGetAddress(expression);
+	if (isOfType(expression.get(), language::getArrayLiteralExpression()))
+		return evaluateArrayLiteral(expression);
+	if (isOfType(expression.get(), language::getConstructorInvocationExpressionDescriptor()))
+		return evaluateConstructor(expression);
+	if (isOfType(expression.get(), language::getNewExpressionDescriptor()))
+		return evaluateNew(expression);
 
 	std::terminate();
 }
 
 
-std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::ExpressionEvaluator::evaluate(dataStructures::execution::IRuntimeValue& expression)
+runtime_value cMCompiler::compiler::ExpressionEvaluator::evaluate(language::runtime_value& expression)
 {
+	auto type = language::getExpressionType(expression);
 	auto result = evaluateCommon(expression);
 	if (result == nullptr)
 		return nullptr;
-	if (!language::isOfType(&expression, language::getAdressofExpressionDescriptor()))
+	if (!language::isOfType(expression.get(), language::getAdressofExpressionDescriptor()))
 	{
 		auto r = language::dereferenceOnce(result.get());
+		if (r != nullptr && type != r->type())
+			throw std::exception("invalid value type");
 		if (r != nullptr)
 			return r->copy();
 		return ReferenceValue::make(nullptr, { result->type().type, result->type().referenceCount - 1 });
@@ -135,7 +168,7 @@ std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::
 		return result;
 }
 
-std::unique_ptr<dataStructures::execution::ReferenceValue> cMCompiler::compiler::ExpressionEvaluator::evaluateLeftExpression(dataStructures::execution::IRuntimeValue& expression)
+std::unique_ptr<dataStructures::execution::ReferenceValue> cMCompiler::compiler::ExpressionEvaluator::evaluateLeftExpression(language::runtime_value& expression)
 {
 	auto result = evaluateCommon(expression);
 	auto reference = dynamic_cast<dataStructures::execution::ReferenceValue*>(result.get());

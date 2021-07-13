@@ -6,6 +6,7 @@
 #include "../LanguageLogic/CompileTimeFunctions/FunctionLibrary.hpp"
 #include "../Utilities/algorithm.hpp"
 #include "../LanguageLogic/IRUtility.hpp"
+#include "../Utilities/range.hpp"
 #include <Windows.h>
 #include <excpt.h>
 #include <winnt.h>
@@ -53,6 +54,12 @@ std::unique_ptr<IRuntimeValue> cMCompiler::compiler::execute(
 	dataStructures::SourcePointer lastInstruction;
 	std::unique_ptr<IRuntimeValue> returnValue = nullptr;
 
+	for (auto const i : utilities::range(valueMap.size()))
+	{
+		auto valueType = valueMap[i]->type();
+		auto parameterType = functionDefinition->parameters()[i]->type();
+		assert(valueType == parameterType);
+	}
 
 	auto f = language::compileTimeFunctions::FuntionLibrary::instance().getFunction(functionDefinition);
 	if (f)

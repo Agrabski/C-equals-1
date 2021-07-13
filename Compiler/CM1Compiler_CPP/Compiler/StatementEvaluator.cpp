@@ -10,6 +10,7 @@
 
 using namespace cMCompiler::dataStructures::execution;
 using namespace cMCompiler::language;
+using cMCompiler::utilities::pointer_cast;
 
 std::optional<runtime_value> cMCompiler::compiler::StatementEvaluator::evaluate(language::runtime_value& instruction)
 {
@@ -38,12 +39,12 @@ std::optional<runtime_value> cMCompiler::compiler::StatementEvaluator::evaluate(
 	if (isOfType(inst, language::getReturnStatementDescriptor()))
 	{
 		auto expression = inst->getMemberValue("_expression")->value();
-		return ev_.evaluate(**expression);
+		return ev_.evaluate(*expression);
 	}
 	if (isOfType(inst, language::getIfDescriptor()))
 	{
 		auto expression = inst->getMemberValue("_expression")->value();
-		auto value = ev_.evaluate(**expression);
+		auto value = ev_.evaluate(*expression);
 		ArrayValue* code = nullptr;
 		if (language::dereferenceAs<BooleanValue>(value.get())->value())
 			code = dereferenceAs<ArrayValue>(inst->getMemberValue("_ifBranch")->value()->get());
@@ -58,13 +59,13 @@ std::optional<runtime_value> cMCompiler::compiler::StatementEvaluator::evaluate(
 	{
 		auto expression = inst->getMemberValue("_expression")->value();
 		auto code = dereferenceAs<ArrayValue>(inst->getMemberValue("_body")->value()->get());
-		auto expressionValue = ev_.evaluate(**expression);
+		auto expressionValue = ev_.evaluate(*expression);
 		while (dereferenceAs<BooleanValue>(expressionValue.get())->value())
 		{
 			for (auto& i : *code)
 				if (auto r = evaluate(i))
 					return r;
-			expressionValue = ev_.evaluate(**expression);
+			expressionValue = ev_.evaluate(*expression);
 		}
 		return {};
 	}
@@ -73,7 +74,8 @@ std::optional<runtime_value> cMCompiler::compiler::StatementEvaluator::evaluate(
 
 void cMCompiler::compiler::StatementEvaluator::call(IRuntimeValue& instruction)
 {
-	ev_.evaluate(*language::dereferenceAs<ObjectValue>(&instruction)->getMemberValue("_function"));
+	auto exp = pointer_cast<IRuntimeValue>(language::dereferenceAs<ObjectValue>(&instruction)->getMemberValue("_function"));
+	ev_.evaluate(exp);
 }
 
 void cMCompiler::compiler::StatementEvaluator::assign(dataStructures::execution::IRuntimeValue& instruction)
@@ -81,8 +83,8 @@ void cMCompiler::compiler::StatementEvaluator::assign(dataStructures::execution:
 	using utilities::pointer_cast;
 	auto lExpression = pointer_cast<IRuntimeValue>(language::dereferenceAs<ObjectValue>(&instruction)->getMemberValue("_lExpression"));
 	auto rExpression = pointer_cast<IRuntimeValue>(language::dereferenceAs<ObjectValue>(&instruction)->getMemberValue("_rExpression"));
-	auto lvalue = ev_.evaluateLeftExpression(*lExpression);
-	auto rvalue = ev_.evaluate(*rExpression);
+	auto lvalue = ev_.evaluateLeftExpression(lExpression);
+	auto rvalue = ev_.evaluate(rExpression);
 	lvalue->performAssigment(std::move(rvalue));
 }
 
@@ -93,8 +95,8 @@ void cMCompiler::compiler::StatementEvaluator::declareVariable(dataStructures::e
 	using dataStructures::execution::RuntimeVariableDescriptor;
 	not_null i = dereferenceAs<ObjectValue>(&instruction);
 	not_null variable = dereferenceAs<RuntimeVariableDescriptor>(i->getMemberValue("_variable").get())->value();
-	auto expression = i->getMemberValue("_expression");
-	auto value = ev_.evaluate(*expression);
+	auto expression = pointer_cast<IRuntimeValue>(i->getMemberValue("_expression"));
+	auto value = ev_.evaluate(expression);
 	auto res = dereferenceOnce(value.get());
 	this->variables_[variable->name()] = res != nullptr ? res->copy() : nullptr;
 }
