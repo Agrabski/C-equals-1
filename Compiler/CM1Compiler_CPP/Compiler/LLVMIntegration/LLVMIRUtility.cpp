@@ -13,6 +13,7 @@
 #include <clang/Driver/Driver.h>
 #include <clang/Driver/Compilation.h>
 #include <clang/Driver/Action.h>
+#include "../ExceptionHandling.hpp"
 #include "../IntermidiateRepresentationEmmiter.hpp"
 #include "../compilerInterfaceUtility.hpp"
 #include "../FunctionExecutionUtility.hpp"
@@ -37,29 +38,7 @@ std::unique_ptr<CompilationResult> cMCompiler::compiler::llvmIntegration::compil
 	args.push_back(language::getValueFor(packages));
 	args.push_back(language::getValueFor(result.get()));
 	auto emiter = cMCompiler::compiler::IntermidiateRepresentationEmmiter();
-	try
-	{
-		execute(entryPoint, std::move(args));
-	}
-	catch (cMCompiler::dataStructures::RuntimeException const& e)
-	{
-		std::cerr << "exception occured: " << e.what() << std::endl;
-		for (auto const& frame : std::views::reverse(e.trace()))
-			std::cerr
-			<< "[ "
-			<< frame.function->qualifiedName()
-			<< " ]: "
-			<< frame.currentInstruction.lineNumber_
-			<< " ("
-			<< frame.currentInstruction.filePath_
-			<< ")"
-			<< std::endl;
-		exit(-1);
-	}
-	catch (std::exception const& e)
-	{
-		std::cerr << e.what();
-	}
+	runWithHandling([&]() {execute(entryPoint, std::move(args)); });
 	return result;
 }
 

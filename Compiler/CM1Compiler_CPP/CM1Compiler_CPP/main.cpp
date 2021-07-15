@@ -10,34 +10,9 @@
 #include "../Compiler/PackageDiscoveryUtility.hpp"
 #include "../LanguageLogic/BuiltInPackageBuildUtility.hpp"
 #include "../Compiler/compilerInterfaceUtility.hpp"
+#include "../Compiler/ExceptionHandling.hpp"
 #include "../Compiler/LLVMIntegration/LLVMIRUtility.hpp"
 
-void runWithHandling(std::function<void()> const& f)
-{
-	try
-	{
-		f();
-	}
-	catch (cMCompiler::dataStructures::RuntimeException const& e)
-	{
-		std::cerr << "exception occured: " << e.what() << std::endl;
-		for (auto const& frame : std::views::reverse(e.trace()))
-			std::cerr
-			<< "[ "
-			<< frame.function->qualifiedName()
-			<< " ]: "
-			<< frame.currentInstruction.lineNumber_
-			<< " ("
-			<< frame.currentInstruction.filePath_
-			<< ")"
-			<< std::endl;
-		exit(-1);
-	}
-	catch (std::exception const& e)
-	{
-		std::cerr << e.what();
-	}
-}
 
 
 int main(int argc, char* argv[])
@@ -63,7 +38,7 @@ int main(int argc, char* argv[])
 		auto compiler = cMCompiler::compiler::loadCompilerInterfacePackage(*context);
 
 		auto context = llvm::LLVMContext();
-		runWithHandling([&]()
+		cMCompiler::compiler::runWithHandling([&]()
 			{
 				auto llvmIr = cMCompiler::compiler::llvmIntegration::compileToLLVMIr(*compiler.front(), packages, context);
 

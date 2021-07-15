@@ -80,6 +80,8 @@
     <ClCompile Include="CompileTimeInfrastrucutre\CompileTimeHeap.cpp" />
     <ClCompile Include="CreateGetter.cpp" />
     <ClCompile Include="ExpressionUtility.cpp" />
+    <ClCompile Include="FunctionPredicates.cpp" />
+    <ClCompile Include="GetterExecution.cpp" />
     <ClCompile Include="InstantiateGeneric.cpp" />
     <ClCompile Include="IRUtility.cpp" />
     <ClCompile Include="LiteralUtility.cpp" />

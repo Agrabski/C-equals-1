@@ -18,9 +18,11 @@ CompileTimeHeap::element_pointer& cMCompiler::language::compileTimeInfrastructur
 
 std::unique_ptr<ReferenceValue> cMCompiler::language::compileTimeInfrastructure::CompileTimeHeap::wrap(element_pointer& element, dataStructures::TypeReference type, bool unique)
 {
-	type.referenceCount += 1;
-	if(unique)
+	if (unique)
+	{
+		type.referenceCount += 1;
 		return std::make_unique<ReferenceValue>(&element, type, [this](auto e) {dealocate(e); });
+	}
 	return ReferenceValue::make(&element, type);
 }
 

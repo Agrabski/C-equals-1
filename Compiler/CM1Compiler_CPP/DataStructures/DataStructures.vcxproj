@@ -199,6 +199,7 @@
     <ClInclude Include="Generic\GenericVariable.hpp" />
     <ClInclude Include="Generic\TypePointer.hpp" />
     <ClInclude Include="INamedObject.hpp" />
+    <ClInclude Include="InvalidTypeException.hpp" />
     <ClInclude Include="ISerializationManager.hpp" />
     <ClInclude Include="IValueHolder.hpp" />
     <ClInclude Include="MetadataObject.hpp" />
@@ -207,6 +208,7 @@
     <ClInclude Include="ObjectWithAccessibility.hpp" />
     <ClInclude Include="ObjectWithMetadata.hpp" />
     <ClInclude Include="PackageDatabase.hpp" />
+    <ClInclude Include="printStackTrace.hpp" />
     <ClInclude Include="QualifiedName.hpp" />
     <ClInclude Include="RuntimeException.hpp" />
     <ClInclude Include="SourcePointer.hpp" />
@@ -243,6 +245,7 @@
     <ClCompile Include="INamedObject.cpp" />
     <ClCompile Include="NameResolutionContext.cpp" />
     <ClCompile Include="Namespace.cpp" />
+    <ClCompile Include="printStackTrace.cpp" />
     <ClCompile Include="QualifiedName.cpp" />
     <ClCompile Include="RuntimeException.cpp" />
     <ClCompile Include="Target.cpp" />

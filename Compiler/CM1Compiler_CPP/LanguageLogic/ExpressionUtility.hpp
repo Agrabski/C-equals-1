@@ -32,6 +32,7 @@ namespace cMCompiler::language
 
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildNewExpression(
 		runtime_value&& referenceToruntimeNew,
+		runtime_value&& referenceTocompiletimeNew,
 		runtime_value&& referenceToRuntimeConstructor,
 		runtime_value&& referenceToCompiletimeContructor,
 		runtime_value&& expressions,

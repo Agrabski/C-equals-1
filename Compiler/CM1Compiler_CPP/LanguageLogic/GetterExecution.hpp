@@ -56,4 +56,7 @@ namespace cMCompiler::language
 			[&](auto const& e) {return e->name() == name; });
 		return convert<T>(compiler::execute(*function, std::move(params)));
 	}
+
+	runtime_value executeBasicGetter(std::unique_ptr<dataStructures::execution::IRuntimeValue>& object, std::string const& name);
+	
 }

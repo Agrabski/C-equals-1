@@ -11,6 +11,7 @@
 #include "../DataStructures/execution/ReferenceValue.hpp"
 #include "../LanguageLogic/TypeInstantiationUtility.hpp"
 #include "../LanguageLogic/MetatypeUility.hpp"
+#include "../LanguageLogic/GetterExecution.hpp"
 using namespace cMCompiler;
 using namespace cMCompiler::dataStructures::execution;
 using language::runtime_value;
@@ -78,9 +79,10 @@ runtime_value cMCompiler::compiler::ExpressionEvaluator::evaluateVariable(langua
 runtime_value cMCompiler::compiler::ExpressionEvaluator::evaluateGetAddress(language::runtime_value& expression)
 {
 	auto exp = pointer_cast<IRuntimeValue>(dereferenceAs<ObjectValue>(expression.get())->getMemberValue("_expression"));
+	auto type = language::getExpressionType(expression);
 	auto r = evaluateCommon(exp);
-	if(r->type().referenceCount == 0)
-		return language::moveToHeap(std::move(r));
+	while (r->type().referenceCount < type.referenceCount)
+		r = language::moveToHeap(std::move(r));
 	return r;
 }
 
@@ -105,13 +107,17 @@ runtime_value cMCompiler::compiler::ExpressionEvaluator::evaluateNew(
 )
 {
 	not_null object = language::dereferenceAs<ObjectValue>(expression.get());
+	not_null newOperator = language::dereferenceAs<RuntimeFunctionDescriptor>(
+		object->getMemberValue("_compiletimeNewOperator").get()
+		)->value();
 	not_null constructor = language::dereferenceAs<RuntimeFunctionDescriptor>(
 		object->getMemberValue("_compiletimeConstructor").get()
 		)->value();
 	auto type = dynamic_cast<dataStructures::Type*>(constructor->parent());
-	auto result = language::heapAllocate({ type, 0 }, false);
+	auto result = execute(newOperator, {});
+	auto getValue = language::executeBasicGetter(result, "get");
 	auto params = std::vector<language::runtime_value>();
-	params.emplace_back(result->copy());
+	params.emplace_back(std::move(getValue));
 
 	for (
 		not_null args = language::dereferenceAs<ArrayValue>(object->getMemberValue("_arguments").get());
@@ -162,7 +168,7 @@ runtime_value cMCompiler::compiler::ExpressionEvaluator::evaluate(language::runt
 			throw std::exception("invalid value type");
 		if (r != nullptr)
 			return r->copy();
-		return ReferenceValue::make(nullptr, { result->type().type, result->type().referenceCount - 1 });
+		return ReferenceValue::make(nullptr, type.dereference());
 	}
 	else
 		return result;

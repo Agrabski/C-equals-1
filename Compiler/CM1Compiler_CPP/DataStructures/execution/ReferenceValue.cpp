@@ -19,8 +19,8 @@ std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler
 
 void cMCompiler::dataStructures::execution::ReferenceValue::performAssigment(std::unique_ptr<IRuntimeValue>&& newValue)
 {
-	if (value_ != nullptr && *value_ != nullptr && newValue != nullptr)
-		assert(value_->get()->type().referenceCount == newValue->type().referenceCount);
+	if (value_ != nullptr && newValue != nullptr && (type().referenceCount - 1 != newValue->type().referenceCount))
+		throw InvalidTypeException({ type().type, type().referenceCount - 1 }, newValue->type());
 	*value_ = std::move(newValue);
 }
 cMCompiler::dataStructures::execution::json cMCompiler::dataStructures::execution::ReferenceValue::emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const

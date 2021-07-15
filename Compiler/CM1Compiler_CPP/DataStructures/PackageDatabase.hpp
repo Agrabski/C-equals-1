@@ -52,7 +52,7 @@ namespace cMCompiler::dataStructures
 		}
 	public:
 		std::string const& name() const noexcept { return name_; }
-		Namespace* rootNamespace() noexcept { return &rootNamespace_; }
+		gsl::not_null<Namespace*> rootNamespace() noexcept { return &rootNamespace_; }
 		PackageDatabase(std::string name) : name_(std::move(name)), rootNamespace_("",nullptr) {}
 		PackageDatabase(PackageDatabase&&) = default;
 		std::vector<not_null<PackageDatabase*>>const& dependencies() const noexcept { return dependencies_; }

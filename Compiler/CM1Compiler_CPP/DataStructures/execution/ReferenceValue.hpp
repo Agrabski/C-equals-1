@@ -1,5 +1,6 @@
 #pragma once
 #include "IRuntimeValue.h"
+#include "../InvalidTypeException.hpp"
 
 namespace cMCompiler::dataStructures::execution
 {
@@ -8,15 +9,16 @@ namespace cMCompiler::dataStructures::execution
 		std::unique_ptr<IRuntimeValue>* value_;
 		std::function<void(ReferenceValue&)> dealocator_;
 	public:
-		ReferenceValue(std::unique_ptr<IRuntimeValue>* value, TypeReference type, std::function<void(ReferenceValue&)> dealocator) noexcept :
+		ReferenceValue(std::unique_ptr<IRuntimeValue>* value, TypeReference type, std::function<void(ReferenceValue&)> dealocator) :
 			IRuntimeValue(type),
 			value_(value),
 			dealocator_(dealocator)
 		{
-			assert(
-				value == nullptr ||
-				value->get() == nullptr ||
-				value->get()->type().referenceCount == (type.referenceCount - 1));
+			if ((
+				value != nullptr &&
+				value->get() != nullptr &&
+				value->get()->type().referenceCount != (type.referenceCount - 1)))
+				throw InvalidTypeException({ type.type, type.referenceCount - 1 }, value->get()->type());
 		}
 		template<typename T>
 		ReferenceValue(std::unique_ptr<T>* value, TypeReference type) : IRuntimeValue(type)

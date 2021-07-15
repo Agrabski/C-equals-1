@@ -2,11 +2,11 @@
 #include <exception>
 #include <vector>
 #include <gsl.h>
-#include "Function.hpp"
 #include "SourcePointer.hpp"
 
 namespace cMCompiler::dataStructures
 {
+	class Function;
 	struct stackFrame
 	{
 		gsl::not_null<Function*> function;

@@ -1,5 +1,5 @@
 import {string read_all_file} from {cm1mLang}
-import {functionDescriptor} from {cm1mLang::compiler}
+import {functionDescriptor markRunTimeOnly} from {cm1mLang::compiler}
 
 namespace compiler
 {
@@ -44,6 +44,7 @@ namespace compiler
 				ir = ir.replace("$" + self._nameOftypeToReplace1, self._nameToReplace1);
 			}
 			f.overridenLLVMIR(ir);
+			markRunTimeOnly(f);
 		}
 	}
 }

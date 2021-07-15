@@ -9,6 +9,8 @@ namespace cMCompiler::dataStructures
 		Type* type;
 		size_t referenceCount;
 		std::string typeName() const;
+		TypeReference getReference() const noexcept;
+		TypeReference dereference() const noexcept;
 	};
 	std::ostream& operator<< (std::ostream& s, TypeReference const& ref);
 

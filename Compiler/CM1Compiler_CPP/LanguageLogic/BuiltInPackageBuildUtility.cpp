@@ -19,6 +19,9 @@
 #include "LLVMBindings/LLVMBindings.hpp"
 #include "../DataStructures/execution/RuntimePackageDescriptor.hpp"
 #include "SpecialFunctionUtility.hpp"
+#include "TypeInstantiationUtility.hpp"
+#include "GenericUtility.hpp"
+
 using namespace cMCompiler::dataStructures::execution;
 
 using namespace std::string_literals;
@@ -224,6 +227,12 @@ void buildCompilerLibrary(gsl::not_null<Namespace*> rootNamespace)
 		replace->setAccessibility(Accessibility::Public);
 		replace->appendVariable("function", { function, 0 });
 		FuntionLibrary::instance().addFunctionDefinition(replace, markCompileTimeOnly);
+	}
+	{
+		auto replace = ns->append<Function>("markRunTimeOnly");
+		replace->setAccessibility(Accessibility::Public);
+		replace->appendVariable("function", { function, 0 });
+		FuntionLibrary::instance().addFunctionDefinition(replace, markRunTimeOnly);
 	}
 	{
 		auto replace = ns->append<Function>("replaceWithSymbol");
@@ -492,6 +501,12 @@ void buildPackage()
 			return getNullFor(a.front());
 		}, "null", NameResolutionContext(defaultPackage__.get()),
 			"C-=-1_library_internals.cm");
+	result->rootNamespace()->appendGeneric<Function>({ "T" },
+		[](auto a) -> Function*
+		{
+			return getHeapAllocateFor(a.front());
+		}, "compiletime_heap_allocate", NameResolutionContext(defaultPackage__.get()),
+			"C-=-1_library_internals.cm");
 	buildCompilerLibrary(result->rootNamespace());
 	buildString(string);
 	buildUsize(usize);
@@ -642,7 +657,7 @@ gsl::not_null<Function*> cMCompiler::language::getNullFor(cMCompiler::dataStruct
 	result->setReturnType(returnType);
 	compileTimeFunctions::FuntionLibrary::instance().addFunctionDefinition(result, [=](...)
 		{
-			return ReferenceValue::make(nullptr, returnType);
+			return ReferenceValue::make(nullptr, elementType);
 		});
 	return result;
 }
@@ -650,4 +665,20 @@ gsl::not_null<Function*> cMCompiler::language::getNullFor(cMCompiler::dataStruct
 gsl::not_null<Generic<Function>*> cMCompiler::language::getNull()
 {
 	return getDefaultPackage()->rootNamespace()->get<Generic<Function>>("null");
+}
+
+gsl::not_null<Function*> cMCompiler::language::getHeapAllocateFor(cMCompiler::dataStructures::TypeReference objectType)
+{
+	auto returnType = objectType.getReference();
+	auto existing = getDefaultPackage()->rootNamespace()->get<Function>();
+	for (auto c : existing)
+		if (c->name() == "compiletime_heap_allocate" && c->returnType() == returnType)
+			return c;
+	auto result = getDefaultPackage()->rootNamespace()->append<Function>("compiletime_heap_allocate");
+	result->setReturnType(returnType);
+	compileTimeFunctions::FuntionLibrary::instance().addFunctionDefinition(result, [=](...)
+		{
+			return heapAllocate(objectType, false);
+		});
+	return result;
 }

@@ -1,13 +1,22 @@
-import {usize} from {cm1mLang}
+import {usize compiletime_heap_allocate} from {cm1mLang}
+import {RunTimeOnly} from {compiler}
+
 public fn new_array<T>(size: usize) -> @unique<T[]>
 {
 	let result = unsafe_cast<char[], T[]>(unsafe_new(sizeof<T>() * size));
 	return @unique<T[]>(result);
 }
 
+[RunTimeOnly()]
 public fn operator new unique<T>() -> @unique<T>
 {
 	let result = unsafe_cast<char[], T>(unsafe_new(sizeof<T>()));
+	return @unique<T>(result);
+}
+
+public fn operator new unique<T>() -> @unique<T> 
+{
+	let result = compiletime_heap_allocate<T>();
 	return @unique<T>(result);
 }
 

@@ -1,0 +1,11 @@
+import {markRunTimeOnly functionDescriptor} from {cm1mLang::compiler}
+
+namespace compiler 
+{
+	public att<function> RunTimeOnly
+	{
+		public fn attach(f: functionDescriptor)
+		{
+			markRunTimeOnly(f);
+		}
+	}

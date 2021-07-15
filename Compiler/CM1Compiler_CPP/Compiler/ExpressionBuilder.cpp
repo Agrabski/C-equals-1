@@ -315,14 +315,6 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 	);
 }
 
-//cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::buildExpression(gsl::not_null<CMinusEqualsMinus1Revision0Parser::MemberAccessExpressionContext*> ctx, language::runtime_value&& referenceToParent)
-//{
-//	if (ctx->Identifier() != nullptr)
-//		return language::buildMemberAccessExpression(variableLookupFunction_(ctx->Identifier()->getText()), buildExpression(ctx->expression()));
-//	else
-//		return language::buildMemberAccessExpression(buildExpression(ctx->functionCall()), buildExpression(ctx->expression()));
-//}
-
 cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::buildExpression(gsl::not_null<CMinusEqualsMinus1Revision0Parser::ThrowExpressionContext*> ctx, language::runtime_value&& referenceToParent)
 {
 	std::terminate();
@@ -344,9 +336,11 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 
 	auto compileTime = language::resolveOverload(methods, params, true, false);
 	auto runTime = language::resolveOverload(methods, params, false, true);
-	auto newOperator = nameResolver_.resolveOperatorNewUnique(context_, type);
+	auto compileNewOperator = nameResolver_.resolveOperatorNewUnique(context_, type, true, false);
+	auto runNewOperator = nameResolver_.resolveOperatorNewUnique(context_, type, false, true);
 	return language::buildNewExpression(
-		language::getValueFor(newOperator),
+		language::getValueFor(runNewOperator),
+		language::getValueFor(compileNewOperator),
 		language::getValueFor(runTime),
 		language::getValueFor(compileTime),
 		language::convertCollection(std::move(params), { language::getExpressionDescriptor(), 1 }),
@@ -354,26 +348,3 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 	);
 }
 
-//cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::buildExpression(gsl::not_null<CMinusEqualsMinus1Revision0Parser::ArithmeticExpressionContext*> ctx, dataStructures::Type* requestedType)
-//{
-//	using namespace dataStructures::execution;
-//	if (ctx->IntegerLiteral())
-//	{
-//		auto lit = language::buildIntegerValue(requestedType);
-//		lit->fromString(ctx->IntegerLiteral()->getText());
-//		auto result = language::buildValueLiteralExpression(std::move(lit));
-//		return std::move(result);
-//	}
-//}
-
-//cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::buildExpression(gsl::not_null<CMinusEqualsMinus1Revision0Parser::LExpressionContext*> ctx, language::runtime_value&& referenceToParent)
-//{
-//	using namespace cMCompiler::dataStructures::ir;
-//	auto const identifierChain = ctx->Identifier();
-//	auto variableAccess = language::buildVariableReferenceExpression(variableLookupFunction_(identifierChain[0]->getText()));
-//	auto strings = std::vector<std::string>();
-//	for (not_null id : identifierChain)
-//		strings.push_back(id->getText());
-//	strings.erase(strings.begin());
-//	return language::buildValueMemberAccessExpression(std::move(variableAccess), language::convertToCollection(strings));
-//}

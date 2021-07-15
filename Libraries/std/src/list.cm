@@ -46,7 +46,7 @@ public class list<T> //: ICollection<T>
 	{
 		let result = 0;
 		let currElement = self._begin.get();
-		while(currElement != null<T>())
+		while(currElement != null<listElement<T>>())
 		{
 			currElement = currElement._next.get();
 			result = result + 1;

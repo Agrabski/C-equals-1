@@ -4,6 +4,7 @@
 #include "../DataStructures/Function.hpp"
 #include "../Utilities/typedRange.hpp"
 #include "SpecialFunctionUtility.hpp"
+#include "FunctionPredicates.hpp"
 
 namespace cMCompiler::language
 {
@@ -14,9 +15,6 @@ namespace cMCompiler::language
 	};
 
 	bool verifyParameterMatch(Parameter const& parameter, dataStructures::Variable const& functionParameter);
-	bool isCompiletimeExecutable(not_null<dataStructures::Function const*> function);
-	bool isRuntimeExecutable(not_null<dataStructures::Function const*> function);
-	std::function<bool(not_null<dataStructures::Function const*> function)> getFunctionPredicate(bool forceCompileTime = false, bool forceRuntime = false);
 	template<std::ranges::range ParameterRange>
 	std::function<bool(not_null<dataStructures::Function const*> function)> getParameterTypeMatchPredicate(ParameterRange const& parameters)
 	{

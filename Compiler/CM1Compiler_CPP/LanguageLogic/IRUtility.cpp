@@ -429,11 +429,10 @@ gsl::not_null<Type*> cMCompiler::language::buildNewExpressionDescriptor(gsl::not
 		[](value_map&& a, generic_parameters)->runtime_value
 		{
 			auto self = dereferenceAs<ObjectValue>(a["self"].get());
-			auto f = dereferenceAs<RuntimeFunctionDescriptor>(self->getMemberValue("_newOperator").get());
+			auto f = dereferenceAs<RuntimeFunctionDescriptor>(self->getMemberValue("_compiletimeNewOperator").get());
 			if (f == nullptr)
 			{
-				auto returnType = dynamic_cast<Type*>(dereferenceAs<RuntimeFunctionDescriptor>(self->getMemberValue("_compiletimeConstructor").get())->value()->parent());
-				return  getValueFor({ returnType, 1 });
+				f = dereferenceAs<RuntimeFunctionDescriptor>(self->getMemberValue("_runtimeNewOperator").get());
 			}
 			else
 				return getValueFor(f->value()->returnType());
@@ -443,7 +442,8 @@ gsl::not_null<Type*> cMCompiler::language::buildNewExpressionDescriptor(gsl::not
 	createGetter(result->append<Function>("pointerToSource"), result);
 	result->appendInterface(getExpressionDescriptor());
 
-	result->appendField("_newOperator", { getFunctionDescriptor(), 0 })->setAccessibility(Accessibility::Private);
+	result->appendField("_runtimeNewOperator", { getFunctionDescriptor(), 0 })->setAccessibility(Accessibility::Private);
+	result->appendField("_compiletimeNewOperator", { getFunctionDescriptor(), 0 })->setAccessibility(Accessibility::Private);
 	result->appendField("_compiletimeConstructor", { getFunctionDescriptor(), 0 })->setAccessibility(Accessibility::Private);
 	result->appendField("_runtimeConstructor", { getFunctionDescriptor(), 0 })->setAccessibility(Accessibility::Private);
 	result->appendField("_sourcePointer", { getPointerToSource(), 0 });

@@ -24,7 +24,7 @@ not_null<Type*> buildCompilationResultDescriptor(
 	auto f = createCustomFunction(
 		result->append<Function>("appendModule"),
 		result,
-		[result](auto&& parameters, auto) -> runtime_value
+		[result, moduleDescriptor](auto&& parameters, auto) -> runtime_value
 		{
 			auto compilationResult = dereferenceAs<GenericRuntimeWrapper<CompilationResult>>(parameters["self"].get())->value();
 
@@ -34,7 +34,7 @@ not_null<Type*> buildCompilationResultDescriptor(
 
 			auto resultModule = m.get();
 			compilationResult->modules.push_back(std::move(m));
-			return std::make_unique<GenericRuntimeWrapper<llvm::Module>>(resultModule, TypeReference{ result, 0 });
+			return std::make_unique<GenericRuntimeWrapper<llvm::Module>>(resultModule, TypeReference{ moduleDescriptor, 0 });
 		}
 	);
 	f->appendVariable("moduleName", { getString(), 0 });
