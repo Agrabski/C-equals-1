@@ -161,7 +161,7 @@ runtime_value cMCompiler::compiler::ExpressionEvaluator::evaluate(language::runt
 	auto result = evaluateCommon(expression);
 	if (result == nullptr)
 		return nullptr;
-	if (!language::isOfType(expression.get(), language::getAdressofExpressionDescriptor()))
+	if (result->type() != type)
 	{
 		auto r = language::dereferenceOnce(result.get());
 		if (r != nullptr && type != r->type())

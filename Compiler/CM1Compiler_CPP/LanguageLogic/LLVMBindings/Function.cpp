@@ -24,6 +24,14 @@ void appendBodyBuilding(not_null<Type*> functionType, not_null<Type*> llvmType)
 			auto varName = dereferenceAs<StringValue>(a["name"].get())->value();
 			auto block = llvm::BasicBlock::Create(self->getContext(), "x", self);
 			auto builder = llvm::IRBuilder<>(block);
+			if (!varType->isSized())
+			{
+				std::string exceptionMessage = "Type cannot be allocated on stack beacose it is unsized. Type was: ";
+				llvm::raw_string_ostream rso = llvm::raw_string_ostream(exceptionMessage);
+				varType->print(rso);
+				// todo: fucking dangling pointer. Too bad!
+				throw std::exception(exceptionMessage.c_str());
+			}
 			builder.CreateAlloca(varType, nullptr, varName);
 			return nullptr;
 		}

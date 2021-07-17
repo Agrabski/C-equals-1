@@ -14,7 +14,7 @@ public class list<T> //: ICollection<T>
 	public fn push(element: T)
 	{
 		let newElement = new unique listElement<T>();
-		newElement._allocated = element;
+		newElement.get()._allocated = element;
 		if (self._begin.get() == null<listElement<T>>())
 			self._begin = newElement.move();
 		else

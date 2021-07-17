@@ -97,8 +97,8 @@ void cMCompiler::compiler::StatementEvaluator::declareVariable(dataStructures::e
 	not_null variable = dereferenceAs<RuntimeVariableDescriptor>(i->getMemberValue("_variable").get())->value();
 	auto expression = pointer_cast<IRuntimeValue>(i->getMemberValue("_expression"));
 	auto value = ev_.evaluate(expression);
-	auto res = dereferenceOnce(value.get());
-	this->variables_[variable->name()] = res != nullptr ? res->copy() : nullptr;
+	assert(value->type() == variable->type());
+	this->variables_[variable->name()] = std::move(value);
 }
 
 void cMCompiler::compiler::StatementEvaluator::terminate(dataStructures::execution::IRuntimeValue& instruction)

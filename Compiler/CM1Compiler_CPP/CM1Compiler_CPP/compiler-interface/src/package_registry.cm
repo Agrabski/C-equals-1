@@ -45,7 +45,8 @@ private class packageRegistry
 			if(self._data.get(i).path == path)
 				return self._data.get(i).module;
 		let newModule = self._compilationResult.appendModule(path);
-		self._data.push(pathPackagePair(path, newModule));
+		let pair = pathPackagePair(path, newModule);
+		self._data.push(pair);
 		return newModule;
 
 	}
