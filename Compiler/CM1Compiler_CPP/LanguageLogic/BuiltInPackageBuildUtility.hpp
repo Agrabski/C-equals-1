@@ -19,6 +19,8 @@ namespace cMCompiler::language
 	gsl::not_null<dataStructures::Type*> getPackageDescriptor();
 	gsl::not_null<dataStructures::Type*> getFieldDescriptor();
 	gsl::not_null<dataStructures::Type*> getPointerToSource();
+	gsl::not_null<dataStructures::Type*> getTypeGenericInstantiationInfo();
+	gsl::not_null<dataStructures::Type*> getGenericTypeDescriptor();
 	gsl::not_null<dataStructures::Attribute*> getCompileTimeAttribute();
 	gsl::not_null<dataStructures::Attribute*> getCompilerEntryPointAttribute();
 	gsl::not_null<dataStructures::Type*> getCollectionTypeFor(cMCompiler::dataStructures::TypeReference elementType);

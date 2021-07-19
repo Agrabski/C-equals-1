@@ -62,8 +62,8 @@ namespace cMCompiler::compiler
 		if (generic != nullptr)
 		{
 			std::vector<std::string> parameters{};
-			for (not_null param : generic->identifier())
-				parameters.push_back(param->getText());
+			for (not_null param : generic->genericParameterDeclaration())
+				parameters.push_back(param->identifier()->getText());//todo: expressions
 			auto x = target->appendGeneric<Function>(std::move(parameters), ctx->clone(nullptr), name, context, file);
 		}
 		else

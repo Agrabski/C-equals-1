@@ -1,6 +1,6 @@
 import {null} from {cm1mLang}
 
-public class list<T> //: ICollection<T>
+public class list<typename T> //: ICollection<T>
 {
 	private _begin: @unique<listElement<T>>;
 	private _end:  listElement<T>*;
@@ -55,7 +55,7 @@ public class list<T> //: ICollection<T>
 	}
 }
 
-private class listElement<T>
+private class listElement<typename T>
 {
 	public _allocated: T;
 	public _next: @unique<listElement<T>>;

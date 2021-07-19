@@ -55,6 +55,10 @@ not_null<dataStructures::Function*> cMCompiler::compiler::instantiate
 		executeAttachmentFunction(f, attribute, resolver, context);
 	if (context.objectMap_.contains(function.name()))
 		context.objectMap_[function.name()].push_back(f);
+	f->setInstantiationData({
+		&function,
+		genericParameters
+		});
 	return f;
 }
 
@@ -118,5 +122,9 @@ not_null<dataStructures::Type*> cMCompiler::compiler::instantiate
 		executeAttachmentFunction(type, attribute, resolver, context);
 	if (context.objectMap_.contains(type->name()))
 		context.objectMap_[type->name()].push_back(type);
+	type->setInstantiationData({
+		&genericType,
+		genericParameters
+		});
 	return type;
 }

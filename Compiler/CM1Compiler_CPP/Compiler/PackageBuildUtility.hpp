@@ -48,7 +48,7 @@ namespace cMCompiler::compiler
 
 	void supplyDependencies(
 		gsl::not_null<dataStructures::PackageDatabase*>package,
-		std::vector<std::unique_ptr<dataStructures::PackageDatabase>>& packages,
+		std::vector<std::unique_ptr<dataStructures::PackageDatabase>> const& packages,
 		std::map<dataStructures::PackageDatabase*, std::vector<std::string>>const& depNames);
 
 	void supplyDependencies(

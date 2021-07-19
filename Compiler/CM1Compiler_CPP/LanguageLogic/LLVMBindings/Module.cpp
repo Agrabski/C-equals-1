@@ -81,6 +81,24 @@ void appendType(
 		f->appendVariable("name", { getString(), 0 });
 }
 
+void getPointer(
+	not_null<Type*> mod,
+	not_null<Type*> llvmType
+)
+{
+	auto f = mod->append<Function>("getPointer");
+	createCustomFunction(f, mod, [llvmType](auto&& params, auto)->runtime_value
+		{
+			auto type = dereferenceAs<GenericRuntimeWrapper<llvm::Type>>(params["type"].get())->value();
+			auto self = dereferenceAs<GenericRuntimeWrapper<llvm::Module>>(params["self"].get())->value();
+
+			auto ty = llvm::PointerType::getUnqual(type);
+			return std::make_unique<GenericRuntimeWrapper<llvm::Type>>(ty, TypeReference{ llvmType, 0 });
+		})
+		->setReturnType({ llvmType, 0 });
+		f->appendVariable("type", { llvmType, 0 });
+}
+
 void appendArrayType(
 	not_null<Type*> mod,
 	not_null<Type*> llvmType
@@ -121,6 +139,7 @@ gsl::not_null<Type*> cMCompiler::language::buildModuleDescriptor(
 	auto result = backendns->append<Type>("llvmModule");
 	appendFunction(result, llvmFunction, llvmType);
 	appendType(result, llvmType);
+	getPointer(result, llvmType);
 
 
 

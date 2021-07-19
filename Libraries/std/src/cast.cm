@@ -2,5 +2,5 @@ import {usize} from {cm1mLang}
 import {ReplaceWithLLVMIR} from {compiler}
 
 [ReplaceWithLLVMIR("sizeof.llvm", "T", nameof(T), "Y", nameof(Y))]
-public fn unsafe_cast<T, Y>(i: T*) -> Y*
+public fn unsafe_cast<typename T, typename Y>(i: T*) -> Y*
 {}

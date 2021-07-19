@@ -8,6 +8,7 @@
 #include "../DataStructures/execution/RuntimeFunctionDescriptor.hpp"
 #include "../DataStructures/execution/RuntimeFieldDescriptor.hpp"
 #include "../DataStructures/execution/RuntimeVariableDescriptor.hpp"
+#include "../DataStructures/execution/GenericRuntimeWrapper.hpp"
 #include "RuntimeTypesConversionUtility.hpp"
 #include "../Utilities/pointer_cast.hpp"
 #include "GetterExecution.hpp"
@@ -227,6 +228,21 @@ cMCompiler::language::runtime_value cMCompiler::language::buildBinaryOperatorExp
 	);
 }
 
+Type* cMCompiler::language::getType(dataStructures::PackageDatabase*)
+{
+	return getPackageDescriptor();
+}
+
+Type* cMCompiler::language::getType(dataStructures::TypeReference*)
+{
+	return getTypeDescriptor();
+}
+
+Type* cMCompiler::language::getType(dataStructures::Variable*)
+{
+	return getVariableDescriptor();
+}
+
 std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(TypeReference value)
 {
 	return std::make_unique<RuntimeTypeDescriptor>(TypeReference{ getTypeDescriptor(), 0 }, value);
@@ -242,6 +258,11 @@ std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(dataStructures:
 	return getValueFor({ t, 0 });
 }
 
+std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(Generic<Type>* t)
+{
+	return std::make_unique<GenericRuntimeWrapper<Generic<Type>>>(t, TypeReference{ getGenericTypeDescriptor(), 0 });
+}
+
 std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(Function* value)
 {
 	return std::make_unique<RuntimeFunctionDescriptor>(TypeReference{ getFunctionDescriptor(), 0 }, value);
@@ -255,6 +276,11 @@ std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(Field* value)
 std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(PackageDatabase* value)
 {
 	return std::make_unique<RuntimePackageDescriptor>(TypeReference{ getPackageDescriptor(), 0 }, value);
+}
+
+std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(dataStructures::GenericInstantiationData<dataStructures::Type>* value)
+{
+	return std::make_unique<GenericRuntimeWrapper<GenericInstantiationData<Type>>>(value, TypeReference{ getTypeGenericInstantiationInfo(), 0 });
 }
 
 std::unique_ptr<IRuntimeValue> cMCompiler::language::buildPointerToSource(std::string const& filename, unsigned long long lineNumber)

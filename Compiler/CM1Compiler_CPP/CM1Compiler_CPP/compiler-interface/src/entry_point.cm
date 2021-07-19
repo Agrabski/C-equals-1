@@ -46,9 +46,20 @@ private fn completeType(t: typeDescriptor, package: packageDescriptor, registry:
 	}
 }
 
+private fn getParameterTypes(f: functionDescriptor) -> llvmType[]
+{
+	let result = <llvmType>[];
+	for(param in f.parameters())
+}
+
+private fn getParameterNames(f: functionDescriptor) -> string[]
+{
+	
+}
+
 private fn buildConstructor(t: typeDescriptor, f: functionDescriptor, package: packageDescriptor, registry: packageRegistry*, mod: llvmModule)
 {
 	let lt = registry.getLLVMTypeFor(t, package);
-	let f = mod.appendFunction("construct", <llvmType>[], <string>[], lt);
-	f.appendAlloca(lt, "self");
+	let func = mod.appendFunction("construct",getParameterTypes(f), getParameterNames(f), lt);
+	func.getBuilder().appendAlloca(lt, "self");
 }

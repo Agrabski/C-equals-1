@@ -38,8 +38,8 @@ cMCompiler::dataStructures::Type* cMCompiler::compiler::createType(
 	if (generic != nullptr)
 	{
 		std::vector<std::string> parameters{};
-		for (not_null param : generic->identifier())
-			parameters.push_back(param->getText());
+		for (not_null param : generic->genericParameterDeclaration())
+			parameters.push_back(param->identifier()->getText());
 		auto x = target->appendGeneric<dataStructures::Type>(std::move(parameters), ctx->clone(nullptr), name, context, path);
 		return nullptr;
 	}
@@ -167,14 +167,14 @@ cMCompiler::dataStructures::TypeReference cMCompiler::compiler::getType(
 	if (ctx->genericUsage())
 	{
 		std::vector<dataStructures::TypeReference> parameters;
-		for (not_null p : ctx->genericUsage()->typeSpecifier())
+		for (not_null p : ctx->genericUsage()->genericParameter())
 		{
 			auto name = p->getText();
 			parameters.push_back(
 				getType(
 					resolver,
 					context,
-					p,
+					p->typeSpecifier(),
 					file
 				));
 		}

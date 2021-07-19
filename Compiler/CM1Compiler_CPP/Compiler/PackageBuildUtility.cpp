@@ -26,7 +26,7 @@ std::vector<std::unique_ptr<dataStructures::PackageDatabase>> cMCompiler::compil
 
 void cMCompiler::compiler::supplyDependencies(
 	gsl::not_null<dataStructures::PackageDatabase*> package,
-	std::vector<std::unique_ptr<dataStructures::PackageDatabase>>& packages,
+	std::vector<std::unique_ptr<dataStructures::PackageDatabase>> const& packages,
 	std::map<dataStructures::PackageDatabase*, std::vector<std::string>> const& depNames)
 {
 	auto const& names = depNames.at(package);
@@ -34,7 +34,8 @@ void cMCompiler::compiler::supplyDependencies(
 	{
 		if (name == "cm1mLang")
 			package->appendDependency(language::getDefaultPackage());
-		else {
+		else
+		{
 			auto dependency = std::find_if(packages.begin(), packages.end(), [&name](auto const& e)
 				{
 					return e->name() == name;

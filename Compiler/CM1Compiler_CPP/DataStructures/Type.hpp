@@ -9,6 +9,7 @@
 #include "AttributeTarget.hpp"
 #include "TypeClassifier.hpp"
 #include "Generic.hpp"
+#include "GenericInstantiationData.hpp"
 
 using gsl::not_null;
 
@@ -16,7 +17,11 @@ namespace cMCompiler::dataStructures
 {
 	class Namespace;
 	class Field;
-	class Type : public INamedObject, public ObjectWithAccessbility, public AttributeTarget
+	class Type :
+		public INamedObject,
+		public ObjectWithAccessbility,
+		public AttributeTarget,
+		public InstantiationDataHolder<Type>
 	{
 		std::vector<std::unique_ptr<Function>> methods_;
 		std::vector<std::unique_ptr<Field>> fields_;

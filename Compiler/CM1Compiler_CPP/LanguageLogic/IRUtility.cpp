@@ -8,6 +8,7 @@
 #include "GetterExecution.hpp"
 #include "../Parser/antlr4-runtime.h"
 #include "LiteralUtility.hpp"
+#include "../DataStructures/execution/RuntimeVariableDescriptor.hpp"
 using namespace cMCompiler::dataStructures::execution;
 
 using namespace cMCompiler::dataStructures;
@@ -111,8 +112,28 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildWhil
 gsl::not_null<Type*> cMCompiler::language::buildVariableDescriptor(gsl::not_null<Namespace*> irNs)
 {
 	auto result = irNs->append<Type>("variableDescriptor"s);
-	result->append<Function>("_name"s)->setReturnType({ getString(), 1 })->setAccessibility(Accessibility::Public);
-	result->append<Function>("_type"s)->setReturnType({ getTypeDescriptor(),0 })->setAccessibility(Accessibility::Public);
+	createCustomFunction(
+		result
+		->append<Function>("name"s)
+		->setReturnType({ getString(), 1 }),
+		result,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<RuntimeVariableDescriptor>(a["self"].get())->value();
+			return buildStringValue(self->name());
+		}
+	)->setAccessibility(Accessibility::Public);
+	createCustomFunction(
+		result
+		->append<Function>("type"s)
+		->setReturnType({ getString(), 1 }),
+		result,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<RuntimeVariableDescriptor>(a["self"].get())->value();
+			return getValueFor(self->type());
+		}
+	)->setAccessibility(Accessibility::Public);
 	return result;
 }
 

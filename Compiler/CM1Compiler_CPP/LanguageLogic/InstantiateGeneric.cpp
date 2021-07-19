@@ -50,7 +50,8 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::instantia
 				auto self = dereferenceAs<dataStructures::execution::ArrayValue>(args["self"].get());
 				self->push(args["value"]->copy());
 				return nullptr;
-			})->appendVariable("value", genericParameters[0]);
+			}
+		)->appendVariable("value", genericParameters[0]);
 		createCustomFunction(
 			newType->append<dataStructures::Function>("length"),
 			newType,
@@ -58,7 +59,9 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::instantia
 			{
 				auto self = dereferenceAs<dataStructures::execution::ArrayValue>(args["self"].get());
 				return buildIntegerValue(getUsize(), self->size());
-			})->setReturnType({ getUsize(), 0 });
+			}
+		)->setReturnType({ getUsize(), 0 });
+		newType->setInstantiationData({ getArray(), genericParameters });
 		return newType;
 
 	}

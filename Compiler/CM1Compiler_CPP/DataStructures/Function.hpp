@@ -12,6 +12,7 @@
 #include "Target.hpp"
 #include "ObjectWithMetadata.hpp"
 #include "MetadataObject.hpp"
+#include "GenericInstantiationData.hpp"
 #include "execution/ArrayValue.hpp"
 
 using gsl::not_null;
@@ -48,7 +49,8 @@ namespace cMCompiler::dataStructures
 		public INamedObject,
 		public AttributeTarget,
 		public ObjectWithAccessbility,
-		public ObjectWithMetadata<FunctionMetadata>
+		public ObjectWithMetadata<FunctionMetadata>,
+		public InstantiationDataHolder<Function>
 	{
 		std::unique_ptr<execution::ArrayValue> intermidiateRepresentation_;
 		std::vector<std::unique_ptr<Variable>> parameters_;

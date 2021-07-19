@@ -58,6 +58,17 @@ std::optional<cMCompiler::language::runtime_value> cMCompiler::compiler::Express
 			language::buildSourcePointer(filepath_.string(), *ctx)
 		);
 	}
+	if (functionName == "genericTypeof")
+	{
+		auto name = ctx->functionCallParameter(0)->getText();
+		auto value = nameResolver_.resolve<Generic<Type>>(name, context_);
+		return language::buildValueLiteralExpression(
+			language::moveToHeap(language::getValueFor(
+				value
+			)),
+			language::buildSourcePointer(filepath_.string(), *ctx)
+		);
+	}
 	return {};
 
 }
@@ -249,17 +260,16 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 		return std::move(*special);
 	}
 	auto arguments = buildParameters(ctx);
-	// todo: generics
-	// todo: operators
 	std::vector<not_null<dataStructures::Function*>> candidates;
 	if (ctx->genericUsage() != nullptr)
 	{
+		// todo: expression parameters
 		auto genericParameters = std::vector<dataStructures::TypeReference>();
-		for (auto g : ctx->genericUsage()->typeSpecifier())
+		for (auto g : ctx->genericUsage()->genericParameter())
 			genericParameters.push_back(getType(
 				nameResolver_,
 				context_,
-				g,
+				g->typeSpecifier(),
 				filepath_
 			));
 

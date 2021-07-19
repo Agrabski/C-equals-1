@@ -39,6 +39,7 @@
     <ClInclude Include="AttributeUtility.hpp" />
     <ClInclude Include="CompilationUnitDatabaseBuilder.hpp" />
     <ClInclude Include="compilerInterfaceUtility.hpp" />
+    <ClInclude Include="Environment.hpp" />
     <ClInclude Include="ExceptionHandling.hpp" />
     <ClInclude Include="ExpressionBuilder.hpp" />
     <ClInclude Include="ExpressionEvaluator.hpp" />
@@ -60,6 +61,7 @@
     <ClCompile Include="AttributeUtility.cpp" />
     <ClCompile Include="CompilationUnitDatabaseBuilder.cpp" />
     <ClCompile Include="compilerInterfaceUtility.cpp" />
+    <ClCompile Include="Environment.cpp" />
     <ClCompile Include="ExceptionHandling.cpp" />
     <ClCompile Include="ExpressionBuilder.cpp" />
     <ClCompile Include="ExpressionEvaluator.cpp" />

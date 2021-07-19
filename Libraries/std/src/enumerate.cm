@@ -22,7 +22,7 @@ public class integerIterator
 }
 
 
-public class enumeration<From, To>
+public class enumeration<typename From,typename To>
 {
 	private _to: To;
 	private _from: From;
@@ -44,7 +44,7 @@ public class enumeration<From, To>
 	}
 }
 
-public class atHocCollection<From, To>
+public class atHocCollection<typename From,typename To>
 {
 	private _to: To;
 	private _from: From;

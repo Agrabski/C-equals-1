@@ -1,6 +1,6 @@
 import {null} from {cm1mLang}
 
-class @unique<T>
+class @unique<typename T>
 {
 	private _allocated : T*;
 

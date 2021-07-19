@@ -32,7 +32,11 @@ classContentSequence: (functionDeclaration | fieldDeclaration)*;
 fieldDeclaration:
 	attributeSequence? AccessSpecifier? identifier ':' typeSpecifier SemiColon;
 
-genericSpecifier: Less identifier (',' identifier)* Greater;
+genericSpecifier: Less genericParameterDeclaration (',' genericParameterDeclaration)* Greater;
+
+genericParameterDeclaration: 'typename' identifier | typeSpecifier identifier;
+
+genericParameter: typeSpecifier | expression;
 
 implementedInterfacesSequence:
 	typeReference
@@ -57,7 +61,7 @@ modifier:  arraySpecifier? ref*;
 
 arraySpecifier: '[' modifier']';
 
-genericUsage: Less typeSpecifier (',' typeSpecifier)* Greater;
+genericUsage: Less genericParameter (',' genericParameter)* Greater;
 
 functionBody: OpenBracket statement* CloseBracket;
 
@@ -230,7 +234,7 @@ Shared: 'shared';
 Unique: 'unique';
 New: 'new';
 
-identifier: SimpleIdentifier | '@new' | '@unique' | '@shared' | '@throw' | '@attribute' | '@default' | 'type';
+identifier: SimpleIdentifier | '@new' | '@unique' | '@shared' | '@throw' | '@attribute' | '@default' | 'type' | 'typename';
 
 SimpleIdentifier: LETTER (LETTER | DIGIT)*;
 
