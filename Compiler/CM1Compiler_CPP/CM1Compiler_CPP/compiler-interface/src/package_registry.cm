@@ -1,7 +1,7 @@
 import {compilerEntryPoint usize packageDescriptor string null array} from {cm1mLang}
-import {llvmModule compilationResult llvmType llvmInt32Type} from {cm1mLang::compiler::backend}
+import {llvmModule compilationResult llvmType llvmInt32Type llvmCstringType} from {cm1mLang::compiler::backend}
 import {functionDescriptor typeDescriptor packageDescriptor} from {cm1mLang::compiler}
-import {enumerate list} from {std}
+import {enumerate list print} from {std}
 
 private struct pathPackagePair
 {
@@ -59,8 +59,11 @@ private class packageRegistry
 
 	public fn getLLVMTypeFor(t: typeDescriptor, package: packageDescriptor) -> llvmType
 	{
+		print(t.qualifiedName());
 		if(t == typeof(usize))
 			return llvmInt32Type(self._compilationResult);
+		if(t == typeof(string))
+			return llvmCstringType(self._compilationResult);
 		let file = t.sourceLocation();
 		let module = self.getModuleForFile(file.filename);
 		for(i in enumerate(0, self._types.length()))
@@ -69,6 +72,34 @@ private class packageRegistry
 		let llvmType = self.translateType(t, module, package);
 		self._types.push(typeMapPair(t, llvmType));
 		return llvmType;
+	}
+
+	public fn getLLVMTypeForExisting(t: typeDescriptor) -> llvmType 
+	{
+		let file = t.sourceLocation();
+		let module = self.getModuleForFile(file.filename);
+		let baseType = t.baseType();
+		if(baseType == typeof(usize))
+			return llvmInt32Type(self._compilationResult);
+		if(baseType == typeof(string))
+			return llvmCstringType(self._compilationResult);
+
+		let file = t.sourceLocation();
+		let module = self.getModuleForFile(file.filename);
+		for(i in enumerate(0, self._types.length()))
+		{
+			if(self._types.get(i).ctype == baseType)
+			{
+				return self.getType(t, self._types.get(i).llvmType, module);
+			}
+		}
+	}
+
+	private fn getType(t: typeDescriptor, llvmBaseType: llvmType, module: llvmModule) -> llvmType
+	{
+		if(t.referenceCount() == 0)
+			return llvmBaseType;
+		return self.getType(t.dereference(), module.getPointer(llvmBaseType), module);
 	}
 
 	private fn translateType(t: typeDescriptor, module: llvmModule, package: packageDescriptor) -> llvmType

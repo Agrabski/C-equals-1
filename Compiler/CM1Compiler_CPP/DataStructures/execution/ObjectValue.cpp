@@ -64,6 +64,7 @@ cMCompiler::dataStructures::TypeReference const& cMCompiler::dataStructures::exe
 
 std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler::dataStructures::execution::ObjectValue::copy() const
 {
+	auto type_name = type().type->name();
 	auto result = std::make_unique<ObjectValue>(type());
 	for (auto const& kv : values_)
 		result->values_[kv.first] = kv.second->copy();

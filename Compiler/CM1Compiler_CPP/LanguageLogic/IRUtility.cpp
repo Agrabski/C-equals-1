@@ -115,7 +115,7 @@ gsl::not_null<Type*> cMCompiler::language::buildVariableDescriptor(gsl::not_null
 	createCustomFunction(
 		result
 		->append<Function>("name"s)
-		->setReturnType({ getString(), 1 }),
+		->setReturnType({ getString(), 0 }),
 		result,
 		[](auto&& a, auto b)
 		{
@@ -126,7 +126,7 @@ gsl::not_null<Type*> cMCompiler::language::buildVariableDescriptor(gsl::not_null
 	createCustomFunction(
 		result
 		->append<Function>("type"s)
-		->setReturnType({ getString(), 1 }),
+		->setReturnType({ getTypeDescriptor(), 0 }),
 		result,
 		[](auto&& a, auto b)
 		{
@@ -379,7 +379,7 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildFunc
 		{
 			auto self = dereferenceAs<ObjectValue>(a["self"].get());
 			auto f = dereferenceAs<RuntimeFunctionDescriptor>(self->getMemberValue("_runtimeFunction").get());
-			if (f == nullptr)
+			if (f == nullptr || f->value() == nullptr)
 				f = dereferenceAs<RuntimeFunctionDescriptor>(self->getMemberValue("_compiletimeFunction").get());
 			return getValueFor(f->value()->returnType());
 		}

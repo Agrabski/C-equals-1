@@ -10,6 +10,7 @@
 #include "Function.hpp"
 #include "Type.hpp"
 #include "Types.hpp"
+#include "Value.hpp"
 
 using namespace cMCompiler::dataStructures;
 using namespace cMCompiler::dataStructures::execution;
@@ -49,7 +50,9 @@ void cMCompiler::language::buildLLVMBindings(gsl::not_null<dataStructures::Names
 
 	auto type = buildTypeDescriptor(backendNs);
 
-	auto function = buildFunctionDescriptor(backendNs, type);
+	auto llvmValue = buildValue(backendNs, type);
+
+	auto function = buildFunctionDescriptor(backendNs, type, llvmValue);
 
 	auto llvmModule = buildModuleDescriptor(backendNs, function, type);
 	

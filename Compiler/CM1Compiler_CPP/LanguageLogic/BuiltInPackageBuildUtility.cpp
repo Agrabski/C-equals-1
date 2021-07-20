@@ -165,6 +165,7 @@ void completeBuildingType(gsl::not_null<Type*> type)
 		{
 			auto arg1 = dereferenceAs<execution::RuntimeTypeDescriptor>(a.get());
 			auto arg2 = dereferenceAs<execution::RuntimeTypeDescriptor>(b.get());
+
 			return buildBooleanValue(arg1->value() != arg2->value());
 		});
 	createCustomFunction(
@@ -199,6 +200,39 @@ void completeBuildingType(gsl::not_null<Type*> type)
 		{
 			auto self = dereferenceAs<RuntimeTypeDescriptor>(a["self"].get())->value();
 			return getValueFor(self.type->instantiationData());
+		}
+	);
+	createCustomFunction(
+		type
+		->append<Function>("referenceCount")
+		->setReturnType({ getUsize(),0 }),
+		type,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<RuntimeTypeDescriptor>(a["self"].get())->value();
+			return buildIntegerValue(getUsize(), self.referenceCount);
+		}
+	);
+	createCustomFunction(
+		type
+		->append<Function>("baseType")
+		->setReturnType({ type,0 }),
+		type,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<RuntimeTypeDescriptor>(a["self"].get())->value();
+			return getValueFor(self.baseType());
+		}
+	);
+	createCustomFunction(
+		type
+		->append<Function>("dereference")
+		->setReturnType({ type,0 }),
+		type,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<RuntimeTypeDescriptor>(a["self"].get())->value();
+			return getValueFor(self.dereference());
 		}
 	);
 }

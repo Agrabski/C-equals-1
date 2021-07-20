@@ -42,11 +42,13 @@
     <ClInclude Include="InstantiateGeneric.hpp" />
     <ClInclude Include="IRUtility.hpp" />
     <ClInclude Include="LiteralUtility.hpp" />
+    <ClInclude Include="LLVMBindings\BodyBuilder.hpp" />
     <ClInclude Include="LLVMBindings\Function.hpp" />
     <ClInclude Include="LLVMBindings\LLVMBindings.hpp" />
     <ClInclude Include="LLVMBindings\Module.hpp" />
     <ClInclude Include="LLVMBindings\Type.hpp" />
     <ClInclude Include="LLVMBindings\Types.hpp" />
+    <ClInclude Include="LLVMBindings\Value.hpp" />
     <ClInclude Include="MetatypeUility.hpp" />
     <ClInclude Include="NameResolver.hpp" />
     <ClInclude Include="NamespaceBuilder.hpp" />
@@ -85,11 +87,13 @@
     <ClCompile Include="InstantiateGeneric.cpp" />
     <ClCompile Include="IRUtility.cpp" />
     <ClCompile Include="LiteralUtility.cpp" />
+    <ClCompile Include="LLVMBindings\BodyBuilder.cpp" />
     <ClCompile Include="LLVMBindings\Function.cpp" />
     <ClCompile Include="LLVMBindings\LLVMBindings.cpp" />
     <ClCompile Include="LLVMBindings\Module.cpp" />
     <ClCompile Include="LLVMBindings\Type.cpp" />
     <ClCompile Include="LLVMBindings\Types.cpp" />
+    <ClCompile Include="LLVMBindings\Value.cpp" />
     <ClCompile Include="MetatypeUility.cpp" />
     <ClCompile Include="NameResolver.cpp" />
     <ClCompile Include="NamespaceBuilder.cpp" />

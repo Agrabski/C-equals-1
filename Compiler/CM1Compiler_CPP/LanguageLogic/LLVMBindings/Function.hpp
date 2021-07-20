@@ -5,8 +5,9 @@
 namespace cMCompiler::language
 {
 	gsl::not_null<dataStructures::Type*> buildFunctionDescriptor(
-		gsl::not_null<dataStructures::Namespace*> backendns,
-		gsl::not_null<dataStructures::Type*> llvmType);
+		not_null<dataStructures::Namespace*> backendns,
+		not_null<dataStructures::Type*> llvmType,
+		not_null<dataStructures:: Type*> llvmValue);
 
 	gsl::not_null<dataStructures::Type*> getLLVMFunctionDescriptor();
 }

@@ -141,6 +141,12 @@
     <ClInclude Include="CompileTimeFunctions\Boobs.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="LLVMBindings\BodyBuilder.hpp">
+      <Filter>Header Files\LLVMBindings</Filter>
+    </ClInclude>
+    <ClInclude Include="LLVMBindings\Value.hpp">
+      <Filter>Header Files\LLVMBindings</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NamespaceBuilder.cpp">
@@ -246,6 +252,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GetterExecution.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LLVMBindings\BodyBuilder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LLVMBindings\Value.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

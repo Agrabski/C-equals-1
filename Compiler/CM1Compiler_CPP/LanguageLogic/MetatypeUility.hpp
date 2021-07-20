@@ -15,15 +15,15 @@
 
 namespace cMCompiler::language
 {
-	dataStructures::TypeReference getExpressionType(std::unique_ptr<dataStructures::execution::IRuntimeValue>& expression);
+	dataStructures::TypeReference getExpressionType(runtime_value& expression);
 
 	runtime_value buildVariableDeclaration(gsl::not_null<dataStructures::Variable*> variable, runtime_value&& expression, runtime_value&& pointerToSource);
-	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildScopeTermination(runtime_value&& variables, runtime_value&& pointerToSource);
-	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildIf(runtime_value&& expression, runtime_value&& pointerToSource);
-	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildAssigmentStatement(runtime_value&& lExpression, runtime_value&& rExpression, runtime_value&& pointerToSource);
-	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildReturnStatement(runtime_value&& Expression, runtime_value&& pointerToSource);
-	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildReturnStatement(runtime_value&& pointerToSource);
-	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildFunctionCallStatement(
+	runtime_value buildScopeTermination(runtime_value&& variables, runtime_value&& pointerToSource);
+	runtime_value buildIf(runtime_value&& expression, runtime_value&& pointerToSource);
+	runtime_value buildAssigmentStatement(runtime_value&& lExpression, runtime_value&& rExpression, runtime_value&& pointerToSource);
+	runtime_value buildReturnStatement(runtime_value&& Expression, runtime_value&& pointerToSource);
+	runtime_value buildReturnStatement(runtime_value&& pointerToSource);
+	runtime_value buildFunctionCallStatement(
 		runtime_value&& expression,
 		runtime_value&& pointerToSource);
 
@@ -32,8 +32,8 @@ namespace cMCompiler::language
 		runtime_value&& pointerToSource
 	);
 
-	std::unique_ptr<dataStructures::execution::IRuntimeValue> createVariableDescriptor(not_null<dataStructures::Variable*> variable);
-	std::unique_ptr<dataStructures::execution::IRuntimeValue> createTypeDescriptor(dataStructures::TypeReference  type);
+	runtime_value createVariableDescriptor(not_null<dataStructures::Variable*> variable);
+	runtime_value createTypeDescriptor(dataStructures::TypeReference  type);
 
 
 	void suplyParent(runtime_value& instruction, runtime_value&& referenceToParent);
@@ -44,14 +44,14 @@ namespace cMCompiler::language
 	dataStructures::Type* getType(dataStructures::TypeReference*);
 	dataStructures::Type* getType(dataStructures::Variable*);
 
-	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(dataStructures::TypeReference);
-	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(dataStructures::Type* t);
-	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(dataStructures::Generic<dataStructures::Type>* t);
-	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(dataStructures::Function*);
-	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(dataStructures::Field*);
-	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(dataStructures::Variable*);
-	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(dataStructures::PackageDatabase*);
-	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(dataStructures::GenericInstantiationData<dataStructures::Type>*);
+	runtime_value getValueFor(dataStructures::TypeReference);
+	runtime_value getValueFor(dataStructures::Type* t);
+	runtime_value getValueFor(dataStructures::Generic<dataStructures::Type>* t);
+	runtime_value getValueFor(dataStructures::Function*);
+	runtime_value getValueFor(dataStructures::Field*);
+	runtime_value getValueFor(dataStructures::Variable*);
+	runtime_value getValueFor(dataStructures::PackageDatabase*);
+	runtime_value getValueFor(dataStructures::GenericInstantiationData<dataStructures::Type>*);
 
 	template<typename T>
 	runtime_value convertCollection(std::vector<not_null<T*>>const& collection, dataStructures::TypeReference elementType)
@@ -63,9 +63,9 @@ namespace cMCompiler::language
 	}
 
 	template<typename T>
-	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(std::vector<std::unique_ptr<T>>const& c)
+	runtime_value getValueFor(std::vector<std::unique_ptr<T>>const& c)
 	{
-		auto result = std::vector<std::unique_ptr<dataStructures::execution::IRuntimeValue>>();
+		auto result = std::vector<runtime_value>();
 		for (auto const& e : c)
 			result.push_back(getValueFor(e.get()));
 
@@ -74,9 +74,9 @@ namespace cMCompiler::language
 	}
 
 	template<typename T>
-	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(std::vector<T>const& c)
+	runtime_value getValueFor(std::vector<T>const& c)
 	{
-		auto result = std::vector<std::unique_ptr<dataStructures::execution::IRuntimeValue>>();
+		auto result = std::vector<runtime_value>();
 		for (auto const& e : c)
 			result.push_back(getValueFor(e));
 
@@ -85,9 +85,9 @@ namespace cMCompiler::language
 	}
 
 	template<typename T>
-	std::unique_ptr<dataStructures::execution::IRuntimeValue> getValueFor(std::vector<not_null<T*>>const& c)
+	runtime_value getValueFor(std::vector<not_null<T*>>const& c)
 	{
-		auto result = std::vector<std::unique_ptr<dataStructures::execution::IRuntimeValue>>();
+		auto result = std::vector<runtime_value>();
 		for (auto const& e : c)
 			result.push_back(getValueFor(e));
 
@@ -95,7 +95,7 @@ namespace cMCompiler::language
 		return convertToCollection(std::move(result), dataStructures::TypeReference{ getType((T*)nullptr), 0 });
 	}
 
-	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildPointerToSource(
+	runtime_value buildPointerToSource(
 		std::string const& filename,
 		unsigned long long lineNumber
 	);

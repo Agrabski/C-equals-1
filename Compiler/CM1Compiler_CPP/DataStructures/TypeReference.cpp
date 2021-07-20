@@ -38,3 +38,8 @@ cMCompiler::dataStructures::TypeReference cMCompiler::dataStructures::TypeRefere
 	assert(referenceCount - 1 >= 0);
 	return { type,referenceCount - 1 };
 }
+
+cMCompiler::dataStructures::TypeReference cMCompiler::dataStructures::TypeReference::baseType() const noexcept
+{
+	return { type, 0 };
+}

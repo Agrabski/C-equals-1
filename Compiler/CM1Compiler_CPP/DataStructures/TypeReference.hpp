@@ -11,6 +11,7 @@ namespace cMCompiler::dataStructures
 		std::string typeName() const;
 		TypeReference getReference() const noexcept;
 		TypeReference dereference() const noexcept;
+		TypeReference baseType() const noexcept;
 	};
 	std::ostream& operator<< (std::ostream& s, TypeReference const& ref);
 
