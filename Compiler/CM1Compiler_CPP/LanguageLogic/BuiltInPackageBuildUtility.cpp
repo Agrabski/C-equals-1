@@ -131,15 +131,13 @@ void completeBuildingType(gsl::not_null<Type*> type)
 	)->setAccessibility(Accessibility::Public);
 	createCustomFunction(
 		type
-		->append<Function>("constructors")
+		->append<Function>("methods")
 		->setReturnType({ getCollectionTypeFor({ cMCompiler::language::getFunctionDescriptor(), 0 }),0 }),
 		type,
 		[](auto&& a, auto b)
 		{
 			auto self = dereferenceAs<RuntimeTypeDescriptor>(a["self"].get())->value();
 			auto methods = self.type->methods();
-			if (!methods.empty())
-				methods.erase(std::remove_if(methods.begin(), methods.end(), isConstructor));
 			return convertCollection(methods, { getFunctionDescriptor(), 0 });
 		}
 	)->setAccessibility(Accessibility::Public);
@@ -235,6 +233,18 @@ void completeBuildingType(gsl::not_null<Type*> type)
 			return getValueFor(self.dereference());
 		}
 	);
+
+	createCustomFunction(
+		type
+		->append<Function>("isVoidType")
+		->setReturnType({ getBool(),0 }),
+		type,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<RuntimeTypeDescriptor>(a["self"].get())->value();
+			return buildBooleanValue(self.type == nullptr);
+		}
+	);
 }
 
 void completeBuildingNamespace(gsl::not_null<Type*> t)
@@ -255,6 +265,27 @@ void completeBuildingFunction(gsl::not_null<Type*> t)
 			return getValueFor(self->parameters());
 		}
 	);
+	createCustomFunction(
+		t->append<Function>("returnType")
+		->setReturnType({ getTypeDescriptor(),0 }),
+		t,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<RuntimeFunctionDescriptor>(a["self"].get())->value();
+			return getValueFor(self->returnType());
+		}
+	);
+	createCustomFunction(
+		t->append<Function>("name")
+		->setReturnType({ getString(),0 }),
+		t,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<RuntimeFunctionDescriptor>(a["self"].get())->value();
+			return buildStringValue(self->name());
+		}
+	);
+
 }
 
 void buildGenericTypeDescriptor(gsl::not_null<Namespace*> compilerNs)

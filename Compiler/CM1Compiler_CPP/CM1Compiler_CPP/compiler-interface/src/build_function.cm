@@ -1,0 +1,47 @@
+import {functionDescriptor packageDescriptor typeDescriptor} from {cm1mLang::compiler}
+import {llvmFunction llvmModule llvmType llvmVoidType compilationResult} from {cm1mLang::compiler::backend}
+import {enumerate} from {std}
+import {string} from {cm1mLang}
+
+private fn createFunction(f: functionDescriptor, package: packageDescriptor, registry: packageRegistry*, mod: llvmModule, cr: compilationResult) -> llvmFunction
+{
+	let returnType = llvmVoidType(cr);
+	if(f.returnType().isVoidType())
+		let x = 1;
+	else
+		returnType = registry.getLLVMTypeForExisting(f.returnType());
+	let func = mod.appendFunction(
+		f.name(),
+		getParameterTypes(f, registry),
+		getParameterNames(f, registry),
+		returnType
+		);
+	return func;
+}
+
+
+private fn createBuild(f: functionDescriptor, llvmF: llvmFunction, package: packageDescriptor, registry: packageRegistry*, mod: llvmModule) -> llvmFunction
+{
+	
+}
+
+private fn getParameterTypes(f: functionDescriptor, registry: packageRegistry*) -> llvmType[]
+{
+	let result = <llvmType>[];
+	let parameters = f.parameters();
+	for(i in enumerate(0, parameters.length()))
+		result.push(registry.getLLVMTypeForExisting(parameters[i].type()));
+	return result;
+}
+
+private fn getParameterNames(f: functionDescriptor, registry: packageRegistry*) -> string[]
+{
+	let result = <string>[];
+	let parameters = f.parameters();
+	for(i in enumerate(0, parameters.length()))
+	{
+		result.push(parameters[i].name());
+	}
+	return result;
+}
+

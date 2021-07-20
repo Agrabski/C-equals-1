@@ -11,7 +11,10 @@ std::string name(gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclaratio
 	return ctx->identifier()->getText();
 }
 
-void appendDefaultConstructor(not_null<cMCompiler::dataStructures::Type*> type)
+void appendDefaultConstructor(
+	not_null<cMCompiler::dataStructures::Type*> type,
+	not_null< CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*> declaration,
+	std::filesystem::path file)
 {
 	using namespace cMCompiler::dataStructures;
 	using namespace cMCompiler;
@@ -21,6 +24,7 @@ void appendDefaultConstructor(not_null<cMCompiler::dataStructures::Type*> type)
 		TypeReference{ language::getIInstruction() ,1 }
 	));
 	c->setReturnType({ nullptr, 0 });
+	c->setSourceLocation(language::buildSourcePointer(file.string(), *declaration));
 	cMCompiler::compiler::appendSpecialVariable(type, c);
 }
 
@@ -29,7 +33,7 @@ cMCompiler::dataStructures::Type* cMCompiler::compiler::createType(
 	language::NameResolver& resolver,
 	language::NameResolutionContext& context,
 	gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*> ctx,
-	std::filesystem::path const&path)
+	std::filesystem::path const& path)
 {
 	assert(target != nullptr);
 	auto name = ::name(ctx);
@@ -78,7 +82,7 @@ void cMCompiler::compiler::finalizeType(
 }
 
 void cMCompiler::compiler::confirmType(
-	language::NameResolver& resolver, 
+	language::NameResolver& resolver,
 	language::NameResolutionContext& context,
 	dataStructures::Type* type,
 	gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*> ctx,
@@ -150,7 +154,7 @@ void cMCompiler::compiler::finalizeType(language::NameResolver& resolver, langua
 				finalizeFunction(resolver, context, f, member, file);
 			}
 		if (auto methods = type->methods(); !std::any_of(methods.begin(), methods.end(), language::isConstructor))
-			appendDefaultConstructor(type);
+			appendDefaultConstructor(type, ctx, file);
 		type->finalize();
 	}
 }

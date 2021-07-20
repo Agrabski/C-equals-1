@@ -335,7 +335,7 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitIfStatement(CMinus
 				language::pushElse(conditional, std::move(e));
 			});
 		ctx->compoundStatement(1)->accept(this);
-		auto scopeExit = leaveScope(ctx->compoundStatement(1)->CloseBracket()->getSymbol()->getLine());
+		auto scopeExit = leaveScope(language::getLineNumber(ctx));
 		language::suplyParent(scopeExit, getReferenceToParent());
 		language::pushElse(conditional, std::move(scopeExit));
 		instructionAppenders.pop_back();

@@ -1,7 +1,7 @@
-import {compilerEntryPoint functionDescriptor packageDescriptor typeDescriptor} from {cm1mLang::compiler}
-import {string null usize} from {cm1mLang}
-import {compilationResult llvmType llvmInt32Type llvmModule} from {cm1mLang::compiler::backend}
-import {enumerate print} from {std}
+import {compilerEntryPoint packageDescriptor typeDescriptor} from {cm1mLang::compiler}
+import {usize} from {cm1mLang}
+import {compilationResult llvmType} from {cm1mLang::compiler::backend}
+import {enumerate} from {std}
 
 [compilerEntryPoint()]
 public fn entryPoint(packages: packageDescriptor[], result: compilationResult) {
@@ -9,7 +9,7 @@ public fn entryPoint(packages: packageDescriptor[], result: compilationResult) {
 	for(i in enumerate(0, packages.length()))
 		compilePackage(packages[i], &registry);
 	for(i in enumerate(0, packages.length()))
-		completePackage(packages[i], &registry);
+		completePackage(packages[i], &registry, result);
 }
 
 private fn compilePackage(package: packageDescriptor, registry: packageRegistry*)
@@ -19,11 +19,11 @@ private fn compilePackage(package: packageDescriptor, registry: packageRegistry*
 		createType(types[i], package, registry);
 }
 
-private fn completePackage(package: packageDescriptor, registry: packageRegistry*) 
+private fn completePackage(package: packageDescriptor, registry: packageRegistry*, cr: compilationResult) 
 {
 	let types = package.getAllTypes();
 	for(i in enumerate(0, types.length()))
-		completeType(types[i], package, registry);
+		completeType(types[i], package, registry, cr);
 }
 
 private fn createType(t: typeDescriptor, package: packageDescriptor, registry: packageRegistry*)
@@ -31,7 +31,7 @@ private fn createType(t: typeDescriptor, package: packageDescriptor, registry: p
 	let lt = registry.getLLVMTypeFor(t, package);
 }
 
-private fn completeType(t: typeDescriptor, package: packageDescriptor, registry: packageRegistry*)
+private fn completeType(t: typeDescriptor, package: packageDescriptor, registry: packageRegistry*, cr: compilationResult)
 {
 	if(t != typeof(usize))
 	{
@@ -44,41 +44,11 @@ private fn completeType(t: typeDescriptor, package: packageDescriptor, registry:
 			types.push(registry.getLLVMTypeFor(field.type(), package));
 		}
 		lt.setFields(types);
-		let cons = t.constructors();
+		let cons = t.methods();
 		for(i in enumerate(0, cons.length()))
 		{
 			let mod = registry.getModuleFor(cons[i]);
-			buildConstructor(t, cons[i], package, registry, mod);
+			createFunction(cons[i], package, registry, mod, cr);
 		}
 	}
-}
-
-private fn getParameterTypes(f: functionDescriptor, registry: packageRegistry*) -> llvmType[]
-{
-	let result = <llvmType>[];
-	let parameters = f.parameters();
-	for(i in enumerate(0, parameters.length()))
-		result.push(registry.getLLVMTypeForExisting(parameters[i].type()));
-	return result;
-}
-
-private fn getParameterNames(f: functionDescriptor, registry: packageRegistry*) -> string[]
-{
-	let result = <string>[];
-	let parameters = f.parameters();
-	print(parameters.length());
-	for(i in enumerate(0, parameters.length()))
-	{
-		result.push(parameters[i].name());
-	}
-	return result;
-}
-
-private fn buildConstructor(t: typeDescriptor, f: functionDescriptor, package: packageDescriptor, registry: packageRegistry*, mod: llvmModule)
-{
-	let lt = registry.getLLVMTypeFor(t, package);
-	let func = mod.appendFunction("construct",getParameterTypes(f, registry), getParameterNames(f, registry), lt);
-	let builder = func.getBuilder();
-	let value = builder.appendAlloca(lt, "self");
-	builder.appendRet(value);
 }

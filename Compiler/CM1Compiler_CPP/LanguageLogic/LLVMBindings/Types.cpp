@@ -40,4 +40,15 @@ void cMCompiler::language::buildTypeFunctions(not_null<Namespace*> backendNs, no
 			auto cr = dereferenceAs<GenericRuntimeWrapper<CompilationResult>>(params["compilationResult"].get())->value();
 			return std::make_unique<GenericRuntimeWrapper<llvm::Type>>(llvm::Type::getInt8PtrTy(cr->llvmContext), TypeReference{ llvmType, 0 });
 		});
+
+
+	g = backendNs->append<Function>("llvmVoidType");
+	g->setReturnType({ llvmType, 0 });
+	g->appendVariable("compilationResult", { compilationResult, 0 });
+
+	compileTimeFunctions::FuntionLibrary::instance().addFunctionDefinition(g, [llvmType](auto&& params, auto)
+		{
+			auto cr = dereferenceAs<GenericRuntimeWrapper<CompilationResult>>(params["compilationResult"].get())->value();
+			return std::make_unique<GenericRuntimeWrapper<llvm::Type>>(llvm::Type::getVoidTy(cr->llvmContext), TypeReference{ llvmType, 0 });
+		});
 }
