@@ -19,6 +19,16 @@ namespace cMCompiler::language
 		dataStructures::TypeReference type,
 		std::vector<runtime_value>&& argumentExpressions,
 		std::string const& methodName,
+		std::vector<dataStructures::TypeReference> const& genericParameters, 
+		runtime_value&& pointerToSource,
+		NameResolver nr,
+		NameResolutionContext context,
+		std::filesystem::path p);
+	runtime_value buildMethodCallExpression(
+		runtime_value&& expression,
+		dataStructures::TypeReference type,
+		std::vector<runtime_value>&& argumentExpressions,
+		std::string const& methodName,
 		runtime_value&& pointerToSource);
 	runtime_value buildFieldAccessExpression(runtime_value&& expression, gsl::not_null<dataStructures::Field*> field, runtime_value&& pointerToSource);
 	runtime_value buildVariableReferenceExpressionDescriptor(gsl::not_null<dataStructures::Variable*> var);

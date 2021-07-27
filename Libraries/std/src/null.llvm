@@ -1,1 +1,3 @@
-ret %$T* null
+define $T* null_$T() {
+	ret %$T* null
+}

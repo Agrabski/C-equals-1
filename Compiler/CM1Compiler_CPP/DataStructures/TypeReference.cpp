@@ -28,7 +28,7 @@ std::string cMCompiler::dataStructures::TypeReference::typeName() const
 	return type->name();
 }
 
-cMCompiler::dataStructures::TypeReference cMCompiler::dataStructures::TypeReference::getReference() const noexcept
+cMCompiler::dataStructures::TypeReference cMCompiler::dataStructures::TypeReference::reference() const noexcept
 {
 	return { type, referenceCount + 1 };
 }

@@ -1,22 +1,26 @@
 import {compilerEntryPoint packageDescriptor typeDescriptor} from {cm1mLang::compiler}
 import {usize} from {cm1mLang}
 import {compilationResult llvmType} from {cm1mLang::compiler::backend}
-import {enumerate} from {std}
+import {enumerate print} from {std}
 
 [compilerEntryPoint()]
 public fn entryPoint(packages: packageDescriptor[], result: compilationResult) {
 	let registry = packageRegistry(result);
 	for(i in enumerate(0, packages.length()))
-		compilePackage(packages[i], &registry);
+	{
+		print(packages[i].name());
+		compilePackage(packages[i], &registry, result);
+	}
 	for(i in enumerate(0, packages.length()))
 		completePackage(packages[i], &registry, result);
 }
 
-private fn compilePackage(package: packageDescriptor, registry: packageRegistry*)
+private fn compilePackage(package: packageDescriptor, registry: packageRegistry*, cr: compilationResult)
 {
 	let types = package.getAllTypes();
 	for(i in enumerate(0, types.length()))
 		createType(types[i], package, registry);
+	
 }
 
 private fn completePackage(package: packageDescriptor, registry: packageRegistry*, cr: compilationResult) 
@@ -24,6 +28,11 @@ private fn completePackage(package: packageDescriptor, registry: packageRegistry
 	let types = package.getAllTypes();
 	for(i in enumerate(0, types.length()))
 		completeType(types[i], package, registry, cr);
+	let functions = package.getAllFunctions();
+	for(i in enumerate(0, functions.length()))
+		if(functions[i].runtimeExecutable())
+			createFunction(functions[i], package, registry, registry.getModuleFor(functions[i]), cr);
+
 }
 
 private fn createType(t: typeDescriptor, package: packageDescriptor, registry: packageRegistry*)
@@ -46,9 +55,10 @@ private fn completeType(t: typeDescriptor, package: packageDescriptor, registry:
 		lt.setFields(types);
 		let cons = t.methods();
 		for(i in enumerate(0, cons.length()))
-		{
-			let mod = registry.getModuleFor(cons[i]);
-			createFunction(cons[i], package, registry, mod, cr);
-		}
+			if(cons[i].runtimeExecutable())
+			{
+				let mod = registry.getModuleFor(cons[i]);
+				createFunction(cons[i], package, registry, mod, cr);
+			}
 	}
 }

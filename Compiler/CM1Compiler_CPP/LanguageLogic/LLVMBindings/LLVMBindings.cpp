@@ -1,5 +1,9 @@
 #include "LLVMBindings.hpp"
-#include"Module.hpp"
+#include <llvm/IRReader/IRReader.h>
+#include <llvm/Support/MemoryBuffer.h>
+#include <llvm/Support/SourceMgr.h>
+#include <llvm/IR/Module.h>
+#include "Module.hpp"
 #include "../CreateGetter.hpp"
 #include "../BuiltInPackageBuildUtility.hpp"
 #include "../RuntimeTypesConversionUtility.hpp"
@@ -39,6 +43,28 @@ not_null<Type*> buildCompilationResultDescriptor(
 		}
 	);
 	f->appendVariable("moduleName", { getString(), 0 });
+	f->setReturnType({ moduleDescriptor, 0 });
+
+	f = createCustomFunction(
+		result->append<Function>("loadModuleFromString"),
+		result,
+		[result, moduleDescriptor](auto&& parameters, auto) -> runtime_value
+		{
+			auto compilationResult = dereferenceAs<GenericRuntimeWrapper<CompilationResult>>(parameters["self"].get())->value();
+
+			auto text = dereferenceAs<StringValue>(parameters["moduleText"].get())->value();
+
+			auto stream = llvm::MemoryBuffer::getMemBuffer(text);
+			auto err = llvm::SMDiagnostic();
+
+			auto m = llvm::parseIR(llvm::MemoryBufferRef(*stream), err, compilationResult->llvmContext);
+
+			auto resultModule = m.get();
+			compilationResult->modules.push_back(std::move(m));
+			return std::make_unique<GenericRuntimeWrapper<llvm::Module>>(resultModule, TypeReference{ moduleDescriptor, 0 });
+		}
+	);
+	f->appendVariable("moduleText", { getString(), 0 });
 	f->setReturnType({ moduleDescriptor, 0 });
 
 	return result;

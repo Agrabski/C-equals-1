@@ -192,6 +192,7 @@
     <ClInclude Include="execution\RuntimeTypeDescriptor.hpp" />
     <ClInclude Include="execution\RuntimeVariableDescriptor.hpp" />
     <ClInclude Include="execution\StringValue.hpp" />
+    <ClInclude Include="execution\WrapperTypeTranslation.hpp" />
     <ClInclude Include="Field.hpp" />
     <ClInclude Include="Function.hpp" />
     <ClInclude Include="Generic.hpp" />

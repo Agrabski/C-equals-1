@@ -25,7 +25,11 @@ AttributeInstance* cMCompiler::language::getAttribute(AttributeTarget& target, A
 	return nullptr;
 }
 
-bool cMCompiler::language::isCompileTime(dataStructures::Function& f)
+std::function<bool(not_null<AttributeInstance*>att)> cMCompiler::language::getIsDescribedByTypePredicate(dataStructures::TypeReference t)
 {
-	return getAttribute(f, getCompileTimeAttribute()) != nullptr;
+	auto type = t.type;
+	return [type](not_null<AttributeInstance*> attribute)
+	{
+		return attribute->basedOn()->describingType() == type;
+	};
 }

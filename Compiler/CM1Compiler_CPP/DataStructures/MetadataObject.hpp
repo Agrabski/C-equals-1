@@ -13,7 +13,7 @@ namespace cMCompiler::dataStructures
 
 		bool hasFlag(Flags flag) const noexcept
 		{
-			return (flags_ & flag) == noneValue;
+			return (flags_ & flag) == flag;
 		}
 	};
 }

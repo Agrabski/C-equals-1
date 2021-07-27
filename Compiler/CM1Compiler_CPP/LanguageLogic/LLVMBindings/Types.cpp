@@ -51,4 +51,5 @@ void cMCompiler::language::buildTypeFunctions(not_null<Namespace*> backendNs, no
 			auto cr = dereferenceAs<GenericRuntimeWrapper<CompilationResult>>(params["compilationResult"].get())->value();
 			return std::make_unique<GenericRuntimeWrapper<llvm::Type>>(llvm::Type::getVoidTy(cr->llvmContext), TypeReference{ llvmType, 0 });
 		});
+
 }

@@ -35,7 +35,11 @@ std::unique_ptr<CompilationResult> cMCompiler::compiler::llvmIntegration::compil
 	auto result = std::make_unique<CompilationResult>();
 
 	std::vector<language::runtime_value> args;
-	args.push_back(language::getValueFor(packages));
+	std::vector<not_null<dataStructures::PackageDatabase*>> p;
+	for (auto& pa : packages)
+		p.push_back(pa.get());
+	p.push_back(language::getDefaultPackage());
+	args.push_back(language::getValueFor(p));
 	args.push_back(language::getValueFor(result.get()));
 	auto emiter = cMCompiler::compiler::IntermidiateRepresentationEmmiter();
 	runWithHandling([&]() {execute(entryPoint, std::move(args)); });

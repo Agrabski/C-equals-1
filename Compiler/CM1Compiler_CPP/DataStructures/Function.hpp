@@ -37,7 +37,6 @@ namespace cMCompiler::dataStructures
 
 	struct FunctionMetadata : public MetadataObject<FunctionFlags, FunctionFlags::None>
 	{
-		std::optional<std::string> overrideLLVMIR_;
 	};
 
 	std::ostream& operator<<(std::ostream& stream, FunctionFlags flags);

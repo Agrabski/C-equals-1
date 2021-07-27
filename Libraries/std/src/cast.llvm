@@ -1,2 +1,4 @@
-%2 = bitcast %$T* %0 to %$Y*
-ret %$Y* %2
+define $Y* cast($T* %0) {
+	%1 = bitcast %$T* %0 to %$Y*
+	ret %$Y* %1
+}

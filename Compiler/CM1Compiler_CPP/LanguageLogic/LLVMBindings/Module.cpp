@@ -27,8 +27,9 @@ void appendFunction(
 		{
 			auto rt = dereferenceAs<GenericRuntimeWrapper<llvm::Type>>(params["returnType"].get());
 			llvm::Type* returnType = nullptr;
-			if (rt)
-				returnType = rt->value();
+			if (!rt)
+				throw std::exception("return type cannot be null");
+			returnType = rt->value();
 			auto types = dereferenceAs<ArrayValue>(params["parameterTypes"].get());
 			auto names = dereferenceAs<ArrayValue>(params["parameterNames"].get());
 			assert(types->size() == names->size());
@@ -57,7 +58,7 @@ void appendFunction(
 			return std::make_unique<GenericRuntimeWrapper<llvm::Function>>(fu, TypeReference{ getLLVMFunctionDescriptor(), 0 });
 		})
 		->setReturnType({ llvmFunction, 0 });
-		f->appendVariable("functionName", {getString(), 0});
+		f->appendVariable("functionName", { getString(), 0 });
 		f->appendVariable("parameterTypes", { getCollectionTypeFor({llvmType, 0}), 0 });
 		f->appendVariable("parameterNames", { getCollectionTypeFor({getString(), 0}), 0 });
 		f->appendVariable("returnType", { llvmType, 0 });
@@ -104,17 +105,17 @@ void appendArrayType(
 	not_null<Type*> llvmType
 )
 {
-/*	auto f = mod->append<Function>("appendArray");
-	createCustomFunction(f, mod, [llvmType](auto&& params, auto)->runtime_value
-		{
-			auto name = dereferenceAs<llvm::Type>(params["type"].get())->value();
-			auto self = dereferenceAs<GenericRuntimeWrapper<llvm::Module>>(params["self"].get())->value();
+	/*	auto f = mod->append<Function>("appendArray");
+		createCustomFunction(f, mod, [llvmType](auto&& params, auto)->runtime_value
+			{
+				auto name = dereferenceAs<llvm::Type>(params["type"].get())->value();
+				auto self = dereferenceAs<GenericRuntimeWrapper<llvm::Module>>(params["self"].get())->value();
 
-			auto ty = llvm::ArrayType::create(self->getContext(), name);
-			return std::make_unique<GenericRuntimeWrapper<llvm::Type>>(ty, TypeReference{ llvmType, 0 });
-		})
-		->setReturnType({ llvmType, 0 });
-		f->appendVariable("type", { llvmType, 0 })*/;
+				auto ty = llvm::ArrayType::create(self->getContext(), name);
+				return std::make_unique<GenericRuntimeWrapper<llvm::Type>>(ty, TypeReference{ llvmType, 0 });
+			})
+			->setReturnType({ llvmType, 0 });
+			f->appendVariable("type", { llvmType, 0 })*/;
 }
 
 void appendName(

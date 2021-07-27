@@ -6,16 +6,19 @@ namespace cMCompiler::dataStructures
 	class Type;
 	struct TypeReference
 	{
-		Type* type;
-		size_t referenceCount;
+		Type* type = nullptr;
+		size_t referenceCount = 0;
 		std::string typeName() const;
-		TypeReference getReference() const noexcept;
+		TypeReference reference() const noexcept;
 		TypeReference dereference() const noexcept;
 		TypeReference baseType() const noexcept;
+		TypeReference() = default;
+		TypeReference(Type* t) noexcept : type(t) {}
+		TypeReference(Type* t, size_t refCount) noexcept : type(t), referenceCount(refCount) {}
 	};
 	std::ostream& operator<< (std::ostream& s, TypeReference const& ref);
 
 
 }
-	bool operator!=(cMCompiler::dataStructures::TypeReference const& a, cMCompiler::dataStructures::TypeReference const& b) noexcept;
-	bool operator==(cMCompiler::dataStructures::TypeReference const& a, cMCompiler::dataStructures::TypeReference const& b) noexcept;
+bool operator!=(cMCompiler::dataStructures::TypeReference const& a, cMCompiler::dataStructures::TypeReference const& b) noexcept;
+bool operator==(cMCompiler::dataStructures::TypeReference const& a, cMCompiler::dataStructures::TypeReference const& b) noexcept;

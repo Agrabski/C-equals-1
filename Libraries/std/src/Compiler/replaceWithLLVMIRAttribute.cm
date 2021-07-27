@@ -10,6 +10,7 @@ namespace compiler
 		private _nameToReplace: string;
 		private _nameOftypeToReplace1: string;
 		private _nameToReplace1: string;
+		public overridenLLVMIR: string;
 
 		public fn construct(filename: string, nameOfTypeToReplace: string, nameToReplace: string)
 		{
@@ -43,7 +44,7 @@ namespace compiler
 			{
 				ir = ir.replace("$" + self._nameOftypeToReplace1, self._nameToReplace1);
 			}
-			f.overridenLLVMIR(ir);
+			self.overridenLLVMIR = ir;
 			markRunTimeOnly(f);
 		}
 	}

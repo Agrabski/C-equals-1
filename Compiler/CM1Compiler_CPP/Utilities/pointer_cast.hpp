@@ -10,4 +10,15 @@ namespace cMCompiler::utilities
 		static_assert(std::is_assignable<To, From>::value);
 		return std::unique_ptr<To>(ptr.release());
 	}
+
+	template<typename T>
+	T* toPointer(T* t)
+	{
+		return t;
+	}
+	template<typename T>
+	T* toPointer(T& t)
+	{
+		return &t;
+	}
 }

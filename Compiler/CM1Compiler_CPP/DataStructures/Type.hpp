@@ -46,6 +46,14 @@ namespace cMCompiler::dataStructures
 				result.push_back(c.get());
 			return result;
 		}
+		
+		std::vector<not_null<Generic<Function>*>> genericMethods()
+		{
+			auto result = std::vector<gsl::not_null<Generic<Function>*>>();
+			for (auto& c : genericFunction_)
+				result.push_back(c.get());
+			return result;
+		}
 
 		std::vector<not_null<Type*>> const& interfaces() const noexcept
 		{
@@ -68,13 +76,7 @@ namespace cMCompiler::dataStructures
 			return this;
 		}
 
-		std::vector<INamedObject*> children() noexcept final
-		{
-			auto result = std::vector<INamedObject*>();
-			//for (auto& c : methods_)
-			//	result.push_back(c.get());
-			return result;
-		}
+		std::vector<INamedObject*> children() noexcept final;
 
 		void appendInterface(gsl::not_null<Type*> t)
 		{
@@ -104,6 +106,20 @@ namespace cMCompiler::dataStructures
 			std::filesystem::path const& p)
 		{
 			auto tmp = std::make_unique<Generic<T>>(std::move(parameterNames), std::move(parseTree), name, this, context, p);
+			not_null const result = tmp.get();
+			genericFunction_.push_back(std::move(tmp));
+			return result;
+		}
+
+		template<typename T>
+		gsl::not_null<Generic<T>*> appendGeneric(
+			std::vector<std::string>&& parameterNames,
+			std::function<not_null<T*>(std::vector<TypeReference> const&)> customFill,
+			std::string name,
+			NameResolutionContext const& context,
+			std::filesystem::path const& path)
+		{
+			auto tmp = std::make_unique<Generic<T>>(std::move(parameterNames), std::move(customFill), name, this, context, path);
 			not_null const result = tmp.get();
 			genericFunction_.push_back(std::move(tmp));
 			return result;

@@ -42,7 +42,9 @@ implementedInterfacesSequence:
 	typeReference
 	| (typeReference ',')+ identifier;
 
-typeReference: identifier genericUsage?;
+typeReference: identifier genericUsage? | typenameReferencesAttribute identifier;
+
+typenameReferencesAttribute : '_att_';
 
 namespaceDeclaration:
 	'namespace' qualifiedIdentifier OpenBracket declarationSequence CloseBracket;
@@ -234,7 +236,7 @@ Shared: 'shared';
 Unique: 'unique';
 New: 'new';
 
-identifier: SimpleIdentifier | '@new' | '@unique' | '@shared' | '@throw' | '@attribute' | '@default' | 'type' | 'typename';
+identifier: SimpleIdentifier | '@new' | '@unique' | '@shared' | '@throw' | '@attribute' | '@default' | 'type' | 'typename' | 'attribute';
 
 SimpleIdentifier: LETTER (LETTER | DIGIT)*;
 

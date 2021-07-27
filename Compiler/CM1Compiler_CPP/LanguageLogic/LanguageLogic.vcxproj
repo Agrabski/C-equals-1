@@ -49,6 +49,7 @@
     <ClInclude Include="LLVMBindings\Type.hpp" />
     <ClInclude Include="LLVMBindings\Types.hpp" />
     <ClInclude Include="LLVMBindings\Value.hpp" />
+    <ClInclude Include="MetadataHolderBindings.hpp" />
     <ClInclude Include="MetatypeUility.hpp" />
     <ClInclude Include="NameResolver.hpp" />
     <ClInclude Include="NamespaceBuilder.hpp" />
@@ -83,6 +84,7 @@
     <ClCompile Include="CreateGetter.cpp" />
     <ClCompile Include="ExpressionUtility.cpp" />
     <ClCompile Include="FunctionPredicates.cpp" />
+    <ClCompile Include="GenericUtility.cpp" />
     <ClCompile Include="GetterExecution.cpp" />
     <ClCompile Include="InstantiateGeneric.cpp" />
     <ClCompile Include="IRUtility.cpp" />

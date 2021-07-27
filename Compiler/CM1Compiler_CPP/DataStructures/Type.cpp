@@ -25,3 +25,16 @@ execution::json cMCompiler::dataStructures::Type::emmit(ir::INameGetter const& n
 		{"attributes", AttributeTarget::emmitAttributes(nameLookupFunction, manager)}
 	};
 }
+std::vector<INamedObject*> cMCompiler::dataStructures::Type::children() noexcept
+{
+	auto result = std::vector<INamedObject*>();
+	for (auto& c : methods_)
+		result.push_back(c.get());
+	for (auto& c : fields_)
+		result.push_back(c.get());
+	for (auto& c : genericFunction_)
+		result.push_back(c.get());
+
+
+	return result;
+}

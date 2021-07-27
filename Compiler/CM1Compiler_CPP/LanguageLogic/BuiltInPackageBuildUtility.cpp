@@ -22,6 +22,7 @@
 #include "TypeInstantiationUtility.hpp"
 #include "GenericUtility.hpp"
 #include "../DataStructures/execution/GenericRuntimeWrapper.hpp"
+#include "MetadataHolderBindings.hpp"
 
 using namespace cMCompiler::dataStructures::execution;
 
@@ -33,6 +34,13 @@ auto const compile_time_type_descriptor__ = "typeDescriptor";
 auto const compile_time_function_descriptor__ = "functionDescriptor";
 
 static auto defaultPackage__ = std::make_unique<PackageDatabase>("cm1mLang");
+
+void setSourcePointer(not_null<INamedObject*> obj)
+{
+	obj->setSourceLocation(buildPointerToSource("C-=-1_library_internals.cm", 0));
+	for (auto child : obj->children())
+		setSourcePointer(child);
+}
 
 
 void buildCompilerEntryPointAttribute(gsl::not_null<Namespace*> compilerNs)
@@ -90,6 +98,15 @@ gsl::not_null<Type*> buildPackageDescriptor(gsl::not_null<Namespace*> compilerNs
 			return convertCollection(self->getAllTypes(), { getTypeDescriptor(), 0 });
 		}
 	);
+	createCustomFunction(
+		ns->append<Function>("getAllFunctions")->setReturnType({ getCollectionTypeFor({ getFunctionDescriptor(), 0 }), 0 }),
+		ns,
+		[](auto&& args, auto)
+		{
+			auto self = dereferenceAs<RuntimePackageDescriptor>(args["self"].get())->value();
+			return convertCollection(self->getAllFunctions(), { getFunctionDescriptor(), 0 });
+		}
+	);
 
 	createCustomFunction(
 		ns->append<Function>("name")->setReturnType({ getString(), 0 }),
@@ -111,6 +128,7 @@ gsl::not_null<Type*> buildPointerToSource(gsl::not_null<Namespace*> compilerNs)
 	t->setAccessibility(Accessibility::Public);
 	t->appendField("filename", { cMCompiler::language::getString(), 0 })->setAccessibility(Accessibility::Public);
 	t->appendField("lineNumber", { cMCompiler::language::getUsize(), 0 })->setAccessibility(Accessibility::Public);
+	t->setSourceLocation(buildPointerToSource("C-=-1_library_internals.cm", 0));
 
 	return t;
 }
@@ -254,6 +272,7 @@ void completeBuildingNamespace(gsl::not_null<Type*> t)
 
 void completeBuildingFunction(gsl::not_null<Type*> t)
 {
+	using namespace std::string_literals;
 	t->appendField("parent", { cMCompiler::language::getNamespaceDescriptor(), 1 })->setAccessibility(Accessibility::Public);
 	createCustomFunction(
 		t->append<Function>("parameters")
@@ -284,6 +303,19 @@ void completeBuildingFunction(gsl::not_null<Type*> t)
 			auto self = dereferenceAs<RuntimeFunctionDescriptor>(a["self"].get())->value();
 			return buildStringValue(self->name());
 		}
+	);
+
+	createNativeObjectGetter<Function>(
+		"code"s, t, { getCollectionTypeFor({getIInstruction(), 1}),0 },
+		[](Function* self) -> runtime_value { return self->code()->copy(); }
+	);
+	createNativeObjectGetter<Function>(
+		"runtimeExecutable"s, t, { getBool(),0 },
+		[](Function* self) -> runtime_value { return buildBooleanValue(!self->metadata().hasFlag(FunctionFlags::ExcludeAtRuntime)); }
+	);
+	createNativeObjectGetter<Function>(
+		"compiletimeExecutable"s, t, { getBool(),0 },
+		[](Function* self) -> runtime_value { return buildBooleanValue(!self->metadata().hasFlag(FunctionFlags::ExcludeAtCompileTime)); }
 	);
 
 }
@@ -355,6 +387,8 @@ void buildCompilerLibrary(gsl::not_null<Namespace*> rootNamespace)
 	completeBuildingNamespace(nsDescriptor);
 	completeBuildingFunction(function);
 	buildCompilerEntryPointAttribute(ns);
+	appendMetadataBindings<Function>(function);
+	appendMetadataBindings<TypeReference>(type);
 	buildLLVMBindings(ns);
 	{
 		auto replace = ns->append<Function>("replaceWithCompilerFunction");
@@ -407,26 +441,6 @@ void buildCompilerLibrary(gsl::not_null<Namespace*> rootNamespace)
 		raise->appendVariable("code", { getUsize(), 0 });
 		FuntionLibrary::instance().addFunctionDefinition(raise, raiseError);
 	}
-	createCustomFunction(function->append<Function>("overridenLLVMIR")->setReturnType({ getString(), 0 }), function,
-		[](value_map&& a, generic_parameters)->runtime_value
-		{
-			auto llvm = dereferenceAs<execution::RuntimeFunctionDescriptor>(a["self"].get())->value()->metadata().overrideLLVMIR_;
-			if (llvm)
-				return buildStringValue(*llvm);
-			return buildStringValue();
-		}
-	)->setAccessibility(Accessibility::Public);
-	auto setter = createCustomFunction(function->append<Function>("overridenLLVMIR")->setReturnType({ getString(), 0 }), function,
-		[](value_map&& a, generic_parameters)->runtime_value
-		{
-			auto llvm = dereferenceAs<execution::StringValue>(a["ir"].get())->value();
-			auto function = dereferenceAs<execution::RuntimeFunctionDescriptor>(a["self"].get())->value();
-			function->metadata().overrideLLVMIR_ = llvm;
-			function->metadata().appendFlag(FunctionFlags::ExcludeAtCompileTime);
-			return runtime_value();
-		});
-	setter->setAccessibility(Accessibility::Public);
-	setter->appendVariable("ir", { getString(), 0 });
 	createCustomFunction(function->append<Function>("sourceLocation")->setReturnType({ getPointerToSource(), 0 }), function,
 		[](auto&& a, auto)
 		{
@@ -713,7 +727,7 @@ void buildPackage()
 			return buildBooleanValue(arg1 || arg2);
 		});
 
-	supplySourcePointers(result->rootNamespace(), buildPointerToSource("C-=-1_library_internals.cm", 0));
+	setSourcePointer(result->rootNamespace());
 }
 
 gsl::not_null<PackageDatabase*> cMCompiler::language::getDefaultPackage()
@@ -828,7 +842,7 @@ gsl::not_null<Generic<Function>*> cMCompiler::language::getNull()
 
 gsl::not_null<Function*> cMCompiler::language::getHeapAllocateFor(cMCompiler::dataStructures::TypeReference objectType)
 {
-	auto returnType = objectType.getReference();
+	auto returnType = objectType.reference();
 	auto existing = getDefaultPackage()->rootNamespace()->get<Function>();
 	for (auto c : existing)
 		if (c->name() == "compiletime_heap_allocate" && c->returnType() == returnType)

@@ -221,13 +221,29 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 		auto methodName = ctx->functionCall()->identifier()->getText();
 
 		auto parameters = buildParameters(ctx->functionCall());
+		auto genericParameters = std::vector<dataStructures::TypeReference>();
+		if (ctx->functionCall()->genericUsage() != nullptr)
+		{
+			// todo: expression parameters
+			for (auto g : ctx->functionCall()->genericUsage()->genericParameter())
+				genericParameters.push_back(getType(
+					nameResolver_,
+					context_,
+					g->typeSpecifier(),
+					filepath_
+				));
+		}
 
 		auto result = language::buildMethodCallExpression(
 			std::move(expression),
 			type,
 			std::move(parameters),
 			methodName,
-			language::buildSourcePointer(filepath_.string(), *ctx)
+			genericParameters,
+			language::buildSourcePointer(filepath_.string(), *ctx),
+			nameResolver_,
+			context_,
+			filepath_
 		);
 		language::setParent(result.get(), std::move(referenceToParent));
 		return result;

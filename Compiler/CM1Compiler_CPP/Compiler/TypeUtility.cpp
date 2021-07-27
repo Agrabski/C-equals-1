@@ -186,7 +186,10 @@ cMCompiler::dataStructures::TypeReference cMCompiler::compiler::getType(
 		type = instantiate(*g, parameters, resolver, context, file);
 	}
 	else
-		type = resolver.resolve<dataStructures::Type>(name, context);
+		if (ctx->typenameReferencesAttribute() == nullptr)
+			type = resolver.resolve<dataStructures::Type>(name, context);
+		else
+			type = resolver.resolve<dataStructures::Attribute>(name, context)->describingType();
 	return dataStructures::TypeReference{ type, 0 };
 }
 

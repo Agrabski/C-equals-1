@@ -180,6 +180,9 @@
     <ClInclude Include="execution\GenericOwningRuntimeWrapper.h">
       <Filter>Header Files\Execution</Filter>
     </ClInclude>
+    <ClInclude Include="execution\WrapperTypeTranslation.hpp">
+      <Filter>Header Files\Execution</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
