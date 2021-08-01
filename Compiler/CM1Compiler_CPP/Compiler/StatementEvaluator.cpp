@@ -39,7 +39,9 @@ std::optional<runtime_value> cMCompiler::compiler::StatementEvaluator::evaluate(
 	if (isOfType(inst, language::getReturnStatementDescriptor()))
 	{
 		auto expression = inst->getMemberValue("_expression")->value();
-		return ev_.evaluate(*expression);
+		if (*expression != nullptr)
+			return ev_.evaluate(*expression);
+		return nullptr;
 	}
 	if (isOfType(inst, language::getIfDescriptor()))
 	{

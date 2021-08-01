@@ -10,7 +10,11 @@ namespace cMCompiler::dataStructures::execution
 	template<typename T>
 	struct WrapperTypeTranslation {};
 
-#define DEFINE_WRAPPER(a, b) template<> struct WrapperTypeTranslation<a> {using WrapperType = b;};
+#define DEFINE_WRAPPER(a, b) template<> struct WrapperTypeTranslation<a>\
+{\
+	using WrapperType = b;\
+    char const * const TypeName = #b ;\
+};
 
 	DEFINE_WRAPPER(TypeReference, RuntimeTypeDescriptor);
 	DEFINE_WRAPPER(Function, RuntimeFunctionDescriptor);

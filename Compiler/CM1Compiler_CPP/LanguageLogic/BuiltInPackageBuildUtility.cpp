@@ -38,6 +38,9 @@ static auto defaultPackage__ = std::make_unique<PackageDatabase>("cm1mLang");
 void setSourcePointer(not_null<INamedObject*> obj)
 {
 	obj->setSourceLocation(buildPointerToSource("C-=-1_library_internals.cm", 0));
+	auto type = dynamic_cast<Type*>(obj.get());
+	if (type != nullptr && type->parent()->name() == "ir")
+		type->metadata().appendFlag(TypeFlags::ExcludeAtRuntime);
 	for (auto child : obj->children())
 		setSourcePointer(child);
 }
@@ -263,6 +266,13 @@ void completeBuildingType(gsl::not_null<Type*> type)
 			return buildBooleanValue(self.type == nullptr);
 		}
 	);
+
+	createNativeObjectGetter<TypeReference>(
+		"excludedAtRuntime",
+		type,
+		{ getBool(), 0 },
+		[](auto* v) {return buildBooleanValue(v->type->metadata().hasFlag(TypeFlags::ExcludeAtRuntime)); }
+	);
 }
 
 void completeBuildingNamespace(gsl::not_null<Type*> t)
@@ -316,6 +326,10 @@ void completeBuildingFunction(gsl::not_null<Type*> t)
 	createNativeObjectGetter<Function>(
 		"compiletimeExecutable"s, t, { getBool(),0 },
 		[](Function* self) -> runtime_value { return buildBooleanValue(!self->metadata().hasFlag(FunctionFlags::ExcludeAtCompileTime)); }
+	);
+	createNativeObjectGetter<Function>(
+		"isAbstract", t, { getBool(), 0 },
+		[](Function* f) {return buildBooleanValue(f->code() == nullptr); }
 	);
 
 }

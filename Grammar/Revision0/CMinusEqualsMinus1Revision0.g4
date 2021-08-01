@@ -9,21 +9,29 @@ languageStandardDeclaration:
 
 declarationSequence: declaration+;
 
-declaration: functionDeclaration | typeDeclaration | namespaceDeclaration | importDeclaration | attributeDeclaration;
+declaration:
+	functionDeclaration
+	| typeDeclaration
+	| namespaceDeclaration
+	| importDeclaration
+	| attributeDeclaration;
 
-attributeDeclaration : (AccessSpecifier)? 'att' Less attributeTarget+ Greater identifier OpenBracket classContentSequence CloseBracket;
+attributeDeclaration: (AccessSpecifier)? 'att' Less attributeTarget+ Greater identifier OpenBracket
+		classContentSequence CloseBracket;
 
 attributeTarget: ('type' | 'variable' | 'function');
 
-importDeclaration : 'import' '{' importAliasDeclaration+ '}' 'from' '{' qualifiedIdentifier '}';
+importDeclaration:
+	'import' '{' importAliasDeclaration+ '}' 'from' '{' qualifiedIdentifier '}';
 
-importAliasDeclaration: identifier (':'identifier)?;
+importAliasDeclaration: identifier (':' identifier)?;
 
 typeDeclaration:
-	(attributeSequence)? AccessSpecifier? classTypeSpecifier identifier genericSpecifier? (':' implementedInterfacesSequence)? OpenBracket
-		classContentSequence CloseBracket;
+	(attributeSequence)? AccessSpecifier? classTypeSpecifier identifier genericSpecifier? (
+		':' implementedInterfacesSequence
+	)? OpenBracket classContentSequence CloseBracket;
 
-classTypeSpecifier: (Class| Interface | 'struct');
+classTypeSpecifier: (Class | Interface | 'struct');
 
 adressOfExpression: '&' expression;
 
@@ -32,9 +40,14 @@ classContentSequence: (functionDeclaration | fieldDeclaration)*;
 fieldDeclaration:
 	attributeSequence? AccessSpecifier? identifier ':' typeSpecifier SemiColon;
 
-genericSpecifier: Less genericParameterDeclaration (',' genericParameterDeclaration)* Greater;
+genericSpecifier:
+	Less genericParameterDeclaration (
+		',' genericParameterDeclaration
+	)* Greater;
 
-genericParameterDeclaration: 'typename' identifier | typeSpecifier identifier;
+genericParameterDeclaration:
+	'typename' identifier
+	| typeSpecifier identifier;
 
 genericParameter: typeSpecifier | expression;
 
@@ -42,16 +55,18 @@ implementedInterfacesSequence:
 	typeReference
 	| (typeReference ',')+ identifier;
 
-typeReference: identifier genericUsage? | typenameReferencesAttribute identifier;
+typeReference:
+	identifier genericUsage?
+	| typenameReferencesAttribute identifier;
 
-typenameReferencesAttribute : '_att_';
+typenameReferencesAttribute: '_att_';
 
 namespaceDeclaration:
 	'namespace' qualifiedIdentifier OpenBracket declarationSequence CloseBracket;
 
 functionDeclaration:
-	(attributeSequence)? AccessSpecifier? 'fn' functionName genericSpecifier? ParamOpen parameterList ParamClose ('->'
-		typeSpecifier)? functionBody;
+	(attributeSequence)? AccessSpecifier? 'fn' functionName genericSpecifier? ParamOpen
+		parameterList ParamClose ('->' typeSpecifier)? functionBody;
 
 parameterList: | parameter | (parameter ',')+ parameter;
 
@@ -59,37 +74,46 @@ parameter: attributeSequence? identifier ':' typeSpecifier;
 
 typeSpecifier: typeReference modifier;
 
-modifier:  arraySpecifier? ref*;
+modifier: arraySpecifier? ref*;
 
-arraySpecifier: '[' modifier']';
+arraySpecifier: '[' modifier ']';
 
-genericUsage: Less genericParameter (',' genericParameter)* Greater;
+genericUsage:
+	Less genericParameter (',' genericParameter)* Greater;
 
 functionBody: OpenBracket statement* CloseBracket;
 
 functionName: identifier | specialFunctionIdentifier;
-specialFunctionIdentifier: Operator (New (Unique | Shared) | binaryOperator ); // todo: more operators
+specialFunctionIdentifier:
+	Operator (New (Unique | Shared) | binaryOperator); // todo: more operators
 
 compoundStatement:
 	Unsafe? OpenBracket statement* CloseBracket
 	| statement;
 
 statement:
-	  ifStatement
+	ifStatement
 	| loopStatement
 	| assigmentStatement SemiColon
 	| variableDeclarationStatement SemiColon
 	| returnStatement SemiColon
-    | functionCallStatement SemiColon;
+	| functionCallStatement SemiColon;
 
-functionCallStatement: functionCall | expression Period functionCall;
+functionCallStatement:
+	functionCall
+	| expression Period functionCall;
 
-returnStatement: 'return' expression;
+returnStatement: 'return' expression?;
 
-variableDeclarationStatement: attributeSequence? 'let' identifier (':' typeSpecifier)? ('=' functionCallParameter)?;
+variableDeclarationStatement:
+	attributeSequence? 'let' identifier (':' typeSpecifier)? (
+		'=' functionCallParameter
+	)?;
 
 ifStatement:
-	'if' ParamOpen expression ParamClose compoundStatement ('else' compoundStatement)?;
+	'if' ParamOpen expression ParamClose compoundStatement (
+		'else' compoundStatement
+	)?;
 
 loopStatement:
 	rangeForStatement
@@ -123,39 +147,37 @@ attribute: ATTROBITEOPEN functionCall ATTROBITECLOSE;
 
 qualifiedIdentifier: identifier (DoubleColon identifier)*;
 
-expression
-    : STRING
-    | adressOfExpression
-    | arrayLiteral
-    | ParamOpen expression ParamClose
-    | expression Period identifier
-    | expression Period functionCall
-    | functionCall
-    | throwExpression
-    | identifier
-    | IntegerLiteral
+expression:
+	STRING
+	| adressOfExpression
+	| arrayLiteral
+	| ParamOpen expression ParamClose
+	| expression Period identifier
+	| expression Period functionCall
+	| functionCall
+	| throwExpression
+	| identifier
+	| IntegerLiteral
 	| newExpression
 	| expression binaryOperator expression
-    | LogicalUnaryOperator expression
-    | expression indexExpression
-    ;
+	| LogicalUnaryOperator expression
+	| expression indexExpression;
 
-arrayLiteral: Less typeReference Greater '[' ((expression ',')* expression)? ']';
+arrayLiteral:
+	Less typeReference Greater '[' ((expression ',')* expression)? ']';
 
-indexExpression: '[' expression+']';
+indexExpression: '[' expression+ ']';
 
-newExpression : New (Unique | Shared) typeReference ParamOpen (
-                                      		functionCallParameter (Comma functionCallParameter)*
-                                      	)? ParamClose;
+newExpression:
+	New (Unique | Shared) typeReference ParamOpen (
+		functionCallParameter (Comma functionCallParameter)*
+	)? ParamClose;
 
-assigmentStatement:
-	expression Asssigment expression;
+assigmentStatement: expression Asssigment expression;
 
 throwExpression: Throw expression;
 
 AccessSpecifier: Public | Private | Internal;
-
-
 
 OpenBracket: '{';
 CloseBracket: '}';
@@ -166,8 +188,8 @@ ParamClose: ')';
 ATTROBITEOPEN: '[';
 ATTROBITECLOSE: ']';
 
-arithmeticBinaryOperator
-    : Plus
+arithmeticBinaryOperator:
+	Plus
 	| Minus
 	| Star
 	| PlusEquals
@@ -175,15 +197,18 @@ arithmeticBinaryOperator
 	| MultiplyEquals
 	| DivideEquals;
 
-comparsionOperator
-    : Greater
+comparsionOperator:
+	Greater
 	| Less
 	| GreaterEqual
 	| LessEqual
 	| Equal
 	| NotEqual;
 
-binaryOperator: logicalBinaryOperator | comparsionOperator | arithmeticBinaryOperator;
+binaryOperator:
+	logicalBinaryOperator
+	| comparsionOperator
+	| arithmeticBinaryOperator;
 
 logicalBinaryOperator: Or | And | Xor | NotEqual | Equal;
 
@@ -236,16 +261,25 @@ Shared: 'shared';
 Unique: 'unique';
 New: 'new';
 
-identifier: SimpleIdentifier | '@new' | '@unique' | '@shared' | '@throw' | '@attribute' | '@default' | 'type' | 'typename' | 'attribute';
+identifier:
+	SimpleIdentifier
+	| '@new'
+	| '@unique'
+	| '@shared'
+	| '@throw'
+	| '@attribute'
+	| '@default'
+	| 'type'
+	| 'typename'
+	| 'attribute';
 
 SimpleIdentifier: LETTER (LETTER | DIGIT)*;
 
-
 IntegerLiteral: (DIGIT)+;
 DIGIT: [0-9];
-fragment ESC : '\\"' | '\\\\' | '\\\n' ;
-STRING: '"' ( ESC | ~[\\"\r\n] )* '"';
-AnyCharacter:('\\"');
+fragment ESC: '\\"' | '\\\\' | '\\\n';
+STRING: '"' ( ESC | ~[\\"\r\n])* '"';
+AnyCharacter: ('\\"');
 LETTER: [a-zA-Z_];
 Whitespace: [ \t]+ -> skip;
 Newline: ('\r' '\n'? | '\n') -> skip;

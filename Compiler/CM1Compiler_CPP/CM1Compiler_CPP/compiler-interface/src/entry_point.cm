@@ -1,5 +1,5 @@
 import {compilerEntryPoint packageDescriptor typeDescriptor} from {cm1mLang::compiler}
-import {usize} from {cm1mLang}
+import {usize string} from {cm1mLang}
 import {compilationResult llvmType} from {cm1mLang::compiler::backend}
 import {enumerate print} from {std}
 
@@ -31,18 +31,32 @@ private fn completePackage(package: packageDescriptor, registry: packageRegistry
 	let functions = package.getAllFunctions();
 	for(i in enumerate(0, functions.length()))
 		if(functions[i].runtimeExecutable())
+		{
+			if(functions[i].isAbstract())
+				return;
 			createFunction(functions[i], package, registry, registry.getModuleFor(functions[i]), cr);
+		}
 
 }
 
 private fn createType(t: typeDescriptor, package: packageDescriptor, registry: packageRegistry*)
 {
+	if(t.excludedAtRuntime())
+		return;
 	let lt = registry.getLLVMTypeFor(t, package);
 }
 
 private fn completeType(t: typeDescriptor, package: packageDescriptor, registry: packageRegistry*, cr: compilationResult)
 {
-	if(t != typeof(usize))
+	if(t.excludedAtRuntime())
+		return;
+	if(t.isBasedOnGeneric())
+	{
+		let instantiationData = t.genericInstantiationInfo();
+		if(instantiationData.generic() == genericTypeof(array))
+			return;
+	}
+	if(t != typeof(usize) && (t != typeof(string)) && (t.referenceCount() == 0))
 	{
 		let fields = t.fields();
 		let lt = registry.getLLVMTypeFor(t, package);
@@ -57,6 +71,8 @@ private fn completeType(t: typeDescriptor, package: packageDescriptor, registry:
 		for(i in enumerate(0, cons.length()))
 			if(cons[i].runtimeExecutable())
 			{
+				if(cons[i].isAbstract())
+					return;
 				let mod = registry.getModuleFor(cons[i]);
 				createFunction(cons[i], package, registry, mod, cr);
 			}

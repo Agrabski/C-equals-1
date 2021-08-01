@@ -10,18 +10,34 @@
 #include "TypeClassifier.hpp"
 #include "Generic.hpp"
 #include "GenericInstantiationData.hpp"
+#include "MetadataObject.hpp"
+#include "ObjectWithMetadata.hpp"
 
 using gsl::not_null;
 
 namespace cMCompiler::dataStructures
 {
+	enum TypeFlags : int64_t
+	{
+		None = 0b0,
+		ExcludeAtRuntime = 0x1
+	};
+
+	TypeFlags operator|(TypeFlags lhs, TypeFlags rhs);
+	TypeFlags operator&(TypeFlags lhs, TypeFlags rhs);
+
+	struct TypeMetadata : public MetadataObject<TypeFlags, TypeFlags::None>
+	{
+	};
+
 	class Namespace;
 	class Field;
 	class Type :
 		public INamedObject,
 		public ObjectWithAccessbility,
 		public AttributeTarget,
-		public InstantiationDataHolder<Type>
+		public InstantiationDataHolder<Type>,
+		public ObjectWithMetadata<TypeMetadata>
 	{
 		std::vector<std::unique_ptr<Function>> methods_;
 		std::vector<std::unique_ptr<Field>> fields_;

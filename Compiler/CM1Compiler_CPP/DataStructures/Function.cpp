@@ -61,12 +61,12 @@ execution::json cMCompiler::dataStructures::Function::emmit(ir::INameGetter cons
 
 FunctionFlags cMCompiler::dataStructures::operator|(FunctionFlags lhs, FunctionFlags rhs)
 {
-	return static_cast<FunctionFlags>(static_cast<char>(lhs) | static_cast<char>(rhs));
+	return static_cast<FunctionFlags>(static_cast<int64_t>(lhs) | static_cast<int64_t>(rhs));
 }
 
 FunctionFlags cMCompiler::dataStructures::operator&(FunctionFlags lhs, FunctionFlags rhs)
 {
-	return static_cast<FunctionFlags>(static_cast<char>(lhs) & static_cast<char>(rhs));
+	return static_cast<FunctionFlags>(static_cast<int64_t>(lhs) & static_cast<int64_t>(rhs));
 }
 
 std::ostream& cMCompiler::dataStructures::operator<<(std::ostream& stream, FunctionFlags flags)

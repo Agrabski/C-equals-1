@@ -38,3 +38,13 @@ std::vector<INamedObject*> cMCompiler::dataStructures::Type::children() noexcept
 
 	return result;
 }
+
+TypeFlags cMCompiler::dataStructures::operator|(TypeFlags lhs, TypeFlags rhs)
+{
+	return static_cast<TypeFlags>(static_cast<int64_t>(lhs) | static_cast<int64_t>(rhs));
+}
+
+TypeFlags cMCompiler::dataStructures::operator&(TypeFlags lhs, TypeFlags rhs)
+{
+	return static_cast<TypeFlags>(static_cast<int64_t>(lhs) & static_cast<int64_t>(rhs));
+}

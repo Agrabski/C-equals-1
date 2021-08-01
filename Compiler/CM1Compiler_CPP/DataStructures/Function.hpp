@@ -27,9 +27,9 @@ namespace cMCompiler::dataStructures
 	enum class FunctionFlags : int64_t
 	{
 		None = 0b0000000000000,
-		ExcludeAtCompileTime = 0b0000000000001,
-		ExcludeAtRuntime = 0b0000000000010,
-		Unsafe = 0b0000000000100
+		ExcludeAtCompileTime = 0x1,
+		ExcludeAtRuntime = 0x2,
+		Unsafe = 0x4
 	};
 
 	FunctionFlags operator|(FunctionFlags lhs, FunctionFlags rhs);
