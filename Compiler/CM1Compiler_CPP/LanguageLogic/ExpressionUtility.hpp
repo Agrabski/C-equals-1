@@ -40,6 +40,11 @@ namespace cMCompiler::language
 		runtime_value&& pointerToSource
 	);
 
+	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildDereferenceExpression(
+		runtime_value&& expression,
+		runtime_value&& pointerToSource
+	);
+
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildNewExpression(
 		runtime_value&& referenceToruntimeNew,
 		runtime_value&& referenceTocompiletimeNew,

@@ -82,6 +82,14 @@ std::vector<cMCompiler::language::runtime_value> cMCompiler::compiler::Expressio
 	return result;
 }
 
+cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::buildExpression(gsl::not_null<CMinusEqualsMinus1Revision0Parser::DereferenceExpressionContext*> ctx, language::runtime_value&& referenceToParent)
+{
+	return language::buildDereferenceExpression(
+		buildExpression(ctx->expression(), nullptr),
+		language::buildSourcePointer(filepath_.string(), *ctx)
+	);
+}
+
 cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::buildExpression(gsl::not_null<CMinusEqualsMinus1Revision0Parser::ArrayLiteralContext*> ctx, language::runtime_value&& referenceToParent)
 {
 	std::vector< cMCompiler::language::runtime_value> expressions;
@@ -191,6 +199,8 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 		language::setParent(result.get(), std::move(referenceToParent));
 		return std::move(result);
 	}
+	if (ctx->dereferenceExpression())
+		return buildExpression(ctx->dereferenceExpression(), nullptr);
 	std::terminate();//todo: index expression
 }
 
@@ -330,7 +340,7 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 		);
 	}
 	if (compileTime == nullptr && runtime == nullptr)
-		std::cerr << "Function " << name << " does not exist";
+ 		std::cerr << "Function " << name << " does not exist";
 	assert((compileTime != nullptr) || (runtime != nullptr));
 
 	return language::buildFunctionCallExpression(

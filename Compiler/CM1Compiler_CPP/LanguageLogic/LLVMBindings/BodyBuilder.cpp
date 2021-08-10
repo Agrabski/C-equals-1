@@ -86,6 +86,30 @@ void appendRetVoid(
 	);
 }
 
+void appendAssign(
+	gsl::not_null<Type*> builder,
+	gsl::not_null<Namespace*> backendns,
+	gsl::not_null<Type*> llvmValue
+)
+{
+	auto f = createCustomFunction(
+		builder->append<Function>("appendStore"),
+		builder,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<GenericRuntimeWrapper<llvm::IRBuilder<>>>(a["self"].get())->value();
+			auto value = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["value"].get())->value();
+			auto pointer = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["pointer"].get())->value();
+
+			self->CreateStore(value, pointer);
+			return nullptr;
+		}
+	);
+	f->appendVariable("value", { llvmValue, 0 });
+	f->appendVariable("pointer", { llvmValue, 0 });
+
+}
+
 gsl::not_null<Type*> cMCompiler::language::buildBodyBuilder(
 	gsl::not_null<Namespace*> backendns,
 	gsl::not_null<Type*> llvmType,
@@ -96,6 +120,7 @@ gsl::not_null<Type*> cMCompiler::language::buildBodyBuilder(
 	appendAlloca(builder, backendns, llvmType, llvmValue);
 	appendRet(builder, llvmValue);
 	appendRetVoid(builder, backendns, llvmType);
+	appendAssign(builder, backendns, llvmValue); 
 
 	return builder;
 }

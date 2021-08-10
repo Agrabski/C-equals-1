@@ -1,4 +1,4 @@
-import {null} from {cm1mLang}
+import {null usize} from {cm1mLang}
 
 public class list<typename T> //: ICollection<T>
 {

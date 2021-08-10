@@ -31,5 +31,6 @@ namespace cMCompiler::compiler
 		language::runtime_value buildExpression(gsl::not_null<CMinusEqualsMinus1Revision0Parser::NewExpressionContext*> ctx, language::runtime_value&& referenceToParent);
 		language::runtime_value buildExpression(gsl::not_null<CMinusEqualsMinus1Revision0Parser::ArrayLiteralContext*> ctx, language::runtime_value&& referenceToParent);
 		language::runtime_value buildExpression(gsl::not_null<CMinusEqualsMinus1Revision0Parser::AdressOfExpressionContext*> ctx, language::runtime_value&& referenceToParent);
+		language::runtime_value buildExpression(gsl::not_null<CMinusEqualsMinus1Revision0Parser::DereferenceExpressionContext*> ctx, language::runtime_value&& referenceToParent);
 	};
 }

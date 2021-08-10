@@ -8,6 +8,7 @@
 #include "GetterExecution.hpp"
 #include "../Parser/antlr4-runtime.h"
 #include "LiteralUtility.hpp"
+#include "MetatypeUility.hpp"
 #include "../DataStructures/execution/RuntimeVariableDescriptor.hpp"
 using namespace cMCompiler::dataStructures::execution;
 
@@ -134,6 +135,30 @@ gsl::not_null<Type*> cMCompiler::language::buildVariableDescriptor(gsl::not_null
 			return getValueFor(self->type());
 		}
 	)->setAccessibility(Accessibility::Public);
+	createOperator(
+		getDefaultPackage()->rootNamespace(),
+		"==",
+		{ result, 0 },
+		{ result, 0 },
+		{ getBool(), 0 },
+		[](auto& a, auto& b)
+		{
+			auto arg1 = dereferenceAs<execution::RuntimeVariableDescriptor>(a.get());
+			auto arg2 = dereferenceAs<execution::RuntimeVariableDescriptor>(b.get());
+			return buildBooleanValue(arg1->value() == arg2->value());
+		});
+	createOperator(
+		getDefaultPackage()->rootNamespace(),
+		"!=",
+		{ result, 0 },
+		{ result, 0 },
+		{ getBool(), 0 },
+		[](auto& a, auto& b)
+		{
+			auto arg1 = dereferenceAs<execution::RuntimeVariableDescriptor>(a.get());
+			auto arg2 = dereferenceAs<execution::RuntimeVariableDescriptor>(b.get());
+			return buildBooleanValue(arg1->value() != arg2->value());
+		});
 	return result;
 }
 
@@ -302,6 +327,26 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildLite
 		{
 			auto value = dereference(dereferenceAs<ObjectValue>(not_null(a["self"].get()))->getMemberValue("_value").get());
 			return getValueFor(value->type());
+		})->setReturnType({ getTypeDescriptor(), 1 });
+		createGetter(t->append<Function>("parentExpression"), t);
+		createGetter(t->append<Function>("pointerToSource"), t);
+		t->appendInterface(getExpressionDescriptor());
+		return t;
+}
+
+gsl::not_null<Type*> cMCompiler::language::builddereferenceExpressionDescriptor(gsl::not_null<dataStructures::Namespace*> irNs)
+{
+	using namespace cMCompiler::dataStructures::execution;
+	auto t = irNs->append<Type>("dereferenceExpression");
+	t->appendField("_parentExpression", { getExpressionDescriptor(), 1 });
+	t->appendField("_expression", { getExpressionDescriptor(), 1 });
+	t->appendField("_pointerToSource", { getPointerToSource(), 0 });
+	t->appendInterface(getExpressionDescriptor());
+
+	createCustomFunction(t->append<Function>("type"), t, [](value_map&& a, generic_parameters) -> runtime_value
+		{
+			auto value = utilities::pointer_cast<IRuntimeValue>(dereferenceAs<ObjectValue>(not_null(a["self"].get()))->getMemberValue("_expression"));
+			return getValueFor(getExpressionType(value).dereference());
 		})->setReturnType({ getTypeDescriptor(), 1 });
 		createGetter(t->append<Function>("parentExpression"), t);
 		createGetter(t->append<Function>("pointerToSource"), t);
@@ -487,6 +532,7 @@ void cMCompiler::language::buildIrNamespace(gsl::not_null<dataStructures::Namesp
 	buildFieldAccessExpressionDescriptor(ns);
 	buildAssigmentStatementDescriptor(ns);
 	buildLiteralExpressionDescriptor(ns);
+	builddereferenceExpressionDescriptor(ns);
 	buildArrayLiteralExpressionDescriptor(ns);
 	buildVariableDeclarationStatementDescriptor(ns);
 	buildBinaryOperatorExpressionDescriptor(ns);
@@ -564,6 +610,11 @@ gsl::not_null<Type*> cMCompiler::language::getNewExpressionDescriptor()
 gsl::not_null<Type*> cMCompiler::language::getArrayLiteralExpression()
 {
 	return getDefaultPackage()->rootNamespace()->get<Namespace>("compiler")->get<Namespace>("ir")->get<Type>("arrayLiteralExpression");
+}
+
+gsl::not_null<Type*> cMCompiler::language::getDereferenceExpression()
+{
+	return getDefaultPackage()->rootNamespace()->get<Namespace>("compiler")->get<Namespace>("ir")->get<Type>("dereferenceExpression");
 }
 
 gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::getScopeTerminationStatementDescriptor()

@@ -10,7 +10,6 @@ namespace cMCompiler::language
 
 	};
 	extern std::optional<CoercionStrategy> coerce(TypeReference const& valueType, TypeReference const& sinkType);
-	extern unsigned char countReferenceLevel(dataStructures::execution::IRuntimeValue const* value);
 
 }
 

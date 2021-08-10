@@ -132,6 +132,16 @@ std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler
 	return std::move(expression);
 }
 
+std::unique_ptr<IRuntimeValue> cMCompiler::language::buildDereferenceExpression(runtime_value&& expression, runtime_value&& pointerToSource)
+{
+	auto [result, object] = heapAllocateObject(getDereferenceExpression());
+
+	object.setValue("_pointerToSource", std::move(pointerToSource));
+	object.setValue("_expression", std::move(expression));
+
+	return std::move(result);
+}
+
 std::unique_ptr<IRuntimeValue> cMCompiler::language::buildNewExpression(
 	runtime_value&& referenceToruntimeNew,
 	runtime_value&& referenceTocompiletimeNew,

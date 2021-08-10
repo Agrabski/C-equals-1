@@ -161,7 +161,10 @@ expression:
 	| newExpression
 	| expression binaryOperator expression
 	| LogicalUnaryOperator expression
-	| expression indexExpression;
+	| expression indexExpression
+	| dereferenceExpression;
+
+dereferenceExpression: Star expression;
 
 arrayLiteral:
 	Less typeReference Greater '[' ((expression ',')* expression)? ']';

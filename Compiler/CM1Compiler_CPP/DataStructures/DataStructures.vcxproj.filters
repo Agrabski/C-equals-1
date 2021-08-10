@@ -183,6 +183,9 @@
     <ClInclude Include="execution\WrapperTypeTranslation.hpp">
       <Filter>Header Files\Execution</Filter>
     </ClInclude>
+    <ClInclude Include="NullValueException.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

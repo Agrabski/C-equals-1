@@ -7,6 +7,7 @@
 #include "../Utilities/algorithm.hpp"
 #include "../LanguageLogic/IRUtility.hpp"
 #include "../Utilities/range.hpp"
+#include "../LanguageLogic/TypeCoercionUtility.hpp"
 #include <Windows.h>
 #include <excpt.h>
 #include <winnt.h>
@@ -58,7 +59,7 @@ std::unique_ptr<IRuntimeValue> cMCompiler::compiler::execute(
 	{
 		auto valueType = valueMap[i]->type();
 		auto parameterType = functionDefinition->parameters()[i]->type();
-		assert(valueType == parameterType);
+		assert(language::coerce(valueType, parameterType));
 	}
 
 	auto f = language::compileTimeFunctions::FuntionLibrary::instance().getFunction(functionDefinition);

@@ -61,10 +61,10 @@ void cMCompiler::compiler::llvmIntegration::compileToBinary(
 	llvm::InitializeAllAsmPrinters();
 	std::string er;
 
-	auto target = llvm::TargetRegistry::lookupTarget(triplet, er);
+	not_null target = llvm::TargetRegistry::lookupTarget(triplet, er);
 	llvm::TargetOptions opt;
 	auto RM = llvm::Optional<llvm::Reloc::Model>();
-	auto machine = target->createTargetMachine(triplet, CPU, Features, opt, RM);
+	not_null machine = target->createTargetMachine(triplet, CPU, Features, opt, RM);
 	for (auto& module : result->modules)
 	{
 		module->setDataLayout(machine->createDataLayout());

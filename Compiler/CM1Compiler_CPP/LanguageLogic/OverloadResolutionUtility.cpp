@@ -32,9 +32,6 @@ Function* cMCompiler::language::resolveOverload(
 	for (auto& p : parameters)
 		params.push_back({ executeGetter<TypeReference>(p, "type"s) });
 	return resolveOverload(candidates, params, forceCompileTime, forceRuntime);
-	if (candidates.size() == 1)
-		return candidates.front();
-	//todo: do it actually
 }
 
 cMCompiler::dataStructures::Function* cMCompiler::language::resolveOverloadForExecution(

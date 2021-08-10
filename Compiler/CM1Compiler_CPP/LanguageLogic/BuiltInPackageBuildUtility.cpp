@@ -23,6 +23,7 @@
 #include "GenericUtility.hpp"
 #include "../DataStructures/execution/GenericRuntimeWrapper.hpp"
 #include "MetadataHolderBindings.hpp"
+#include "TypeCoercionUtility.hpp"
 
 using namespace cMCompiler::dataStructures::execution;
 
@@ -34,6 +35,38 @@ auto const compile_time_type_descriptor__ = "typeDescriptor";
 auto const compile_time_function_descriptor__ = "functionDescriptor";
 
 static auto defaultPackage__ = std::make_unique<PackageDatabase>("cm1mLang");
+
+void appendCasts(not_null<Namespace*> rootNs)
+{
+	using cMCompiler::dataStructures::execution::ReferenceValue;
+	auto g = rootNs->appendGeneric<Function>(
+		{ "T", "Y" },
+		[rootNs](auto const& params) -> not_null<Function*>
+		{
+			auto result = rootNs->append<Function>(getGenericMangledName("cast", params));
+
+			auto returnType = params[0];
+			result->appendVariable("a", params[1].reference());
+			result->setReturnType(returnType.reference());
+			cMCompiler::language::compileTimeFunctions::FuntionLibrary::instance().addFunctionDefinition(
+				result,
+				[returnType](auto&& a, auto) -> runtime_value
+				{
+					auto param = a["a"]->copy();
+					auto ref = dynamic_cast<ReferenceValue*>(param.get());
+					auto val = dereferenceOnce(param.get());
+					if (coerce(val->type().reference(), returnType.reference()))
+						return ReferenceValue::make(ref->value(), returnType);
+					return ReferenceValue::make(nullptr, returnType);
+				}
+			);
+
+			return result;
+		},
+		"cast", cMCompiler::dataStructures::NameResolutionContext(getDefaultPackage()),
+			"C-=-1_library_internals.cm"
+			);
+}
 
 void setSourcePointer(not_null<INamedObject*> obj)
 {
@@ -271,7 +304,7 @@ void completeBuildingType(gsl::not_null<Type*> type)
 		"excludedAtRuntime",
 		type,
 		{ getBool(), 0 },
-		[](auto* v) {return buildBooleanValue(v->type->metadata().hasFlag(TypeFlags::ExcludeAtRuntime)); }
+		[](auto* v) { return buildBooleanValue(v->type->metadata().hasFlag(TypeFlags::ExcludeAtRuntime)); }
 	);
 }
 
@@ -329,8 +362,33 @@ void completeBuildingFunction(gsl::not_null<Type*> t)
 	);
 	createNativeObjectGetter<Function>(
 		"isAbstract", t, { getBool(), 0 },
-		[](Function* f) {return buildBooleanValue(f->code() == nullptr); }
+		[](Function* f) { return buildBooleanValue(f->code() == nullptr); }
 	);
+	createOperator(
+		getDefaultPackage()->rootNamespace(),
+		"==",
+		{ t, 0 },
+		{ t, 0 },
+		{ getBool(), 0 },
+		[](auto& a, auto& b)
+		{
+			auto arg1 = dereferenceAs<execution::RuntimeFunctionDescriptor>(a.get());
+			auto arg2 = dereferenceAs<execution::RuntimeFunctionDescriptor>(b.get());
+			return buildBooleanValue(arg1->value() == arg2->value());
+		});
+	createOperator(
+		getDefaultPackage()->rootNamespace(),
+		"!=",
+		{ t, 0 },
+		{ t, 0 },
+		{ getBool(), 0 },
+		[](auto& a, auto& b)
+		{
+			auto arg1 = dereferenceAs<execution::RuntimeFunctionDescriptor>(a.get());
+			auto arg2 = dereferenceAs<execution::RuntimeFunctionDescriptor>(b.get());
+
+			return buildBooleanValue(arg1->value() != arg2->value());
+		});
 
 }
 
@@ -531,7 +589,7 @@ void buildUsize(gsl::not_null<Type*> usize_type)
 		{ usize_type, 0 },
 		{ usize_type, 0 },
 		{ getBool(), 0 },
-		[usize_type](auto& a, auto& b)
+		[](auto& a, auto& b)
 		{
 			auto result = convertToIntegral<usize>(*a) > convertToIntegral<usize>(*b);
 			return buildBooleanValue(result);
@@ -543,7 +601,7 @@ void buildUsize(gsl::not_null<Type*> usize_type)
 		{ usize_type, 0 },
 		{ usize_type, 0 },
 		{ getBool(), 0 },
-		[usize_type](auto& a, auto& b)
+		[](auto& a, auto& b)
 		{
 			auto result = convertToIntegral<usize>(*a) < convertToIntegral<usize>(*b);
 			return buildBooleanValue(result);
@@ -555,7 +613,7 @@ void buildUsize(gsl::not_null<Type*> usize_type)
 		{ usize_type, 0 },
 		{ usize_type, 0 },
 		{ getBool(), 0 },
-		[usize_type](auto& a, auto& b)
+		[](auto& a, auto& b)
 		{
 			auto result = convertToIntegral<usize>(*a) == convertToIntegral<usize>(*b);
 			return buildBooleanValue(result);
@@ -568,7 +626,7 @@ void buildUsize(gsl::not_null<Type*> usize_type)
 		{ usize_type, 0 },
 		{ usize_type, 0 },
 		{ getBool(), 0 },
-		[usize_type](auto& a, auto& b)
+		[](auto& a, auto& b)
 		{
 			auto arg1 = convertToIntegral<usize>(*a);
 			auto arg2 = convertToIntegral<usize>(*b);
@@ -576,6 +634,8 @@ void buildUsize(gsl::not_null<Type*> usize_type)
 			return buildBooleanValue(result);
 		}
 	);
+
+	appendCasts(ns);
 }
 
 void buildString(gsl::not_null<Type*> string)
@@ -709,6 +769,30 @@ void buildPackage()
 		"!=",
 		{ nullptr, 1 },
 		{ nullptr, 1 },
+		{ getBool(), 0 },
+		[](auto& a, auto& b)
+		{
+			auto arg1 = dynamic_cast<ReferenceValue*>(a.get())->value();
+			auto arg2 = dynamic_cast<ReferenceValue*>(b.get())->value();
+			return buildBooleanValue(arg1 != arg2);
+		});
+	cMCompiler::language::createOperator(
+		defaultPackage__->rootNamespace(),
+		"==",
+		{ nullptr, 2 },
+		{ nullptr, 2 },
+		{ getBool(), 0 },
+		[](auto& a, auto& b)
+		{
+			auto arg1 = dynamic_cast<ReferenceValue*>(a.get())->value();
+			auto arg2 = dynamic_cast<ReferenceValue*>(b.get())->value();
+			return buildBooleanValue(arg1 == arg2);
+		});
+	cMCompiler::language::createOperator(
+		defaultPackage__->rootNamespace(),
+		"!=",
+		{ nullptr, 2 },
+		{ nullptr, 2 },
 		{ getBool(), 0 },
 		[](auto& a, auto& b)
 		{

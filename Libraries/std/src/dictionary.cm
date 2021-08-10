@@ -1,0 +1,45 @@
+import {null} from {cm1mLang}
+
+
+public class dictionary<typename Key, typename Value>
+{
+	private _storage: list<KeyValuePair<Key,Value>>;
+	public fn construct()
+	{
+		self._storage = list<KeyValuePair<Key,Value>>();
+	}
+
+	public fn push(k: Key, v: Value)
+	{
+		let found = self.get(k);
+		if(found == null<Value>())
+		{
+			self._storage.push(KeyValuePair<Key, Value>(k, v));
+			return;
+		}
+		*found = v;
+	}
+
+	public fn get(k: Key) -> Value*
+	{
+		for(i in enumerate(0, self._storage.length()))
+		{
+			let element = self._storage.get(i);
+			if(element.key == k)
+				return &(element.value);
+		}
+		return null<Value>();
+	}
+}
+
+private struct KeyValuePair<typename Key, typename Value>
+{
+	public key: Key;
+	public value: Value;
+
+	public fn construct(k: Key, v: Value)
+	{
+		self.key = k;
+		self.value = v;
+	}
+}

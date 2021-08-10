@@ -6,6 +6,7 @@
 #include "../LanguageLogic/IRUtility.hpp"
 #include "../LanguageLogic/RuntimeTypesConversionUtility.hpp"
 #include "FunctionExecutionUtility.hpp"
+#include "../DataStructures/NullValueException.hpp"
 #include "../DataStructures/execution/RuntimeVariableDescriptor.hpp"
 
 using namespace cMCompiler::dataStructures::execution;
@@ -99,6 +100,8 @@ void cMCompiler::compiler::StatementEvaluator::declareVariable(dataStructures::e
 	not_null variable = dereferenceAs<RuntimeVariableDescriptor>(i->getMemberValue("_variable").get())->value();
 	auto expression = pointer_cast<IRuntimeValue>(i->getMemberValue("_expression"));
 	auto value = ev_.evaluate(expression);
+	if (value == nullptr)
+		throw dataStructures::NullValueException();
 	assert(value->type() == variable->type());
 	this->variables_[variable->name()] = std::move(value);
 }

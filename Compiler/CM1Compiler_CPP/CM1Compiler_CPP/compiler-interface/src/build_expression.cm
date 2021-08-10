@@ -1,0 +1,27 @@
+import {
+	IExpression
+	llvmValue
+	variableDescriptor
+	variableReferenceExpression
+}
+from {cm1mLang::compiler::ir}
+
+import {llvmIrBodyBuilder llvmValue} from {cm1mLang::compiler::backend}
+import {dictionary} from {std}
+import {cast null} from {cm1mLang}
+
+private fn build_expression(instruction: IExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*) -> llvmValue
+{
+	if(cast<variableReferenceExpression, IExpression>(instruction) != null<variableReferenceExpression>())
+		return build(
+			cast<variableReferenceExpression, IExpression>(instruction),
+			builder,
+			variables,
+			registry
+		);
+}
+
+private fn build(instruction: variableReferenceExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*) -> llvmValue
+{
+	return *(variables.get(instruction._variable));
+}

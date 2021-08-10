@@ -7,6 +7,15 @@
 		},
 		{
 			"include": "#strings"
+		},
+		{
+			"include": "#declaration"
+		},
+		{
+			"include": "#publicity"
+		},
+		{
+			"include": "#declaration_type"
 		}
 	],
 	"repository": {
@@ -15,6 +24,18 @@
 				"name": "keyword.control.cm1",
 				"match": "\\b(if|while|for|return)\\b"
 			}]
+		},
+		"declaration": {
+			"match": "\\bfn|let\\b",
+			"name": "storage.type"
+		},
+		"declaration_type": {
+			"match": "\\:\\s([a-zA-Z0-9]+\\**)",
+			"name": "storage.type"
+		},
+		"publicity":{
+			"match": "\\b(public|private|internal)\\b",
+			"name": "support.variable"
 		},
 		"strings": {
 			"name": "string.quoted.double.cm1",

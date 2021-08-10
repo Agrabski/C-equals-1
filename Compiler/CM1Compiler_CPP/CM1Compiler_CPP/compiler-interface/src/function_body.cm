@@ -1,0 +1,39 @@
+import {
+	IInstruction
+	variableDeclarationStatement
+	variableDescriptor
+}
+from {cm1mLang::compiler::ir}
+
+import {llvmIrBodyBuilder llvmValue} from {cm1mLang::compiler::backend}
+import {dictionary} from {std}
+import {cast null} from {cm1mLang}
+
+private fn build_instruction(instruction: IInstruction*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*)
+{
+	if(cast<variableDeclarationStatement, IInstruction>(instruction) != null<variableDeclarationStatement>())
+		build(
+			cast<variableDeclarationStatement, IInstruction>(instruction),
+			builder,
+			variables,
+			registry
+		);
+}
+
+private fn build(instruction: variableDeclarationStatement*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*)
+{
+	let var = instruction._variable;
+	let value = build_expression(
+		instruction._expression,
+		builder,
+		variables,
+		registry
+	);
+	let pointer = builder.appendAlloca(
+		registry.getLLVMTypeForExisting(var.type()),
+		var.name()
+	);
+
+	builder.appendStore(value, pointer);
+
+}

@@ -9,6 +9,7 @@
 #include "../LanguageLogic/RuntimeTypesConversionUtility.hpp"
 #include "../LanguageLogic/SpecialFunctionUtility.hpp"
 #include "../LanguageLogic/ExpressionUtility.hpp"
+#include "../LanguageLogic/TypeCoercionUtility.hpp"
 #include "TypeUtility.hpp"
 
 std::string cMCompiler::compiler::FunctionBodyBuilder::decorateTemporary(not_null<antlr4::tree::ParseTree*>tree, int index)
@@ -407,8 +408,13 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitReturnStatement(CM
 	assert(ctx != nullptr);
 	auto sourcePointer = language::buildSourcePointer(filePath_.string(), *ctx);
 	if (ctx->expression() != nullptr)
-		instructionAppenders.back()(language::buildReturnStatement(
-			getBuilder().buildExpression(not_null{ ctx->expression() }, nullptr), std::move(sourcePointer)));
+	{
+		auto exp = getBuilder().buildExpression(not_null{ ctx->expression() }, nullptr);
+		auto expType = language::getExpressionType(exp);
+		if(!language::coerce(expType, function_->returnType()))
+			assert(false);
+		instructionAppenders.back()(language::buildReturnStatement(std::move(exp), std::move(sourcePointer)));
+	}
 	else
 		instructionAppenders.back()(language::buildReturnStatement(std::move(sourcePointer)));
 	return {};

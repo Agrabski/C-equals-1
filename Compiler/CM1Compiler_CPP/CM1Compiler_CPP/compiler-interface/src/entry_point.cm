@@ -1,7 +1,7 @@
-import {compilerEntryPoint packageDescriptor typeDescriptor} from {cm1mLang::compiler}
+import {compilerEntryPoint packageDescriptor typeDescriptor functionDescriptor} from {cm1mLang::compiler}
 import {usize string} from {cm1mLang}
-import {compilationResult llvmType} from {cm1mLang::compiler::backend}
-import {enumerate print} from {std}
+import {compilationResult llvmType llvmFunction} from {cm1mLang::compiler::backend}
+import {enumerate print dictionary} from {std}
 
 [compilerEntryPoint()]
 public fn entryPoint(packages: packageDescriptor[], result: compilationResult) {
@@ -25,6 +25,7 @@ private fn compilePackage(package: packageDescriptor, registry: packageRegistry*
 
 private fn completePackage(package: packageDescriptor, registry: packageRegistry*, cr: compilationResult) 
 {
+	let functionMap = dictionary<functionDescriptor, llvmFunction>();
 	let types = package.getAllTypes();
 	for(i in enumerate(0, types.length()))
 		completeType(types[i], package, registry, cr);
@@ -34,7 +35,15 @@ private fn completePackage(package: packageDescriptor, registry: packageRegistry
 		{
 			if(functions[i].isAbstract())
 				return;
-			createFunction(functions[i], package, registry, registry.getModuleFor(functions[i]), cr);
+			let x = createFunction(functions[i], package, registry, registry.getModuleFor(functions[i]), cr);
+			functionMap.push(functions[i], x);
+		}
+	for(i in enumerate(0, functions.length()))
+		if(functions[i].runtimeExecutable())
+		{
+			if(functions[i].isAbstract())
+				return;
+			buildFunction(functions[i], *functionMap.get(functions[i]), package, registry, registry.getModuleFor(functions[i]));
 		}
 
 }

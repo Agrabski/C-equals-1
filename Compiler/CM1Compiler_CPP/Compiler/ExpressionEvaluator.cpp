@@ -12,6 +12,7 @@
 #include "../LanguageLogic/TypeInstantiationUtility.hpp"
 #include "../LanguageLogic/MetatypeUility.hpp"
 #include "../LanguageLogic/GetterExecution.hpp"
+#include "../LanguageLogic/TypeCoercionUtility.hpp"
 using namespace cMCompiler;
 using namespace cMCompiler::dataStructures::execution;
 using language::runtime_value;
@@ -129,6 +130,14 @@ runtime_value cMCompiler::compiler::ExpressionEvaluator::evaluateNew(
 	return result;
 }
 
+std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::ExpressionEvaluator::evaluateDereference(language::runtime_value& expression)
+{
+	not_null object = language::dereferenceAs<ObjectValue>(expression.get());
+	auto exp = utilities::pointer_cast<IRuntimeValue>(object->getMemberValue("_expression"));
+	auto val = evaluate(exp);
+	return language::dereferenceOnce(val.get())->copy();
+}
+
 runtime_value cMCompiler::compiler::ExpressionEvaluator::evaluateCommon(language::runtime_value& expression)
 {
 	using language::isOfType;
@@ -150,6 +159,8 @@ runtime_value cMCompiler::compiler::ExpressionEvaluator::evaluateCommon(language
 		return evaluateConstructor(expression);
 	if (isOfType(expression.get(), language::getNewExpressionDescriptor()))
 		return evaluateNew(expression);
+	if (isOfType(expression.get(), language::getDereferenceExpression()))
+		return evaluateDereference(expression);
 
 	std::terminate();
 }
@@ -164,7 +175,7 @@ runtime_value cMCompiler::compiler::ExpressionEvaluator::evaluate(language::runt
 	if (result->type() != type)
 	{
 		auto r = language::dereferenceOnce(result.get());
-		if (r != nullptr && type != r->type())
+		if (r != nullptr && !language::coerce(r->type(), type))
 			throw std::exception("invalid value type");
 		if (r != nullptr)
 			return r->copy();

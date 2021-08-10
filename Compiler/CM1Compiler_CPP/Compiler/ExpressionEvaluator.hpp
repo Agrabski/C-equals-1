@@ -25,6 +25,7 @@ namespace cMCompiler::compiler
 		std::unique_ptr<dataStructures::execution::IRuntimeValue> evaluateGetAddress(language::runtime_value& expression);
 		std::unique_ptr<dataStructures::execution::IRuntimeValue> evaluateConstructor(language::runtime_value& expression);
 		std::unique_ptr<dataStructures::execution::IRuntimeValue> evaluateNew(language::runtime_value& expression);
+		std::unique_ptr<dataStructures::execution::IRuntimeValue> evaluateDereference(language::runtime_value& expression);
 
 		std::unique_ptr<dataStructures::execution::IRuntimeValue> evaluateCommon(language::runtime_value& expression);
 
