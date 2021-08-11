@@ -1,4 +1,4 @@
-[basic concepts](Language\BasicConcepts.md)
+[basic concepts](Language/BasicConcepts.md)
 
 # Compilation process
 
