@@ -1,0 +1,9 @@
+import {usize} from {cm1mLang}
+
+public fn indexof<typename T>(collection: T[]*, element: T*)
+{
+	for(i in enumerate(0, collection.length()))
+	if(collection[i] == *element)
+		return i;
+	return -1;
+}

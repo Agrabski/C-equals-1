@@ -102,6 +102,8 @@ void cMCompiler::compiler::StatementEvaluator::declareVariable(dataStructures::e
 	auto value = ev_.evaluate(expression);
 	if (value == nullptr)
 		throw dataStructures::NullValueException();
+
+
 	assert(value->type() == variable->type());
 	this->variables_[variable->name()] = std::move(value);
 }

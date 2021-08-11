@@ -6,7 +6,7 @@
 
 void cMCompiler::compiler::runWithHandling(std::function<void()> const& f)
 {
-	try 
+	try
 	{
 		f();
 		return;
@@ -27,5 +27,5 @@ void cMCompiler::compiler::runWithHandling(std::function<void()> const& f)
 	{
 		std::cerr << e.what();
 	}
-		exit(-1);
+	exit(-1);
 }

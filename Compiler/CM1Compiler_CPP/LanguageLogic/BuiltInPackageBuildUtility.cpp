@@ -195,6 +195,15 @@ void completeBuildingType(gsl::not_null<Type*> type)
 			return convertCollection(methods, { getFunctionDescriptor(), 0 });
 		}
 	)->setAccessibility(Accessibility::Public);
+	createNativeObjectGetter<TypeReference>(
+		"fields",
+		type,
+		{ getCollectionTypeFor({getFieldDescriptor(), 0}), 0 },
+		[](TypeReference* t)
+		{
+			return convertCollection(t->type->fields(), { getFieldDescriptor(), 0 });
+		}
+	);
 	createOperator(
 		getDefaultPackage()->rootNamespace(),
 		"==",

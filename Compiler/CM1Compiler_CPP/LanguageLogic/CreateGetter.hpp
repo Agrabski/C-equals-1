@@ -12,7 +12,7 @@ namespace cMCompiler::language
 
 
 	gsl::not_null<dataStructures::Function*> createGetter(gsl::not_null<dataStructures::Function*> function, gsl::not_null<dataStructures::Type*> type);
-	template<typename T>
+	template<dataStructures::execution::wrapped_type T>
 	gsl::not_null<dataStructures::Function*> createNativeObjectGetter(
 		std::string const& name,
 		gsl::not_null<dataStructures::Type*> type,

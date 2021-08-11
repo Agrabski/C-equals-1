@@ -4,30 +4,32 @@ import {
 	variableDescriptor
 }
 from {cm1mLang::compiler::ir}
+import {fieldDescriptor functionDescriptor} from {cm1mLang::compiler}
+import {llvmIrBodyBuilder llvmValue llvmFunction} from {cm1mLang::compiler::backend}
+import {dictionary print} from {std}
+import {cast null dictionary} from {cm1mLang}
 
-import {llvmIrBodyBuilder llvmValue} from {cm1mLang::compiler::backend}
-import {dictionary} from {std}
-import {cast null} from {cm1mLang}
-
-private fn build_instruction(instruction: IInstruction*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*)
+private fn build_instruction(instruction: IInstruction*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*, functionMap: dictionary<functionDescriptor, llvmFunction>*)
 {
 	if(cast<variableDeclarationStatement, IInstruction>(instruction) != null<variableDeclarationStatement>())
 		build(
 			cast<variableDeclarationStatement, IInstruction>(instruction),
 			builder,
 			variables,
-			registry
+			registry,
+			functionMap
 		);
 }
 
-private fn build(instruction: variableDeclarationStatement*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*)
+private fn build(instruction: variableDeclarationStatement*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*, functionMap: dictionary<functionDescriptor, llvmFunction>*)
 {
 	let var = instruction._variable;
 	let value = build_expression(
 		instruction._expression,
 		builder,
 		variables,
-		registry
+		registry,
+		functionMap
 	);
 	let pointer = builder.appendAlloca(
 		registry.getLLVMTypeForExisting(var.type()),

@@ -1,4 +1,5 @@
 #include "Print.hpp"
+#include "../RuntimeTypesConversionUtility.hpp"
 #include <iostream>
 
 using namespace cMCompiler::dataStructures::execution;
@@ -10,6 +11,12 @@ std::unique_ptr<IRuntimeValue> cMCompiler::language::compileTimeFunctions::print
 {
 	if (valueMap.size() != 1)
 		throw std::exception(); //todo: better exception
-	std::cout << valueMap["value"]->toString() << std::endl;
+	auto v = valueMap["value"].get();
+	while (dereferenceOnce(v) != nullptr && dereferenceOnce(v) != v)
+	{
+		std::cout << "*";
+		v = dereferenceOnce(v);
+	}
+	std::cout << v->toString() << std::endl;
 	return nullptr;
 }

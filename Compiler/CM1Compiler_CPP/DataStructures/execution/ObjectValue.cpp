@@ -34,7 +34,9 @@ std::string cMCompiler::dataStructures::execution::ObjectValue::toString() const
 		stream << kv.first << " = ";
 		if (kv.second != nullptr)
 			stream << kv.second->toString();
-		stream << "NULL";
+		else
+			stream << "NULL";
+		stream << " ";
 	}
 	stream << "}";
 	return stream.str();

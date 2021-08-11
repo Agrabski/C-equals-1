@@ -3,7 +3,7 @@ import {llvmFunction llvmModule llvmType llvmVoidType compilationResult llvmValu
 import {enumerate print dictionary} from {std}
 import {ReplaceWithLLVMIR} from {std::compiler}
 import {variableDescriptor} from {cm1mLang::compiler::ir}
-import {string null} from {cm1mLang}
+import {string null dictionary} from {cm1mLang}
 
 private fn createFunction(f: functionDescriptor, package: packageDescriptor, registry: packageRegistry*, mod: llvmModule, cr: compilationResult) -> llvmFunction
 {
@@ -34,13 +34,13 @@ private fn createFunctionFromLLVMIR(f: functionDescriptor, cr: compilationResult
 	let mod = cr.loadModuleFromString(attribute.overridenLLVMIR);
 }
 
-private fn buildFunction(f: functionDescriptor, llvmF: llvmFunction, package: packageDescriptor, registry: packageRegistry*, mod: llvmModule)
+private fn buildFunction(f: functionDescriptor, llvmF: llvmFunction, package: packageDescriptor, registry: packageRegistry*, mod: llvmModule, functionMap: dictionary<functionDescriptor, llvmFunction>*)
 {
 	let variables = dictionary<variableDescriptor, llvmValue>();
 	let builder = llvmF.getBuilder();
 	let code = f.code();
 	for(i in enumerate(0, code.length()))
-		build_instruction(code[i], &builder, &variables, registry);
+		build_instruction(code[i], &builder, &variables, registry, functionMap);
 	
 }
 

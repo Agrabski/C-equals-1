@@ -59,7 +59,6 @@ private class packageRegistry
 
 	public fn getLLVMTypeFor(t: typeDescriptor, package: packageDescriptor) -> llvmType
 	{
-		print(t.qualifiedName());
 		if(t == typeof(usize))
 			return llvmInt32Type(self._compilationResult);
 		if(t == typeof(string))
@@ -93,7 +92,6 @@ private class packageRegistry
 				return self.getType(t, self._types.get(i).llvmType, module);
 			}
 		}
-		print(t.qualifiedName());
 	}
 
 	private fn getType(t: typeDescriptor, llvmBaseType: llvmType, module: llvmModule) -> llvmType

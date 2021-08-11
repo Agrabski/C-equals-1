@@ -57,7 +57,7 @@ std::unique_ptr<IRuntimeValue> cMCompiler::compiler::execute(
 
 	for (auto const i : utilities::range(valueMap.size()))
 	{
-		auto valueType = valueMap[i]->type();
+		auto const& valueType = valueMap[i]->type();
 		auto parameterType = functionDefinition->parameters()[i]->type();
 		assert(language::coerce(valueType, parameterType));
 	}

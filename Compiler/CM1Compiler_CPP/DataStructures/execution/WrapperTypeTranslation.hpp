@@ -1,6 +1,7 @@
 #pragma once
 #include "RuntimeTypeDescriptor.hpp"
 #include "RuntimeFunctionDescriptor.hpp"
+#include "RuntimeFieldDescriptor.hpp"
 #include "../Type.hpp"
 #include "../TypeReference.hpp"
 #include "../Function.hpp"
@@ -18,6 +19,7 @@ namespace cMCompiler::dataStructures::execution
 
 	DEFINE_WRAPPER(TypeReference, RuntimeTypeDescriptor);
 	DEFINE_WRAPPER(Function, RuntimeFunctionDescriptor);
+	DEFINE_WRAPPER(Field, RuntimeFieldDescriptor);
 
 	template<typename T>
 	concept wrapped_type = std::derived_from<typename WrapperTypeTranslation<T>::WrapperType, IRuntimeValue>;

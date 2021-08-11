@@ -1,4 +1,5 @@
 #include "ReferenceValue.hpp"
+#include <sstream>
 
 std::string cMCompiler::dataStructures::execution::ReferenceValue::typeName() const
 {
@@ -7,7 +8,10 @@ std::string cMCompiler::dataStructures::execution::ReferenceValue::typeName() co
 
 std::string cMCompiler::dataStructures::execution::ReferenceValue::toString() const
 {
-	return (*value_)->toString();
+	using namespace std::string_literals;
+	std::stringstream ss;
+	ss << "[object at: " << value_->get() << "]"s;
+	return ss.str();
 }
 
 std::unique_ptr<cMCompiler::dataStructures::execution::IRuntimeValue> cMCompiler::dataStructures::execution::ReferenceValue::copy() const

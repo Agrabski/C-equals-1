@@ -14,9 +14,9 @@ using namespace cMCompiler::dataStructures::execution;
 using namespace cMCompiler::language;
 
 
-void appendBodyBuilding(not_null<Type*> functionType, not_null<Type*> llvmType, not_null<Namespace*> backendNs, not_null<Type*> llvmValue)
+void appendBodyBuilding(not_null<Type*> functionType, not_null<Type*> llvmType, not_null<Namespace*> backendNs, not_null<Type*> llvmValue, not_null<Type*> llvmFunction)
 {
-	auto builderType = buildBodyBuilder(backendNs, llvmType, llvmValue);
+	auto builderType = buildBodyBuilder(backendNs, llvmType, llvmValue, llvmFunction);
 	auto f = createCustomFunction(
 		functionType->append<Function>("getBuilder"),
 		functionType,
@@ -35,7 +35,7 @@ void appendBodyBuilding(not_null<Type*> functionType, not_null<Type*> llvmType, 
 gsl::not_null<Type*> cMCompiler::language::buildFunctionDescriptor(gsl::not_null<dataStructures::Namespace*> backendns, gsl::not_null<dataStructures::Type*> llvmType, not_null<Type*> llvmValue)
 {
 	auto result = backendns->append<Type>("llvmFunction");
-	appendBodyBuilding(result, llvmType, backendns, llvmValue);
+	appendBodyBuilding(result, llvmType, backendns, llvmValue, result);
 	//todo: do
 	return result;
 }

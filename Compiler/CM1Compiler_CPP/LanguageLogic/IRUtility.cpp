@@ -195,6 +195,29 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildFiel
 			return buildIntegerValue(getUsize(), self->type().referenceCount);
 		}
 	)->setAccessibility(Accessibility::Public);
+	createNativeObjectGetter<Field>(
+		"parent",
+		result,
+		{ getTypeDescriptor(), 0 },
+		[](Field* t)
+		{
+			return getValueFor(dynamic_cast<Type*>(t->parent()));
+		}
+	);
+	createOperator(
+		getDefaultPackage()->rootNamespace(),
+		"==",
+		{ result, 0 },
+		{ result,0 },
+		{ getBool(), 0 },
+		[](auto& a, auto& b)
+		{
+			auto arg1 = dereferenceAs<execution::RuntimeFieldDescriptor>(a.get());
+			auto arg2 = dereferenceAs<execution::RuntimeFieldDescriptor>(b.get());
+			return buildBooleanValue(arg1->value() != arg2->value());
+
+		}
+	);
 	return result;
 }
 

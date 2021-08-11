@@ -7,10 +7,7 @@ import {enumerate print dictionary} from {std}
 public fn entryPoint(packages: packageDescriptor[], result: compilationResult) {
 	let registry = packageRegistry(result);
 	for(i in enumerate(0, packages.length()))
-	{
-		print(packages[i].name());
 		compilePackage(packages[i], &registry, result);
-	}
 	for(i in enumerate(0, packages.length()))
 		completePackage(packages[i], &registry, result);
 }
@@ -43,7 +40,7 @@ private fn completePackage(package: packageDescriptor, registry: packageRegistry
 		{
 			if(functions[i].isAbstract())
 				return;
-			buildFunction(functions[i], *functionMap.get(functions[i]), package, registry, registry.getModuleFor(functions[i]));
+			buildFunction(functions[i], *functionMap.get(functions[i]), package, registry, registry.getModuleFor(functions[i]), &functionMap);
 		}
 
 }

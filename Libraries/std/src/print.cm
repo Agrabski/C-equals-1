@@ -12,3 +12,6 @@ public fn print(value: usize){}
 [CompileTimeOnly()]
 [FunctionMapsTo("print")]
 public fn print(value: string){}
+[CompileTimeOnly()]
+[FunctionMapsTo("print")]
+public fn print<typename T>(value: T){}
