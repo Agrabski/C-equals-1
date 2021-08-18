@@ -1,5 +1,5 @@
 #pragma once
-#include <gsl.h>
+#include <gsl/gsl>
 #include "IValueHolder.hpp"
 #include "AttributeTarget.hpp"
 #include "ObjectWithAccessibility.hpp"

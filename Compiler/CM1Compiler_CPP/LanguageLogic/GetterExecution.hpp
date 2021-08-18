@@ -1,5 +1,5 @@
 #pragma once
-#include <gsl.h>
+#include <gsl/gsl>
 #include <string>
 #include "runtime_values.hpp"
 #include "NameResolver.hpp"

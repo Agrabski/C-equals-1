@@ -1,7 +1,7 @@
 #pragma once
 #include <exception>
 #include <vector>
-#include <gsl.h>
+#include <gsl/gsl>
 #include "SourcePointer.hpp"
 
 namespace cMCompiler::dataStructures

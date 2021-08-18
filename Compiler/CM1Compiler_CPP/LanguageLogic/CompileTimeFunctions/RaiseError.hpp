@@ -2,7 +2,7 @@
 #include <memory>
 #include <map>
 #include <string>
-#include <gsl.h>
+#include <gsl/gsl>
 #include "../../DataStructures/execution/IRuntimeValue.h"
 
 namespace cMCompiler::language::compileTimeFunctions

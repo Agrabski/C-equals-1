@@ -1,5 +1,5 @@
 #pragma once
-#include <gsl.h>
+#include <gsl/gsl>
 #include "../../DataStructures/Namespace.hpp"
 
 namespace cMCompiler::language

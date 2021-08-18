@@ -1,6 +1,6 @@
 #pragma once
 #include <memory>
-#include <gsl.h>
+#include <gsl/gsl>
 #include <vector>
 #include "runtime_values.hpp"
 #include "RuntimeTypesConversionUtility.hpp"

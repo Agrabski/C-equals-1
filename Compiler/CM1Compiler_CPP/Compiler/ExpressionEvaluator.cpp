@@ -9,6 +9,7 @@
 #include "../DataStructures/execution/RuntimeVariableDescriptor.hpp"
 #include "../DataStructures/execution/RuntimeTypeDescriptor.hpp"
 #include "../DataStructures/execution/ReferenceValue.hpp"
+#include "../DataStructures/NullValueException.hpp"
 #include "../LanguageLogic/TypeInstantiationUtility.hpp"
 #include "../LanguageLogic/MetatypeUility.hpp"
 #include "../LanguageLogic/GetterExecution.hpp"
@@ -35,7 +36,7 @@ runtime_value cMCompiler::compiler::ExpressionEvaluator::evaluateArrayLiteral(la
 	std::vector<language::runtime_value> result;
 
 	for (auto& exp : *values)
-		result.push_back(evaluate(exp));
+		result.push_back(evaluate(exp, false));
 
 	return language::convertCollection(std::move(result), type->value());
 }
@@ -47,8 +48,8 @@ runtime_value cMCompiler::compiler::ExpressionEvaluator::evaluateBinaryOperator(
 	auto arg1 = pointer_cast<IRuntimeValue>(exp->getMemberValue("_arg1"));
 	auto arg2 = pointer_cast<IRuntimeValue>(exp->getMemberValue("_arg2"));
 	std::vector<language::runtime_value> argumentValues;
-	argumentValues.push_back(evaluate(arg1));
-	argumentValues.push_back(evaluate(arg2));
+	argumentValues.push_back(evaluate(arg1, false));
+	argumentValues.push_back(evaluate(arg2, false));
 	return execute(function->value(), std::move(argumentValues));
 }
 
@@ -67,7 +68,7 @@ runtime_value cMCompiler::compiler::ExpressionEvaluator::evaluateCall(language::
 	not_null arguments = language::dereferenceAs<ArrayValue>(exp->getMemberValue("_arguments").get());
 	std::vector<language::runtime_value> argumentValues;
 	for (auto& arg : *arguments)
-		argumentValues.push_back(evaluate(arg));
+		argumentValues.push_back(evaluate(arg, false));
 	return execute(function->value(), std::move(argumentValues));
 }
 
@@ -97,7 +98,7 @@ runtime_value cMCompiler::compiler::ExpressionEvaluator::evaluateConstructor(lan
 	auto result = language::instantiate(constructor->parameters().front()->type());
 	argValues.push_back(ReferenceValue::make(&result, result->type()));
 	for (auto& arg : *arguments)
-		argValues.push_back(evaluate(arg));
+		argValues.push_back(evaluate(arg, false));
 	compiler::execute(constructor, std::move(argValues));
 	return result;
 
@@ -124,7 +125,7 @@ runtime_value cMCompiler::compiler::ExpressionEvaluator::evaluateNew(
 		not_null args = language::dereferenceAs<ArrayValue>(object->getMemberValue("_arguments").get());
 		auto & arg : *args
 		)
-		params.emplace_back(evaluate(arg));
+		params.emplace_back(evaluate(arg, false));
 
 	assert(execute(constructor, std::move(params)) == nullptr);
 	return result;
@@ -134,7 +135,7 @@ std::unique_ptr<dataStructures::execution::IRuntimeValue> cMCompiler::compiler::
 {
 	not_null object = language::dereferenceAs<ObjectValue>(expression.get());
 	auto exp = utilities::pointer_cast<IRuntimeValue>(object->getMemberValue("_expression"));
-	auto val = evaluate(exp);
+	auto val = evaluate(exp, false);
 	return language::dereferenceOnce(val.get())->copy();
 }
 
@@ -166,23 +167,37 @@ runtime_value cMCompiler::compiler::ExpressionEvaluator::evaluateCommon(language
 }
 
 
-runtime_value cMCompiler::compiler::ExpressionEvaluator::evaluate(language::runtime_value& expression)
+runtime_value cMCompiler::compiler::ExpressionEvaluator::evaluate(language::runtime_value& expression, bool expectNull)
 {
 	auto type = language::getExpressionType(expression);
 	auto result = evaluateCommon(expression);
 	if (result == nullptr)
-		return nullptr;
+	{
+		if (expectNull)
+			return nullptr;
+		else
+		{
+ 			throw dataStructures::NullValueException();
+		}
+	}
 	if (result->type() != type)
 	{
 		auto r = language::dereferenceOnce(result.get());
 		if (r != nullptr && !language::coerce(r->type(), type))
 			throw std::exception("invalid value type");
 		if (r != nullptr)
-			return r->copy();
+			if (result == nullptr && !expectNull)
+				throw dataStructures::NullValueException();
+			else
+				return r->copy();
 		return ReferenceValue::make(nullptr, type.dereference());
 	}
 	else
+	{
+		if (result == nullptr && !expectNull)
+			throw dataStructures::NullValueException();
 		return result;
+	}
 }
 
 std::unique_ptr<dataStructures::execution::ReferenceValue> cMCompiler::compiler::ExpressionEvaluator::evaluateLeftExpression(language::runtime_value& expression)

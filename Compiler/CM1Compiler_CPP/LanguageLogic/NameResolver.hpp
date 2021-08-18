@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include <gsl.h>
+#include <gsl/gsl>
 #include <ranges>
 #include <filesystem>
 #include "../DataStructures/PackageDatabase.hpp"

@@ -2,7 +2,7 @@
 #include <vector>
 #include <array>
 #include <memory>
-#include <gsl.h>
+#include <gsl/gsl>
 #include "../../DataStructures/execution/IRuntimeValue.h"
 #include "../../DataStructures/execution/ReferenceValue.hpp"
 

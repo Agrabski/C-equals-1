@@ -144,6 +144,52 @@ void appendGetFieldValue(
 
 }
 
+void appendAddressOf(
+	gsl::not_null<Type*> builder,
+	gsl::not_null<Namespace*> backendns,
+	gsl::not_null<Type*> llvmValue,
+	gsl::not_null<Type*> llvmType
+)
+{
+	auto f = createCustomFunction(
+		builder->append<Function>("appendAddressof"),
+		builder,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<GenericRuntimeWrapper<llvm::IRBuilder<>>>(a["self"].get())->value();
+			auto value = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["value"].get())->value();
+			auto type = dereferenceAs<GenericRuntimeWrapper<llvm::Type>>(a["type"].get())->value();
+
+			return getValueFor(self->CreateIntToPtr(value, type));
+		}
+	);
+	f->appendVariable("value", { llvmValue, 0 });
+	f->appendVariable("type", { llvmType, 0 });
+
+}
+
+void appendLiteral(
+	gsl::not_null<Type*> builder,
+	gsl::not_null<Namespace*> backendns,
+	gsl::not_null<Type*> llvmValue,
+	gsl::not_null<Type*> llvmType
+)
+{
+	auto f = createCustomFunction(
+		builder->append<Function>("appendIntegerLiteral"),
+		builder,
+		[](auto&& a, auto b)
+		{
+			auto value = convertToIntegral<usize>(*dereferenceAs<IntegerValue>(a["value"].get()));
+			auto type = dereferenceAs<GenericRuntimeWrapper<llvm::Type>>(a["type"].get())->value();
+			return getValueFor(llvm::ConstantInt::get(type, value));
+		}
+	);
+	f->appendVariable("value", { nullptr, 1 });
+	f->appendVariable("type", { llvmType, 0 });
+
+}
+
 void appendFunctionCall(
 	gsl::not_null<Type*> builder,
 	gsl::not_null<Namespace*> backendns,
@@ -188,6 +234,8 @@ gsl::not_null<Type*> cMCompiler::language::buildBodyBuilder(
 	appendAssign(builder, backendns, llvmValue);
 	appendGetFieldValue(builder, backendns, llvmValue, llvmType);
 	appendFunctionCall(builder, backendns, llvmValue, llvmType, llvmFunction);
+	appendAddressOf(builder, backendns, llvmValue, llvmType);
+	appendLiteral(builder, backendns, llvmValue, llvmType);
 
 	return builder;
 }

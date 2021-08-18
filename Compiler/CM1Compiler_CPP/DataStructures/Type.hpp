@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
-#include <gsl.h>
+#include <gsl/gsl>
 #include "INamedObject.hpp"
 #include "Namespace.hpp"
 #include "Function.hpp"

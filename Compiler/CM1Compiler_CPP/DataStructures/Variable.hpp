@@ -5,7 +5,7 @@
 #include "Target.hpp"
 #include "IValueHolder.hpp"
 #include <vector>
-#include <gsl.h>
+#include <gsl/gsl>
 #include <string>
 #include <memory>
 #include <variant>

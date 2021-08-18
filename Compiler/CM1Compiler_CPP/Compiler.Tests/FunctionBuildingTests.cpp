@@ -1,6 +1,6 @@
 #pragma once
 #include "pch.h"
-#include <gsl.h>
+#include <gsl/gsl>
 #include "CppUnitTest.h"
 #include "CompilationUnitDataBaseBuilderTestingUtility.hpp"
 #include "../Compiler/FunctionUtility.hpp"

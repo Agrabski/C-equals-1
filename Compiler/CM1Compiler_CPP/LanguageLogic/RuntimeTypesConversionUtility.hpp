@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <gsl.h>
+#include <gsl/gsl>
 #include "runtime_values.hpp"
 #include "../DataStructures/SourcePointer.hpp"
 #include "../DataStructures/execution/IRuntimeValue.h"

@@ -4,10 +4,10 @@
 
 namespace cMCompiler::dataStructures
 {
-	class NullValueException : RuntimeException
+	class NullValueException : public RuntimeException
 	{
 	public:
-		explicit NullValueException() : RuntimeException("Evaluation of expression did not produce a value.") {}
+		NullValueException() : RuntimeException("Evaluation of expression did not produce a value.") {}
 
 	};
 }

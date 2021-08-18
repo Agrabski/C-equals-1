@@ -1,5 +1,5 @@
 #pragma once
-#include <gsl.h>
+#include <gsl/gsl>
 #include <filesystem>
 #include "CreateGetter.hpp"
 #include "BuiltInPackageBuildUtility.hpp"

@@ -34,7 +34,7 @@ namespace cMCompiler::compiler
 			std::function<std::unique_ptr<dataStructures::execution::IRuntimeValue>& (std::string const&)> variableLookupFunction) :
 			variableLookupFunction_(variableLookupFunction) {}
 
-		std::unique_ptr< dataStructures::execution::IRuntimeValue> evaluate(language::runtime_value& expression);
+		std::unique_ptr< dataStructures::execution::IRuntimeValue> evaluate(language::runtime_value& expression, bool expectNull);
 		std::unique_ptr< dataStructures::execution::ReferenceValue> evaluateLeftExpression(language::runtime_value& expression);
 	};
 }

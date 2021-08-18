@@ -688,6 +688,10 @@ void buildString(gsl::not_null<Type*> string)
 			return buildIntegerValue(getUsize(), self->value().length());
 		}
 	);
+	string->append<Function>("length")
+		->setReturnType({ getUsize(), 0 })
+		->metadata().appendFlag(cMCompiler::dataStructures::FunctionFlags::ExcludeAtCompileTime);
+
 	auto indexOperator = string->append<Function>("operator_[]");
 	indexOperator->setAccessibility(Accessibility::Public);
 	indexOperator->setReturnType({ getChar(), 0 });

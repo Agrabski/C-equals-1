@@ -1,6 +1,6 @@
 #include "Environment.hpp"
 #include <stdlib.h>
-#include <gsl.h>
+#include <gsl/gsl>
 
 std::string cMCompiler::compiler::getEnvironmentVariable(std::string const& name)
 {

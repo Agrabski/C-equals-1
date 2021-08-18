@@ -6,7 +6,7 @@
 #pragma once
 
 #include "../support/Any.h"
-#include <gsl.h>
+#include <gsl/gsl>
 using gsl::not_null;
 
 namespace antlr4 

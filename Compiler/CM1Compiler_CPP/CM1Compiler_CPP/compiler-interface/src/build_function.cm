@@ -7,7 +7,6 @@ import {string null dictionary} from {cm1mLang}
 
 private fn createFunction(f: functionDescriptor, package: packageDescriptor, registry: packageRegistry*, mod: llvmModule, cr: compilationResult) -> llvmFunction
 {
-	print(f.name());
 	let attribute = f.get_attribute<_att_ ReplaceWithLLVMIR>();
 
 	if(attribute != null<_att_ ReplaceWithLLVMIR>())
@@ -37,6 +36,9 @@ private fn createFunctionFromLLVMIR(f: functionDescriptor, cr: compilationResult
 private fn buildFunction(f: functionDescriptor, llvmF: llvmFunction, package: packageDescriptor, registry: packageRegistry*, mod: llvmModule, functionMap: dictionary<functionDescriptor, llvmFunction>*)
 {
 	let variables = dictionary<variableDescriptor, llvmValue>();
+	let params = f.parameters();
+	for(i in enumerate(0, params.length()))
+		variables.push(params[i], llvmF.getParameter(i));
 	let builder = llvmF.getBuilder();
 	let code = f.code();
 	for(i in enumerate(0, code.length()))

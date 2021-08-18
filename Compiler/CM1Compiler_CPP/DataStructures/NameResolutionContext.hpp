@@ -1,7 +1,7 @@
 #pragma once
 #include <map>
 #include <vector>
-#include <gsl.h>
+#include <gsl/gsl>
 #include <string>
 
 namespace cMCompiler::dataStructures

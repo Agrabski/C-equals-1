@@ -4,7 +4,7 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include <gsl.h>
+#include <gsl/gsl>
 #include "../Parser/CMinusEqualsMinus1Revision0Parser.h"
 #include "../DataStructures/Function.hpp"
 #include "../DataStructures/Accessibility.hpp"

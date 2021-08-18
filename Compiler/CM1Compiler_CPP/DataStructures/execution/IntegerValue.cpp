@@ -1,6 +1,6 @@
 #include "IntegerValue.hpp"
 #include <sstream>
-#include "gsl.h"
+#include <gsl/gsl>
 
 using namespace cMCompiler::dataStructures::execution;
 using namespace cMCompiler::dataStructures;

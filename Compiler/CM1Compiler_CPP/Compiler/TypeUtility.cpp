@@ -167,6 +167,8 @@ cMCompiler::dataStructures::TypeReference cMCompiler::compiler::getType(
 )
 {
 	auto name = ctx->identifier()->getText();
+	if (name == "void")
+		return { nullptr, 0 };
 	dataStructures::Type* type;
 	if (ctx->genericUsage())
 	{

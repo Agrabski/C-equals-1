@@ -5,7 +5,7 @@ std::ostream& cMCompiler::dataStructures::operator<<(std::ostream& s, TypeRefere
 {
 	if (ref.type == nullptr)
 		return s;
-	s << ref.type->name();
+	s << ref.typeName();
 	for (auto x = ref.referenceCount; x > 0; x--)
 		s << '*';
 	return s;
@@ -25,6 +25,8 @@ bool operator==(cMCompiler::dataStructures::TypeReference const& a, cMCompiler::
 
 std::string cMCompiler::dataStructures::TypeReference::typeName() const
 {
+	if (type == nullptr)
+		return "void";
 	return type->name();
 }
 

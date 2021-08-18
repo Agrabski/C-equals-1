@@ -6,7 +6,7 @@
 #pragma once
 
 #include "antlr4-common.h"
-#include <gsl.h>
+#include <gsl/gsl>
 
 using gsl::not_null;
 

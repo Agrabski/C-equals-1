@@ -1,6 +1,6 @@
 #pragma once
 #include <list>
-#include <gsl.h>
+#include <gsl/gsl>
 #include <memory>
 #include "IRuntimeValue.h"
 #include "IComplexRuntimeValue.hpp"

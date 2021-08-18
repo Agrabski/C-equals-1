@@ -1,5 +1,5 @@
 #include "IntermidiateRepresentationEmmiter.hpp"
-#include <gsl.h>
+#include <gsl/gsl>
 #include <sstream>
 #include <nlohmann/json.hpp>
 #include "../DataStructures/IntermidiateRepresentation/INameGetter.hpp"

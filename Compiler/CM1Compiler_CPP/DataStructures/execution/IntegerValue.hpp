@@ -2,7 +2,7 @@
 #include <cstddef>
 #include <ostream>
 #include <string>
-#include <gsl.h>
+#include <gsl/gsl>
 #include "IRuntimeValue.h"
 #include "../IntermidiateRepresentation/INameGetter.hpp"
 

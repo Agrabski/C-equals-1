@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 #include <map>
-#include <gsl.h>
+#include <gsl/gsl>
 #include "../../DataStructures/execution/IRuntimeValue.h"
 
 

@@ -2,7 +2,7 @@
 #include <memory>
 #include <map>
 #include <string>
-#include <gsl.h>
+#include <gsl/gsl>
 #include "../RuntimeTypesConversionUtility.hpp"
 #include "../../DataStructures/execution/IRuntimeValue.h"
 

@@ -1,5 +1,5 @@
 #pragma once
-#include <gsl.h>
+#include <gsl/gsl>
 #include "../DataStructures/PackageDatabase.hpp"
 #include "../DataStructures/Type.hpp"
 

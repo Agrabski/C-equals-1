@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <map>
-#include <gsl.h>
+#include <gsl/gsl>
 #include "execution/IRuntimeValue.h"
 
 namespace cMCompiler::dataStructures

@@ -1,5 +1,5 @@
 #pragma once
-#include <gsl.h>
+#include <gsl/gsl>
 #include "../DataStructures/Variable.hpp"
 #include "NameResolver.hpp"
 #include "runtime_values.hpp"

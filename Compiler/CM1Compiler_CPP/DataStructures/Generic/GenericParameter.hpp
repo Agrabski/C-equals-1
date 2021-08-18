@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <gsl.h>
+#include <gsl/gsl>
 
 using gsl::not_null;
 

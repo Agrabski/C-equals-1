@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include <gsl.h>
+#include <gsl/gsl>
 #include <llvm/IR/LLVMContext.h>
 #include "../../DataStructures/CompilationResult.hpp"
 #include "../../DataStructures/PackageDatabase.hpp"

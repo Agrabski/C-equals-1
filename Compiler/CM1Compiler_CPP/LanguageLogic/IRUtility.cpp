@@ -350,11 +350,12 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildLite
 		{
 			auto value = dereference(dereferenceAs<ObjectValue>(not_null(a["self"].get()))->getMemberValue("_value").get());
 			return getValueFor(value->type());
-		})->setReturnType({ getTypeDescriptor(), 1 });
-		createGetter(t->append<Function>("parentExpression"), t);
-		createGetter(t->append<Function>("pointerToSource"), t);
-		t->appendInterface(getExpressionDescriptor());
-		return t;
+		}
+	)->setReturnType({ getTypeDescriptor(), 0 });
+	createGetter(t->append<Function>("parentExpression"), t);
+	createGetter(t->append<Function>("pointerToSource"), t);
+	t->appendInterface(getExpressionDescriptor());
+	return t;
 }
 
 gsl::not_null<Type*> cMCompiler::language::builddereferenceExpressionDescriptor(gsl::not_null<dataStructures::Namespace*> irNs)
@@ -370,11 +371,12 @@ gsl::not_null<Type*> cMCompiler::language::builddereferenceExpressionDescriptor(
 		{
 			auto value = utilities::pointer_cast<IRuntimeValue>(dereferenceAs<ObjectValue>(not_null(a["self"].get()))->getMemberValue("_expression"));
 			return getValueFor(getExpressionType(value).dereference());
-		})->setReturnType({ getTypeDescriptor(), 1 });
-		createGetter(t->append<Function>("parentExpression"), t);
-		createGetter(t->append<Function>("pointerToSource"), t);
-		t->appendInterface(getExpressionDescriptor());
-		return t;
+		}
+	)->setReturnType({ getTypeDescriptor(), 0 });
+	createGetter(t->append<Function>("parentExpression"), t);
+	createGetter(t->append<Function>("pointerToSource"), t);
+	t->appendInterface(getExpressionDescriptor());
+	return t;
 }
 
 gsl::not_null<Type*> cMCompiler::language::buildArrayLiteralExpressionDescriptor(gsl::not_null<dataStructures::Namespace*> irNs)
@@ -393,11 +395,12 @@ gsl::not_null<Type*> cMCompiler::language::buildArrayLiteralExpressionDescriptor
 		{
 			auto value = dereferenceAs<RuntimeTypeDescriptor>(dereferenceAs<ObjectValue>(not_null(a["self"].get()))->getMemberValue("_type").get());
 			return value->copy();
-		})->setReturnType({ getTypeDescriptor(), 1 });
-		createGetter(t->append<Function>("parentExpression"), t);
-		createGetter(t->append<Function>("pointerToSource"), t);
-		t->appendInterface(getExpressionDescriptor());
-		return t;
+		}
+	)->setReturnType({ getTypeDescriptor(), 1 });
+	createGetter(t->append<Function>("parentExpression"), t);
+	createGetter(t->append<Function>("pointerToSource"), t);
+	t->appendInterface(getExpressionDescriptor());
+	return t;
 }
 
 gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildAdressofExpressionDescriptor(gsl::not_null<dataStructures::Namespace*> irNs)

@@ -2,6 +2,7 @@
 #include "BodyBuilder.hpp"
 #include <llvm/IR/Instructions.h>
 #include <llvm/IR/IRBuilder.h>
+#include "Value.hpp"
 #include "../../DataStructures/execution/GenericRuntimeWrapper.hpp"
 #include "../../DataStructures/execution/GenericOwningRuntimeWrapper.h"
 #include "../../DataStructures/execution/StringValue.hpp"
@@ -29,13 +30,32 @@ void appendBodyBuilding(not_null<Type*> functionType, not_null<Type*> llvmType, 
 		}
 	);
 	f->setReturnType({ builderType, 0 });
+}
 
+void appendGetParameter(not_null<Type*> functionType, not_null<Type*> llvmType, not_null<Namespace*> backendNs, not_null<Type*> llvmValue, not_null<Type*> llvmFunction)
+{
+	auto builderType = buildBodyBuilder(backendNs, llvmType, llvmValue, llvmFunction);
+	auto f = createCustomFunction(
+		functionType->append<Function>("getParameter"),
+		functionType,
+		[builderType](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<GenericRuntimeWrapper<llvm::Function>>(a["self"].get())->value();
+			auto index = convertToIntegral<usize>(*dereferenceAs<IntegerValue>(a["index"].get()));
+			auto list = self->arg_begin();
+			assert((list + index) < self->arg_end());
+			return getValueFor((list + index));
+		}
+	);
+	f->appendVariable("index", { getUsize(), 0 });
+	f->setReturnType({ llvmValue, 0 });
 }
 
 gsl::not_null<Type*> cMCompiler::language::buildFunctionDescriptor(gsl::not_null<dataStructures::Namespace*> backendns, gsl::not_null<dataStructures::Type*> llvmType, not_null<Type*> llvmValue)
 {
 	auto result = backendns->append<Type>("llvmFunction");
 	appendBodyBuilding(result, llvmType, backendns, llvmValue, result);
+	appendGetParameter(result, llvmType, backendns, llvmValue, result);
 	//todo: do
 	return result;
 }

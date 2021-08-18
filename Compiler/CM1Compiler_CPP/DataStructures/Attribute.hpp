@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <memory>
-#include <gsl.h>
+#include <gsl/gsl>
 #include "Type.hpp"
 #include "Function.hpp"
 #include "INamedObject.hpp"

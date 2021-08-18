@@ -1,6 +1,6 @@
 #pragma once
 #include <ostream>
-#include <gsl.h>
+#include <gsl/gsl>
 #include "../DataStructures/PackageDatabase.hpp"
 
 namespace cMCompiler::compiler

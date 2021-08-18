@@ -1,5 +1,5 @@
 #pragma once
-#include <gsl.h>
+#include <gsl/gsl>
 #include <llvm/IR/Module.h>
 #include <llvm/IR/LLVMContext.h>
 #include "../../DataStructures/Namespace.hpp"

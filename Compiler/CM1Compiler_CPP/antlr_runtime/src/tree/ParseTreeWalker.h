@@ -6,7 +6,7 @@
 #pragma once
 
 #include "antlr4-common.h"
-#include <gsl.h>
+#include <gsl/gsl>
 
 namespace antlr4 {
 namespace tree {

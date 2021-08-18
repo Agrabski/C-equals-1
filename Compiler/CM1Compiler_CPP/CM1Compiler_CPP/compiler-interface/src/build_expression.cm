@@ -5,13 +5,15 @@ import {
 	variableReferenceExpression
 	fieldAccessExpression
 	functionCallExpression
+	adressofExpression
+	literalExpression
 }
 from {cm1mLang::compiler::ir}
 
 import {llvmIrBodyBuilder llvmValue llvmFunction} from {cm1mLang::compiler::backend}
 import {fieldDescriptor functionDescriptor} from {cm1mLang::compiler}
 import {dictionary indexof print enumerate} from {std}
-import {cast null} from {cm1mLang}
+import {cast null usize} from {cm1mLang}
 
 private fn build_expression(instruction: IExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*, functionMap: dictionary<functionDescriptor, llvmFunction>*) -> llvmValue
 {
@@ -39,14 +41,31 @@ private fn build_expression(instruction: IExpression*, builder: llvmIrBodyBuilde
 			registry,
 			functionMap
 		);
+	if(cast<adressofExpression, IExpression>(instruction) != null<adressofExpression>())
+		return build(
+			cast<adressofExpression, IExpression>(instruction),
+			builder,
+			variables,
+			registry,
+			functionMap
+		);
+	if(cast<literalExpression, IExpression>(instruction) != null<literalExpression>())
+		return build(
+			cast<literalExpression, IExpression>(instruction),
+			builder,
+			variables,
+			registry,
+			functionMap
+		);
 	print<IExpression*>(instruction);
 }
 
 private fn build(instruction: functionCallExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*, functionMap: dictionary<functionDescriptor, llvmFunction>*) -> llvmValue
 {
-	let function = instruction._runtimeFunction;
+	let f = instruction._runtimeFunction;
 	let values = <llvmValue>[];
 	let arguments = instruction._arguments;
+	print(f.name());
 	for(i in enumerate(0, arguments.length()))
 		values.push(build_expression(
 			arguments[i],
@@ -55,12 +74,22 @@ private fn build(instruction: functionCallExpression*, builder: llvmIrBodyBuilde
 			registry,
 			functionMap
 		));
-	
+	return builder.appendFunctionCall(*functionMap.get(f), &values);
 }
 
 private fn build(instruction: variableReferenceExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*, functionMap: dictionary<functionDescriptor, llvmFunction>*) -> llvmValue
 {
 	return *(variables.get(instruction._variable));
+}
+
+private fn build(instruction: literalExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*, functionMap: dictionary<functionDescriptor, llvmFunction>*) -> llvmValue
+{
+	if(instruction.type() == typeof(usize))
+		return builder.appendIntegerLiteral(
+			instruction._value,
+			registry.getLLVMTypeForExisting(instruction.type())
+		);
+	print<literalExpression*>(instruction);
 }
 
 private fn build(instruction: fieldAccessExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*, functionMap: dictionary<functionDescriptor, llvmFunction>*) -> llvmValue
@@ -75,5 +104,14 @@ private fn build(instruction: fieldAccessExpression*, builder: llvmIrBodyBuilder
 		0,
 		indexof<fieldDescriptor>(&typeFields, &field),
 		llvmBaseType
+	);
+}
+
+private fn build(instruction: adressofExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*, functionMap: dictionary<functionDescriptor, llvmFunction>*) -> llvmValue
+{
+	let exp = build_expression(instruction._expression, builder, variables, registry, functionMap);
+	return builder.appendAddressof(
+		exp,
+		registry.getLLVMTypeForExisting(instruction.type())
 	);
 }
