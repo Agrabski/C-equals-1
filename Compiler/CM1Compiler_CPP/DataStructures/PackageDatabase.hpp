@@ -26,12 +26,8 @@ namespace cMCompiler::dataStructures
 
 		void getFunctions(gsl::not_null<Type*> ns, std::vector<gsl::not_null<Function*>>& result)
 		{
-			for (auto t : ns->children())
-			{
-				auto x = dynamic_cast<Function*>(t);
-				if (x != nullptr)
-					result.push_back(x);
-			}
+			for (auto t : ns->methods())
+				result.push_back(t);
 		}
 
 		void getFunctions(gsl::not_null<Namespace*> ns, std::vector<gsl::not_null<Function*>>& result)
@@ -53,7 +49,7 @@ namespace cMCompiler::dataStructures
 	public:
 		std::string const& name() const noexcept { return name_; }
 		gsl::not_null<Namespace*> rootNamespace() noexcept { return &rootNamespace_; }
-		PackageDatabase(std::string name) : name_(std::move(name)), rootNamespace_("",nullptr) {}
+		PackageDatabase(std::string name) : name_(std::move(name)), rootNamespace_("", nullptr) {}
 		PackageDatabase(PackageDatabase&&) = default;
 		std::vector<not_null<PackageDatabase*>>const& dependencies() const noexcept { return dependencies_; }
 		void appendDependency(not_null<PackageDatabase*> dep) { dependencies_.push_back(dep); }

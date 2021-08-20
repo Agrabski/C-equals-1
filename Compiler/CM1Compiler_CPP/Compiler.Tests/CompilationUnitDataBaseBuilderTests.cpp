@@ -42,7 +42,7 @@ class T
 		{
 			auto program = std::stringstream(R"___(
 import {usize} from {cm1mLang}
-fn func<T>() -> T {}
+fn func<typename T>() -> T {}
 fn func1() 
 {
 	let x = func<usize>();
@@ -58,7 +58,7 @@ fn func1()
 		{
 			auto program = std::stringstream(R"___(
 import {usize} from {cm1mLang}
-class C<T>
+class C<typename T>
 {
 	public _field: T;
 	public fn construct() {}
@@ -106,7 +106,7 @@ class T
 		{
 			auto program = std::stringstream(R"___(
 import {usize: int} from {cm1mLang}
-fn func<T>() -> T {}
+fn func<typename T>() -> T {}
 fn func1() 
 {
 	let x = func<int>();
@@ -122,7 +122,7 @@ fn func1()
 		{
 			auto program = std::stringstream(R"___(
 import {usize: int} from {cm1mLang}
-class C<T>
+class C<typename T>
 {
 	public _field: T;
 	public fn construct() {}
@@ -158,7 +158,7 @@ class T
 		{
 			auto program = std::stringstream(R"___(
 import {usize: int string} from {cm1mLang}
-fn func<T>() -> T {}
+fn func<typename T>() -> T {}
 fn func1() 
 {
 	let x = func<int>();
@@ -174,7 +174,7 @@ fn func1()
 		{
 			auto program = std::stringstream(R"___(
 import {usize: int string} from {cm1mLang}
-class C<T>
+class C<typename T>
 {
 	public _field: T;
 	public fn construct() {}
@@ -195,7 +195,7 @@ fn func1()
 		{
 			auto program = std::stringstream(R"___(
 import {usize: string string:usize} from {cm1mLang}
-fn func<T>() -> T {}
+fn func<typename T>() -> T {}
 fn func1() 
 {
 	let x = func<string>();
@@ -246,7 +246,7 @@ namespace X
 			auto program = std::stringstream(R"___(
 namespace X
 {
-	fn func<T>() -> T {}
+	fn func<typename T>() -> T {}
 	fn func1() {let x = func<G>();}
 	class G {}
 )___");

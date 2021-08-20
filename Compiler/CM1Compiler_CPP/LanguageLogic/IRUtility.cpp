@@ -52,6 +52,7 @@ void cMCompiler::language::implementExpressionInterface(not_null<dataStructures:
 gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildExpressionDescriptor(gsl::not_null<dataStructures::Namespace*> irNs)
 {
 	auto interface = irNs->append<Type>("IExpression"s);
+	interface->setTypeClassifier(TypeClassifier::Interface);
 	interface->append<Function>("pointerToSource")->setReturnType({ getPointerToSource(), 0 });
 	interface->append<Function>("parentExpression")->setReturnType({ interface, 1 });
 	interface->append<Function>("type")->setReturnType({ getTypeDescriptor(),1 });
@@ -61,6 +62,7 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildExpr
 gsl::not_null<Type*> cMCompiler::language::buidStatementDescriptor(gsl::not_null<Namespace*> irNs)
 {
 	auto interface = irNs->append<Type>("IInstruction"s);
+	interface->setTypeClassifier(TypeClassifier::Interface);
 	interface->append<Function>("pointerToSource")->setReturnType({ getPointerToSource(), 0 });
 	interface->append<Function>("parentStatement")->setReturnType({ interface, 1 });
 	return interface;

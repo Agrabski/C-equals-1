@@ -154,6 +154,19 @@ gsl::not_null<Type*> buildPackageDescriptor(gsl::not_null<Namespace*> compilerNs
 		}
 	);
 
+	createCustomFunction(
+		ns->append<Function>("dependencies")->setReturnType({ getCollectionTypeFor({ ns, 0 }), 0 }),
+		ns,
+		[ns](auto&& args, auto)
+		{
+			auto self = dereferenceAs<RuntimePackageDescriptor>(args["self"].get())->value();
+			std::vector<not_null<PackageDatabase*>> p;
+			for (auto& pa : self->dependencies())
+				p.push_back(pa.get());
+			return getValueFor(std::move(p));
+		}
+	);
+
 	return ns;
 }
 
@@ -358,6 +371,11 @@ void completeBuildingFunction(gsl::not_null<Type*> t)
 	);
 
 	createNativeObjectGetter<Function>(
+		"qualifiedName"s, t, { getString(),0 },
+		[](Function* self) -> runtime_value { return buildStringValue((std::string)self->qualifiedName()); }
+	);
+
+	createNativeObjectGetter<Function>(
 		"code"s, t, { getCollectionTypeFor({getIInstruction(), 1}),0 },
 		[](Function* self) -> runtime_value { return self->code()->copy(); }
 	);
@@ -371,7 +389,11 @@ void completeBuildingFunction(gsl::not_null<Type*> t)
 	);
 	createNativeObjectGetter<Function>(
 		"isAbstract", t, { getBool(), 0 },
-		[](Function* f) { return buildBooleanValue(f->code() == nullptr); }
+		[](Function* f)
+		{
+			auto type = dynamic_cast<Type*> (f->parent());
+			return buildBooleanValue(type != nullptr && type->typeClassifier() == TypeClassifier::Interface);
+		}
 	);
 	createOperator(
 		getDefaultPackage()->rootNamespace(),
@@ -688,9 +710,10 @@ void buildString(gsl::not_null<Type*> string)
 			return buildIntegerValue(getUsize(), self->value().length());
 		}
 	);
-	string->append<Function>("length")
-		->setReturnType({ getUsize(), 0 })
-		->metadata().appendFlag(cMCompiler::dataStructures::FunctionFlags::ExcludeAtCompileTime);
+	length = string->append<Function>("length")
+		->setReturnType({ getUsize(), 0 });
+	length->metadata().appendFlag(cMCompiler::dataStructures::FunctionFlags::ExcludeAtCompileTime);
+	length->appendVariable("self", { string, 1 });
 
 	auto indexOperator = string->append<Function>("operator_[]");
 	indexOperator->setAccessibility(Accessibility::Public);
@@ -714,9 +737,22 @@ void buildString(gsl::not_null<Type*> string)
 		{ getBool(), 0 },
 		[](auto& a, auto& b)
 		{
-			auto arg1 = dereferenceAs<StringValue>(a.get())->value();
-			auto arg2 = dereferenceAs<StringValue>(b.get())->value();
+			auto const& arg1 = dereferenceAs<StringValue>(a.get())->value();
+			auto const& arg2 = dereferenceAs<StringValue>(b.get())->value();
 			return buildBooleanValue(arg1 == arg2);
+		});
+
+	cMCompiler::language::createOperator(
+		defaultPackage__->rootNamespace(),
+		"!=",
+		{ string, 0 },
+		{ string, 0 },
+		{ getBool(), 0 },
+		[](auto& a, auto& b)
+		{
+			auto const& arg1 = dereferenceAs<StringValue>(a.get())->value();
+			auto const& arg2 = dereferenceAs<StringValue>(b.get())->value();
+			return buildBooleanValue(arg1 != arg2);
 		});
 }
 
@@ -727,6 +763,27 @@ void supplySourcePointers(not_null<INamedObject*> object, cMCompiler::language::
 		supplySourcePointers(child, sourcePointer);
 }
 
+void appendLogicalConstants(not_null<Namespace*> rootNs)
+{
+	auto& library = compileTimeFunctions::FuntionLibrary::instance();
+
+	library.addFunctionDefinition(
+		rootNs->append<Function>("true")->setReturnType({ getBool(), 0 }),
+		[](auto&&, auto)
+		{
+			return buildBooleanValue(true);
+		}
+	);
+	library.addFunctionDefinition(
+		rootNs->append<Function>("false")->setReturnType({ getBool(), 0 }),
+		[](auto&&, auto)
+		{
+			return buildBooleanValue(false);
+		}
+	);
+}
+
+
 void buildPackage()
 {
 	using namespace cMCompiler::language::compileTimeFunctions;
@@ -736,6 +793,7 @@ void buildPackage()
 	auto result = defaultPackage__.get();
 	auto string = result->rootNamespace()->append<Type>("string");
 	result->rootNamespace()->append<Type>("bool");
+	appendLogicalConstants(result->rootNamespace());
 	result->rootNamespace()->append<Type>("char");
 	auto usize = result->rootNamespace()->append<Type>("usize");
 	result->rootNamespace()->appendGeneric<Type>({ "T" },

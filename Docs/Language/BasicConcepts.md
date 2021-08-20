@@ -2,6 +2,11 @@
 
 In C-=-1 every element of the language except for namespaces is subject to access control, meaning they can be marked as public, private or internal. Public elements are visible everywhere, private are visible only within context of the parent element and internal elements are only visible within the assembly.
 
+## Execution context
+
+C-=-1 is designed to be executable as a standalone, binary file, as well as an interpreted language.
+Some operations, like memory allocation, may be performed differently depending on whether the program is in binary form or is interpreted.
+
 ## Assembly
 
 ## Namespace
@@ -23,7 +28,7 @@ Interfaces can only be accessed via references and cannot be directly created. A
 
 ## Attribute
 
-`attributeDeclaration : (AccessSpecifier)? 'att' '<'attributeTarget+ '>' Identifier OpenBracket classContentSequence CloseBracket;`
+`attributeDeclaration : (AccessSpecifier)? 'att' '<'attributeTarget+ '>' Identifier { classContentSequence }`
 
 `attributeTarget: ('type' | 'variable' | 'function' | 'enum');`
 

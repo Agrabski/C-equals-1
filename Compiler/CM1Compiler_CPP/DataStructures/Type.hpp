@@ -55,6 +55,8 @@ namespace cMCompiler::dataStructures
 			AttributeTarget(Target::Class)
 		{}
 
+		TypeClassifier typeClassifier() const noexcept { return typeClassification_; }
+
 		std::vector<not_null<Function*>> methods()
 		{
 			auto result = std::vector<gsl::not_null<Function*>>();

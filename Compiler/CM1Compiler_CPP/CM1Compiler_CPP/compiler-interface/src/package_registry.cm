@@ -92,6 +92,8 @@ private class packageRegistry
 				return self.getType(t, self._types.get(i).llvmType, module);
 			}
 		}
+		print("llvm type was not found");
+		print(t.qualifiedName());
 	}
 
 	private fn getType(t: typeDescriptor, llvmBaseType: llvmType, module: llvmModule) -> llvmType

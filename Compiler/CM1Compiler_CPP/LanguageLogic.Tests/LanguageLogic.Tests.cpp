@@ -5,6 +5,7 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace cMCompiler::language;
+using namespace cMCompiler::dataStructures;
 
 namespace LanguageLogicTests
 {
@@ -27,6 +28,18 @@ namespace LanguageLogicTests
 			Assert::IsNotNull(compile);
 			Assert::IsNotNull(run);
 
+		}
+
+		TEST_METHOD(DefaultPackageAllFunctionsContainsString_Length)
+		{
+			auto package = getDefaultPackage();
+			auto functions = package->getAllFunctions();
+			auto found = std::find_if(functions.begin(), functions.end(), [](auto f)
+				{
+					return f->name() == "length" && f->parent()->name() == "string" && !f->metadata().hasFlag(FunctionFlags::ExcludeAtRuntime);
+				}
+			);
+			Assert::IsTrue(found != functions.end());
 		}
 	};
 }

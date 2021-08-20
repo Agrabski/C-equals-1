@@ -1,5 +1,7 @@
 [basic concepts](Language/BasicConcepts.md)
 
+[Compilation](Language/Compilation.md)
+
 # Compilation process
 
 Parse code -> Build IR for attributes -> Collect function and type definitions -> Attach attributes -> Build IR for functions and types -> Execute special attribute functions -> Remove reflection and metaprogramming operations -> Save assembly IR -> (optional) convert to LLVM IR and compile to machine code

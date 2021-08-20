@@ -1,4 +1,4 @@
-import {null usize} from {cm1mLang}
+import {null usize bool true false} from {cm1mLang}
 
 public class list<typename T> //: ICollection<T>
 {
@@ -53,6 +53,7 @@ public class list<typename T> //: ICollection<T>
 		}
 		return result;
 	}
+
 }
 
 private class listElement<typename T>
