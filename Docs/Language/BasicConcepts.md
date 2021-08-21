@@ -15,7 +15,7 @@ Some operations, like memory allocation, may be performed differently depending 
 
 ### Class
 
-Classes in C-=-1 are directly analogous to C++. A class may have fields of any type, methods with any accessibility modifiers and constructors. Methods 
+Classes in C-=-1 are directly analogous to C++. A class may have fields of any type, methods with any accessibility modifiers and constructors. Methods may access class instance fields using the `self` keyword.
 
 ### Interface
 

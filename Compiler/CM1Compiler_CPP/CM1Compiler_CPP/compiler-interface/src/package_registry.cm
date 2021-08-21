@@ -1,5 +1,5 @@
 import {compilerEntryPoint usize packageDescriptor string null array} from {cm1mLang}
-import {llvmModule compilationResult llvmType llvmInt32Type llvmCstringType} from {cm1mLang::compiler::backend}
+import {llvmModule compilationResult llvmType llvmInt32Type llvmCstringType llvmVoidType} from {cm1mLang::compiler::backend}
 import {functionDescriptor typeDescriptor packageDescriptor} from {cm1mLang::compiler}
 import {enumerate list print} from {std}
 
@@ -75,6 +75,8 @@ private class packageRegistry
 
 	public fn getLLVMTypeForExisting(t: typeDescriptor) -> llvmType 
 	{
+		if(t.isVoidType())
+			return self.getType(t, llvmInt32Type(self._compilationResult), self.getModuleForFile("void.cm"))
 		let file = t.sourceLocation();
 		let module = self.getModuleForFile(file.filename);
 		let baseType = t.baseType();

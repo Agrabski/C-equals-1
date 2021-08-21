@@ -68,6 +68,20 @@ void appendCasts(not_null<Namespace*> rootNs)
 			);
 }
 
+void setAllFunctionsCompileTimeOnly(not_null<INamedObject*> obj)
+{
+	auto f = dynamic_cast<Function*>(obj.get());
+	if (f != nullptr)
+	{
+		f->metadata().appendFlag(FunctionFlags::ExcludeAtRuntime);
+	}
+	else
+	{
+		for (auto child : obj->children())
+			setAllFunctionsCompileTimeOnly(child);
+	}
+}
+
 void setSourcePointer(not_null<INamedObject*> obj)
 {
 	obj->setSourceLocation(buildPointerToSource("C-=-1_library_internals.cm", 0));
@@ -381,7 +395,8 @@ void completeBuildingFunction(gsl::not_null<Type*> t)
 	);
 	createNativeObjectGetter<Function>(
 		"runtimeExecutable"s, t, { getBool(),0 },
-		[](Function* self) -> runtime_value { return buildBooleanValue(!self->metadata().hasFlag(FunctionFlags::ExcludeAtRuntime)); }
+		[](Function* self) -> runtime_value { 
+			return buildBooleanValue(!self->metadata().hasFlag(FunctionFlags::ExcludeAtRuntime)); }
 	);
 	createNativeObjectGetter<Function>(
 		"compiletimeExecutable"s, t, { getBool(),0 },
@@ -555,6 +570,7 @@ void buildCompilerLibrary(gsl::not_null<Namespace*> rootNamespace)
 		{
 			return dereferenceAs<execution::RuntimeTypeDescriptor>(a["self"].get())->value().type->sourcePointer();
 		});
+	setAllFunctionsCompileTimeOnly(ns);
 
 }
 
@@ -1001,6 +1017,9 @@ gsl::not_null<Function*> cMCompiler::language::getNullFor(cMCompiler::dataStruct
 		{
 			return ReferenceValue::make(nullptr, elementType);
 		});
+	result->setSourceLocation(buildPointerToSource("C-=-1_library_internals.cm", 0));
+
+
 	return result;
 }
 

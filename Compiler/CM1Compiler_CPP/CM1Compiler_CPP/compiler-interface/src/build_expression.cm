@@ -65,7 +65,6 @@ private fn build(instruction: functionCallExpression*, builder: llvmIrBodyBuilde
 	let f = instruction._runtimeFunction;
 	let values = <llvmValue>[];
 	let arguments = instruction._arguments;
-	print(f.name());
 	for(i in enumerate(0, arguments.length()))
 		values.push(build_expression(
 			arguments[i],

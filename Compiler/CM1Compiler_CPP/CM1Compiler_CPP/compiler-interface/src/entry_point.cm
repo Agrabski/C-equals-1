@@ -32,7 +32,10 @@ private fn compilePackage(package: packageDescriptor, registry: packageRegistry*
 		compilePackage(deps[i], registry, cr, processedPackages, functionMap);
 	let types = package.getAllTypes();
 	for(i in enumerate(0, types.length()))
+	{
+		print(types[i].qualifiedName());
 		createType(types[i], package, registry);
+	}
 	let functions = package.getAllFunctions();
 	for(i in enumerate(0, functions.length()))
 		if(functions[i].runtimeExecutable())
@@ -46,7 +49,6 @@ private fn compilePackage(package: packageDescriptor, registry: packageRegistry*
 			{
 				let x = createFunction(functions[i], package, registry, registry.getModuleFor(functions[i]), cr);
 				functionMap.push(functions[i], x);
-				print(functions[i].qualifiedName());
 			}
 		}
 		

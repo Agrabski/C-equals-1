@@ -30,4 +30,10 @@ public fn <function name> (
 
 ```
 
+## `compilationResult` type
 
+The `compilationResult` type allows the user to interact with LLVM compiler backend.
+This object allows the user to  manipulate LLVM data structures and gaining access to built-in types.
+`compilationResult` may also be used to set linker and compiler flags and specifying external linkage.
+
+The goal of a backend-interface package is to populate `compilationResult` with LLVM data structures and to set the appropriate linker flags.

@@ -48,6 +48,7 @@ void cMCompiler::language::createIndexer(gsl::not_null<dataStructures::Function*
 		auto arr = dereferenceAs<dataStructures::execution::ArrayValue>(valueMap["self"].get());
 		return arr->get(index);
 	};
+	function->metadata().appendFlag(FunctionFlags::ExcludeAtRuntime);
 	compileTimeFunctions::FuntionLibrary::instance().addFunctionDefinition(function, f);
 }
 

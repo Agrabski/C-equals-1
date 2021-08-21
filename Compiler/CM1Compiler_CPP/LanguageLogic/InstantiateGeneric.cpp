@@ -25,6 +25,12 @@
 //
 //}
 
+void setSourceLocation(not_null<cMCompiler::dataStructures::INamedObject*> obj)
+{
+	obj->setSourceLocation(cMCompiler::language::buildPointerToSource("C-=-1_library_internals.cm", 0));
+
+}
+
 gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::instantiate(
 	dataStructures::Generic<dataStructures::Type> const& type,
 	std::vector<cMCompiler::dataStructures::TypeReference> const& genericParameters)
@@ -66,6 +72,8 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::instantia
 			->setReturnType({ getUsize(), 0 })
 			->metadata().appendFlag(dataStructures::FunctionFlags::ExcludeAtCompileTime);
 		newType->setInstantiationData({ getArray(), genericParameters });
+		for (auto child : newType->children())
+			setSourceLocation(child);
 		return newType;
 
 	}

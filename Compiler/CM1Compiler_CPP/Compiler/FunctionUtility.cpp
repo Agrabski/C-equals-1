@@ -80,7 +80,7 @@ std::vector<cMCompiler::dataStructures::TypeReference> cMCompiler::compiler::get
 			context,
 			variable->typeSpecifier(),
 			file));
-		return result;
+	return result;
 }
 
 void cMCompiler::compiler::confirmFunction(
@@ -150,7 +150,7 @@ void cMCompiler::compiler::confirmFunction(
 		return;
 	auto name = getName(ctx);
 	auto functions = resolver.resolveOverloadSet(name, context);
-	auto freeDeclaration = std::find_if(functions.begin(), functions.end(), [](auto const f) noexcept {return f->state() == dataStructures::ObjectState::Cretated; });
+	auto freeDeclaration = std::find_if(functions.begin(), functions.end(), [](auto const f) noexcept { return f->state() == dataStructures::ObjectState::Cretated; });
 	if (freeDeclaration == functions.end())
 		std::terminate(); //todo: report error
 	not_null function = *freeDeclaration;
@@ -188,7 +188,7 @@ void cMCompiler::compiler::finalizeFunction(
 	auto parametrs = f->parameters();
 	for (not_null<CMinusEqualsMinus1Revision0Parser::ParameterContext*> variable : ctx->parameterList()->parameter())
 	{
-		auto param = std::find_if(parametrs.begin(), parametrs.end(), [=](const auto p) {return p->name() == variable->identifier()->getText(); });
+		auto param = std::find_if(parametrs.begin(), parametrs.end(), [=](const auto p) { return p->name() == variable->identifier()->getText(); });
 		assert(param != parametrs.end());
 		//todo: attributes
 	}

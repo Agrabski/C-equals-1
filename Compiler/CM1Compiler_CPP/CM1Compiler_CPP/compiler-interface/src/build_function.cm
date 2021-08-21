@@ -7,6 +7,7 @@ import {string null dictionary} from {cm1mLang}
 
 private fn createFunction(f: functionDescriptor, package: packageDescriptor, registry: packageRegistry*, mod: llvmModule, cr: compilationResult) -> llvmFunction
 {
+	print(f.qualifiedName());
 	let attribute = f.get_attribute<_att_ ReplaceWithLLVMIR>();
 
 	if(attribute != null<_att_ ReplaceWithLLVMIR>())
