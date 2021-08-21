@@ -1,4 +1,5 @@
 #pragma once
+#include <gsl/gsl>
 #include <string>
 #include <vector>
 #include "QualifiedName.hpp"
@@ -7,6 +8,7 @@
 
 namespace cMCompiler::dataStructures
 {
+	class PackageDatabase;
 	enum class ObjectState { Cretated, Confirmed, Finalized };
 	class INamedObject
 	{
@@ -15,9 +17,10 @@ namespace cMCompiler::dataStructures
 		INamedObject* parent_;
 		INamedObject(INamedObject&&) = delete;
 		ObjectState state_ = ObjectState::Cretated;
+		gsl::not_null<PackageDatabase*> owningPackage_;
 	protected:
-		INamedObject(std::string name, INamedObject* parent)
-			: name_(name), parent_(parent) {}
+		INamedObject(std::string name, INamedObject* parent, gsl::not_null<PackageDatabase*> package)
+			: name_(name), parent_(parent), owningPackage_(package) {}
 		virtual std::vector<validation::ValidationError> validateContent() const = 0;
 	public:
 		ObjectState state() const noexcept { return state_; }
@@ -39,5 +42,7 @@ namespace cMCompiler::dataStructures
 		{
 			return sourcePointer_->copy();
 		}
+
+		gsl::not_null<PackageDatabase*> package() const noexcept { return owningPackage_; }
 	};
 }

@@ -4,7 +4,7 @@
 using namespace cMCompiler::dataStructures;
 not_null<Variable*> Function::appendVariable(std::string name, TypeReference type)
 {
-	auto tmp = std::make_unique<Variable>(name, type, this);
+	auto tmp = std::make_unique<Variable>(name, type, this, package());
 	auto result = tmp.get();
 	parameters_.push_back(std::move(tmp));
 	return result;
@@ -12,7 +12,7 @@ not_null<Variable*> Function::appendVariable(std::string name, TypeReference typ
 
 not_null<Variable*> cMCompiler::dataStructures::Function::appendLocalVariable(std::string name, TypeReference type)
 {
-	auto tmp = std::make_unique<Variable>(name, type, this);
+	auto tmp = std::make_unique<Variable>(name, type, this, package());
 	auto result = tmp.get();
 	localVariables_.push_back(std::move(tmp));
 	return result;

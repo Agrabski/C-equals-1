@@ -29,6 +29,33 @@ private fn createFunction(f: functionDescriptor, package: packageDescriptor, reg
 	}
 }
 
+private fn getFunction(f: functionDescriptor, registry: packageRegistry*) -> llvmFunction {
+
+	if(registry._functions.hasKey(f))
+		return *registry._functions.get(f);
+
+
+	let attribute = f.get_attribute<_att_ ReplaceWithLLVMIR>();
+
+	if(attribute != null<_att_ ReplaceWithLLVMIR>())
+		return createFunctionFromLLVMIR(f, cr, attribute);
+	else
+	{
+		let returnType = llvmVoidType(cr);
+		if(f.returnType().isVoidType())
+			let x = 1;
+		else
+			returnType = registry.getLLVMTypeForExisting(f.returnType());
+		let func = mod.appendFunction(
+			f.name(),
+			getParameterTypes(f, registry),
+			getParameterNames(f, registry),
+			returnType
+			);
+		return func;
+	}
+}
+
 private fn createFunctionFromLLVMIR(f: functionDescriptor, cr: compilationResult, attribute: _att_ ReplaceWithLLVMIR*) -> llvmFunction
 {
 	let mod = cr.loadModuleFromString(attribute.overridenLLVMIR);

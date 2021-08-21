@@ -30,6 +30,9 @@ public fn <function name> (
 
 ```
 
+- `packages` argument contains a collection of packages to be compiled into llvm-ir. The packages are passed in an unspecified order.
+- `result` argument contains the `compilationResult` associated with the current compilation (see [`compilationResult` type](BackendEntryPoint#compilationresult-type))
+
 ## `compilationResult` type
 
 The `compilationResult` type allows the user to interact with LLVM compiler backend.

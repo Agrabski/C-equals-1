@@ -46,12 +46,12 @@ namespace cMCompiler::dataStructures
 
 		TypeClassifier typeClassification_ = TypeClassifier::None;
 	public:
-		Type(std::string name, Namespace* parent, std::vector<gsl::not_null<Type*>>& implementedInterfaces) :
-			INamedObject(name, (INamedObject*)parent), implementedInterfaces_(implementedInterfaces),
+		Type(std::string name, Namespace* parent, std::vector<gsl::not_null<Type*>>& implementedInterfaces, not_null<PackageDatabase*> p) :
+			INamedObject(name, (INamedObject*)parent, p), implementedInterfaces_(implementedInterfaces),
 			AttributeTarget(Target::Class)
 		{}
-		Type(std::string name, Namespace* parent) :
-			INamedObject(name, (INamedObject*)parent),
+		Type(std::string name, Namespace* parent, not_null<PackageDatabase*> p) :
+			INamedObject(name, (INamedObject*)parent, p),
 			AttributeTarget(Target::Class)
 		{}
 
@@ -81,7 +81,7 @@ namespace cMCompiler::dataStructures
 		template<typename T>
 		T* append(std::string n)
 		{
-			methods_.push_back(std::make_unique<T>(n, this));
+			methods_.push_back(std::make_unique<T>(n, this, package()));
 			return methods_.back().get();
 		}
 
@@ -103,7 +103,7 @@ namespace cMCompiler::dataStructures
 
 		Field* appendField(std::string const& name, TypeReference type)
 		{
-			fields_.push_back(std::make_unique<Field>(name, type, this));
+			fields_.push_back(std::make_unique<Field>(name, type, this, package()));
 			return fields_.back().get();
 		}
 
@@ -123,7 +123,7 @@ namespace cMCompiler::dataStructures
 			NameResolutionContext const& context,
 			std::filesystem::path const& p)
 		{
-			auto tmp = std::make_unique<Generic<T>>(std::move(parameterNames), std::move(parseTree), name, this, context, p);
+			auto tmp = std::make_unique<Generic<T>>(std::move(parameterNames), std::move(parseTree), name, this, context, p, package());
 			not_null const result = tmp.get();
 			genericFunction_.push_back(std::move(tmp));
 			return result;
@@ -137,7 +137,7 @@ namespace cMCompiler::dataStructures
 			NameResolutionContext const& context,
 			std::filesystem::path const& path)
 		{
-			auto tmp = std::make_unique<Generic<T>>(std::move(parameterNames), std::move(customFill), name, this, context, path);
+			auto tmp = std::make_unique<Generic<T>>(std::move(parameterNames), std::move(customFill), name, this, context, path, package());
 			not_null const result = tmp.get();
 			genericFunction_.push_back(std::move(tmp));
 			return result;

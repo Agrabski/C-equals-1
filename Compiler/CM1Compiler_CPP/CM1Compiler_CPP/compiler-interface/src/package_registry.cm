@@ -30,6 +30,7 @@ private class packageRegistry
 {
 	private _data: list<pathPackagePair>;
 	private _types: list<typeMapPair>;
+	public _functions: dictionary<functionDescriptor, llvmFunction>;
 	private _compilationResult: compilationResult;
 
 	public fn construct(cr: compilationResult)
@@ -37,6 +38,7 @@ private class packageRegistry
 		self._data = list<pathPackagePair>();
 		self._types = list<typeMapPair>();
 		self._compilationResult = cr;
+		self._functions = dictionary<functionDescriptor, llvmFunction>();
 	}
 
 	private fn getModuleForFile(path: string) -> llvmModule
@@ -48,8 +50,9 @@ private class packageRegistry
 		let pair = pathPackagePair(path, newModule);
 		self._data.push(pair);
 		return newModule;
-
 	}
+
+
 
 	public fn getModuleFor(f: functionDescriptor) -> llvmModule
 	{
@@ -57,7 +60,7 @@ private class packageRegistry
 		return self.getModuleForFile(file.filename);
 	}
 
-	public fn getLLVMTypeFor(t: typeDescriptor, package: packageDescriptor) -> llvmType
+	public fn getLLVMTypeFor(t: typeDescriptor) -> llvmType
 	{
 		if(t == typeof(usize))
 			return llvmInt32Type(self._compilationResult);
@@ -68,7 +71,7 @@ private class packageRegistry
 		for(i in enumerate(0, self._types.length()))
 			if(self._types.get(i).ctype == t)
 				return self._types.get(i).llvmType;
-		let llvmType = self.translateType(t, module, package);
+		let llvmType = self.translateType(t, module);
 		self._types.push(typeMapPair(t, llvmType));
 		return llvmType;
 	}
@@ -105,14 +108,14 @@ private class packageRegistry
 		return self.getType(t.dereference(), module.getPointer(llvmBaseType), module);
 	}
 
-	private fn translateType(t: typeDescriptor, module: llvmModule, package: packageDescriptor) -> llvmType
+	private fn translateType(t: typeDescriptor, module: llvmModule) -> llvmType
 	{
 		if(t.isBasedOnGeneric())
 		{
 			let instantiationData = t.genericInstantiationInfo();
 			if(instantiationData.generic() == genericTypeof(array))
-				return module.getPointer(self.getLLVMTypeFor(instantiationData.parameters()[0], package));
+				return module.getPointer(self.getLLVMTypeFor(instantiationData.parameters()[0]));
 		}
-		return module.appendStruct(package.name() + t.qualifiedName());
+		return module.appendStruct(t.package().name() + t.qualifiedName());
 	}
 }

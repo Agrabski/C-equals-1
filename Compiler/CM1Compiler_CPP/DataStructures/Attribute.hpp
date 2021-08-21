@@ -29,7 +29,7 @@ namespace cMCompiler::dataStructures
 		std::unique_ptr<Type> describingType_;
 		Target attributeTarget_ = Target::None;
 	public:
-		Attribute(std::string name, Namespace* parent);
+		Attribute(std::string name, Namespace* parent, not_null<PackageDatabase*> p);
 		void addAttributeTarget(Target t) noexcept { attributeTarget_ = attributeTarget_ | t; }
 		bool targetValid(Target t) noexcept { return (attributeTarget_ & t) != Target::None; }
 		std::vector<INamedObject*> children() final;

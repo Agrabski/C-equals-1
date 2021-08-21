@@ -68,13 +68,13 @@ namespace cMCompiler::dataStructures
 
 	public:
 		std::vector<Namespace*> namespaces();
-		Namespace(std::string name, Namespace* parent)
-			: INamedObject(name, parent) {}
+		Namespace(std::string name, Namespace* parent, not_null<PackageDatabase*> p)
+			: INamedObject(name, parent, p) {}
 		std::vector<INamedObject*> children() final;
 		template<typename T>
 		gsl::not_null<T*> append(std::string name)
 		{
-			auto tmp = std::make_unique<T>(name, this);
+			auto tmp = std::make_unique<T>(name, this, package());
 			auto const result = tmp.get();
 			getAppropriate<T>().push_back(std::move(tmp));
 			return result;
@@ -108,7 +108,7 @@ namespace cMCompiler::dataStructures
 			NameResolutionContext const& context,
 			std::filesystem::path const& path)
 		{
-			auto tmp = std::make_unique<Generic<T>>(std::move(parameterNames), std::move(parseTree), name, this, context, path);
+			auto tmp = std::make_unique<Generic<T>>(std::move(parameterNames), std::move(parseTree), name, this, context, path, package());
 			not_null const result = tmp.get();
 			getAppropriate<Generic<T>>().push_back(std::move(tmp));
 			return result;
@@ -121,7 +121,7 @@ namespace cMCompiler::dataStructures
 			NameResolutionContext const& context,
 			std::filesystem::path const& p)
 		{
-			auto tmp = std::make_unique<Generic<T>>(std::move(parameterNames), customFill, name, this, context, p);
+			auto tmp = std::make_unique<Generic<T>>(std::move(parameterNames), customFill, name, this, context, p, package());
 			not_null const result = tmp.get();
 			getAppropriate<Generic<T>>().push_back(std::move(tmp));
 			return result;

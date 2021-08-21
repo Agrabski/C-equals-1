@@ -17,8 +17,8 @@ namespace cMCompiler::dataStructures
 	{
 		std::vector<EnumValue> values_;
 	public:
-		Enum(std::string& name, gsl::not_null<Namespace*> ns) :
-			INamedObject(name, (INamedObject*)ns.get()), AttributeTarget(Target::Enum)
+		Enum(std::string& name, gsl::not_null<Namespace*> ns, gsl::not_null<PackageDatabase*> p) :
+			INamedObject(name, (INamedObject*)ns.get(), p), AttributeTarget(Target::Enum)
 		{}
 	};
 }

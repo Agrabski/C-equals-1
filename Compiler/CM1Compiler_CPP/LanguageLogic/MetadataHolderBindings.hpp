@@ -56,4 +56,18 @@ namespace cMCompiler::language
 				std::filesystem::path("C-=-1_library_internals.cm")
 				);
 	}
+
+	template<dataStructures::execution::wrapped_type T>
+	void appendPackageGetter(not_null<dataStructures::Type*> descriptorType)
+	{
+		createNativeObjectGetter<T>(
+			"package",
+			descriptorType,
+			{ getPackageDescriptor(), 0 },
+			[](auto* p)
+			{
+				return getValueFor(convert(p)->package());
+			}
+		);
+	}
 }

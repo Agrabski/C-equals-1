@@ -9,27 +9,25 @@ import {llvmIrBodyBuilder llvmValue llvmFunction} from {cm1mLang::compiler::back
 import {dictionary print} from {std}
 import {cast null dictionary} from {cm1mLang}
 
-private fn build_instruction(instruction: IInstruction*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*, functionMap: dictionary<functionDescriptor, llvmFunction>*)
+private fn build_instruction(instruction: IInstruction*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*)
 {
 	if(cast<variableDeclarationStatement, IInstruction>(instruction) != null<variableDeclarationStatement>())
 		build(
 			cast<variableDeclarationStatement, IInstruction>(instruction),
 			builder,
 			variables,
-			registry,
-			functionMap
+			registry
 		);
 }
 
-private fn build(instruction: variableDeclarationStatement*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*, functionMap: dictionary<functionDescriptor, llvmFunction>*)
+private fn build(instruction: variableDeclarationStatement*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*)
 {
 	let var = instruction._variable;
 	let value = build_expression(
 		instruction._expression,
 		builder,
 		variables,
-		registry,
-		functionMap
+		registry
 	);
 	let pointer = builder.appendAlloca(
 		registry.getLLVMTypeForExisting(var.type()),

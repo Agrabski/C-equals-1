@@ -1,139 +1,35 @@
-# Documentation for language C-=-1, version 0.0.1
+# Documentation for language C-=-1, version 0.1.X
 
-This language 
+This language has been designed as an experiment in metaprogramming mechanisms in low level programming languages.
+The core principles behind C-=-1 are:
+
+- Make all code executable at compile-time and move as mutch of the computation away from run-time as possible.
+- Make the language as expressive and robust as possible
+  - Support compile-time reflection.
+  - Support self-modyfying code.
+  - Make writing custom code analisys tools as easy as possible.
+
+
+## Language versioning
+
+C-=-1 language version numbering roughly follows [Semantic Versioning](https://semver.org/).
+Language version is expressed as `Major.Minor.Patch` (ex: `1.2.3`), where `Patch` is reserved for reference compiler build number.
+Third party compilers (should one ever be created for whatever reason) should list their language standard compilance as `Major.Minor.X` (ex: `1.2.X`).
+
+## Language
 
 [Basic concepts](Language/BasicConcepts.md)
 
 [Compilation](Language/Compilation.md)
 
-# Compilation process
+[Attributes](Language/Attributes)
 
-Parse code -> Build IR for attributes -> Collect function and type definitions -> Attach attributes -> Build IR for functions and types -> Execute special attribute functions -> Remove reflection and metaprogramming operations -> Save assembly IR -> (optional) convert to LLVM IR and compile to machine code
+## Semantic model
 
-# Intermediate representation
+[Functions](Semantic-Model/Functions)
 
-C-=-1 code is handled by the compiler and distributed as an intermediate representation. During the _Execute special attribute functions_ step, it is exposed to user code as a modifiable data structure.
+[Semantic model libraray](Semantic-Model/Library)
 
-### IVariable
+## Compiler backend
 
-```
-public interface IVariable
-{
- public fn name() -> string;
- public fn type() -> typeDescriptor&;
- public fn attributes() -> IAttributeInstance&[];
-}
-```
-
-## Expressions
-
-### IExpression
-
-```
-public interface IExpression
-{
- public fn pointerToSourceCode() -> pointerToSourceCode;
- public fn parentExpression() -> IStatement&;
- public fn type() -> typeDescriptor&;
-}
-```
-
-## Statements
-
-### IStatement
-
-```
-public interface IStatement
-{
- public fn pointerToSourceCode() -> pointerToSourceCode;
- public fn parentStatement() -> IStatement&;
- public fn function() -> functionDescriptor&;
-}
-```
-
-Base interface for all statements.
-
-### IVariableDeclarationStatement
-
-```
-public interface IVariableDeclarationStatement : IStatement
-{
- public fn variable() -> IVariable;
- public fn initialValue() -> IExpression;
-}
-```
-
-### IIfStatement
-
-```
-public interface IIfStatement : IStatement
-{
- public fn expression() -> IExpression&;
- public fn ifBranch() -> IStatement&[];
- public fn elseBranch() -> IStatement&[];
-}
-```
-
-### IFunctionCall
-
-```
-public interface IFunctionCall : IStatement, IExpression
-{
- public fn parameters() -> IExpression&[];
- public fn function() -> functionDescriptor&;
- public fn isInExpressionContext() -> bool;
- public fn isDynamicDispatch() -> bool
-}
-```
-
-# Metatypes
-
-## enumDescriptor
-
-```
-public class enumDescriptor
-{
- public fn name() -> string;
- public fn values() -> enumValueDescriptor&[];
-}
-```
-
-## enumValueDescriptor
-
-```
-public class enumValueDescriptor
-{
- public name: string;
- public value: usize;
-}
-```
-
-## functionDescriptor
-
-```
-public class functionDescriptor
-{
- public fn name() -> string;
- public fn returnType() -> typeDescriptor&;
- public fn parameters() -> parameterDescriptor[];
-}
-```
-
-## typeDescriptor
-
-```
-public class typeDescriptor
-{
- public fn classifier() -> typeClassifier ;
- public fn name() -> string;
- public fn implementedInterfaces() -> typeDescriptor&[];
- public fn fields() -> fieldDescriptor&[];
- public fn functions() -> functionDescriptor&[]
-}
-```
-
-## typeClassifier
-
-```
-public enum typeClassifier {class, interface};
-```
+[Backend entry point](Compiler-Backend/BackendEntryPoint)

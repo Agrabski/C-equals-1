@@ -1,4 +1,4 @@
-import {null} from {cm1mLang}
+import {null bool true false} from {cm1mLang}
 
 
 public class dictionary<typename Key, typename Value>
@@ -29,6 +29,17 @@ public class dictionary<typename Key, typename Value>
 				return &(element.value);
 		}
 		return null<Value>();
+	}
+
+	public fn hasKey(k: key) -> bool 
+	{
+		for(i in enumerate(0, self._storage.length()))
+		{
+			let element = self._storage.get(i);
+			if(element.key == k)
+				return true();
+		}
+		return false();
 	}
 }
 

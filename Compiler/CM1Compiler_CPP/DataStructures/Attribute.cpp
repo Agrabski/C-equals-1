@@ -3,8 +3,8 @@
 using namespace cMCompiler::dataStructures;
 
 
-cMCompiler::dataStructures::Attribute::Attribute(std::string name, Namespace* parent) :
-	INamedObject(name, (INamedObject*)parent), describingType_(std::make_unique<Type>(name, parent)) {}
+cMCompiler::dataStructures::Attribute::Attribute(std::string name, Namespace* parent, not_null<PackageDatabase*> p) :
+	INamedObject(name, (INamedObject*)parent, p), describingType_(std::make_unique<Type>(name, parent, p)) {}
 
 std::vector<cMCompiler::dataStructures::INamedObject*> cMCompiler::dataStructures::Attribute::children()
 {

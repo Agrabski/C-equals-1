@@ -24,8 +24,8 @@ namespace cMCompiler::dataStructures
 		std::vector<INamedObject*> children() noexcept final { return {}; }
 
 	public:
-		Field(std::string name, TypeReference type, gsl::not_null<Type*> parent)
-			: INamedObject(name, (INamedObject*)parent.get()),
+		Field(std::string name, TypeReference type, gsl::not_null<Type*> parent, gsl::not_null<PackageDatabase*> p)
+			: INamedObject(name, (INamedObject*)parent.get(), p),
 			AttributeTarget(Target::Variable), type_(type) {}
 		TypeReference const& type() const noexcept { return type_; }
 

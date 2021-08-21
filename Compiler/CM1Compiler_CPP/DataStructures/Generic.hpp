@@ -41,9 +41,10 @@ namespace cMCompiler::dataStructures
 			std::string name,
 			not_null<INamedObject*> parent,
 			NameResolutionContext const& context,
-			std::filesystem::path const& path) :
+			std::filesystem::path const& path, 
+			not_null<PackageDatabase*> p) :
 			parameterNames_(std::move(parameterNames)), customFill_(customFill),
-			INamedObject(name, parent), context_(context), filePath_(path)
+			INamedObject(name, parent, p), context_(context), filePath_(path)
 		{}
 
 		Generic(
@@ -52,9 +53,10 @@ namespace cMCompiler::dataStructures
 			std::string name,
 			not_null<INamedObject*> parent,
 			NameResolutionContext const& context,
-			std::filesystem::path const& path) :
+			std::filesystem::path const& path, 
+			not_null<PackageDatabase*> p) :
 			parameterNames_(std::move(parameterNames)), parseTree_(std::move(parseTree)),
-			INamedObject(name, parent), context_(context), filePath_(path)
+			INamedObject(name, parent, p), context_(context), filePath_(path)
 		{ }
 
 		bool isSpecial() const noexcept { return parseTree_ == nullptr; }

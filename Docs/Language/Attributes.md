@@ -22,7 +22,7 @@ Any object metadata manipulation that affects overload resolution must be done w
 Applicable targets: function
 
 ```
-fn onCall(f: functionDescriptor&, call: IFunctionCall&);
+fn onCall(f: functionDescriptor*, call: IFunctionCall*);
 ```
 
 Called whenever a function that the attribute is attached to is invoked in the source code.
@@ -31,7 +31,7 @@ Example:
 ```
 public att<function> noDiscard
 {
- public fn onCall(f: functionDescriptor&, call: IFunctionCall&)
+ public fn onCall(f: functionDescriptor*, call: IFunctionCall*)
  {
   if (!call.isInExpressionContext())
    raiseError(call.pointerToSource(), "Value of function marked no discard is not used", 32540);

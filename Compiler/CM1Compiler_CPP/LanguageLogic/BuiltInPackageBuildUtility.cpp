@@ -68,6 +68,7 @@ void appendCasts(not_null<Namespace*> rootNs)
 			);
 }
 
+
 void setAllFunctionsCompileTimeOnly(not_null<INamedObject*> obj)
 {
 	auto f = dynamic_cast<Function*>(obj.get());
@@ -571,7 +572,8 @@ void buildCompilerLibrary(gsl::not_null<Namespace*> rootNamespace)
 			return dereferenceAs<execution::RuntimeTypeDescriptor>(a["self"].get())->value().type->sourcePointer();
 		});
 	setAllFunctionsCompileTimeOnly(ns);
-
+	appendPackageGetter<TypeReference>(type);
+	appendPackageGetter<Function>(function);
 }
 
 void buildUsize(gsl::not_null<Type*> usize_type)

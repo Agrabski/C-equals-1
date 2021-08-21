@@ -21,7 +21,8 @@ namespace CompilerTests
 
 		gsl::not_null<Function*> compileFunction(const char* const text, std::string const& fName)
 		{
-			static std::unique_ptr<Namespace> ns = std::make_unique<Namespace>("test", nullptr);
+			// todo: awful hack
+			static std::unique_ptr<Namespace> ns = std::make_unique<Namespace>("test", nullptr, (PackageDatabase*)123);
 			auto stream = std::stringstream(text);
 			auto ast = cMCompiler::Parser::ParserAdapter().parseFunction(stream);
 			auto context = NameResolutionContext(cMCompiler::language::getDefaultPackage());

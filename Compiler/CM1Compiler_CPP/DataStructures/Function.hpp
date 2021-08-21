@@ -57,8 +57,8 @@ namespace cMCompiler::dataStructures
 		TypeReference returnType_;
 	public:
 		virtual ~Function() = default;
-		Function(std::string name, INamedObject* parent)
-			: AttributeTarget(Target::Function), INamedObject(name, parent) {}
+		Function(std::string name, INamedObject* parent, gsl::not_null<PackageDatabase*> p)
+			: AttributeTarget(Target::Function), INamedObject(name, parent, p) {}
 		not_null<Variable*> appendVariable(std::string name, TypeReference type);
 		not_null<Variable*> appendLocalVariable(std::string name, TypeReference type);
 		std::vector<not_null<Variable*>> parameters();

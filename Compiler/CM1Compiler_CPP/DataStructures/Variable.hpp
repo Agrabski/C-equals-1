@@ -14,11 +14,7 @@ using gsl::not_null;
 
 namespace cMCompiler::dataStructures
 {
-	namespace ir
-	{
-		class ScopeTermination;
-		class VariableDeclaration;
-	}
+	class INamedObject;
 	class AttributeTarget;
 	class Variable : public AttributeTarget, public INamedObject
 	{
@@ -35,8 +31,8 @@ namespace cMCompiler::dataStructures
 			scopeEnd_ = std::move(value);
 		}
 
-		Variable(std::string name, TypeReference type, not_null<Function*> parent) :
-			AttributeTarget(Target::Variable), INamedObject(name, (INamedObject*)parent.get()), type_(type){}
+		Variable(std::string name, TypeReference type, not_null<Function*> parent, gsl::not_null<PackageDatabase*> p) :
+			AttributeTarget(Target::Variable), INamedObject(name, (INamedObject*)parent.get(), p), type_(type){}
 		TypeReference type() const noexcept;
 		std::vector<validation::ValidationError> validateContent() const final { return {}; }
 		std::vector<INamedObject*> children() final { return {}; };

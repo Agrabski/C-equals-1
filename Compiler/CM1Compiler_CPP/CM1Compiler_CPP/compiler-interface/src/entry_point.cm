@@ -9,10 +9,7 @@ public fn entryPoint(packages: packageDescriptor[], result: compilationResult) {
 	let functionMap = dictionary<functionDescriptor, llvmFunction>();
 	let processedPackages = list<packageDescriptor>();
 	for(i in enumerate(0, packages.length()))
-		compilePackage(packages[i], &registry, result, &processedPackages, &functionMap);
-	for(i in enumerate(0, packages.length()))
-		completePackage(packages[i], &registry, result, &functionMap);
-}
+		compilePackage(packages[i], &registry, result, &processedPackages, &functionMap);}
 
 private fn contains(l: list<packageDescriptor>*, elem: packageDescriptor*) -> bool
 {
@@ -34,7 +31,7 @@ private fn compilePackage(package: packageDescriptor, registry: packageRegistry*
 	for(i in enumerate(0, types.length()))
 	{
 		print(types[i].qualifiedName());
-		createType(types[i], package, registry);
+		createType(types[i], registry);
 	}
 	let functions = package.getAllFunctions();
 	for(i in enumerate(0, functions.length()))
@@ -47,7 +44,7 @@ private fn compilePackage(package: packageDescriptor, registry: packageRegistry*
 			}
 			else
 			{
-				let x = createFunction(functions[i], package, registry, registry.getModuleFor(functions[i]), cr);
+				let x = createFunction(functions[i], registry, registry.getModuleFor(functions[i]), cr);
 				functionMap.push(functions[i], x);
 			}
 		}
@@ -65,19 +62,19 @@ private fn completePackage(package: packageDescriptor, registry: packageRegistry
 		{
 			if(functions[i].isAbstract())
 				return;
-			buildFunction(functions[i], *functionMap.get(functions[i]), package, registry, registry.getModuleFor(functions[i]), functionMap);
+			buildFunction(functions[i], *functionMap.get(functions[i]), registry, registry.getModuleFor(functions[i]), functionMap);
 		}
 
 }
 
-private fn createType(t: typeDescriptor, package: packageDescriptor, registry: packageRegistry*)
+private fn createType(t: typeDescriptor, registry: packageRegistry*)
 {
 	if(t.excludedAtRuntime())
 		return;
-	let lt = registry.getLLVMTypeFor(t, package);
+	let lt = registry.getLLVMTypeFor(t);
 }
 
-private fn completeType(t: typeDescriptor, package: packageDescriptor, registry: packageRegistry*, cr: compilationResult)
+private fn completeType(t: typeDescriptor, registry: packageRegistry*, cr: compilationResult)
 {
 	if(t.excludedAtRuntime())
 		return;
@@ -90,12 +87,12 @@ private fn completeType(t: typeDescriptor, package: packageDescriptor, registry:
 	if(t != typeof(usize) && (t != typeof(string)) && (t.referenceCount() == 0))
 	{
 		let fields = t.fields();
-		let lt = registry.getLLVMTypeFor(t, package);
+		let lt = registry.getLLVMTypeFor(t);
 		let types = <llvmType>[];
 		for(i in enumerate(0, fields.length()))
 		{
 			let field = fields[i];
-			types.push(registry.getLLVMTypeFor(field.type(), package));
+			types.push(registry.getLLVMTypeFor(field.type()));
 		}
 		lt.setFields(types);
 		let cons = t.methods();
@@ -105,7 +102,7 @@ private fn completeType(t: typeDescriptor, package: packageDescriptor, registry:
 				if(cons[i].isAbstract())
 					return;
 				let mod = registry.getModuleFor(cons[i]);
-				createFunction(cons[i], package, registry, mod, cr);
+				createFunction(cons[i], registry, mod, cr);
 			}
 	}
 }
