@@ -1,57 +1,48 @@
 import {functionDescriptor packageDescriptor typeDescriptor} from {cm1mLang::compiler}
-import {llvmFunction llvmModule llvmType llvmVoidType compilationResult llvmValue} from {cm1mLang::compiler::backend}
+import {llvmFunction llvmModule llvmType compilationResult llvmValue} from {cm1mLang::compiler::backend}
 import {enumerate print dictionary} from {std}
 import {ReplaceWithLLVMIR} from {std::compiler}
 import {variableDescriptor} from {cm1mLang::compiler::ir}
-import {string null dictionary} from {cm1mLang}
+import {string null dictionary bool} from {cm1mLang}
 
-private fn createFunction(f: functionDescriptor, package: packageDescriptor, registry: packageRegistry*, mod: llvmModule, cr: compilationResult) -> llvmFunction
+private fn getFunction(f: functionDescriptor, registry: packageRegistry*) -> llvmFunction
 {
-	print(f.qualifiedName());
-	let attribute = f.get_attribute<_att_ ReplaceWithLLVMIR>();
-
-	if(attribute != null<_att_ ReplaceWithLLVMIR>())
-		return createFunctionFromLLVMIR(f, cr, attribute);
-	else
-	{
-		let returnType = llvmVoidType(cr);
-		if(f.returnType().isVoidType())
-			let x = 1;
-		else
-			returnType = registry.getLLVMTypeForExisting(f.returnType());
-		let func = mod.appendFunction(
-			f.name(),
-			getParameterTypes(f, registry),
-			getParameterNames(f, registry),
-			returnType
-			);
-		return func;
-	}
-}
-
-private fn getFunction(f: functionDescriptor, registry: packageRegistry*) -> llvmFunction {
 
 	if(registry._functions.hasKey(f))
 		return *registry._functions.get(f);
-
+	print(f.qualifiedName());
 
 	let attribute = f.get_attribute<_att_ ReplaceWithLLVMIR>();
 
 	if(attribute != null<_att_ ReplaceWithLLVMIR>())
-		return createFunctionFromLLVMIR(f, cr, attribute);
+		return createFunctionFromLLVMIR(f, registry._compilationResult, attribute);
 	else
 	{
-		let returnType = llvmVoidType(cr);
-		if(f.returnType().isVoidType())
-			let x = 1;
-		else
-			returnType = registry.getLLVMTypeForExisting(f.returnType());
+		
+		if(f.qualifiedName() == "::string::length")
+			return getStringLength(f, registry);
+		if(f.name() == "length") //todo: this is about arrays
+			return getArrayLength(f, registry);
+		if(f.qualifiedName() == "::true")
+			return getTrue(f, registry);
+		if(f.qualifiedName() == "::false")
+			return getFalse(f, registry);
+		if(f.qualifiedName() == "::operator_==")
+			return getSimpleComparisonOperator(f, registry);
+		if(f.qualifiedName() == "::null")
+			return getNull(f, registry);
+		if(f.qualifiedName() == "::null")
+			return getCast(f, registry);
+		let mod = registry.getModuleFor(f);
 		let func = mod.appendFunction(
 			f.name(),
 			getParameterTypes(f, registry),
 			getParameterNames(f, registry),
-			returnType
+			getType(f.returnType(), registry)
 			);
+		registry._functions.push(f, func);
+		buildFunction(f, func, registry, mod);
+		
 		return func;
 	}
 }
@@ -61,7 +52,7 @@ private fn createFunctionFromLLVMIR(f: functionDescriptor, cr: compilationResult
 	let mod = cr.loadModuleFromString(attribute.overridenLLVMIR);
 }
 
-private fn buildFunction(f: functionDescriptor, llvmF: llvmFunction, package: packageDescriptor, registry: packageRegistry*, mod: llvmModule, functionMap: dictionary<functionDescriptor, llvmFunction>*)
+private fn buildFunction(f: functionDescriptor, llvmF: llvmFunction, registry: packageRegistry*, mod: llvmModule)
 {
 	let variables = dictionary<variableDescriptor, llvmValue>();
 	let params = f.parameters();
@@ -70,7 +61,7 @@ private fn buildFunction(f: functionDescriptor, llvmF: llvmFunction, package: pa
 	let builder = llvmF.getBuilder();
 	let code = f.code();
 	for(i in enumerate(0, code.length()))
-		build_instruction(code[i], &builder, &variables, registry, functionMap);
+		build_instruction(code[i], &builder, &variables, registry);
 	
 }
 
@@ -79,7 +70,7 @@ private fn getParameterTypes(f: functionDescriptor, registry: packageRegistry*) 
 	let result = <llvmType>[];
 	let parameters = f.parameters();
 	for(i in enumerate(0, parameters.length()))
-		result.push(registry.getLLVMTypeForExisting(parameters[i].type()));
+		result.push(getType(parameters[i].type(), registry));
 	return result;
 }
 

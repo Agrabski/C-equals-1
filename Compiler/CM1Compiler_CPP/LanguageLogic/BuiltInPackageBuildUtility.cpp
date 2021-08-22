@@ -60,6 +60,7 @@ void appendCasts(not_null<Namespace*> rootNs)
 					return ReferenceValue::make(nullptr, returnType);
 				}
 			);
+			result->setSourceLocation(buildPointerToSource("C-=-1_library_internals.cm", 0));
 
 			return result;
 		},
@@ -716,6 +717,8 @@ void buildString(gsl::not_null<Type*> string)
 			return buildStringValue(a1 + a2);
 		}
 	);
+	plus->metadata().appendFlag(FunctionFlags::ExcludeAtRuntime);
+
 
 	auto length = string->append<Function>("length");
 	length->setReturnType({ getUsize(), 0 });
@@ -839,6 +842,7 @@ void buildPackage()
 	auto readFile = result->rootNamespace()->append<Function>("read_all_file");
 	readFile->appendVariable("path", { string, 0 });
 	readFile->setReturnType({ string, 0 });
+	readFile->metadata().appendFlag(FunctionFlags::ExcludeAtRuntime);
 	functionLibrary.addFunctionDefinition(readFile, compileTimeFunctions::readAllFile);
 
 	cMCompiler::language::createOperator(
@@ -1043,5 +1047,7 @@ gsl::not_null<Function*> cMCompiler::language::getHeapAllocateFor(cMCompiler::da
 		{
 			return heapAllocate(objectType, false);
 		});
+	result->metadata().appendFlag(FunctionFlags::ExcludeAtRuntime);
+	result->setSourceLocation(buildPointerToSource("C-=-1_library_internals.cm", 0));
 	return result;
 }

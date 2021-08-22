@@ -1,15 +1,14 @@
 import {compilerEntryPoint packageDescriptor typeDescriptor functionDescriptor} from {cm1mLang::compiler}
-import {usize string bool true false} from {cm1mLang}
-import {compilationResult llvmType llvmFunction} from {cm1mLang::compiler::backend}
+import {usize string bool true false null} from {cm1mLang}
+import {compilationResult llvmType llvmFunction llvmVoidType} from {cm1mLang::compiler::backend}
 import {enumerate print dictionary list} from {std}
 
 [compilerEntryPoint()]
 public fn entryPoint(packages: packageDescriptor[], result: compilationResult) {
 	let registry = packageRegistry(result);
-	let functionMap = dictionary<functionDescriptor, llvmFunction>();
 	let processedPackages = list<packageDescriptor>();
 	for(i in enumerate(0, packages.length()))
-		compilePackage(packages[i], &registry, result, &processedPackages, &functionMap);}
+		compilePackage(packages[i], &registry, result, &processedPackages);}
 
 private fn contains(l: list<packageDescriptor>*, elem: packageDescriptor*) -> bool
 {
@@ -19,20 +18,14 @@ private fn contains(l: list<packageDescriptor>*, elem: packageDescriptor*) -> bo
 	return false();
 }
 
-private fn compilePackage(package: packageDescriptor, registry: packageRegistry*, cr: compilationResult, processedPackages: list<packageDescriptor>*, functionMap: dictionary<functionDescriptor, llvmFunction>*)
+private fn compilePackage(package: packageDescriptor, registry: packageRegistry*, cr: compilationResult, processedPackages: list<packageDescriptor>*)
 {
 	if(contains(processedPackages, &package))
 		return;
 	print(package.name());
 	let deps = package.dependencies();
 	for(i in enumerate(0, deps.length()))
-		compilePackage(deps[i], registry, cr, processedPackages, functionMap);
-	let types = package.getAllTypes();
-	for(i in enumerate(0, types.length()))
-	{
-		print(types[i].qualifiedName());
-		createType(types[i], registry);
-	}
+		compilePackage(deps[i], registry, cr, processedPackages);
 	let functions = package.getAllFunctions();
 	for(i in enumerate(0, functions.length()))
 		if(functions[i].runtimeExecutable())
@@ -44,40 +37,30 @@ private fn compilePackage(package: packageDescriptor, registry: packageRegistry*
 			}
 			else
 			{
-				let x = createFunction(functions[i], registry, registry.getModuleFor(functions[i]), cr);
-				functionMap.push(functions[i], x);
+				getFunction(functions[i], registry);
 			}
 		}
 		
 }
 
-private fn completePackage(package: packageDescriptor, registry: packageRegistry*, cr: compilationResult, functionMap: dictionary<functionDescriptor, llvmFunction>*) 
-{
-	let types = package.getAllTypes();
-	for(i in enumerate(0, types.length()))
-		completeType(types[i], package, registry, cr);
-	let functions = package.getAllFunctions();
-	for(i in enumerate(0, functions.length()))
-		if(functions[i].runtimeExecutable())
-		{
-			if(functions[i].isAbstract())
-				return;
-			buildFunction(functions[i], *functionMap.get(functions[i]), registry, registry.getModuleFor(functions[i]), functionMap);
-		}
 
-}
-
-private fn createType(t: typeDescriptor, registry: packageRegistry*)
+private fn getType(t: typeDescriptor, registry: packageRegistry*) -> llvmType
 {
+	if(t.isVoidType())
+		return llvmVoidType(registry._compilationResult);
+	let found = registry.findExistingType(t);
+	if(found != null<llvmType>())
+		return *found;
+	print(t.qualifiedName());
 	if(t.excludedAtRuntime())
 		return;
 	let lt = registry.getLLVMTypeFor(t);
+	completeType(t, lt, registry);
+	return lt;
 }
 
-private fn completeType(t: typeDescriptor, registry: packageRegistry*, cr: compilationResult)
+private fn completeType(t: typeDescriptor, lType: llvmType, registry: packageRegistry*)
 {
-	if(t.excludedAtRuntime())
-		return;
 	if(t.isBasedOnGeneric())
 	{
 		let instantiationData = t.genericInstantiationInfo();
@@ -87,22 +70,12 @@ private fn completeType(t: typeDescriptor, registry: packageRegistry*, cr: compi
 	if(t != typeof(usize) && (t != typeof(string)) && (t.referenceCount() == 0))
 	{
 		let fields = t.fields();
-		let lt = registry.getLLVMTypeFor(t);
 		let types = <llvmType>[];
 		for(i in enumerate(0, fields.length()))
 		{
 			let field = fields[i];
 			types.push(registry.getLLVMTypeFor(field.type()));
 		}
-		lt.setFields(types);
-		let cons = t.methods();
-		for(i in enumerate(0, cons.length()))
-			if(cons[i].runtimeExecutable())
-			{
-				if(cons[i].isAbstract())
-					return;
-				let mod = registry.getModuleFor(cons[i]);
-				createFunction(cons[i], registry, mod, cr);
-			}
+		lType.setFields(types);
 	}
 }

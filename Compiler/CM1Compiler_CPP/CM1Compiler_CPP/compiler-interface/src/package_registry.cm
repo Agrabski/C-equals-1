@@ -1,7 +1,7 @@
-import {compilerEntryPoint usize packageDescriptor string null array} from {cm1mLang}
-import {llvmModule compilationResult llvmType llvmInt32Type llvmCstringType llvmVoidType} from {cm1mLang::compiler::backend}
+import {compilerEntryPoint usize bool packageDescriptor string null array} from {cm1mLang}
+import {llvmModule compilationResult llvmType llvmInt32Type llvmCstringType llvmFunction llvmBoolType} from {cm1mLang::compiler::backend}
 import {functionDescriptor typeDescriptor packageDescriptor} from {cm1mLang::compiler}
-import {enumerate list print} from {std}
+import {enumerate list print dictionary} from {std}
 
 private struct pathPackagePair
 {
@@ -52,7 +52,14 @@ private class packageRegistry
 		return newModule;
 	}
 
+	public fn findExistingType(t: typeDescriptor) -> llvmType*
+	{
+		for(i in enumerate(0, self._types.length()))
+			if(self._types.get(i).ctype == t)
+				return &(self._types.get(i).llvmType);
+		return null<llvmType>();
 
+	}
 
 	public fn getModuleFor(f: functionDescriptor) -> llvmModule
 	{
@@ -66,46 +73,20 @@ private class packageRegistry
 			return llvmInt32Type(self._compilationResult);
 		if(t == typeof(string))
 			return llvmCstringType(self._compilationResult);
+		if(t == typeof(bool))
+			return llvmBoolType(self._compilationResult)
 		let file = t.sourceLocation();
 		let module = self.getModuleForFile(file.filename);
 		for(i in enumerate(0, self._types.length()))
 			if(self._types.get(i).ctype == t)
 				return self._types.get(i).llvmType;
+
+		if(t.referenceCount() > 0)
+			return module.getPointer(self.getLLVMTypeFor(t.dereference()));
+		
 		let llvmType = self.translateType(t, module);
 		self._types.push(typeMapPair(t, llvmType));
 		return llvmType;
-	}
-
-	public fn getLLVMTypeForExisting(t: typeDescriptor) -> llvmType 
-	{
-		if(t.isVoidType())
-			return self.getType(t, llvmInt32Type(self._compilationResult), self.getModuleForFile("void.cm"))
-		let file = t.sourceLocation();
-		let module = self.getModuleForFile(file.filename);
-		let baseType = t.baseType();
-		if(baseType == typeof(usize))
-			return llvmInt32Type(self._compilationResult);
-		if(baseType == typeof(string))
-			return llvmCstringType(self._compilationResult);
-
-		let file = t.sourceLocation();
-		let module = self.getModuleForFile(file.filename);
-		for(i in enumerate(0, self._types.length()))
-		{
-			if(self._types.get(i).ctype == baseType)
-			{
-				return self.getType(t, self._types.get(i).llvmType, module);
-			}
-		}
-		print("llvm type was not found");
-		print(t.qualifiedName());
-	}
-
-	private fn getType(t: typeDescriptor, llvmBaseType: llvmType, module: llvmModule) -> llvmType
-	{
-		if(t.referenceCount() == 0)
-			return llvmBaseType;
-		return self.getType(t.dereference(), module.getPointer(llvmBaseType), module);
 	}
 
 	private fn translateType(t: typeDescriptor, module: llvmModule) -> llvmType
@@ -114,7 +95,12 @@ private class packageRegistry
 		{
 			let instantiationData = t.genericInstantiationInfo();
 			if(instantiationData.generic() == genericTypeof(array))
-				return module.getPointer(self.getLLVMTypeFor(instantiationData.parameters()[0]));
+			{
+				let elementType = self.getLLVMTypeFor(instantiationData.parameters()[0]);
+				let result = module.appendStruct(t.package().name() + t.qualifiedName());
+				result.setFields(<llvmType>[module.getPointer(elementType), llvmInt32Type(self._compilationResult)]);
+				return result;
+			}
 		}
 		return module.appendStruct(t.package().name() + t.qualifiedName());
 	}

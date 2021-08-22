@@ -67,8 +67,10 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::instantia
 				return buildIntegerValue(getUsize(), self->size());
 			}
 		)->setReturnType({ getUsize(), 0 });
-		newType
-			->append<dataStructures::Function>("length")
+		auto length = newType
+			->append<dataStructures::Function>("length");
+		length->appendVariable("self", { newType, 1 });
+		length
 			->setReturnType({ getUsize(), 0 })
 			->metadata().appendFlag(dataStructures::FunctionFlags::ExcludeAtCompileTime);
 		newType->setInstantiationData({ getArray(), genericParameters });

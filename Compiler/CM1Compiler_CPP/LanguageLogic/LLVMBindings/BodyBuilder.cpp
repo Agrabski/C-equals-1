@@ -110,6 +110,74 @@ void appendAssign(
 
 }
 
+void appendLoad(
+	gsl::not_null<Type*> builder,
+	gsl::not_null<Namespace*> backendns,
+	gsl::not_null<Type*> llvmValue
+)
+{
+	auto f = createCustomFunction(
+		builder->append<Function>("appendLoad"),
+		builder,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<GenericRuntimeWrapper<llvm::IRBuilder<>>>(a["self"].get())->value();
+			auto pointer = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["pointer"].get())->value();
+
+			return getValueFor(self->CreateLoad(pointer));
+		}
+	)->setReturnType({ llvmValue, 0 });
+	f->appendVariable("pointer", { llvmValue, 0 });
+
+}
+
+void appendCompare(
+	gsl::not_null<Type*> builder,
+	gsl::not_null<Namespace*> backendns,
+	gsl::not_null<Type*> llvmValue
+)
+{
+	auto f = createCustomFunction(
+		builder->append<Function>("appendCmpEqual"),
+		builder,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<GenericRuntimeWrapper<llvm::IRBuilder<>>>(a["self"].get())->value();
+			auto left = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["left"].get())->value();
+			auto right = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["right"].get())->value();
+
+			return getValueFor(self->CreateCmp(llvm::CmpInst::Predicate::ICMP_EQ, left, right));
+		}
+	)->setReturnType({ llvmValue, 0 });
+	f->appendVariable("left", { llvmValue, 0 });
+	f->appendVariable("right", { llvmValue, 0 });
+
+}
+
+void appendBitcast(
+	gsl::not_null<Type*> builder,
+	gsl::not_null<Namespace*> backendns,
+	gsl::not_null<Type*> llvmValue,
+	gsl::not_null<Type*> llvmType
+)
+{
+	auto f = createCustomFunction(
+		builder->append<Function>("appendBitcast"),
+		builder,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<GenericRuntimeWrapper<llvm::IRBuilder<>>>(a["self"].get())->value();
+			auto value = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["arg"].get())->value();
+			auto type = dereferenceAs<GenericRuntimeWrapper<llvm::Type>>(a["type"].get())->value();
+
+			return getValueFor(self->CreateBitCast(value, type));
+		}
+	)->setReturnType({ llvmValue, 0 });
+	f->appendVariable("arg", { llvmValue, 0 });
+	f->appendVariable("type", { llvmType, 0 });
+
+}
+
 void appendGetFieldValue(
 	gsl::not_null<Type*> builder,
 	gsl::not_null<Namespace*> backendns,
@@ -133,7 +201,7 @@ void appendGetFieldValue(
 				llvm::ConstantInt::get(llvm::IntegerType::getInt32Ty(self->getContext()), memberIndex)
 			};
 
-			auto result = self->CreateGEP(type, pointer, indexList);
+			auto result = self->CreateGEP(pointer, indexList);
 			return getValueFor(result);
 		}
 	);
@@ -168,6 +236,29 @@ void appendAddressOf(
 
 }
 
+
+void appendNullConstant(
+	gsl::not_null<Type*> builder,
+	gsl::not_null<Namespace*> backendns,
+	gsl::not_null<Type*> llvmValue,
+	gsl::not_null<Type*> llvmType
+)
+{
+	auto f = createCustomFunction(
+		builder->append<Function>("appendNullPointer"),
+		builder,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<GenericRuntimeWrapper<llvm::IRBuilder<>>>(a["self"].get())->value();
+			auto type = dereferenceAs<GenericRuntimeWrapper<llvm::Type>>(a["type"].get())->value();
+
+			return getValueFor(llvm::ConstantPointerNull::get(llvm::cast<llvm::PointerType>(type)));
+		}
+	);
+	f->appendVariable("type", { llvmType, 0 });
+
+}
+
 void appendLiteral(
 	gsl::not_null<Type*> builder,
 	gsl::not_null<Namespace*> backendns,
@@ -185,7 +276,7 @@ void appendLiteral(
 			return getValueFor(llvm::ConstantInt::get(type, value));
 		}
 	);
-	f->appendVariable("value", { nullptr, 1 });
+	f->appendVariable("value", { getUsize(), 0 });
 	f->appendVariable("type", { llvmType, 0 });
 
 }
@@ -236,6 +327,10 @@ gsl::not_null<Type*> cMCompiler::language::buildBodyBuilder(
 	appendFunctionCall(builder, backendns, llvmValue, llvmType, llvmFunction);
 	appendAddressOf(builder, backendns, llvmValue, llvmType);
 	appendLiteral(builder, backendns, llvmValue, llvmType);
+	appendLoad(builder, backendns, llvmValue);
+	appendCompare(builder, backendns, llvmValue);
+	appendNullConstant(builder, backendns, llvmValue, llvmType);
+	appendBitcast(builder, backendns, llvmValue, llvmType);
 
 	return builder;
 }

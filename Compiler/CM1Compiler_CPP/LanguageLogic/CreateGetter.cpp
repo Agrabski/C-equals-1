@@ -76,6 +76,7 @@ void cMCompiler::language::createOperator(
 		auto arg2 = &valueMap["arg2"];
 		return body(*arg1, *arg2);
 	};
+	f->metadata().appendFlag(FunctionFlags::ExcludeAtRuntime);
 	compileTimeFunctions::FuntionLibrary::instance().addFunctionDefinition(f, function);
 
 }

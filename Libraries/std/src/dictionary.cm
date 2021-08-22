@@ -31,7 +31,7 @@ public class dictionary<typename Key, typename Value>
 		return null<Value>();
 	}
 
-	public fn hasKey(k: key) -> bool 
+	public fn hasKey(k: Key) -> bool 
 	{
 		for(i in enumerate(0, self._storage.length()))
 		{

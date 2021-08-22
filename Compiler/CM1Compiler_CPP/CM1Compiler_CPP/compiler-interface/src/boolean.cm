@@ -1,0 +1,37 @@
+import {functionDescriptor packageDescriptor typeDescriptor} from {cm1mLang::compiler}
+import {llvmFunction llvmModule llvmType compilationResult llvmValue} from {cm1mLang::compiler::backend}
+import {enumerate print dictionary} from {std}
+import {ReplaceWithLLVMIR} from {std::compiler}
+import {variableDescriptor} from {cm1mLang::compiler::ir}
+import {string null dictionary usize bool} from {cm1mLang}
+
+private fn getTrue(f: functionDescriptor, registry: packageRegistry*) -> llvmFunction
+{
+	let mod = registry.getModuleFor(f);
+	let func = mod.appendFunction(
+			f.name(),
+			getParameterTypes(f, registry),
+			getParameterNames(f, registry),
+			getType(f.returnType(), registry)
+			);
+	let builder = func.getBuilder();
+
+	builder.appendRet(builder.appendIntegerLiteral(1, registry.getLLVMTypeFor(typeof(bool))));
+	return func;
+}
+
+
+private fn getFalse(f: functionDescriptor, registry: packageRegistry*) -> llvmFunction
+{
+	let mod = registry.getModuleFor(f);
+	let func = mod.appendFunction(
+			f.name(),
+			getParameterTypes(f, registry),
+			getParameterNames(f, registry),
+			getType(f.returnType(), registry)
+			);
+	let builder = func.getBuilder();
+
+	builder.appendRet(builder.appendIntegerLiteral(0, registry.getLLVMTypeFor(typeof(bool))));
+	return func;
+}

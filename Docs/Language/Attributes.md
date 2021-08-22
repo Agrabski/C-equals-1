@@ -34,7 +34,7 @@ public att<function> noDiscard
  public fn onCall(f: functionDescriptor*, call: IFunctionCall*)
  {
   if (!call.isInExpressionContext())
-   raiseError(call.pointerToSource(), "Value of function marked no discard is not used", 32540);
+    raiseError(call.pointerToSource(), "Value of function marked no discard is not used", 32540);
  }
 }
 
@@ -44,10 +44,10 @@ fn someNoDiscardFunction -> usize{}
 
 public fn main()
 {
- someFunction(); // ok
- let x = someFunction(); // ok
- someNoDiscardFunction(); // error! message: 'Value of function marked no discard is not used" error code: 32540
- let y = someNoDiscardFunction(); // ok
- let z = 1 + someNoDiscardFunction(); // ok
+  someFunction(); // ok
+  let x = someFunction(); // ok
+  someNoDiscardFunction(); // error! message: 'Value of function marked no discard is not used" error code: 32540
+  let y = someNoDiscardFunction(); // ok
+  let z = 1 + someNoDiscardFunction(); // ok
 }
 ```

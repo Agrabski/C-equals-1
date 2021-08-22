@@ -1,5 +1,8 @@
 #include "Value.hpp"
+#include "Type.hpp"
 #include "../../DataStructures/execution/GenericRuntimeWrapper.hpp"
+#include "../CreateGetter.hpp"
+#include "../RuntimeTypesConversionUtility.hpp"
 
 using namespace cMCompiler::language;
 using namespace cMCompiler::dataStructures;
@@ -21,6 +24,15 @@ gsl::not_null<Type*> cMCompiler::language::buildValue(gsl::not_null<dataStructur
 {
 	assert(value == nullptr);
 	value = backendns->append<Type>("llvmValue");
+	createCustomFunction(
+		value->append<Function>("type"),
+		value,
+		[](auto&& a, auto)
+		{
+			auto self = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["self"].get())->value();
+			return getValueFor(self->getType());
+		}
+	)->setReturnType({ llvmType, 0 });
 	return value;
 }
 

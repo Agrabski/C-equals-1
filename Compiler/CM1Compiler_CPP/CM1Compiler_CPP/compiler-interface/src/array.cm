@@ -1,0 +1,22 @@
+import {functionDescriptor packageDescriptor typeDescriptor} from {cm1mLang::compiler}
+import {llvmFunction llvmModule llvmType compilationResult llvmValue} from {cm1mLang::compiler::backend}
+import {enumerate print dictionary} from {std}
+import {ReplaceWithLLVMIR} from {std::compiler}
+import {variableDescriptor} from {cm1mLang::compiler::ir}
+import {string null dictionary usize} from {cm1mLang}
+
+private fn getArrayLength(f: functionDescriptor, registry: packageRegistry*) -> llvmFunction
+{
+	let mod = registry.getModuleFor(f);
+	let func = mod.appendFunction(
+			f.name(),
+			getParameterTypes(f, registry),
+			getParameterNames(f, registry),
+			getType(f.returnType(), registry)
+			);
+	let builder = func.getBuilder();
+	let s = func.getParameter(0);
+	let pointer = builder.apendGetElementPointer(s, 0, 1, getType(f.returnType(), registry));
+	builder.appendRet(builder.appendLoad(pointer));
+	return func;
+}

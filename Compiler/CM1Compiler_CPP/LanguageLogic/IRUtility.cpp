@@ -284,7 +284,7 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildBina
 		{
 			auto fr = dereferenceAs<RuntimeFunctionDescriptor>(utilities::pointer_cast<dataStructures::execution::IRuntimeValue>(dereferenceAs<dataStructures::execution::ObjectValue>(a["self"].get())->getMemberValue("_runtimeFunction")).get());
 			auto fc = dereferenceAs<RuntimeFunctionDescriptor>(utilities::pointer_cast<dataStructures::execution::IRuntimeValue>(dereferenceAs<dataStructures::execution::ObjectValue>(a["self"].get())->getMemberValue("_compiletimeFunction")).get());
-			if (fr != nullptr)
+			if (fr != nullptr && fr->value() != nullptr)
 				return getValueFor(fr->value()->returnType());
 			else
 				return getValueFor(fc->value()->returnType());
