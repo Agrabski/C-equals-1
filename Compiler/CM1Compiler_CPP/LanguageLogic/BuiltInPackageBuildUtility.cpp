@@ -79,6 +79,9 @@ void setAllFunctionsCompileTimeOnly(not_null<INamedObject*> obj)
 	}
 	else
 	{
+		auto t = dynamic_cast<Type*>(obj.get());
+		if (t != nullptr)
+			t->metadata().appendFlag(TypeFlags::ExcludeAtRuntime);
 		for (auto child : obj->children())
 			setAllFunctionsCompileTimeOnly(child);
 	}

@@ -4,7 +4,10 @@ using namespace cMCompiler::dataStructures;
 
 
 cMCompiler::dataStructures::Attribute::Attribute(std::string name, Namespace* parent, not_null<PackageDatabase*> p) :
-	INamedObject(name, (INamedObject*)parent, p), describingType_(std::make_unique<Type>(name, parent, p)) {}
+	INamedObject(name, (INamedObject*)parent, p), describingType_(std::make_unique<Type>(name, parent, p)) 
+{
+	describingType_->metadata().appendFlag(TypeFlags::ExcludeAtRuntime);
+}
 
 std::vector<cMCompiler::dataStructures::INamedObject*> cMCompiler::dataStructures::Attribute::children()
 {

@@ -28,21 +28,36 @@ private fn compilePackage(package: packageDescriptor, registry: packageRegistry*
 		compilePackage(deps[i], registry, cr, processedPackages);
 	let functions = package.getAllFunctions();
 	for(i in enumerate(0, functions.length()))
-		if(functions[i].runtimeExecutable())
+	{
+		let func = functions[i];
+		if(func.runtimeExecutable())
 		{
-			if(functions[i].isAbstract())
+			if(ignore(func))
 			{
-				let name = functions[i].name();
+				let name = func.name();
 				print("function " + name + " was ignored");
 			}
 			else
 			{
-				getFunction(functions[i], registry);
+				getFunction(func, registry);
 			}
 		}
-		
+	}
 }
 
+private fn ignore(func: functionDescriptor) -> bool
+{
+
+	let params = func.parameters();
+	for(i in enumerate(0, params.length()))
+		if(params[i].type().excludedAtRuntime())
+			return false();
+	if(func.returnType().isVoidType())
+		return true();
+	if(func.isAbstract() || (func.returnType().excludedAtRuntime()))
+		return false();
+	return true();
+}
 
 private fn getType(t: typeDescriptor, registry: packageRegistry*) -> llvmType
 {
