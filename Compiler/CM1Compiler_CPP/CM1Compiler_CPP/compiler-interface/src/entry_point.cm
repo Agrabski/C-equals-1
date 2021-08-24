@@ -51,12 +51,12 @@ private fn ignore(func: functionDescriptor) -> bool
 	let params = func.parameters();
 	for(i in enumerate(0, params.length()))
 		if(params[i].type().excludedAtRuntime())
-			return false();
+			return true();
 	if(func.returnType().isVoidType())
-		return true();
-	if(func.isAbstract() || (func.returnType().excludedAtRuntime()))
 		return false();
-	return true();
+	if(func.isAbstract() || (func.returnType().excludedAtRuntime()))
+		return true();
+	return false();
 }
 
 private fn getType(t: typeDescriptor, registry: packageRegistry*) -> llvmType

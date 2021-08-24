@@ -389,6 +389,7 @@ void completeBuildingFunction(gsl::not_null<Type*> t)
 		}
 	);
 
+
 	createNativeObjectGetter<Function>(
 		"qualifiedName"s, t, { getString(),0 },
 		[](Function* self) -> runtime_value { return buildStringValue((std::string)self->qualifiedName()); }
@@ -1017,10 +1018,11 @@ gsl::not_null<Function*> cMCompiler::language::getNullFor(cMCompiler::dataStruct
 {
 	auto returnType = TypeReference{ elementType.type, elementType.referenceCount + 1 };
 	auto existing = getDefaultPackage()->rootNamespace()->get<Function>();
+	auto name = getGenericMangledName("null", { elementType });
 	for (auto c : existing)
-		if (c->name() == "null" && c->returnType() == returnType)
+		if (c->name() == name && c->returnType() == returnType)
 			return c;
-	auto result = getDefaultPackage()->rootNamespace()->append<Function>("null");
+	auto result = getDefaultPackage()->rootNamespace()->append<Function>(name);
 	result->setReturnType(returnType);
 	compileTimeFunctions::FuntionLibrary::instance().addFunctionDefinition(result, [=](...)
 		{

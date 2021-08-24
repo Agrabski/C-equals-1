@@ -7,7 +7,6 @@ import {string null dictionary bool} from {cm1mLang}
 
 private fn getFunction(f: functionDescriptor, registry: packageRegistry*) -> llvmFunction
 {
-
 	if(registry._functions.hasKey(f))
 		return *registry._functions.get(f);
 	print(f.qualifiedName());
@@ -31,8 +30,6 @@ private fn getFunction(f: functionDescriptor, registry: packageRegistry*) -> llv
 			return getSimpleComparisonOperator(f, registry);
 		if(f.qualifiedName() == "::null")
 			return getNull(f, registry);
-		if(f.qualifiedName() == "::null")
-			return getCast(f, registry);
 		let mod = registry.getModuleFor(f);
 		let func = mod.appendFunction(
 			f.name(),

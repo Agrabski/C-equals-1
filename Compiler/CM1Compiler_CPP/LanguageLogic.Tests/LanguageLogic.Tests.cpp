@@ -2,6 +2,7 @@
 #include "CppUnitTest.h"
 #include "../LanguageLogic/BuiltInPackageBuildUtility.hpp"
 #include "../LanguageLogic/OverloadResolutionUtility.hpp"
+#include "../LanguageLogic/LLVMBindings/Value.hpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace cMCompiler::language;
@@ -40,6 +41,12 @@ namespace LanguageLogicTests
 				}
 			);
 			Assert::IsTrue(found != functions.end());
+		}
+
+		TEST_METHOD(LLVMValueIsExcludedAtRuntime)
+		{
+			auto value = getValue();
+			Assert::IsTrue(value->metadata().hasFlag(TypeFlags::ExcludeAtRuntime));
 		}
 	};
 }
