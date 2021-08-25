@@ -77,11 +77,11 @@ private fn build(instruction: variableReferenceExpression*, builder: llvmIrBodyB
 
 private fn build(instruction: literalExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*) -> llvmValue
 {
-	//if(instruction.type() == typeof(usize))
-	//	return builder.appendIntegerLiteral(
-	//		instruction._value,
-	//		registry.getLLVMTypeFor(instruction.type())
-	//	);
+	if(instruction.type() == typeof(usize))
+		return builder.appendIntegerLiteral(
+			*cast<usize, void>(instruction._value),
+			registry.getLLVMTypeFor(instruction.type())
+		);
 	print<literalExpression*>(instruction);
 }
 

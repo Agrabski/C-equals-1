@@ -273,6 +273,12 @@ std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(Generic<Type>* 
 	return std::make_unique<GenericRuntimeWrapper<Generic<Type>>>(t, TypeReference{ getGenericTypeDescriptor(), 0 });
 }
 
+std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(Generic<Function>* t)
+{
+	return std::make_unique<GenericRuntimeWrapper<Generic<Function>>>(t, TypeReference{ getGenericFunctionDescriptor(), 0 });
+}
+
+
 std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(Function* value)
 {
 	return std::make_unique<RuntimeFunctionDescriptor>(TypeReference{ getFunctionDescriptor(), 0 }, value);
@@ -291,6 +297,11 @@ std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(PackageDatabase
 std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(dataStructures::GenericInstantiationData<dataStructures::Type>* value)
 {
 	return std::make_unique<GenericRuntimeWrapper<GenericInstantiationData<Type>>>(value, TypeReference{ getTypeGenericInstantiationInfo(), 0 });
+}
+
+std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(dataStructures::GenericInstantiationData<dataStructures::Function>* value)
+{
+	return std::make_unique<GenericRuntimeWrapper<GenericInstantiationData<Function>>>(value, TypeReference{ getFunctionGenericInstantiationInfo(), 0 });
 }
 
 std::unique_ptr<IRuntimeValue> cMCompiler::language::buildPointerToSource(std::string const& filename, unsigned long long lineNumber)

@@ -69,6 +69,17 @@ std::optional<cMCompiler::language::runtime_value> cMCompiler::compiler::Express
 			language::buildSourcePointer(filepath_.string(), *ctx)
 		);
 	}
+	if (functionName == "genericFunctionof")
+	{
+		auto name = ctx->functionCallParameter(0)->getText();
+		auto value = nameResolver_.resolve<Generic<Function>>(name, context_);
+		return language::buildValueLiteralExpression(
+			language::moveToHeap(language::getValueFor(
+				value
+			)),
+			language::buildSourcePointer(filepath_.string(), *ctx)
+		);
+	}
 	return {};
 
 }

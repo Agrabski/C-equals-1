@@ -54,6 +54,11 @@ private class packageRegistry
 
 	public fn findExistingType(t: typeDescriptor) -> llvmType*
 	{
+		if(t.isVoidType() && (t.referenceCount() > 0))
+		{
+			print("void pointer");
+			return &self.getModuleForFile("void").getPointer(llvmInt32Type(self._compilationResult));
+		}
 		for(i in enumerate(0, self._types.length()))
 			if(self._types.get(i).ctype == t)
 				return &(self._types.get(i).llvmType);
@@ -74,7 +79,12 @@ private class packageRegistry
 		if(t == typeof(string))
 			return llvmCstringType(self._compilationResult);
 		if(t == typeof(bool))
-			return llvmBoolType(self._compilationResult)
+			return llvmBoolType(self._compilationResult);
+		if(t.isVoidType() && (t.referenceCount() > 0))
+		{
+			print("void pointer");
+			return self.getModuleForFile("void").getPointer(llvmInt32Type(self._compilationResult));
+		}
 		let file = t.sourceLocation();
 		let module = self.getModuleForFile(file.filename);
 		for(i in enumerate(0, self._types.length()))

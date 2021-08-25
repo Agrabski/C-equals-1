@@ -28,8 +28,11 @@ private fn getFunction(f: functionDescriptor, registry: packageRegistry*) -> llv
 			return getFalse(f, registry);
 		if(f.qualifiedName() == "::operator_==")
 			return getSimpleComparisonOperator(f, registry);
-		if(f.qualifiedName() == "::null")
-			return getNull(f, registry);
+		if(f.isBasedOnGeneric())
+		{
+			if(f.genericInstantiationInfo().generic() == genericFunctionof(null))
+				return getNull(f, registry);
+		}
 		let mod = registry.getModuleFor(f);
 		let func = mod.appendFunction(
 			f.name(),

@@ -39,9 +39,9 @@ static auto defaultPackage__ = std::make_unique<PackageDatabase>("cm1mLang");
 void appendCasts(not_null<Namespace*> rootNs)
 {
 	using cMCompiler::dataStructures::execution::ReferenceValue;
-	auto g = rootNs->appendGeneric<Function>(
+	gsl::not_null<Generic<Function>*> g = rootNs->appendGeneric<Function>(
 		{ "T", "Y" },
-		[rootNs](auto const& params) -> not_null<Function*>
+		[rootNs, g](auto const& params) -> not_null<Function*>
 		{
 			auto result = rootNs->append<Function>(getGenericMangledName("cast", params));
 
@@ -60,6 +60,7 @@ void appendCasts(not_null<Namespace*> rootNs)
 					return ReferenceValue::make(nullptr, returnType);
 				}
 			);
+			result->setInstantiationData({ defaultPackage__->rootNamespace()->get<Generic<Function>>("cast"), params});
 			result->setSourceLocation(buildPointerToSource("C-=-1_library_internals.cm", 0));
 
 			return result;
@@ -345,7 +346,11 @@ void completeBuildingType(gsl::not_null<Type*> type)
 		"excludedAtRuntime",
 		type,
 		{ getBool(), 0 },
-		[](auto* v) { return buildBooleanValue(v->type->metadata().hasFlag(TypeFlags::ExcludeAtRuntime)); }
+		[](auto* v) { 
+			auto t = v->type;
+			if (t == nullptr)
+				return buildBooleanValue(false);
+			return buildBooleanValue(v->type->metadata().hasFlag(TypeFlags::ExcludeAtRuntime)); }
 	);
 }
 
@@ -388,7 +393,28 @@ void completeBuildingFunction(gsl::not_null<Type*> t)
 			return buildStringValue(self->name());
 		}
 	);
-
+	createCustomFunction(
+		t
+		->append<Function>("isBasedOnGeneric")
+		->setReturnType({ getBool(),0 }),
+		t,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<RuntimeFunctionDescriptor>(a["self"].get())->value();
+			return buildBooleanValue(self->wasGenericInstantiated());
+		}
+	);
+	createCustomFunction(
+		t
+		->append<Function>("genericInstantiationInfo")
+		->setReturnType({ getFunctionGenericInstantiationInfo(),0 }),
+		t,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<RuntimeFunctionDescriptor>(a["self"].get())->value();
+			return getValueFor(self->instantiationData());
+		}
+	);
 
 	createNativeObjectGetter<Function>(
 		"qualifiedName"s, t, { getString(),0 },
@@ -463,6 +489,25 @@ void buildGenericTypeDescriptor(gsl::not_null<Namespace*> compilerNs)
 	);
 }
 
+void buildGenericFunctionDescriptor(gsl::not_null<Namespace*> compilerNs)
+{
+	auto result = compilerNs->append<Type>("genericFunctionDescriptor");
+
+	createOperator(
+		getDefaultPackage()->rootNamespace(),
+		"==",
+		TypeReference{ result, 0 },
+		TypeReference{ result, 0 },
+		TypeReference{ getBool(), 0 },
+		[](auto& a, auto& b) -> runtime_value
+		{
+			auto arg1 = dereferenceAs<GenericRuntimeWrapper<Generic<Function>>>(a.get())->value();
+			auto arg2 = dereferenceAs<GenericRuntimeWrapper<Generic<Function>>>(b.get())->value();
+			return buildBooleanValue(arg1 == arg2);
+		}
+	);
+}
+
 void buildTypeGenericInstantiationInfo(gsl::not_null<Namespace*> compilerNs)
 {
 	auto result = compilerNs->append<Type>("genericInstantiationInfo");
@@ -493,6 +538,36 @@ void buildTypeGenericInstantiationInfo(gsl::not_null<Namespace*> compilerNs)
 	);
 }
 
+void buildFunctionGenericInstantiationInfo(gsl::not_null<Namespace*> compilerNs)
+{
+	auto result = compilerNs->append<Type>("genericFunctionInstantiationInfo");
+	using namespace cMCompiler::dataStructures::execution;
+	using namespace cMCompiler::dataStructures;
+	createCustomFunction(
+		result
+		->append<Function>("generic")
+		->setReturnType({ getGenericFunctionDescriptor(),0 }),
+		result,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<GenericRuntimeWrapper<GenericInstantiationData<Function>>>(a["self"].get())->value();
+			return getValueFor(self->basedOn);
+		}
+	);
+
+	createCustomFunction(
+		result
+		->append<Function>("parameters")
+		->setReturnType({ getCollectionTypeFor({getTypeDescriptor(), 0}),0 }),
+		result,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<GenericRuntimeWrapper<GenericInstantiationData<Function>>>(a["self"].get())->value();
+			return getValueFor(self->parameters);
+		}
+	);
+}
+
 void buildCompilerLibrary(gsl::not_null<Namespace*> rootNamespace)
 {
 	using namespace cMCompiler::language::compileTimeFunctions;
@@ -505,7 +580,9 @@ void buildCompilerLibrary(gsl::not_null<Namespace*> rootNamespace)
 	buildFieldDescriptor(ns);
 	buildPackageDescriptor(ns);
 	buildGenericTypeDescriptor(ns);
+	buildGenericFunctionDescriptor(ns);
 	buildTypeGenericInstantiationInfo(ns);
+	buildFunctionGenericInstantiationInfo(ns);
 	buildIrNamespace(ns);
 	completeBuildingType(type);
 	completeBuildingNamespace(nsDescriptor);
@@ -996,9 +1073,19 @@ gsl::not_null<Type*> cMCompiler::language::getTypeGenericInstantiationInfo()
 	return defaultPackage__->rootNamespace()->get<Namespace>("compiler")->get<Type>("genericInstantiationInfo");
 }
 
+gsl::not_null<Type*> cMCompiler::language::getFunctionGenericInstantiationInfo()
+{
+	return defaultPackage__->rootNamespace()->get<Namespace>("compiler")->get<Type>("genericFunctionInstantiationInfo");
+}
+
 gsl::not_null<Type*> cMCompiler::language::getGenericTypeDescriptor()
 {
 	return defaultPackage__->rootNamespace()->get<Namespace>("compiler")->get<Type>("genericTypeDescriptor");
+}
+
+gsl::not_null<Type*> cMCompiler::language::getGenericFunctionDescriptor()
+{
+	return defaultPackage__->rootNamespace()->get<Namespace>("compiler")->get<Type>("genericFunctionDescriptor");
 }
 
 gsl::not_null<Attribute*> cMCompiler::language::getCompilerEntryPointAttribute()
@@ -1028,6 +1115,7 @@ gsl::not_null<Function*> cMCompiler::language::getNullFor(cMCompiler::dataStruct
 		{
 			return ReferenceValue::make(nullptr, elementType);
 		});
+	result->setInstantiationData({ getNull(), {elementType} });
 	result->setSourceLocation(buildPointerToSource("C-=-1_library_internals.cm", 0));
 
 

@@ -47,11 +47,13 @@ namespace cMCompiler::language
 	runtime_value getValueFor(dataStructures::TypeReference);
 	runtime_value getValueFor(dataStructures::Type* t);
 	runtime_value getValueFor(dataStructures::Generic<dataStructures::Type>* t);
+	runtime_value getValueFor(dataStructures::Generic<dataStructures::Function>* t);
 	runtime_value getValueFor(dataStructures::Function*);
 	runtime_value getValueFor(dataStructures::Field*);
 	runtime_value getValueFor(dataStructures::Variable*);
 	runtime_value getValueFor(dataStructures::PackageDatabase*);
 	runtime_value getValueFor(dataStructures::GenericInstantiationData<dataStructures::Type>*);
+	runtime_value getValueFor(dataStructures::GenericInstantiationData<dataStructures::Function>*);
 
 	template<typename T>
 	runtime_value convertCollection(std::vector<not_null<T*>>const& collection, dataStructures::TypeReference elementType)

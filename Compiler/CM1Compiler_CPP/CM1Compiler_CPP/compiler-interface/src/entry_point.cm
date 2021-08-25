@@ -1,5 +1,5 @@
 import {compilerEntryPoint packageDescriptor typeDescriptor functionDescriptor} from {cm1mLang::compiler}
-import {usize string bool true false null} from {cm1mLang}
+import {usize string bool true false null cast} from {cm1mLang}
 import {compilationResult llvmType llvmFunction llvmVoidType} from {cm1mLang::compiler::backend}
 import {enumerate print dictionary list} from {std}
 
@@ -47,11 +47,22 @@ private fn compilePackage(package: packageDescriptor, registry: packageRegistry*
 
 private fn ignore(func: functionDescriptor) -> bool
 {
-
+	if(func.isBasedOnGeneric())
+	{
+		// todo: figure out cast
+		let data = func.genericInstantiationInfo();
+		if(data.generic() == genericFunctionof(cast))
+		{
+			print("generics match");
+			return true();
+		}
+	}
 	let params = func.parameters();
 	for(i in enumerate(0, params.length()))
+	{
 		if(params[i].type().excludedAtRuntime())
 			return true();
+	}
 	if(func.returnType().isVoidType())
 		return false();
 	if(func.isAbstract() || (func.returnType().excludedAtRuntime()))
@@ -61,7 +72,7 @@ private fn ignore(func: functionDescriptor) -> bool
 
 private fn getType(t: typeDescriptor, registry: packageRegistry*) -> llvmType
 {
-	if(t.isVoidType())
+	if(t.isVoidType() && (t.referenceCount() == 0))
 		return llvmVoidType(registry._compilationResult);
 	let found = registry.findExistingType(t);
 	if(found != null<llvmType>())
