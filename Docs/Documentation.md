@@ -26,10 +26,10 @@ Third party compilers (should one ever be created for whatever reason) should li
 
 ## Semantic model
 
-[Functions](Semantic-Model/Functions)
+[Functions](Semantic-Model/Functions.md)
 
-[Semantic model libraray](Semantic-Model/Library)
+[Semantic model libraray](Semantic-Model/Library.md)
 
 ## Compiler backend
 
-[Backend entry point](Compiler-Backend/BackendEntryPoint)
+[Backend entry point](Compiler-Backend/BackendEntryPoint.d)
