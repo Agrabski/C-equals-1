@@ -30,7 +30,7 @@ private fn build(instruction: variableDeclarationStatement*, builder: llvmIrBody
 		registry
 	);
 	let pointer = builder.appendAlloca(
-		registry.getLLVMTypeFor(var.type()),
+		getType(var.type(), registry),
 		var.name()
 	);
 

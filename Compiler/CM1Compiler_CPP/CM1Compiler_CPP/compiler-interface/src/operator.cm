@@ -31,7 +31,7 @@ private fn getNull(f: functionDescriptor, registry: packageRegistry*) -> llvmFun
 			);
 	let builder = func.getBuilder();
 
-	builder.appendRet(builder.appendNullPointer(registry.getLLVMTypeFor(f.returnType())));
+	builder.appendRet(builder.appendNullPointer(getType(f.returnType(), registry)));
 	return func;
 }
 

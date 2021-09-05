@@ -56,6 +56,8 @@ private fn ignore(func: functionDescriptor) -> bool
 			print("generics match");
 			return true();
 		}
+		//for(i in enumerate(0, data.parameters()))
+
 	}
 	let params = func.parameters();
 	for(i in enumerate(0, params.length()))
@@ -81,7 +83,6 @@ private fn getType(t: typeDescriptor, registry: packageRegistry*) -> llvmType
 	if(t.excludedAtRuntime())
 		return;
 	let lt = registry.getLLVMTypeFor(t);
-	completeType(t, lt, registry);
 	return lt;
 }
 
@@ -95,12 +96,14 @@ private fn completeType(t: typeDescriptor, lType: llvmType, registry: packageReg
 	}
 	if(t != typeof(usize) && (t != typeof(string)) && (t.referenceCount() == 0))
 	{
+		print("completing type " + t.qualifiedName());
 		let fields = t.fields();
 		let types = <llvmType>[];
 		for(i in enumerate(0, fields.length()))
 		{
 			let field = fields[i];
-			types.push(registry.getLLVMTypeFor(field.type()));
+			print("adding field of type " + field.type().qualifiedName());
+			types.push(getType(field.type(), registry));
 		}
 		lType.setFields(types);
 	}

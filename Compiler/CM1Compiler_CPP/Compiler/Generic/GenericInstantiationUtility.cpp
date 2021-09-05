@@ -7,6 +7,7 @@
 #include "../Preprocessor.hpp"
 #include "../AttributeUtility.hpp"
 #include "../TypeUtility.hpp"
+#include "../../LanguageLogic/FunctionPredicates.hpp"
 
 using namespace cMCompiler;
 using namespace cMCompiler::dataStructures;
@@ -42,17 +43,24 @@ not_null<dataStructures::Function*> cMCompiler::compiler::instantiate
 	not_null f = createFunction(dynamic_cast<Namespace*>(function.parent()), function.name());
 	instantiations.emplace_back(&function, genericParameters, f);
 	f->name() = language::getGenericMangledName(function, genericParameters);
+	if (utilities::has_if(genericParameters, [](auto const& e) { return e.type->metadata().hasFlag(TypeFlags::ExcludeAtRuntime); }))
+		f->metadata().appendFlag(FunctionFlags::ExcludeAtRuntime);
 	auto context = NameResolutionContext::merge(function.context(), c);
-	confirmFunction(resolver, context, f, functionTree, function.path());
-	finalizeFunction(resolver, context, f, functionTree, function.path());
-	auto ep = ExpressionBuilder(function.path(), resolver, context, [](const auto&) {return nullptr; });
 
+
+	auto ep = ExpressionBuilder(function.path(), resolver, context, [](const auto&) { return nullptr; });
 	if (functionTree->attributeSequence())
 		for (not_null<CMinusEqualsMinus1Revision0Parser::AttributeContext*> attribute : functionTree->attributeSequence()->attribute())
 			attachAttribute(f, attribute, resolver, context, ep);
 
 	for (not_null<AttributeInstance*> attribute : f->attributes())
 		executeAttachmentFunction(f, attribute, resolver, context);
+
+	if (language::isExecutable(f))
+	{
+		confirmFunction(resolver, context, f, functionTree, function.path());
+		finalizeFunction(resolver, context, f, functionTree, function.path());
+	}
 	if (context.objectMap_.contains(function.name()))
 		context.objectMap_[function.name()].push_back(f);
 	f->setInstantiationData({
@@ -96,6 +104,8 @@ not_null<dataStructures::Type*> cMCompiler::compiler::instantiate
 		ast,
 		genericType.path()
 	);
+	if (utilities::has_if(genericParameters, [](auto const& e) { return e.type->metadata().hasFlag(TypeFlags::ExcludeAtRuntime); }))
+		type->metadata().appendFlag(TypeFlags::ExcludeAtRuntime);
 	type->name() = language::getGenericMangledName(genericType, genericParameters);
 
 	instantiations.emplace_back(&genericType, genericParameters, type);
@@ -113,7 +123,7 @@ not_null<dataStructures::Type*> cMCompiler::compiler::instantiate
 		ast,
 		genericType.path()
 	);
-	auto ep = ExpressionBuilder(file, resolver, context, [](const auto&) {return nullptr; });
+	auto ep = ExpressionBuilder(file, resolver, context, [](const auto&) { return nullptr; });
 	if (ast->attributeSequence())
 		for (not_null<CMinusEqualsMinus1Revision0Parser::AttributeContext*> attribute : ast->attributeSequence()->attribute())
 			attachAttribute(type, attribute, resolver, context, ep);

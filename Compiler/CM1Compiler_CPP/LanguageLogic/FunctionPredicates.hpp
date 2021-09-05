@@ -4,8 +4,9 @@
 
 namespace cMCompiler::language
 {
-	bool isCompiletimeExecutable(not_null<dataStructures::Function const*> function);
-	bool isRuntimeExecutable(not_null<dataStructures::Function const*> function);
+	bool isExecutable(not_null<dataStructures::Function const*> function) noexcept;
+	bool isCompiletimeExecutable(not_null<dataStructures::Function const*> function) noexcept;
+	bool isRuntimeExecutable(not_null<dataStructures::Function const*> function) noexcept;
 	std::function<bool(not_null<dataStructures::Function const*> function)> 
 		getFunctionPredicate(bool forceCompileTime = false, bool forceRuntime = false);
 

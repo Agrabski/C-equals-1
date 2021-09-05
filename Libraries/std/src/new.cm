@@ -1,6 +1,7 @@
 import {usize compiletime_heap_allocate} from {cm1mLang}
 import {RunTimeOnly} from {compiler}
 
+[RunTimeOnly()]
 public fn new_array<typename T>(size: usize) -> @unique<T[]>
 {
 	let result = unsafe_cast<char[], T[]>(unsafe_new(sizeof<T>() * size));

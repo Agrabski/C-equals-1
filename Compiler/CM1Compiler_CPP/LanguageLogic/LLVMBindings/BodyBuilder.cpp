@@ -43,11 +43,35 @@ void appendAlloca(
 				throw std::exception(exceptionMessage.c_str());
 			}
 			auto alloc = self->CreateAlloca(varType, nullptr, varName);
+			alloc->dump();
 			return cMCompiler::language::getValueFor(alloc);
 		}
 	);
 	f->appendVariable("type", { llvmType,0 });
 	f->appendVariable("name", { cMCompiler::language::getString(), 0 });
+	f->setReturnType({ llvmValue, 0 });
+
+	f = createCustomFunction(
+		builder->append<Function>("appendAlloca"),
+		builder,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<GenericOwningRuntimeWrapper<llvm::IRBuilder<>>>(a["self"].get())->value();
+			auto varType = dereferenceAs<GenericRuntimeWrapper<llvm::Type>>(a["type"].get())->value();
+			if (!varType->isSized())
+			{
+				std::string exceptionMessage = "Type cannot be allocated on stack beacose it is unsized. Type was: ";
+				llvm::raw_string_ostream rso = llvm::raw_string_ostream(exceptionMessage);
+				varType->print(rso);
+				// todo: fucking dangling pointer. Too bad!
+				throw std::exception(exceptionMessage.c_str());
+			}
+			auto alloc = self->CreateAlloca(varType);
+			alloc->dump();
+			return cMCompiler::language::getValueFor(alloc);
+		}
+	);
+	f->appendVariable("type", { llvmType,0 });
 	f->setReturnType({ llvmValue, 0 });
 }
 
@@ -300,8 +324,12 @@ void appendFunctionCall(
 
 			auto llvmArguments = std::vector<llvm::Value*>();
 			for (auto& arg : *args)
-				llvmArguments.push_back(dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(arg.get())->value());
-
+			{
+				auto value = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(arg.get())->value();
+				value->dump();
+				llvmArguments.push_back(value);
+			}
+			pointer->dump();
 			auto result = self->CreateCall(pointer, llvmArguments);
 			return getValueFor(result);
 		}

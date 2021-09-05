@@ -80,7 +80,7 @@ private fn build(instruction: literalExpression*, builder: llvmIrBodyBuilder*, v
 	if(instruction.type() == typeof(usize))
 		return builder.appendIntegerLiteral(
 			*cast<usize, void>(instruction._value),
-			registry.getLLVMTypeFor(instruction.type())
+			getType(instruction.type(), registry)
 		);
 	print<literalExpression*>(instruction);
 }
@@ -91,7 +91,7 @@ private fn build(instruction: fieldAccessExpression*, builder: llvmIrBodyBuilder
 	let exp = instruction._expression;
 	let val = build_expression(exp, builder, variables, registry);
 	let typeFields = field.parent().fields();
-	let llvmBaseType = registry.getLLVMTypeFor(field.parent());
+	let llvmBaseType = getType(field.parent(), registry);
 	return builder.apendGetElementPointer(
 		val,
 		0,
@@ -103,8 +103,7 @@ private fn build(instruction: fieldAccessExpression*, builder: llvmIrBodyBuilder
 private fn build(instruction: adressofExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*) -> llvmValue
 {
 	let exp = build_expression(instruction._expression, builder, variables, registry);
-	return builder.appendAddressof(
-		exp,
-		registry.getLLVMTypeFor(instruction.type())
-	);
+	let add = builder.appendAlloca(getType(instruction.type().dereference(), registry));
+	builder.appendStore(exp, add);
+	return add;
 }

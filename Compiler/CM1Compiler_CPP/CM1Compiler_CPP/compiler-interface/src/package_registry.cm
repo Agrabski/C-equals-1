@@ -112,6 +112,7 @@ private class packageRegistry
 				return result;
 			}
 		}
-		return module.appendStruct(t.package().name() + t.qualifiedName());
+		let result = module.appendStruct(t.package().name() + t.qualifiedName());
+		completeType(t, result, self);
 	}
 }
