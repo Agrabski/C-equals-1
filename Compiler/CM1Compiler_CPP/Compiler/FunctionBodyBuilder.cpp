@@ -15,7 +15,7 @@
 std::string cMCompiler::compiler::FunctionBodyBuilder::decorateTemporary(not_null<antlr4::tree::ParseTree*>tree, int index)
 {
 	using namespace std::string_literals;
-	return "$$_temporary"s + std::to_string(language::getLineNumber(tree)) + std::to_string(index);
+	return "$$_temporary_"s + std::to_string(language::getLineNumber(tree)) + "_" + std::to_string(index);
 }
 
 std::string cMCompiler::compiler::FunctionBodyBuilder::decorateRangeLoopEndVariableName(std::string const& original)

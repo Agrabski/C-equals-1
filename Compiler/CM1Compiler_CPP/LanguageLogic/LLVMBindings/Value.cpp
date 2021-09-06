@@ -44,7 +44,9 @@ gsl::not_null<Type*> cMCompiler::language::buildValue(gsl::not_null<dataStructur
 		{
 			auto self = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["self"].get())->value();
 			int result = 0;
-			auto x = llvm::cast<llvm::PointerType>(self->getType());
+			llvm::PointerType* x = nullptr;
+			if (llvm::isa<llvm::PointerType>(self->getType()))
+				x = llvm::cast<llvm::PointerType>(self->getType());
 			while (x != nullptr)
 			{
 				if (llvm::isa<llvm::PointerType>(x->getElementType()))

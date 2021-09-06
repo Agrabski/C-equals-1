@@ -13,7 +13,7 @@ from {cm1mLang::compiler::ir}
 import {llvmIrBodyBuilder llvmValue llvmFunction} from {cm1mLang::compiler::backend}
 import {fieldDescriptor functionDescriptor} from {cm1mLang::compiler}
 import {dictionary indexof print enumerate} from {std}
-import {cast null usize} from {cm1mLang}
+import {cast null usize string} from {cm1mLang}
 
 private fn build_expression(instruction: IExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*) -> llvmValue
 {
@@ -106,8 +106,11 @@ private fn build(instruction: fieldAccessExpression*, builder: llvmIrBodyBuilder
 private fn build(instruction: adressofExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*) -> llvmValue
 {
 	let exp = build_expression(instruction._expression, builder, variables, registry);
-	if(exp.referenceCount() == (instruction.type().referenceCount()))
+	if(exp.referenceCount() == (instruction.type().referenceCount()) && (instruction.type() != typeof(string).reference()))
+	{
+		print("skip");
 		return exp;
+	}
 	let add = builder.appendAlloca(getType(instruction.type().dereference(), registry));
 	builder.appendStore(exp, add);
 	return add;

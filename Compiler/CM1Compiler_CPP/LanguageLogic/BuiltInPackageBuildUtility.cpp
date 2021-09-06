@@ -336,6 +336,18 @@ void completeBuildingType(gsl::not_null<Type*> type)
 
 	createCustomFunction(
 		type
+		->append<Function>("reference")
+		->setReturnType({ type,0 }),
+		type,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<RuntimeTypeDescriptor>(a["self"].get())->value();
+			return getValueFor(self.reference());
+		}
+	);
+
+	createCustomFunction(
+		type
 		->append<Function>("isVoidType")
 		->setReturnType({ getBool(),0 }),
 		type,
