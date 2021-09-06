@@ -35,7 +35,6 @@ private fn compilePackage(package: packageDescriptor, registry: packageRegistry*
 			if(ignore(func))
 			{
 				let name = func.name();
-				print("function " + name + " was ignored");
 			}
 			else
 			{
@@ -53,7 +52,6 @@ private fn ignore(func: functionDescriptor) -> bool
 		let data = func.genericInstantiationInfo();
 		if(data.generic() == genericFunctionof(cast))
 		{
-			print("generics match");
 			return true();
 		}
 		//for(i in enumerate(0, data.parameters()))
@@ -79,7 +77,6 @@ private fn getType(t: typeDescriptor, registry: packageRegistry*) -> llvmType
 	let found = registry.findExistingType(t);
 	if(found != null<llvmType>())
 		return *found;
-	print(t.qualifiedName());
 	if(t.excludedAtRuntime())
 		return;
 	let lt = registry.getLLVMTypeFor(t);
@@ -96,13 +93,11 @@ private fn completeType(t: typeDescriptor, lType: llvmType, registry: packageReg
 	}
 	if(t != typeof(usize) && (t != typeof(string)) && (t.referenceCount() == 0))
 	{
-		print("completing type " + t.qualifiedName());
 		let fields = t.fields();
 		let types = <llvmType>[];
 		for(i in enumerate(0, fields.length()))
 		{
 			let field = fields[i];
-			print("adding field of type " + field.type().qualifiedName());
 			types.push(getType(field.type(), registry));
 		}
 		lType.setFields(types);

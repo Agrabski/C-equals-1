@@ -119,6 +119,7 @@ gsl::not_null<Type*> buildTypeDescriptor(gsl::not_null<Namespace*> compilerNs)
 	type->setTypeClassifier(TypeClassifier::Class);
 	type->setAccessibility(Accessibility::Public);
 	type->appendField("name", { cMCompiler::language::getString(), 0 })->setAccessibility(Accessibility::Public);
+	type->metadata().appendFlag(TypeFlags::ExcludeAtRuntime);
 	return type;
 }
 
@@ -127,6 +128,7 @@ gsl::not_null<Type*> buildFunctionDescriptor(gsl::not_null<Namespace*> compilerN
 	auto function = compilerNs->append<Type>("functionDescriptor");
 	function->setTypeClassifier(TypeClassifier::Class);
 	function->setAccessibility(Accessibility::Public);
+	function->metadata().appendFlag(TypeFlags::ExcludeAtRuntime);
 	return function;
 }
 
@@ -135,6 +137,7 @@ gsl::not_null<Type*> buildNamespaceDescriptor(gsl::not_null<Namespace*> compiler
 	auto ns = compilerNs->append<Type>("namespaceDescriptor");
 	ns->setTypeClassifier(TypeClassifier::Class);
 	ns->setAccessibility(Accessibility::Public);
+	ns->metadata().appendFlag(TypeFlags::ExcludeAtRuntime);
 	return ns;
 }
 
@@ -144,6 +147,7 @@ gsl::not_null<Type*> buildPackageDescriptor(gsl::not_null<Namespace*> compilerNs
 	auto ns = compilerNs->append<Type>("packageDescriptor");
 	ns->setTypeClassifier(TypeClassifier::Class);
 	ns->setAccessibility(Accessibility::Public);
+	ns->metadata().appendFlag(TypeFlags::ExcludeAtRuntime);
 
 	createCustomFunction(
 		ns->append<Function>("getAllTypes")->setReturnType({ getCollectionTypeFor({ getTypeDescriptor(), 0 }), 0 }),
@@ -492,7 +496,7 @@ void buildGenericTypeDescriptor(gsl::not_null<Namespace*> compilerNs)
 void buildGenericFunctionDescriptor(gsl::not_null<Namespace*> compilerNs)
 {
 	auto result = compilerNs->append<Type>("genericFunctionDescriptor");
-
+	result->metadata().appendFlag(TypeFlags::ExcludeAtRuntime);
 	createOperator(
 		getDefaultPackage()->rootNamespace(),
 		"==",
@@ -511,6 +515,7 @@ void buildGenericFunctionDescriptor(gsl::not_null<Namespace*> compilerNs)
 void buildTypeGenericInstantiationInfo(gsl::not_null<Namespace*> compilerNs)
 {
 	auto result = compilerNs->append<Type>("genericInstantiationInfo");
+	result->metadata().appendFlag(TypeFlags::ExcludeAtRuntime);
 	using namespace cMCompiler::dataStructures::execution;
 	using namespace cMCompiler::dataStructures;
 	createCustomFunction(
@@ -885,7 +890,6 @@ void appendLogicalConstants(not_null<Namespace*> rootNs)
 	);
 }
 
-
 void buildPackage()
 {
 	using namespace cMCompiler::language::compileTimeFunctions;
@@ -899,9 +903,46 @@ void buildPackage()
 	result->rootNamespace()->append<Type>("char");
 	auto usize = result->rootNamespace()->append<Type>("usize");
 	result->rootNamespace()->appendGeneric<Type>({ "T" },
-		[](auto a)
+		[](auto const& genericParameters) -> not_null<Type*>
 		{
-			return getCollectionTypeFor(a.front());
+			auto name = getGenericMangledName("array", genericParameters);
+			auto found = getDefaultPackage()->rootNamespace()->get<Type>(name);
+			if (found != nullptr)
+				return found;
+			auto newType = getDefaultPackage()->rootNamespace()->append<Type>(name);
+			newType->setSourceLocation(buildPointerToSource("C-=-1_library_internals.cm", 0));
+			newType->setAccessibility(Accessibility::Public);
+			auto indexOperator = newType->append<Function>("operator_[]");
+			createIndexer(indexOperator, newType, genericParameters[0]);
+
+			createCustomFunction(
+				newType->append<Function>("push"),
+				newType,
+				[](auto&& args, auto)
+				{
+					auto self = dereferenceAs<execution::ArrayValue>(args["self"].get());
+					self->push(args["value"]->copy());
+					return nullptr;
+				}
+			)->appendVariable("value", genericParameters[0]);
+			createCustomFunction(
+				newType->append<Function>("length"),
+				newType,
+				[](auto&& args, auto)
+				{
+					auto self = dereferenceAs<execution::ArrayValue>(args["self"].get());
+					return buildIntegerValue(getUsize(), self->size());
+				}
+			)->setReturnType({ getUsize(), 0 });
+			auto length = newType->append<Function>("length");
+			length->appendVariable("self", { newType, 1 });
+			length
+				->setReturnType({ getUsize(), 0 })
+				->metadata().appendFlag(FunctionFlags::ExcludeAtCompileTime);
+			newType->setInstantiationData({ getArray(), genericParameters });
+			for (auto child : newType->children())
+				child->setSourceLocation(cMCompiler::language::buildPointerToSource("C-=-1_library_internals.cm", 0));
+			return newType;
 		}, "array", NameResolutionContext(defaultPackage__.get()),
 			"C-=-1_library_internals.cm");
 

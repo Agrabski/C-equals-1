@@ -8,6 +8,7 @@
 #include "../AttributeUtility.hpp"
 #include "../TypeUtility.hpp"
 #include "../../LanguageLogic/FunctionPredicates.hpp"
+#include "../../LanguageLogic/OverloadResolutionUtility.hpp"
 
 using namespace cMCompiler;
 using namespace cMCompiler::dataStructures;
@@ -43,8 +44,7 @@ not_null<dataStructures::Function*> cMCompiler::compiler::instantiate
 	not_null f = createFunction(dynamic_cast<Namespace*>(function.parent()), function.name());
 	instantiations.emplace_back(&function, genericParameters, f);
 	f->name() = language::getGenericMangledName(function, genericParameters);
-	if (utilities::has_if(genericParameters, [](auto const& e) { return e.type->metadata().hasFlag(TypeFlags::ExcludeAtRuntime); }))
-		f->metadata().appendFlag(FunctionFlags::ExcludeAtRuntime);
+	language::setOverloadResolutionInformation(f, genericParameters);
 	auto context = NameResolutionContext::merge(function.context(), c);
 
 
@@ -104,8 +104,7 @@ not_null<dataStructures::Type*> cMCompiler::compiler::instantiate
 		ast,
 		genericType.path()
 	);
-	if (utilities::has_if(genericParameters, [](auto const& e) { return e.type->metadata().hasFlag(TypeFlags::ExcludeAtRuntime); }))
-		type->metadata().appendFlag(TypeFlags::ExcludeAtRuntime);
+	language::setOverloadResolutionInformation(type, genericParameters);
 	type->name() = language::getGenericMangledName(genericType, genericParameters);
 
 	instantiations.emplace_back(&genericType, genericParameters, type);

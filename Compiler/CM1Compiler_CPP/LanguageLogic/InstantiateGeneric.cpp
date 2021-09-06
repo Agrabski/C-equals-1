@@ -4,26 +4,8 @@
 #include "MetatypeUility.hpp"
 #include "CreateGetter.hpp"
 #include "LiteralUtility.hpp"
+#include "OverloadResolutionUtility.hpp"
 
-
-//gsl::not_null<cMCompiler::dataStructures::Type*> buildArrayIterator(cMCompiler::dataStructures::TypeReference type)
-//{
-//
-//}
-//
-//gsl::not_null<cMCompiler::dataStructures::Type*> buildArrayRange(cMCompiler::dataStructures::TypeReference type)
-//{
-//	using namespace cMCompiler::dataStructures;
-//	using namespace cMCompiler::language;
-//	auto gen = cMCompiler::language::getDefaultPackage()->rootNamespace()->get<Generic<Type>>("arrayIterator");
-//	auto name = getGenericMangledName(*gen, { type });
-//
-//	auto newType = getDefaultPackage()->rootNamespace()->append<Type>(name);
-//	newType->setAccessibility(Accessibility::Public);
-//
-//	auto iterator = TypeReference{ buildArrayIterator(type), 0 };
-//
-//}
 
 void setSourceLocation(not_null<cMCompiler::dataStructures::INamedObject*> obj)
 {
@@ -42,41 +24,11 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::instantia
 	// todo: fucking disgusting
 	if (type.name() == "array")
 	{
-		auto newType = getDefaultPackage()->rootNamespace()->append<dataStructures::Type>(name);
-		newType->setSourceLocation(buildPointerToSource("C-=-1_library_internals.cm", 0));
-		newType->setAccessibility(dataStructures::Accessibility::Public);
-		auto indexOperator = newType->append<dataStructures::Function>("operator_[]");
-		createIndexer(indexOperator, newType, genericParameters[0]);
-
-		createCustomFunction(
-			newType->append<dataStructures::Function>("push"),
-			newType,
-			[](auto&& args, auto)
-			{
-				auto self = dereferenceAs<dataStructures::execution::ArrayValue>(args["self"].get());
-				self->push(args["value"]->copy());
-				return nullptr;
-			}
-		)->appendVariable("value", genericParameters[0]);
-		createCustomFunction(
-			newType->append<dataStructures::Function>("length"),
-			newType,
-			[](auto&& args, auto)
-			{
-				auto self = dereferenceAs<dataStructures::execution::ArrayValue>(args["self"].get());
-				return buildIntegerValue(getUsize(), self->size());
-			}
-		)->setReturnType({ getUsize(), 0 });
-		auto length = newType
-			->append<dataStructures::Function>("length");
-		length->appendVariable("self", { newType, 1 });
-		length
-			->setReturnType({ getUsize(), 0 })
-			->metadata().appendFlag(dataStructures::FunctionFlags::ExcludeAtCompileTime);
-		newType->setInstantiationData({ getArray(), genericParameters });
-		for (auto child : newType->children())
-			setSourceLocation(child);
-		return newType;
+		auto f = type.fillSpecial(genericParameters);
+		setOverloadResolutionInformation(f, genericParameters);
+		for (auto m : f->methods())
+			setOverloadResolutionInformation(m, genericParameters);
+		return f;
 
 	}
 }

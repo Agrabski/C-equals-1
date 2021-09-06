@@ -125,7 +125,12 @@ void appendAssign(
 			auto value = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["value"].get())->value();
 			auto pointer = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["pointer"].get())->value();
 
-			self->CreateStore(value, pointer);
+			value->dump();
+			pointer->dump();
+			if (value->getType() !=
+				cast<llvm::PointerType>(pointer->getType())->getElementType())
+				throw std::exception();
+			self->CreateStore(value, pointer)->dump();
 			return nullptr;
 		}
 	);
@@ -330,6 +335,10 @@ void appendFunctionCall(
 				llvmArguments.push_back(value);
 			}
 			pointer->dump();
+			for (unsigned i = 0; i != llvmArguments.size(); ++i)
+				if (!(i >= pointer->getFunctionType()->getNumParams() ||
+					pointer->getFunctionType()->getParamType(i) == llvmArguments[i]->getType()))
+					throw std::exception();
 			auto result = self->CreateCall(pointer, llvmArguments);
 			return getValueFor(result);
 		}

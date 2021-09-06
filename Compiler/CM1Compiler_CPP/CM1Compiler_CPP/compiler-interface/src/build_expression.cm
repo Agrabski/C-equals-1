@@ -61,12 +61,15 @@ private fn build(instruction: functionCallExpression*, builder: llvmIrBodyBuilde
 	let values = <llvmValue>[];
 	let arguments = instruction._arguments;
 	for(i in enumerate(0, arguments.length()))
+	{
+		print<IExpression*>(arguments[i]);
 		values.push(build_expression(
 			arguments[i],
 			builder,
 			variables,
 			registry
 		));
+	}
 	return builder.appendFunctionCall(getFunction(f, registry), &values);
 }
 
@@ -103,6 +106,8 @@ private fn build(instruction: fieldAccessExpression*, builder: llvmIrBodyBuilder
 private fn build(instruction: adressofExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*) -> llvmValue
 {
 	let exp = build_expression(instruction._expression, builder, variables, registry);
+	if(exp.referenceCount() == (instruction.type().referenceCount()))
+		return exp;
 	let add = builder.appendAlloca(getType(instruction.type().dereference(), registry));
 	builder.appendStore(exp, add);
 	return add;

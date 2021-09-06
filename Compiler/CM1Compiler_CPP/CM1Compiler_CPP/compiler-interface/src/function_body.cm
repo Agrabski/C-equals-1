@@ -33,6 +33,7 @@ private fn build(instruction: variableDeclarationStatement*, builder: llvmIrBody
 		getType(var.type(), registry),
 		var.name()
 	);
+	variables.push(var, pointer);
 
 	builder.appendStore(value, pointer);
 

@@ -2,6 +2,8 @@
 #include "GetterExecution.hpp"
 #include "SpecialFunctionUtility.hpp"
 #include "../Utilities/typedRange.hpp"
+#include "../Utilities/algorithm.hpp"
+
 
 using namespace cMCompiler::dataStructures;
 using cMCompiler::utilities::typed_range;
@@ -20,6 +22,18 @@ bool cMCompiler::language::verifyParameterMatch(Parameter const& parameter, data
 			}))
 			return false;
 			return true;
+}
+
+void cMCompiler::language::setOverloadResolutionInformation(not_null<dataStructures::Type*> type, std::vector<TypeReference> const& genericParameters)
+{
+	if (utilities::has_if(genericParameters, [](auto const& e) { return e.type->metadata().hasFlag(TypeFlags::ExcludeAtRuntime); }))
+		type->metadata().appendFlag(TypeFlags::ExcludeAtRuntime);
+}
+
+void cMCompiler::language::setOverloadResolutionInformation(not_null<dataStructures::Function*> function, std::vector<TypeReference> const& genericParameters)
+{
+	if (utilities::has_if(genericParameters, [](auto const& e) { return e.type->metadata().hasFlag(TypeFlags::ExcludeAtRuntime); }))
+		function->metadata().appendFlag(FunctionFlags::ExcludeAtRuntime);
 }
 
 Function* cMCompiler::language::resolveOverload(

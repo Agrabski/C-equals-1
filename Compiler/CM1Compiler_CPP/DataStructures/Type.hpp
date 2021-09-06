@@ -101,11 +101,7 @@ namespace cMCompiler::dataStructures
 			implementedInterfaces_.push_back(t);
 		}
 
-		Field* appendField(std::string const& name, TypeReference type)
-		{
-			fields_.push_back(std::make_unique<Field>(name, type, this, package()));
-			return fields_.back().get();
-		}
+		Field* appendField(std::string const& name, TypeReference type);
 
 		std::vector<gsl::not_null<Field*>> fields()
 		{

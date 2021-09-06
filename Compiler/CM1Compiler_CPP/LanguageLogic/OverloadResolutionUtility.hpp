@@ -33,6 +33,9 @@ namespace cMCompiler::language
 		};
 	}
 
+	void setOverloadResolutionInformation(not_null<dataStructures::Function*> function, std::vector<dataStructures::TypeReference> const& genericParameters);
+	void setOverloadResolutionInformation(not_null<dataStructures::Type*> function, std::vector<dataStructures::TypeReference> const& genericParameters);
+
 
 	dataStructures::Function* resolveOverload(
 		std::vector<gsl::not_null<dataStructures::Function*>> const& candidates,

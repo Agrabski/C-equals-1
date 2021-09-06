@@ -56,6 +56,7 @@ gsl::not_null<Type*> cMCompiler::language::buildFunctionDescriptor(gsl::not_null
 	auto result = backendns->append<Type>("llvmFunction");
 	appendBodyBuilding(result, llvmType, backendns, llvmValue, result);
 	appendGetParameter(result, llvmType, backendns, llvmValue, result);
+	result->metadata().appendFlag(TypeFlags::ExcludeAtRuntime);
 	//todo: do
 	return result;
 }

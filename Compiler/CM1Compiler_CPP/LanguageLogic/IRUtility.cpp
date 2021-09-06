@@ -56,6 +56,7 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildExpr
 	interface->append<Function>("pointerToSource")->setReturnType({ getPointerToSource(), 0 });
 	interface->append<Function>("parentExpression")->setReturnType({ interface, 1 });
 	interface->append<Function>("type")->setReturnType({ getTypeDescriptor(),1 });
+	interface->metadata().appendFlag(TypeFlags::ExcludeAtRuntime);
 	return interface;
 }
 
@@ -65,6 +66,7 @@ gsl::not_null<Type*> cMCompiler::language::buidStatementDescriptor(gsl::not_null
 	interface->setTypeClassifier(TypeClassifier::Interface);
 	interface->append<Function>("pointerToSource")->setReturnType({ getPointerToSource(), 0 });
 	interface->append<Function>("parentStatement")->setReturnType({ interface, 1 });
+	interface->metadata().appendFlag(TypeFlags::ExcludeAtRuntime);
 	return interface;
 }
 
@@ -115,6 +117,7 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildWhil
 gsl::not_null<Type*> cMCompiler::language::buildVariableDescriptor(gsl::not_null<Namespace*> irNs)
 {
 	auto result = irNs->append<Type>("variableDescriptor"s);
+	result->metadata().appendFlag(TypeFlags::ExcludeAtRuntime);
 	createCustomFunction(
 		result
 		->append<Function>("name"s)
@@ -167,6 +170,7 @@ gsl::not_null<Type*> cMCompiler::language::buildVariableDescriptor(gsl::not_null
 gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildFieldDescriptor(gsl::not_null<dataStructures::Namespace*> compilerNs)
 {
 	auto result = compilerNs->append<Type>("fieldDescriptor"s);
+	result->metadata().appendFlag(TypeFlags::ExcludeAtRuntime);
 	createCustomFunction(
 		result->append<Function>("name"s)
 		->setReturnType({ getString(), 0 }),

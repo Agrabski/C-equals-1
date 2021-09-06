@@ -39,6 +39,15 @@ std::vector<INamedObject*> cMCompiler::dataStructures::Type::children() noexcept
 	return result;
 }
 
+Field* cMCompiler::dataStructures::Type::appendField(std::string const& name, TypeReference type)
+{
+	fields_.push_back(std::make_unique<Field>(name, type, this, package()));
+	auto result = fields_.back().get();
+	if (result->type().type != nullptr && result->type().type->metadata().hasFlag(TypeFlags::ExcludeAtRuntime))
+		metadata().appendFlag(TypeFlags::ExcludeAtRuntime);
+	return result;
+}
+
 TypeFlags cMCompiler::dataStructures::operator|(TypeFlags lhs, TypeFlags rhs)
 {
 	return static_cast<TypeFlags>(static_cast<int64_t>(lhs) | static_cast<int64_t>(rhs));

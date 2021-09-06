@@ -61,7 +61,7 @@ namespace cMCompiler::dataStructures
 
 		bool isSpecial() const noexcept { return parseTree_ == nullptr; }
 
-		not_null<TargetType*> fillSpecial(std::vector<TypeReference> const& parameters)
+		not_null<TargetType*> fillSpecial(std::vector<TypeReference> const& parameters) const
 		{
 			return customFill_(parameters);
 		}

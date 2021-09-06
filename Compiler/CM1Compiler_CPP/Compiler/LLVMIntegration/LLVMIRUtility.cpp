@@ -42,7 +42,23 @@ std::unique_ptr<CompilationResult> cMCompiler::compiler::llvmIntegration::compil
 	args.push_back(language::getValueFor(p));
 	args.push_back(language::getValueFor(result.get()));
 	auto emiter = cMCompiler::compiler::IntermidiateRepresentationEmmiter();
-	runWithHandling([&]() {execute(entryPoint, std::move(args)); });
+	runWithHandling([&]()
+		{
+			try
+			{
+				execute(entryPoint, std::move(args));
+			}
+
+			catch (...)
+			{
+				for (auto& mod : result->modules)
+				{
+					mod->dump();
+					std::cout << std::endl;
+				}
+				throw;
+			}
+		});
 	return result;
 }
 
@@ -79,7 +95,8 @@ void cMCompiler::compiler::llvmIntegration::compileToBinary(
 			ec,
 			llvm::sys::fs::OpenFlags::OF_None);
 
-		if (machine->addPassesToEmitFile(pass, dest, nullptr, llvm::CodeGenFileType::CGFT_ObjectFile)) {
+		if (machine->addPassesToEmitFile(pass, dest, nullptr, llvm::CodeGenFileType::CGFT_ObjectFile))
+		{
 			std::cerr << "TargetMachine can't emit a file of this type";
 			std::terminate();
 		}

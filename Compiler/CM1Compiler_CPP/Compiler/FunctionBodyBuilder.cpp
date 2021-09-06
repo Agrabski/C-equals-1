@@ -14,12 +14,13 @@
 
 std::string cMCompiler::compiler::FunctionBodyBuilder::decorateTemporary(not_null<antlr4::tree::ParseTree*>tree, int index)
 {
-	return "$$_temporary" + language::getLineNumber(tree) + std::to_string(index);
+	using namespace std::string_literals;
+	return "$$_temporary"s + std::to_string(language::getLineNumber(tree)) + std::to_string(index);
 }
 
 std::string cMCompiler::compiler::FunctionBodyBuilder::decorateRangeLoopEndVariableName(std::string const& original)
 {
-	return "$$_" + original;
+	return "$$range_loop_end_" + original;
 }
 
 void cMCompiler::compiler::FunctionBodyBuilder::enterScope(instruction_pointer& currentInstruction)
