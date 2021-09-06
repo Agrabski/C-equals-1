@@ -4,6 +4,7 @@
 #include "../DataStructures/execution/IRuntimeValue.h"
 #include "../LanguageLogic/SpecialFunctionUtility.hpp"
 #include "../LanguageLogic/IRUtility.hpp"
+#include "../LanguageLogic/TypeCoercionUtility.hpp"
 #include "../LanguageLogic/RuntimeTypesConversionUtility.hpp"
 #include "FunctionExecutionUtility.hpp"
 #include "../DataStructures/NullValueException.hpp"
@@ -104,7 +105,7 @@ void cMCompiler::compiler::StatementEvaluator::declareVariable(dataStructures::e
 		throw dataStructures::NullValueException();
 
 
-	assert(value->type() == variable->type());
+	assert(language::coerce(value->type(), variable->type()));
 	this->variables_[variable->name()] = std::move(value);
 }
 

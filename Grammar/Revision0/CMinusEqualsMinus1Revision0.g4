@@ -278,7 +278,7 @@ identifier:
 
 SimpleIdentifier: LETTER (LETTER | DIGIT)*;
 
-IntegerLiteral: (DIGIT)+;
+IntegerLiteral: '-'?(DIGIT)+;
 DIGIT: [0-9];
 fragment ESC: '\\"' | '\\\\' | '\\\n';
 STRING: '"' ( ESC | ~[\\"\r\n])* '"';

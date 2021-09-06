@@ -220,7 +220,7 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildFiel
 		{
 			auto arg1 = dereferenceAs<execution::RuntimeFieldDescriptor>(a.get());
 			auto arg2 = dereferenceAs<execution::RuntimeFieldDescriptor>(b.get());
-			return buildBooleanValue(arg1->value() != arg2->value());
+			return buildBooleanValue(arg1->value() == arg2->value());
 
 		}
 	);

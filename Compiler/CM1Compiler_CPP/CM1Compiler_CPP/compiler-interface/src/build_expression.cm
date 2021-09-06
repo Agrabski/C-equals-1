@@ -7,6 +7,7 @@ import {
 	functionCallExpression
 	adressofExpression
 	literalExpression
+	constructorInvocationExpression
 }
 from {cm1mLang::compiler::ir}
 
@@ -52,6 +53,13 @@ private fn build_expression(instruction: IExpression*, builder: llvmIrBodyBuilde
 			variables,
 			registry
 		);
+	if(cast<constructorInvocationExpression, IExpression>(instruction) != null<constructorInvocationExpression>())
+		return build(
+			cast<constructorInvocationExpression, IExpression>(instruction),
+			builder,
+			variables,
+			registry
+		);
 	print<IExpression*>(instruction);
 }
 
@@ -71,6 +79,27 @@ private fn build(instruction: functionCallExpression*, builder: llvmIrBodyBuilde
 		));
 	}
 	return builder.appendFunctionCall(getFunction(f, registry), &values);
+}
+
+private fn build(instruction: constructorInvocationExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*) -> llvmValue
+{
+	let f = instruction._runtimeConstructor;
+	let values = <llvmValue>[];
+	let arguments = instruction._arguments;
+	let self = builder.appendAlloca(getType(instruction.type(), registry));
+	values.push(self);
+	for(i in enumerate(0, arguments.length()))
+	{
+		print<IExpression*>(arguments[i]);
+		values.push(build_expression(
+			arguments[i],
+			builder,
+			variables,
+			registry
+		));
+	}
+	builder.appendFunctionCall(getFunction(f, registry), &values);
+	return self;
 }
 
 private fn build(instruction: variableReferenceExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*) -> llvmValue
