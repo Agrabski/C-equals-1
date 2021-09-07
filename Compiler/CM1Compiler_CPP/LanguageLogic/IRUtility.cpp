@@ -241,6 +241,17 @@ gsl::not_null<Type*> cMCompiler::language::buildVariableReferenceExpression(gsl:
 	result->appendField("_type", { getTypeDescriptor(), 0 });
 
 	implementExpressionInterface(result);
+	createNativeObjectGetter<Variable>(
+		"isFunctionParameter",
+		result,
+		{ getBool(), 0 },
+		[](Variable* var)
+		{
+			auto parent = dynamic_cast<Function*>(var->parent());
+			auto const& paramenters = parent->parameters();
+			return buildBooleanValue(std::ranges::find(paramenters, not_null(var)) != paramenters.end());
+		}
+	);
 	return result;
 }
 

@@ -14,60 +14,67 @@ from {cm1mLang::compiler::ir}
 import {llvmIrBodyBuilder llvmValue llvmFunction} from {cm1mLang::compiler::backend}
 import {fieldDescriptor functionDescriptor} from {cm1mLang::compiler}
 import {dictionary indexof print enumerate} from {std}
-import {cast null usize string} from {cm1mLang}
+import {cast null usize string bool false true} from {cm1mLang}
 
-private fn build_expression(instruction: IExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*) -> llvmValue
+private fn build_expression(instruction: IExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*, isLeftExpression: bool) -> llvmValue
 {
 	if(cast<variableReferenceExpression, IExpression>(instruction) != null<variableReferenceExpression>())
 		return build(
 			cast<variableReferenceExpression, IExpression>(instruction),
 			builder,
 			variables,
-			registry
+			registry,
+			isLeftExpression
 		);
 	if(cast<fieldAccessExpression, IExpression>(instruction) != null<fieldAccessExpression>())
 		return build(
 			cast<fieldAccessExpression, IExpression>(instruction),
 			builder,
 			variables,
-			registry
+			registry,
+			isLeftExpression
 		);
 	if(cast<functionCallExpression, IExpression>(instruction) != null<functionCallExpression>())
 		return build(
 			cast<functionCallExpression, IExpression>(instruction),
 			builder,
 			variables,
-			registry
+			registry,
+			isLeftExpression
 		);
 	if(cast<adressofExpression, IExpression>(instruction) != null<adressofExpression>())
 		return build(
 			cast<adressofExpression, IExpression>(instruction),
 			builder,
 			variables,
-			registry
+			registry,
+			isLeftExpression
 		);
 	if(cast<literalExpression, IExpression>(instruction) != null<literalExpression>())
 		return build(
 			cast<literalExpression, IExpression>(instruction),
 			builder,
 			variables,
-			registry
+			registry,
+			isLeftExpression
 		);
 	if(cast<constructorInvocationExpression, IExpression>(instruction) != null<constructorInvocationExpression>())
 		return build(
 			cast<constructorInvocationExpression, IExpression>(instruction),
 			builder,
 			variables,
-			registry
+			registry,
+			isLeftExpression
 		);
 	print<IExpression*>(instruction);
 }
 
-private fn build(instruction: functionCallExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*) -> llvmValue
+private fn build(instruction: functionCallExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*, isLeftExpression: bool) -> llvmValue
 {
 	let f = instruction._runtimeFunction;
 	let values = <llvmValue>[];
 	let arguments = instruction._arguments;
+	print("started parameter evaluation");
 	for(i in enumerate(0, arguments.length()))
 	{
 		print<IExpression*>(arguments[i]);
@@ -75,13 +82,15 @@ private fn build(instruction: functionCallExpression*, builder: llvmIrBodyBuilde
 			arguments[i],
 			builder,
 			variables,
-			registry
+			registry,
+			false()
 		));
 	}
+	print("evaluated parameters");
 	return builder.appendFunctionCall(getFunction(f, registry), &values);
 }
 
-private fn build(instruction: constructorInvocationExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*) -> llvmValue
+private fn build(instruction: constructorInvocationExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*, isLeftExpression: bool) -> llvmValue
 {
 	let f = instruction._runtimeConstructor;
 	let values = <llvmValue>[];
@@ -95,19 +104,22 @@ private fn build(instruction: constructorInvocationExpression*, builder: llvmIrB
 			arguments[i],
 			builder,
 			variables,
-			registry
+			registry,
+			false()
 		));
 	}
 	builder.appendFunctionCall(getFunction(f, registry), &values);
 	return self;
 }
 
-private fn build(instruction: variableReferenceExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*) -> llvmValue
+private fn build(instruction: variableReferenceExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*, isLeftExpression: bool) -> llvmValue
 {
-	return *(variables.get(instruction._variable));
+	if(isLeftExpression)
+		return *(variables.get(instruction._variable));
+	return builder.appendLoad(*(variables.get(instruction._variable)));
 }
 
-private fn build(instruction: literalExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*) -> llvmValue
+private fn build(instruction: literalExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*, isLeftExpression: bool) -> llvmValue
 {
 	if(instruction.type() == typeof(usize))
 		return builder.appendIntegerLiteral(
@@ -117,27 +129,27 @@ private fn build(instruction: literalExpression*, builder: llvmIrBodyBuilder*, v
 	print<literalExpression*>(instruction);
 }
 
-private fn build(instruction: fieldAccessExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*) -> llvmValue
+private fn build(instruction: fieldAccessExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*, isLeftExpression: bool) -> llvmValue
 {
 	let field = instruction._field;
 	let exp = instruction._expression;
-	let val = build_expression(exp, builder, variables, registry);
+	let val = build_expression(exp, builder, variables, registry, true());
 	let typeFields = field.parent().fields();
-	let llvmBaseType = getType(field.parent(), registry);
-	return builder.apendGetElementPointer(
+	let address = builder.apendGetElementPointer(
 		val,
 		0,
-		indexof<fieldDescriptor>(&typeFields, &field),
-		llvmBaseType
+		indexof<fieldDescriptor>(&typeFields, &field)
 	);
+	if(isLeftExpression)
+		return address;
+	return builder.appendLoad(address);
 }
 
-private fn build(instruction: adressofExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*) -> llvmValue
+private fn build(instruction: adressofExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*, isLeftExpression: bool) -> llvmValue
 {
-	let exp = build_expression(instruction._expression, builder, variables, registry);
-	if(exp.referenceCount() == (instruction.type().referenceCount()) && (instruction.type() != typeof(string).reference()))
+	let exp = build_expression(instruction._expression, builder, variables, registry, true());
+	if(exp.referenceCount() == (instruction.type().referenceCount()) && (instruction.type().baseType() != typeof(string)))
 	{
-		print("skip");
 		return exp;
 	}
 	let add = builder.appendAlloca(getType(instruction.type().dereference(), registry));

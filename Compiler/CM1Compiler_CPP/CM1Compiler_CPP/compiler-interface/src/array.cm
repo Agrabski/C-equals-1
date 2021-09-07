@@ -16,7 +16,7 @@ private fn getArrayLength(f: functionDescriptor, registry: packageRegistry*) -> 
 			);
 	let builder = func.getBuilder();
 	let s = func.getParameter(0);
-	let pointer = builder.apendGetElementPointer(s, 0, 1, getType(f.returnType(), registry));
+	let pointer = builder.apendGetElementPointer(s, 0, 1);
 	builder.appendRet(builder.appendLoad(pointer));
 	return func;
 }

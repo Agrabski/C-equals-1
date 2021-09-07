@@ -43,7 +43,6 @@ void appendAlloca(
 				throw std::exception(exceptionMessage.c_str());
 			}
 			auto alloc = self->CreateAlloca(varType, nullptr, varName);
-			alloc->dump();
 			return cMCompiler::language::getValueFor(alloc);
 		}
 	);
@@ -67,7 +66,6 @@ void appendAlloca(
 				throw std::exception(exceptionMessage.c_str());
 			}
 			auto alloc = self->CreateAlloca(varType);
-			alloc->dump();
 			return cMCompiler::language::getValueFor(alloc);
 		}
 	);
@@ -223,7 +221,6 @@ void appendGetFieldValue(
 			auto pointer = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["pointer"].get())->value();
 			auto objectIndex = convertToIntegral<usize>(*a["objectIndex"]);
 			auto memberIndex = convertToIntegral<usize>(*a["memberIndex"]);
-			auto type = dereferenceAs<GenericRuntimeWrapper<llvm::Type>>(a["baseType"].get())->value();
 
 			llvm::Value* indexList[] = {
 				llvm::ConstantInt::get(llvm::IntegerType::getInt32Ty(self->getContext()), objectIndex),
@@ -237,7 +234,6 @@ void appendGetFieldValue(
 	f->appendVariable("pointer", { llvmValue, 0 });
 	f->appendVariable("objectIndex", { getUsize(), 0 });
 	f->appendVariable("memberIndex", { getUsize(), 0 });
-	f->appendVariable("baseType", { llvmType, 0 });
 
 }
 
