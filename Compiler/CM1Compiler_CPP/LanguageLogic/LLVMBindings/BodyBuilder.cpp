@@ -123,12 +123,10 @@ void appendAssign(
 			auto value = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["value"].get())->value();
 			auto pointer = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["pointer"].get())->value();
 
-			value->dump();
-			pointer->dump();
 			if (value->getType() !=
 				cast<llvm::PointerType>(pointer->getType())->getElementType())
 				throw std::exception();
-			self->CreateStore(value, pointer)->dump();
+			self->CreateStore(value, pointer);
 			return nullptr;
 		}
 	);
@@ -150,7 +148,8 @@ void appendLoad(
 		{
 			auto self = dereferenceAs<GenericRuntimeWrapper<llvm::IRBuilder<>>>(a["self"].get())->value();
 			auto pointer = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["pointer"].get())->value();
-
+			if (pointer->getType()->getTypeID() != llvm::Type::TypeID::PointerTyID)
+				throw std::exception();
 			return getValueFor(self->CreateLoad(pointer));
 		}
 	)->setReturnType({ llvmValue, 0 });
@@ -179,6 +178,94 @@ void appendCompare(
 	f->appendVariable("left", { llvmValue, 0 });
 	f->appendVariable("right", { llvmValue, 0 });
 
+}
+
+void appendMultiply(
+	gsl::not_null<Type*> builder,
+	gsl::not_null<Namespace*> backendns,
+	gsl::not_null<Type*> llvmValue
+)
+{
+	auto f = createCustomFunction(
+		builder->append<Function>("appendIntegerMultiply"),
+		builder,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<GenericRuntimeWrapper<llvm::IRBuilder<>>>(a["self"].get())->value();
+			auto left = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["left"].get())->value();
+			auto right = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["right"].get())->value();
+
+			return getValueFor(self->CreateMul(left, right));
+		}
+	)->setReturnType({ llvmValue, 0 });
+	f->appendVariable("left", { llvmValue, 0 });
+	f->appendVariable("right", { llvmValue, 0 });
+}
+
+void appendAdd(
+	gsl::not_null<Type*> builder,
+	gsl::not_null<Namespace*> backendns,
+	gsl::not_null<Type*> llvmValue
+)
+{
+	auto f = createCustomFunction(
+		builder->append<Function>("appendIntegerAddition"),
+		builder,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<GenericRuntimeWrapper<llvm::IRBuilder<>>>(a["self"].get())->value();
+			auto left = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["left"].get())->value();
+			auto right = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["right"].get())->value();
+
+			return getValueFor(self->CreateAdd(left, right));
+		}
+	)->setReturnType({ llvmValue, 0 });
+	f->appendVariable("left", { llvmValue, 0 });
+	f->appendVariable("right", { llvmValue, 0 });
+}
+
+void appendSub(
+	gsl::not_null<Type*> builder,
+	gsl::not_null<Namespace*> backendns,
+	gsl::not_null<Type*> llvmValue
+)
+{
+	auto f = createCustomFunction(
+		builder->append<Function>("appendIntegerDifference"),
+		builder,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<GenericRuntimeWrapper<llvm::IRBuilder<>>>(a["self"].get())->value();
+			auto left = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["left"].get())->value();
+			auto right = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["right"].get())->value();
+
+			return getValueFor(self->CreateSub(left, right));
+		}
+	)->setReturnType({ llvmValue, 0 });
+	f->appendVariable("left", { llvmValue, 0 });
+	f->appendVariable("right", { llvmValue, 0 });
+}
+
+void appendDiv(
+	gsl::not_null<Type*> builder,
+	gsl::not_null<Namespace*> backendns,
+	gsl::not_null<Type*> llvmValue
+)
+{
+	auto f = createCustomFunction(
+		builder->append<Function>("appendIntegerDivision"),
+		builder,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<GenericRuntimeWrapper<llvm::IRBuilder<>>>(a["self"].get())->value();
+			auto left = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["left"].get())->value();
+			auto right = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["right"].get())->value();
+
+			return getValueFor(self->CreateUDiv(left, right));
+		}
+	)->setReturnType({ llvmValue, 0 });
+	f->appendVariable("left", { llvmValue, 0 });
+	f->appendVariable("right", { llvmValue, 0 });
 }
 
 void appendBitcast(
@@ -327,10 +414,8 @@ void appendFunctionCall(
 			for (auto& arg : *args)
 			{
 				auto value = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(arg.get())->value();
-				value->dump();
 				llvmArguments.push_back(value);
 			}
-			pointer->dump();
 			for (unsigned i = 0; i != llvmArguments.size(); ++i)
 				if (!(i >= pointer->getFunctionType()->getNumParams() ||
 					pointer->getFunctionType()->getParamType(i) == llvmArguments[i]->getType()))
@@ -362,6 +447,10 @@ gsl::not_null<Type*> cMCompiler::language::buildBodyBuilder(
 	appendLiteral(builder, backendns, llvmValue, llvmType);
 	appendLoad(builder, backendns, llvmValue);
 	appendCompare(builder, backendns, llvmValue);
+	appendMultiply(builder, backendns, llvmValue);
+	appendAdd(builder, backendns, llvmValue);
+	appendSub(builder, backendns, llvmValue);
+	appendDiv(builder, backendns, llvmValue);
 	appendNullConstant(builder, backendns, llvmValue, llvmType);
 	appendBitcast(builder, backendns, llvmValue, llvmType);
 

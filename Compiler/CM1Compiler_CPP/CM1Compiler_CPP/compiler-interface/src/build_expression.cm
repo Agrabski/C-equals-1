@@ -8,6 +8,7 @@ import {
 	adressofExpression
 	literalExpression
 	constructorInvocationExpression
+	binaryOperatorExpression
 }
 from {cm1mLang::compiler::ir}
 
@@ -53,6 +54,14 @@ private fn build_expression(instruction: IExpression*, builder: llvmIrBodyBuilde
 	if(cast<literalExpression, IExpression>(instruction) != null<literalExpression>())
 		return build(
 			cast<literalExpression, IExpression>(instruction),
+			builder,
+			variables,
+			registry,
+			isLeftExpression
+		);
+	if(cast<binaryOperatorExpression, IExpression>(instruction) != null<binaryOperatorExpression>())
+		return build(
+			cast<binaryOperatorExpression, IExpression>(instruction),
 			builder,
 			variables,
 			registry,
@@ -109,15 +118,41 @@ private fn build(instruction: constructorInvocationExpression*, builder: llvmIrB
 		));
 	}
 	builder.appendFunctionCall(getFunction(f, registry), &values);
-	return self;
+	if(isLeftExpression)
+		return self;
+	return builder.appendLoad(self);
 }
 
 private fn build(instruction: variableReferenceExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*, isLeftExpression: bool) -> llvmValue
 {
+	if(instruction._variable.isFunctionParameter())
+		return *(variables.get(instruction._variable));
 	if(isLeftExpression)
 		return *(variables.get(instruction._variable));
 	return builder.appendLoad(*(variables.get(instruction._variable)));
 }
+
+private fn build(instruction: binaryOperatorExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*, isLeftExpression: bool) -> llvmValue
+{
+	let f = instruction._runtimeFunction;
+	let values = <llvmValue>[];
+	values.push(build_expression(
+		instruction._arg1,
+		builder,
+		variables,
+		registry,
+		false()
+	));
+	values.push(build_expression(
+		instruction._arg2,
+		builder,
+		variables,
+		registry,
+		false()
+	));
+	return builder.appendFunctionCall(getFunction(f, registry), &values);
+}
+
 
 private fn build(instruction: literalExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*, isLeftExpression: bool) -> llvmValue
 {

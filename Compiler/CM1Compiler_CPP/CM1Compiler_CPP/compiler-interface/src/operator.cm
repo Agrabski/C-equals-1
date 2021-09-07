@@ -20,6 +20,66 @@ private fn getSimpleComparisonOperator(f: functionDescriptor, registry: packageR
 	return func;
 }
 
+private fn getIntegerMultiplication(f: functionDescriptor, registry: packageRegistry*) -> llvmFunction
+{
+	let mod = registry.getModuleFor(f);
+	let func = mod.appendFunction(
+			f.name(),
+			getParameterTypes(f, registry),
+			getParameterNames(f, registry),
+			getType(f.returnType(), registry)
+			);
+	let builder = func.getBuilder();
+
+	builder.appendRet(builder.appendIntegerMultiply(func.getParameter(0), func.getParameter(1)));
+	return func;
+}
+
+private fn getIntegerAddition(f: functionDescriptor, registry: packageRegistry*) -> llvmFunction
+{
+	let mod = registry.getModuleFor(f);
+	let func = mod.appendFunction(
+			f.name(),
+			getParameterTypes(f, registry),
+			getParameterNames(f, registry),
+			getType(f.returnType(), registry)
+			);
+	let builder = func.getBuilder();
+
+	builder.appendRet(builder.appendIntegerAddition(func.getParameter(0), func.getParameter(1)));
+	return func;
+}
+
+private fn getIntegerDifference(f: functionDescriptor, registry: packageRegistry*) -> llvmFunction
+{
+	let mod = registry.getModuleFor(f);
+	let func = mod.appendFunction(
+			f.name(),
+			getParameterTypes(f, registry),
+			getParameterNames(f, registry),
+			getType(f.returnType(), registry)
+			);
+	let builder = func.getBuilder();
+
+	builder.appendRet(builder.appendIntegerDifference(func.getParameter(0), func.getParameter(1)));
+	return func;
+}
+
+private fn getIntegerDivision(f: functionDescriptor, registry: packageRegistry*) -> llvmFunction
+{
+	let mod = registry.getModuleFor(f);
+	let func = mod.appendFunction(
+			f.name(),
+			getParameterTypes(f, registry),
+			getParameterNames(f, registry),
+			getType(f.returnType(), registry)
+			);
+	let builder = func.getBuilder();
+
+	builder.appendRet(builder.appendIntegerDivision(func.getParameter(0), func.getParameter(1)));
+	return func;
+}
+
 private fn getNull(f: functionDescriptor, registry: packageRegistry*) -> llvmFunction
 {
 	let mod = registry.getModuleFor(f);

@@ -9,6 +9,8 @@ cMCompiler::dataStructures::execution::json cMCompiler::dataStructures::executio
 
 std::string cMCompiler::dataStructures::execution::RuntimeFunctionDescriptor::toString() const
 {
+	if (value_ == nullptr)
+		return "NULL";
 	return (std::string)value_->qualifiedName();
 }
 

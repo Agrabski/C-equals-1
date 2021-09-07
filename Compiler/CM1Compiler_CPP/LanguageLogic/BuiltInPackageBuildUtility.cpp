@@ -60,7 +60,7 @@ void appendCasts(not_null<Namespace*> rootNs)
 					return ReferenceValue::make(nullptr, returnType);
 				}
 			);
-			result->setInstantiationData({ defaultPackage__->rootNamespace()->get<Generic<Function>>("cast"), params});
+			result->setInstantiationData({ defaultPackage__->rootNamespace()->get<Generic<Function>>("cast"), params });
 			result->setSourceLocation(buildPointerToSource("C-=-1_library_internals.cm", 0));
 
 			return result;
@@ -362,11 +362,13 @@ void completeBuildingType(gsl::not_null<Type*> type)
 		"excludedAtRuntime",
 		type,
 		{ getBool(), 0 },
-		[](auto* v) { 
+		[](auto* v)
+		{
 			auto t = v->type;
 			if (t == nullptr)
 				return buildBooleanValue(false);
-			return buildBooleanValue(v->type->metadata().hasFlag(TypeFlags::ExcludeAtRuntime)); }
+			return buildBooleanValue(v->type->metadata().hasFlag(TypeFlags::ExcludeAtRuntime));
+		}
 	);
 }
 
@@ -434,7 +436,7 @@ void completeBuildingFunction(gsl::not_null<Type*> t)
 
 	createNativeObjectGetter<Function>(
 		"qualifiedName"s, t, { getString(),0 },
-		[](Function* self) -> runtime_value { return buildStringValue((std::string)self->qualifiedName()); }
+		[](Function* self) -> runtime_value { if (self == nullptr) return buildStringValue("NULL"); return buildStringValue((std::string)self->qualifiedName()); }
 	);
 
 	createNativeObjectGetter<Function>(
@@ -443,8 +445,10 @@ void completeBuildingFunction(gsl::not_null<Type*> t)
 	);
 	createNativeObjectGetter<Function>(
 		"runtimeExecutable"s, t, { getBool(),0 },
-		[](Function* self) -> runtime_value { 
-			return buildBooleanValue(!self->metadata().hasFlag(FunctionFlags::ExcludeAtRuntime)); }
+		[](Function* self) -> runtime_value
+		{
+			return buildBooleanValue(!self->metadata().hasFlag(FunctionFlags::ExcludeAtRuntime));
+		}
 	);
 	createNativeObjectGetter<Function>(
 		"compiletimeExecutable"s, t, { getBool(),0 },
@@ -782,6 +786,15 @@ void buildUsize(gsl::not_null<Type*> usize_type)
 			return buildBooleanValue(result);
 		}
 	);
+	using namespace std::string_literals;
+	for (auto op : { "*", "+", "-", "/" })
+	{
+		not_null f = ns->append<Function>("operator_"s + op);
+		f->appendVariable("arg1", { usize_type, 0 });
+		f->appendVariable("arg2", { usize_type, 0 });
+		f->setReturnType({ usize_type, 0 });
+		f->metadata().appendFlag(cMCompiler::dataStructures::FunctionFlags::ExcludeAtCompileTime);
+	}
 
 	appendCasts(ns);
 }

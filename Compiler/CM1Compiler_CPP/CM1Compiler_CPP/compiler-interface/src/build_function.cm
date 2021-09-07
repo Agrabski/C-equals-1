@@ -19,15 +19,59 @@ private fn getFunction(f: functionDescriptor, registry: packageRegistry*) -> llv
 	{
 		
 		if(f.qualifiedName() == "::string::length")
-			return getStringLength(f, registry);
+		{
+			let r = getStringLength(f, registry);
+			registry._functions.push(f, r);
+			return r;
+		}
 		if(f.name() == "length") //todo: this is about arrays
-			return getArrayLength(f, registry);
+		{
+			let r = getArrayLength(f, registry);
+			registry._functions.push(f, r);
+			return r;
+		}
 		if(f.qualifiedName() == "::true")
-			return getTrue(f, registry);
+		{
+			let r = getTrue(f, registry);
+			registry._functions.push(f, r);
+			return r;
+		}
 		if(f.qualifiedName() == "::false")
-			return getFalse(f, registry);
+		{
+			let r = getFalse(f, registry);
+			registry._functions.push(f, r);
+			return r;
+		}
 		if(f.qualifiedName() == "::operator_==")
-			return getSimpleComparisonOperator(f, registry);
+		{
+			let r = getSimpleComparisonOperator(f, registry);
+			registry._functions.push(f, r);
+			return r;
+		}
+		if(f.qualifiedName() == "::operator_*")
+		{
+			let r = getIntegerMultiplication(f, registry);
+			registry._functions.push(f, r);
+			return r;
+		}
+		if(f.qualifiedName() == "::operator_+")
+		{
+			let r = getIntegerAddition(f, registry);
+			registry._functions.push(f, r);
+			return r;
+		}
+		if(f.qualifiedName() == "::operator_-")
+		{
+			let r = getIntegerDifference(f, registry);
+			registry._functions.push(f, r);
+			return r;
+		}
+		if(f.qualifiedName() == "::operator_/")
+		{
+			let r = getIntegerDivision(f, registry);
+			registry._functions.push(f, r);
+			return r;
+		}
 		if(f.isBasedOnGeneric())
 		{
 			if(f.genericInstantiationInfo().generic() == genericFunctionof(null))
