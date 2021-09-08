@@ -4,6 +4,7 @@
 #include "../LanguageLogic/BuiltInPackageBuildUtility.hpp"
 #include "../LanguageLogic/GenericUtility.hpp"
 #include "../LanguageLogic/SpecialFunctionUtility.hpp"
+#include "../LanguageLogic/MetatypeUility.hpp"
 #include "Generic/GenericInstantiationUtility.hpp"
 
 std::string name(gsl::not_null<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*> ctx)
@@ -23,6 +24,8 @@ void appendDefaultConstructor(
 			TypeReference{ language::getIInstruction(), 1 }), 0 },
 		TypeReference{ language::getIInstruction() ,1 }
 	));
+	// todo: initialise fields
+	c->code()->push(language::buildReturnStatement(language::buildSourcePointer(file.string(), *declaration)));
 	c->setReturnType({ nullptr, 0 });
 	c->setSourceLocation(language::buildSourcePointer(file.string(), *declaration));
 	cMCompiler::compiler::appendSpecialVariable(type, c);

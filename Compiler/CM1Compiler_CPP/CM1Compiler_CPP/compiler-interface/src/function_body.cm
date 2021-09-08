@@ -2,6 +2,7 @@ import {
 	IInstruction
 	variableDeclarationStatement
 	variableDescriptor
+	returnStatement
 }
 from {cm1mLang::compiler::ir}
 import {fieldDescriptor functionDescriptor} from {cm1mLang::compiler}
@@ -14,6 +15,13 @@ private fn build_instruction(instruction: IInstruction*, builder: llvmIrBodyBuil
 	if(cast<variableDeclarationStatement, IInstruction>(instruction) != null<variableDeclarationStatement>())
 		build(
 			cast<variableDeclarationStatement, IInstruction>(instruction),
+			builder,
+			variables,
+			registry
+		);
+	if(cast<returnStatement, IInstruction>(instruction) != null<returnStatement>())
+		build(
+			cast<returnStatement, IInstruction>(instruction),
 			builder,
 			variables,
 			registry
@@ -39,4 +47,18 @@ private fn build(instruction: variableDeclarationStatement*, builder: llvmIrBody
 
 	builder.appendStore(value, pointer);
 
+}
+private fn build(instruction: returnStatement*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*)
+{
+	let exp = instruction._expression;
+	if(exp != null<IExpression>())
+		builder.appendRet(build_expression(
+			exp,
+			builder,
+			variables,
+			registry,
+			false()
+		));
+	else
+		builder.appendRetVoid();
 }

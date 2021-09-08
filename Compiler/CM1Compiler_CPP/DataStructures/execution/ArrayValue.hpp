@@ -34,6 +34,11 @@ namespace cMCompiler::dataStructures::execution
 			std::terminate();
 		}
 
+		auto size() noexcept
+		{
+			return allocated_.size();
+		}
+
 		auto begin() noexcept
 		{
 			return allocated_.begin();

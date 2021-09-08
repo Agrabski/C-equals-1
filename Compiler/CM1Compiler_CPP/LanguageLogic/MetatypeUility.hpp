@@ -114,5 +114,8 @@ namespace cMCompiler::language
 
 	void pushIf(runtime_value& conditionalInstruction, runtime_value&& newInstruction);
 	void pushElse(runtime_value& conditionalInstruction, runtime_value&& newInstruction);
+	dataStructures::execution::ArrayValue * getIf(not_null<dataStructures::execution::IRuntimeValue*> ifInstruction);
+	dataStructures::execution::ArrayValue* getElse(not_null<dataStructures::execution::IRuntimeValue*> ifInstruction);
+
 	void pushWhile(runtime_value& whileInstruction, runtime_value&& newInstruction);
 }

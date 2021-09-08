@@ -3,4 +3,4 @@ import {ReplaceWithLLVMIR} from {compiler}
 
 [ReplaceWithLLVMIR("sizeof.llvm", "T", nameof(T))]
 public fn sizeof<T>() -> usize
-{}
+{return 0;}

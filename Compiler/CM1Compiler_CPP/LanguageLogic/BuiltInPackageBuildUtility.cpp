@@ -462,6 +462,15 @@ void completeBuildingFunction(gsl::not_null<Type*> t)
 			return buildBooleanValue(type != nullptr && type->typeClassifier() == TypeClassifier::Interface);
 		}
 	);
+	createNativeObjectGetter<Function>(
+		"isIntrinsic", t, { getBool(), 0 },
+		[](Function* f)
+		{
+			auto type = dynamic_cast<Type*> (f->parent());
+			bool isInterfaceMetohd = (type != nullptr && type->typeClassifier() == TypeClassifier::Interface);
+			return buildBooleanValue(!isInterfaceMetohd && f->code() == nullptr);
+		}
+	);
 	createOperator(
 		getDefaultPackage()->rootNamespace(),
 		"==",
@@ -796,6 +805,16 @@ void buildUsize(gsl::not_null<Type*> usize_type)
 		f->metadata().appendFlag(cMCompiler::dataStructures::FunctionFlags::ExcludeAtCompileTime);
 	}
 
+	for (auto op : { "==", "!=", ">", "<"})
+	{
+		not_null f = ns->append<Function>("operator_"s + op);
+		f->appendVariable("arg1", { usize_type, 0 });
+		f->appendVariable("arg2", { usize_type, 0 });
+		f->setReturnType({ getBool(), 0 });
+		f->metadata().appendFlag(cMCompiler::dataStructures::FunctionFlags::ExcludeAtCompileTime);
+	}
+
+
 	appendCasts(ns);
 }
 
@@ -1064,6 +1083,16 @@ void buildPackage()
 			auto arg2 = dereferenceAs<BooleanValue>(b.get())->value();
 			return buildBooleanValue(arg1 || arg2);
 		});
+
+	for (auto op : { "==", "!=" })
+	{
+		not_null f = defaultPackage__->rootNamespace()->append<Function>("operator_"s + op);
+		f->appendVariable("arg1", { nullptr, 1 });
+		f->appendVariable("arg2", { nullptr, 1 });
+		f->setReturnType({ getBool(), 0 });
+		f->metadata().appendFlag(cMCompiler::dataStructures::FunctionFlags::ExcludeAtCompileTime);
+	}
+
 
 	setSourcePointer(result->rootNamespace());
 }

@@ -178,6 +178,49 @@ void appendCompare(
 	f->appendVariable("left", { llvmValue, 0 });
 	f->appendVariable("right", { llvmValue, 0 });
 
+	f = createCustomFunction(
+		builder->append<Function>("appendCmpNotEqual"),
+		builder,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<GenericRuntimeWrapper<llvm::IRBuilder<>>>(a["self"].get())->value();
+			auto left = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["left"].get())->value();
+			auto right = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["right"].get())->value();
+
+			return getValueFor(self->CreateCmp(llvm::CmpInst::Predicate::ICMP_NE, left, right));
+		}
+	)->setReturnType({ llvmValue, 0 });
+	f->appendVariable("left", { llvmValue, 0 });
+	f->appendVariable("right", { llvmValue, 0 });
+	f = createCustomFunction(
+		builder->append<Function>("appendCmpGreater"),
+		builder,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<GenericRuntimeWrapper<llvm::IRBuilder<>>>(a["self"].get())->value();
+			auto left = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["left"].get())->value();
+			auto right = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["right"].get())->value();
+
+			return getValueFor(self->CreateCmp(llvm::CmpInst::Predicate::ICMP_UGT, left, right));
+		}
+	)->setReturnType({ llvmValue, 0 });
+	f->appendVariable("left", { llvmValue, 0 });
+	f->appendVariable("right", { llvmValue, 0 });
+	f = createCustomFunction(
+		builder->append<Function>("appendCmpLess"),
+		builder,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<GenericRuntimeWrapper<llvm::IRBuilder<>>>(a["self"].get())->value();
+			auto left = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["left"].get())->value();
+			auto right = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["right"].get())->value();
+
+			return getValueFor(self->CreateCmp(llvm::CmpInst::Predicate::ICMP_ULT, left, right));
+		}
+	)->setReturnType({ llvmValue, 0 });
+	f->appendVariable("left", { llvmValue, 0 });
+	f->appendVariable("right", { llvmValue, 0 });
+
 }
 
 void appendMultiply(
@@ -348,6 +391,30 @@ void appendAddressOf(
 
 }
 
+void appendPtrToInt(
+	gsl::not_null<Type*> builder,
+	gsl::not_null<Namespace*> backendns,
+	gsl::not_null<Type*> llvmValue,
+	gsl::not_null<Type*> llvmType
+)
+{
+	auto f = createCustomFunction(
+		builder->append<Function>("appendPtrToInt"),
+		builder,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<GenericRuntimeWrapper<llvm::IRBuilder<>>>(a["self"].get())->value();
+			auto value = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["value"].get())->value();
+			auto type = dereferenceAs<GenericRuntimeWrapper<llvm::Type>>(a["type"].get())->value();
+
+			return getValueFor(self->CreatePtrToInt(value, type));
+		}
+	);
+	f->appendVariable("value", { llvmValue, 0 });
+	f->appendVariable("type", { llvmType, 0 });
+
+}
+
 
 void appendNullConstant(
 	gsl::not_null<Type*> builder,
@@ -453,6 +520,7 @@ gsl::not_null<Type*> cMCompiler::language::buildBodyBuilder(
 	appendDiv(builder, backendns, llvmValue);
 	appendNullConstant(builder, backendns, llvmValue, llvmType);
 	appendBitcast(builder, backendns, llvmValue, llvmType);
+	appendPtrToInt(builder, backendns, llvmValue, llvmType);
 
 	return builder;
 }

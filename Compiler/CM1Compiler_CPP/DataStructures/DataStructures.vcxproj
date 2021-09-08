@@ -220,6 +220,7 @@
     <ClInclude Include="Type.hpp" />
     <ClInclude Include="TypeClassifier.hpp" />
     <ClInclude Include="TypeReference.hpp" />
+    <ClInclude Include="Validation\SemanticModelValidationException.h" />
     <ClInclude Include="Validation\ValidationError.hpp" />
     <ClInclude Include="Validation\ValidationUtility.hpp" />
     <ClInclude Include="Variable.hpp" />
@@ -253,6 +254,7 @@
     <ClCompile Include="Type.cpp" />
     <ClCompile Include="TypeClassifier.cpp" />
     <ClCompile Include="TypeReference.cpp" />
+    <ClCompile Include="Validation\SemanticModelValidationException.cpp" />
     <ClCompile Include="Validation\ValidationError.cpp" />
     <ClCompile Include="Validation\ValidationUtility.cpp" />
     <ClCompile Include="Variable.cpp" />

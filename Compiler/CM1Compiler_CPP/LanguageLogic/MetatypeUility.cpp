@@ -342,3 +342,19 @@ void cMCompiler::language::pushWhile(runtime_value& whileInstruction, runtime_va
 	auto collection = dereferenceAs<ArrayValue>(object->getMemberValue("_body").get());
 	collection->push(std::move(newInstruction));
 }
+
+cMCompiler::dataStructures::execution::ArrayValue* cMCompiler::language::getIf(not_null<dataStructures::execution::IRuntimeValue*> ifInstruction)
+{
+	auto object = dereferenceAs<ObjectValue>(ifInstruction.get());
+	
+	return dereferenceAs<ArrayValue>(object->getMemberValue("_ifBranch").get());
+
+}
+
+cMCompiler::dataStructures::execution::ArrayValue* cMCompiler::language::getElse(not_null<dataStructures::execution::IRuntimeValue*> ifInstruction)
+{
+	auto object = dereferenceAs<ObjectValue>(ifInstruction.get());
+
+	return dereferenceAs<ArrayValue>(object->getMemberValue("_elseBranch").get());
+
+}

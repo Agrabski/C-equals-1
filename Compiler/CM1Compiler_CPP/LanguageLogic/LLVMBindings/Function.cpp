@@ -68,3 +68,8 @@ gsl::not_null<Type*> cMCompiler::language::getLLVMFunctionDescriptor()
 		->get<Namespace>("backend")
 		->get<Type>("llvmFunction");
 }
+
+runtime_value cMCompiler::language::getValueFor(not_null<llvm::Function*> function)
+{
+	return std::make_unique<GenericRuntimeWrapper<llvm::Function>>(function, dataStructures::TypeReference{ getLLVMFunctionDescriptor(), 0 });
+}

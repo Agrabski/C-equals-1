@@ -2,6 +2,7 @@
 #include "ExpressionBuilder.hpp"
 #include "../DataStructures/execution/RuntimeVariableDescriptor.hpp"
 #include "../DataStructures/execution/ArrayValue.hpp"
+#include "../DataStructures/Validation/SemanticModelValidationException.h"
 #include "../LanguageLogic/OverloadResolutionUtility.hpp"
 #include "../LanguageLogic/BuiltInPackageBuildUtility.hpp"
 #include "../LanguageLogic/MetatypeUility.hpp"
@@ -10,6 +11,7 @@
 #include "../LanguageLogic/SpecialFunctionUtility.hpp"
 #include "../LanguageLogic/ExpressionUtility.hpp"
 #include "../LanguageLogic/TypeCoercionUtility.hpp"
+#include "../LanguageLogic/CompileTimeFunctions/FunctionLibrary.hpp"
 #include "TypeUtility.hpp"
 
 std::string cMCompiler::compiler::FunctionBodyBuilder::decorateTemporary(not_null<antlr4::tree::ParseTree*>tree, int index)
@@ -47,7 +49,7 @@ cMCompiler::compiler::ExpressionBuilder cMCompiler::compiler::FunctionBodyBuilde
 {
 	return ExpressionBuilder(filePath_, nr_, context_, [this](auto const& e) -> dataStructures::Variable*
 		{
-			auto varFinder = [&](const auto& v) noexcept {return v->name() == e; };
+			auto varFinder = [&](const auto& v) noexcept { return v->name() == e; };
 			for (auto& scope : variables_)
 			{
 				auto var = std::find_if(scope.begin(), scope.end(), varFinder);
@@ -93,7 +95,7 @@ void cMCompiler::compiler::FunctionBodyBuilder::buildForLoop(
 	buildWhileLoop(
 		std::move(testExpression),
 		body,
-		[&]() {actionInNewScope(variable); },
+		[&]() { actionInNewScope(variable); },
 		[&]()
 		{
 			postExpressionFactory(variable);
@@ -101,6 +103,37 @@ void cMCompiler::compiler::FunctionBodyBuilder::buildForLoop(
 	);
 
 
+}
+
+bool cMCompiler::compiler::FunctionBodyBuilder::validateBlockTerminates(not_null<dataStructures::execution::ArrayValue*> code)
+{
+	auto lastInstruction = (--code->end())->get();
+	if (language::isOfType(lastInstruction, language::getReturnStatementDescriptor()))
+		return true;
+	if (language::isOfType(lastInstruction, language::getIfDescriptor()))
+	{
+		auto ifBranch = language::getIf(lastInstruction);
+		auto elseBranch(language::getElse(lastInstruction));
+		return
+			(ifBranch != nullptr && validateBlockTerminates(ifBranch))
+			&&
+			(elseBranch != nullptr && validateBlockTerminates(elseBranch));
+	}
+	if (code->size() < 2)
+		return false;
+	auto secondToLastInstruction = (----code->end())->get();
+	if (language::isOfType(secondToLastInstruction, language::getReturnStatementDescriptor()))
+		return true;
+	if (language::isOfType(secondToLastInstruction, language::getIfDescriptor()))
+	{
+		auto ifBranch = language::getIf(secondToLastInstruction);
+		auto elseBranch(language::getElse(secondToLastInstruction));
+		return
+			(ifBranch != nullptr && validateBlockTerminates(ifBranch))
+			&&
+			(elseBranch != nullptr && validateBlockTerminates(elseBranch));
+	}
+	return false;
 }
 
 void cMCompiler::compiler::FunctionBodyBuilder::buildWhileLoop(
@@ -135,7 +168,7 @@ void cMCompiler::compiler::FunctionBodyBuilder::buildForRangeLoop(
 {
 	auto expressionType = language::getExpressionType(expression);
 	auto expressionMethods = expressionType.type->methods();
-	auto iterateMethod = std::find_if(expressionMethods.begin(), expressionMethods.end(), [](const auto e) {return e->name() == "iterate"; });
+	auto iterateMethod = std::find_if(expressionMethods.begin(), expressionMethods.end(), [](const auto e) { return e->name() == "iterate"; });
 	not_null rangeObjectVariable = function_->appendLocalVariable(
 		decorateTemporary(body, 0),
 		(*iterateMethod)->returnType()
@@ -159,7 +192,7 @@ void cMCompiler::compiler::FunctionBodyBuilder::buildForRangeLoop(
 	}
 
 	auto methods = rangeObjectVariable->type().type->methods();
-	auto begin = std::find_if(methods.begin(), methods.end(), [](auto e) {return e->name() == "begin"; });
+	auto begin = std::find_if(methods.begin(), methods.end(), [](auto e) { return e->name() == "begin"; });
 	auto beginMethods = (*begin)->returnType().type->methods();
 	auto get = std::find_if(beginMethods.begin(), beginMethods.end(), [](auto const e)
 		{
@@ -306,6 +339,13 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitFunctionBody(CMinu
 	instructionAppenders.back()(leaveScope(ctx->CloseBracket()->getSymbol()->getLine()));
 	instructionAppenders.pop_back();
 	parents_.pop_back();
+	if (!validateBlockTerminates(function_->code().get()))
+		if (function_->returnType().isVoidType())
+			function_->code()->push(language::buildReturnStatement(language::buildSourcePointer(filePath_.string(), *ctx->CloseBracket())));
+		else
+			if (!language::compileTimeFunctions::FuntionLibrary::instance().getFunction(function_))
+				throw dataStructures::validation::NotAllPathsReturnAValueException(function_, filePath_);
+
 	return r;
 }
 
@@ -412,7 +452,7 @@ antlrcpp::Any cMCompiler::compiler::FunctionBodyBuilder::visitReturnStatement(CM
 	{
 		auto exp = getBuilder().buildExpression(not_null{ ctx->expression() }, nullptr);
 		auto expType = language::getExpressionType(exp);
-		if(!language::coerce(expType, function_->returnType()))
+		if (!language::coerce(expType, function_->returnType()))
 			assert(false);
 		instructionAppenders.back()(language::buildReturnStatement(std::move(exp), std::move(sourcePointer)));
 	}

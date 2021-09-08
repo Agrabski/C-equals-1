@@ -20,6 +20,57 @@ private fn getSimpleComparisonOperator(f: functionDescriptor, registry: packageR
 	return func;
 }
 
+private fn getSimpleNotEqualsOperator(f: functionDescriptor, registry: packageRegistry*) -> llvmFunction
+{
+	let mod = registry.getModuleFor(f);
+	let func = mod.appendFunction(
+			f.name(),
+			getParameterTypes(f, registry),
+			getParameterNames(f, registry),
+			getType(f.returnType(), registry)
+			);
+	let builder = func.getBuilder();
+	let arg1 = func.getParameter(0);
+	let arg2 = func.getParameter(1);
+	if(f.parameters()[0].type().referenceCount() > 0)
+	{
+		arg1 = builder.appendPtrToInt(arg1, getType(typeof(usize), registry));
+		arg2 = builder.appendPtrToInt(arg2, getType(typeof(usize), registry));
+	}
+	builder.appendRet(builder.appendCmpNotEqual(arg1, arg2));
+	return func;
+}
+
+private fn getSimpleGreaterOperator(f: functionDescriptor, registry: packageRegistry*) -> llvmFunction
+{
+	let mod = registry.getModuleFor(f);
+	let func = mod.appendFunction(
+			f.name(),
+			getParameterTypes(f, registry),
+			getParameterNames(f, registry),
+			getType(f.returnType(), registry)
+			);
+	let builder = func.getBuilder();
+
+	builder.appendRet(builder.appendCmpGreater(func.getParameter(0), func.getParameter(1)));
+	return func;
+}
+
+private fn getSimpleLessOperator(f: functionDescriptor, registry: packageRegistry*) -> llvmFunction
+{
+	let mod = registry.getModuleFor(f);
+	let func = mod.appendFunction(
+			f.name(),
+			getParameterTypes(f, registry),
+			getParameterNames(f, registry),
+			getType(f.returnType(), registry)
+			);
+	let builder = func.getBuilder();
+
+	builder.appendRet(builder.appendCmpLess(func.getParameter(0), func.getParameter(1)));
+	return func;
+}
+
 private fn getIntegerMultiplication(f: functionDescriptor, registry: packageRegistry*) -> llvmFunction
 {
 	let mod = registry.getModuleFor(f);

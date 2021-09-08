@@ -1,5 +1,7 @@
 #pragma once
 #include <gsl/gsl>
+#include <llvm/IR/Function.h>
+#include "../runtime_values.hpp"
 #include "../../DataStructures/Namespace.hpp"
 
 namespace cMCompiler::language
@@ -10,4 +12,6 @@ namespace cMCompiler::language
 		not_null<dataStructures:: Type*> llvmValue);
 
 	gsl::not_null<dataStructures::Type*> getLLVMFunctionDescriptor();
+
+	runtime_value getValueFor(not_null<llvm::Function*> function);
 }

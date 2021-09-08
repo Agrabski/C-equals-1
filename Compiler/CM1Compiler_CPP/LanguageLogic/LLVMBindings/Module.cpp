@@ -131,6 +131,24 @@ void appendName(
 		});
 }
 
+void appendFunctions(
+	not_null<Type*> mod,
+	not_null<Type*> llvmFunction)
+{
+	auto result = mod->append<Function>("functions");
+	result->setReturnType({ getCollectionTypeFor({ llvmFunction, 0 }), 0 });
+	createCustomFunction(result, mod, [](auto&& params, auto)
+		{
+			auto self = dereferenceAs<GenericRuntimeWrapper<llvm::Module>>(params["self"].get())->value();
+
+			auto result = std::vector<runtime_value>();
+			for (auto& f : self->getFunctionList())
+				result.push_back(getValueFor(&f));
+
+			return convertCollection(std::move(result), { getLLVMFunctionDescriptor(), 0 });
+		});
+}
+
 gsl::not_null<Type*> cMCompiler::language::buildModuleDescriptor(
 	gsl::not_null<Namespace*> backendns,
 	gsl::not_null<Type*> llvmFunction,
@@ -141,6 +159,7 @@ gsl::not_null<Type*> cMCompiler::language::buildModuleDescriptor(
 	result->metadata().appendFlag(TypeFlags::ExcludeAtRuntime);
 	appendFunction(result, llvmFunction, llvmType);
 	appendType(result, llvmType);
+	appendFunctions(result, llvmFunction);
 	getPointer(result, llvmType);
 
 

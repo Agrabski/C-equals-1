@@ -28,26 +28,33 @@ int main(int argc, char* argv[])
 		auto emiter = cMCompiler::compiler::IntermidiateRepresentationEmmiter();
 
 		std::filesystem::create_directory("out");
-		for (auto& package : packages)
+		try
 		{
-			auto outputFile = std::ofstream(path("out") / (package->name() + ".json"));
-			emiter.emmit(outputFile, *package);
-			outputFile.close();
-		}
-
-		auto compiler = cMCompiler::compiler::loadCompilerInterfacePackage(*context);
-
-		auto context = llvm::LLVMContext();
-		cMCompiler::compiler::runWithHandling([&]()
+			for (auto& package : packages)
 			{
-				auto llvmIr = cMCompiler::compiler::llvmIntegration::compileToLLVMIr(*compiler.front(), packages, context);
+				auto outputFile = std::ofstream(path("out") / (package->name() + ".json"));
+				emiter.emmit(outputFile, *package);
+				outputFile.close();
+			}
 
-				auto tripple = llvm::sys::getDefaultTargetTriple();
-				cMCompiler::compiler::llvmIntegration::compileToBinary(llvmIr.get(), "out", tripple);
+			auto compiler = cMCompiler::compiler::loadCompilerInterfacePackage(*context);
 
-				llvmIr.release();
-			});
+			auto context = llvm::LLVMContext();
+			cMCompiler::compiler::runWithHandling([&]()
+				{
+					auto llvmIr = cMCompiler::compiler::llvmIntegration::compileToLLVMIr(*compiler.front(), packages, context);
 
+
+					auto tripple = llvm::sys::getDefaultTargetTriple();
+					cMCompiler::compiler::llvmIntegration::compileToBinary(llvmIr.get(), "out", tripple);
+
+					llvmIr.release();
+				});
+		}
+		catch (std::exception const& e)
+		{
+			std::cerr << e.what();
+		}
 	}
 
 	return 0;

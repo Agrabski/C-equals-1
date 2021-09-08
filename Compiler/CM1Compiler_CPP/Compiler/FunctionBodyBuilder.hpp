@@ -24,6 +24,13 @@ namespace cMCompiler::compiler
 		ExpressionBuilder getBuilder();
 		std::filesystem::path filePath_;
 
+		/// <summary>
+		/// Checks if block terminates on all paths with an return
+		/// </summary>
+		/// <param name="code">Code of the block to be analised</param>
+		/// <returns>true if block terminates with a return on all paths</returns>
+		bool validateBlockTerminates(not_null<dataStructures::execution::ArrayValue*> code);
+
 		void buildWhileLoop(
 			language::runtime_value&& expression,
 			not_null<antlr4::tree::ParseTree*> body,

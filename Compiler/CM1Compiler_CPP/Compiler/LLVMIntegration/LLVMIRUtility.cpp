@@ -21,6 +21,7 @@
 #include "../../LanguageLogic/LLVMBindings/LLVMBindings.hpp"
 #include "../../DataStructures/execution/StringValue.hpp"
 #include "../../DataStructures/RuntimeException.hpp"
+#include <llvm/IR/Verifier.h>
 
 using namespace cMCompiler::compiler;
 using namespace cMCompiler::dataStructures;
@@ -82,27 +83,36 @@ void cMCompiler::compiler::llvmIntegration::compileToBinary(
 	auto RM = llvm::Optional<llvm::Reloc::Model>();
 	not_null machine = target->createTargetMachine(triplet, CPU, Features, opt, RM);
 	for (auto& module : result->modules)
-	{
-		module->setDataLayout(machine->createDataLayout());
-		module->setTargetTriple(triplet);
-
-		auto pass = llvm::legacy::PassManager();
-
-		std::error_code ec;
-		auto path = std::filesystem::path(module->getModuleIdentifier()).replace_extension(".o").filename();
-		llvm::raw_fd_ostream dest(
-			(outputDirectory / path).string(),
-			ec,
-			llvm::sys::fs::OpenFlags::OF_None);
-
-		if (machine->addPassesToEmitFile(pass, dest, nullptr, llvm::CodeGenFileType::CGFT_ObjectFile))
-		{
-			std::cerr << "TargetMachine can't emit a file of this type";
-			std::terminate();
-		}
 		module->dump();
-		pass.run(*module);
-		dest.flush();
+	for (auto& module : result->modules)
+	{
+		if (llvm::verifyModule(*module, &llvm::outs()))
+		{
+			module->setDataLayout(machine->createDataLayout());
+			module->setTargetTriple(triplet);
+
+			auto pass = llvm::legacy::PassManager();
+
+			std::error_code ec;
+			auto path = std::filesystem::path(module->getModuleIdentifier()).replace_extension(".o").filename();
+			llvm::raw_fd_ostream dest(
+				(outputDirectory / path).string(),
+				ec,
+				llvm::sys::fs::OpenFlags::OF_None);
+
+			if (machine->addPassesToEmitFile(pass, dest, nullptr, llvm::CodeGenFileType::CGFT_ObjectFile))
+			{
+				std::cerr << "TargetMachine can't emit a file of this type";
+				std::terminate();
+			}
+			pass.run(*module);
+			dest.flush();
+		}
+		else
+		{
+			llvm::outs().flush();
+			exit(1);
+		}
 	}
 
 }

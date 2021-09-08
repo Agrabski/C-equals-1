@@ -9,6 +9,7 @@ namespace cMCompiler::dataStructures
 		Type* type = nullptr;
 		size_t referenceCount = 0;
 		std::string typeName() const;
+		bool isVoidType() const noexcept { return type == nullptr; }
 		TypeReference reference() const noexcept;
 		TypeReference dereference() const noexcept;
 		TypeReference baseType() const noexcept;

@@ -76,6 +76,13 @@ private fn build_expression(instruction: IExpression*, builder: llvmIrBodyBuilde
 			isLeftExpression
 		);
 	print<IExpression*>(instruction);
+	return build(
+	cast<constructorInvocationExpression, IExpression>(instruction),
+	builder,
+	variables,
+	registry,
+	isLeftExpression
+);
 }
 
 private fn build(instruction: functionCallExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*, isLeftExpression: bool) -> llvmValue
@@ -162,6 +169,10 @@ private fn build(instruction: literalExpression*, builder: llvmIrBodyBuilder*, v
 			getType(instruction.type(), registry)
 		);
 	print<literalExpression*>(instruction);
+	return builder.appendIntegerLiteral(
+	*cast<usize, void>(instruction._value),
+	getType(instruction.type(), registry)
+);
 }
 
 private fn build(instruction: fieldAccessExpression*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*, isLeftExpression: bool) -> llvmValue
