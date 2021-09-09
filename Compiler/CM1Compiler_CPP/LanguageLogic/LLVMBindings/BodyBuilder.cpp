@@ -62,8 +62,7 @@ void appendAlloca(
 				std::string exceptionMessage = "Type cannot be allocated on stack beacose it is unsized. Type was: ";
 				llvm::raw_string_ostream rso = llvm::raw_string_ostream(exceptionMessage);
 				varType->print(rso);
-				// todo: fucking dangling pointer. Too bad!
-				throw std::exception(exceptionMessage.c_str());
+				throw cMCompiler::dataStructures::RuntimeException(rso.str());
 			}
 			auto alloc = self->CreateAlloca(varType);
 			return cMCompiler::language::getValueFor(alloc);
@@ -123,9 +122,19 @@ void appendAssign(
 			auto value = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["value"].get())->value();
 			auto pointer = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["pointer"].get())->value();
 
-			if (value->getType() !=
-				cast<llvm::PointerType>(pointer->getType())->getElementType())
-				throw std::exception();
+			auto valueType = value->getType();
+			auto pointerType = cast<llvm::PointerType>(pointer->getType())->getElementType();
+
+			if (valueType != pointerType)
+			{
+				// todo: incorporate values into the exception
+				std::string exceptionMessage = "Cannot store ";
+				llvm::raw_string_ostream rso = llvm::raw_string_ostream(exceptionMessage);
+				valueType->print(rso);
+				rso << " into pointer of type ";
+				pointer->getType()->print(rso);
+				throw cMCompiler::dataStructures::RuntimeException(rso.str());
+			}
 			self->CreateStore(value, pointer);
 			return nullptr;
 		}
@@ -502,6 +511,8 @@ gsl::not_null<Type*> cMCompiler::language::buildBodyBuilder(
 	gsl::not_null<Type*> llvmFunction
 )
 {
+	if (builder != nullptr)
+		return getBodyBuilder();
 	builder = backendns->append<Type>("llvmIrBodyBuilder");
 
 	appendAlloca(builder, backendns, llvmType, llvmValue);

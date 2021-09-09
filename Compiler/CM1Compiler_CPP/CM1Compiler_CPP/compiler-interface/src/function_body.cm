@@ -3,12 +3,13 @@ import {
 	variableDeclarationStatement
 	variableDescriptor
 	returnStatement
+	assigmentStatement
 }
 from {cm1mLang::compiler::ir}
 import {fieldDescriptor functionDescriptor} from {cm1mLang::compiler}
 import {llvmIrBodyBuilder llvmValue llvmFunction} from {cm1mLang::compiler::backend}
 import {dictionary print} from {std}
-import {cast null dictionary false} from {cm1mLang}
+import {cast null dictionary false true} from {cm1mLang}
 
 private fn build_instruction(instruction: IInstruction*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*)
 {
@@ -19,6 +20,14 @@ private fn build_instruction(instruction: IInstruction*, builder: llvmIrBodyBuil
 			variables,
 			registry
 		);
+	if(cast<assigmentStatement, IInstruction>(instruction) != null<assigmentStatement>())
+		build(
+			cast<assigmentStatement, IInstruction>(instruction),
+			builder,
+			variables,
+			registry
+		);
+	
 	if(cast<returnStatement, IInstruction>(instruction) != null<returnStatement>())
 		build(
 			cast<returnStatement, IInstruction>(instruction),
@@ -48,6 +57,7 @@ private fn build(instruction: variableDeclarationStatement*, builder: llvmIrBody
 	builder.appendStore(value, pointer);
 
 }
+
 private fn build(instruction: returnStatement*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*)
 {
 	let exp = instruction._expression;
@@ -61,4 +71,25 @@ private fn build(instruction: returnStatement*, builder: llvmIrBodyBuilder*, var
 		));
 	else
 		builder.appendRetVoid();
+}
+
+private fn build(instruction: assigmentStatement*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*)
+{
+	let lExp = instruction._lExpression;
+	let rExp = instruction._rExpression;
+	let lValue = build_expression(
+		lExp,
+		builder,
+		variables,
+		registry,
+		true()
+	);
+	let rValue = build_expression(
+		rExp,
+		builder,
+		variables,
+		registry,
+		false()
+	);
+	builder.appendStore(rValue, lValue);
 }

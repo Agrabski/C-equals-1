@@ -16,9 +16,10 @@ namespace cMCompiler::dataStructures
 	class RuntimeException : public std::exception
 	{
 		std::vector<stackFrame> stackTrace_;
+		std::string message_;
 	public:
 		RuntimeException() : std::exception() {}
-		explicit RuntimeException(char const* msg) : std::exception(msg) {}
+		explicit RuntimeException(std::string msg) : std::exception(msg.c_str()), message_(std::move(msg)) {}
 		void push(stackFrame&& frame);
 		std::vector<stackFrame>const& trace() const noexcept;
 	};

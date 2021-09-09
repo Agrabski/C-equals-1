@@ -96,6 +96,7 @@ cMCompiler::language::runtime_value cMCompiler::language::buildAssigmentStatemen
 {
 	auto [result, object] = language::heapAllocateObject(getAssigmentStatementDescriptor());
 	// todo: parent statement
+	// todo: validate types
 	//setParent(lExpression.get(), result->copy());
 	//setParent(rExpression.get(), result->copy());
 	object.setValue("_lExpression", std::move(lExpression));
