@@ -125,8 +125,7 @@ private fn buildFunction(f: functionDescriptor, llvmF: llvmFunction, registry: p
 		variables.push(params[i], llvmF.getParameter(i));
 	let builder = llvmF.getBuilder();
 	let code = f.code();
-	for(i in enumerate(0, code.length()))
-		build_instruction(code[i], &builder, &variables, registry);
+	build_block(&code, &builder, &variables, registry);
 }
 
 private fn getParameterTypes(f: functionDescriptor, registry: packageRegistry*) -> llvmType[]

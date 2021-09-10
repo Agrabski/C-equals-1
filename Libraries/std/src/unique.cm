@@ -6,7 +6,8 @@ class @unique<typename T>
 
 	public fn finalize()
 	{
-		delete<T>(self._allocated);
+		if(self._allocated != null<T>())
+			delete<T>(self._allocated);
 	}
 
 	public fn move() -> @unique<T>

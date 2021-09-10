@@ -143,20 +143,27 @@ private fn build(instruction: binaryOperatorExpression*, builder: llvmIrBodyBuil
 {
 	let f = instruction._runtimeFunction;
 	let values = <llvmValue>[];
-	values.push(build_expression(
+	let arg1 = build_expression(
 		instruction._arg1,
 		builder,
 		variables,
 		registry,
 		false()
-	));
-	values.push(build_expression(
+	);
+	let arg2 = build_expression(
 		instruction._arg2,
 		builder,
 		variables,
 		registry,
 		false()
-	));
+	);
+	if(f.parameters()[0].type().isVoidType() )
+	{
+		arg1 = builder.appendBitcast(arg1, getType(typeof(void).reference(), registry));
+		arg2 = builder.appendBitcast(arg2, getType(typeof(void).reference(), registry));
+	}
+	values.push(arg1);
+	values.push(arg2);
 	return builder.appendFunctionCall(getFunction(f, registry), &values);
 }
 

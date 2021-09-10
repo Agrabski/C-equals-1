@@ -4,12 +4,21 @@ import {
 	variableDescriptor
 	returnStatement
 	assigmentStatement
+	functionCallStatement
+	ifStatement
 }
 from {cm1mLang::compiler::ir}
 import {fieldDescriptor functionDescriptor} from {cm1mLang::compiler}
 import {llvmIrBodyBuilder llvmValue llvmFunction} from {cm1mLang::compiler::backend}
-import {dictionary print} from {std}
+import {dictionary print enumerate} from {std}
 import {cast null dictionary false true} from {cm1mLang}
+
+private fn build_block(code: IInstruction[*]*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*)
+{
+	for(i in enumerate(0, code.length()))
+		build_instruction((code[i]), builder, variables, registry);
+}
+
 
 private fn build_instruction(instruction: IInstruction*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*)
 {
@@ -31,6 +40,22 @@ private fn build_instruction(instruction: IInstruction*, builder: llvmIrBodyBuil
 	if(cast<returnStatement, IInstruction>(instruction) != null<returnStatement>())
 		build(
 			cast<returnStatement, IInstruction>(instruction),
+			builder,
+			variables,
+			registry
+		);
+
+	if(cast<functionCallStatement, IInstruction>(instruction) != null<functionCallStatement>())
+		build(
+			cast<functionCallStatement, IInstruction>(instruction),
+			builder,
+			variables,
+			registry
+		);
+
+	if(cast<ifStatement, IInstruction>(instruction) != null<ifStatement>())
+		build(
+			cast<ifStatement, IInstruction>(instruction),
 			builder,
 			variables,
 			registry
@@ -92,4 +117,36 @@ private fn build(instruction: assigmentStatement*, builder: llvmIrBodyBuilder*, 
 		false()
 	);
 	builder.appendStore(rValue, lValue);
+}
+
+private fn build(instruction: functionCallStatement*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*)
+{
+	let exp = instruction._function;
+	build_expression(
+			exp,
+			builder,
+			variables,
+			registry,
+			false()
+		);
+}
+
+private fn build(instruction: ifStatement*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*)
+{
+	let exp = instruction._expression;
+	let condition = build_expression(
+		exp,
+		builder,
+		variables,
+		registry,
+		false()
+	);
+	let ifBranchBuilder = builder.appendBlock("if");
+	let elseBranchBuilder = builder.appendBlock("else");
+	builder.appendBranch(ifBranchBuilder, elseBranchBuilder, condition);
+	builder.switchToNewBlock();
+	build_block(&(instruction._ifBranch), &ifBranchBuilder, variables, registry);
+	build_block(&(instruction._elseBranch), &ifBranchBuilder, variables, registry);
+	ifBranchBuilder.appendBranch(*builder);
+	elseBranchBuilder.appendBranch(*builder);
 }

@@ -376,6 +376,82 @@ void appendGetFieldValue(
 
 }
 
+
+void appendBlock(
+	gsl::not_null<Type*> builder,
+	gsl::not_null<Namespace*> backendns,
+	gsl::not_null<Type*> llvmValue,
+	gsl::not_null<Type*> llvmType
+)
+{
+	auto f = createCustomFunction(
+		builder->append<Function>("appendBlock"),
+		builder,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<GenericRuntimeWrapper<llvm::IRBuilder<>>>(a["self"].get())->value();
+			auto const& name = dereferenceAs<StringValue>(a["name"].get())->value();
+
+			auto newBlock = llvm::BasicBlock::Create(self->getContext(), name, self->GetInsertBlock()->getParent());
+			return std::make_unique<GenericOwningRuntimeWrapper<llvm::IRBuilder<>>>(
+				std::make_shared<llvm::IRBuilder<>>(newBlock),
+				TypeReference{ getBodyBuilder(), 0 });
+		}
+	);
+	f->appendVariable("name", { getString(), 0 });
+	f->setReturnType({ getBodyBuilder(), 0 });
+}
+
+void appendBranch(
+	gsl::not_null<Type*> builder,
+	gsl::not_null<Namespace*> backendns,
+	gsl::not_null<Type*> llvmValue,
+	gsl::not_null<Type*> llvmType
+)
+{
+	auto functionCode = [](auto&& a, auto b) -> runtime_value
+	{
+		auto self = dereferenceAs<GenericRuntimeWrapper<llvm::IRBuilder<>>>(a["self"].get())->value();
+		auto const& ifBranch = dereferenceAs<GenericRuntimeWrapper<llvm::IRBuilder<>>>(a["ifBranch"].get())->value();
+		if (a.contains("condition"))
+		{
+			auto const& elseBranch = dereferenceAs<GenericRuntimeWrapper<llvm::IRBuilder<>>>(a["elseBranch"].get())->value();
+			auto const& condition = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["condition"].get())->value();
+			return getValueFor(self->CreateCondBr(condition, ifBranch->GetInsertBlock(), elseBranch->GetInsertBlock()));
+		}
+		else
+			return getValueFor(self->CreateBr(ifBranch->GetInsertBlock()));
+	};
+	auto f = createCustomFunction(
+		builder->append<Function>("appendBranch"),
+		builder,
+		functionCode
+	);
+	f->appendVariable("ifBranch", { builder, 0 });
+	f->appendVariable("elseBranch", { builder, 0 });
+	f->appendVariable("condition", { llvmValue, 0 });
+	f->setReturnType({ nullptr, 0 });
+
+	f = createCustomFunction(
+		builder->append<Function>("appendBranch"),
+		builder,
+		functionCode
+	);
+	f->appendVariable("ifBranch", { builder, 0 });
+	f->setReturnType({});
+
+	f = createCustomFunction(
+		builder->append<Function>("switchToNewBlock"),
+		builder,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<GenericRuntimeWrapper<llvm::IRBuilder<>>>(a["self"].get())->value();
+			self->SetInsertPoint(llvm::BasicBlock::Create(self->getContext(), "", self->GetInsertBlock()->getParent()));
+			return nullptr;
+		}
+	);
+}
+
 void appendAddressOf(
 	gsl::not_null<Type*> builder,
 	gsl::not_null<Namespace*> backendns,
@@ -495,7 +571,16 @@ void appendFunctionCall(
 			for (unsigned i = 0; i != llvmArguments.size(); ++i)
 				if (!(i >= pointer->getFunctionType()->getNumParams() ||
 					pointer->getFunctionType()->getParamType(i) == llvmArguments[i]->getType()))
-					throw std::exception();
+				{
+					std::string message = "while calling ";
+					auto rso = llvm::raw_string_ostream(message);
+					pointer->print(rso);
+					rso << " could not convert ";
+					llvmArguments[i]->getType()->print(rso);
+					rso << " to ";
+					pointer->getFunctionType()->getParamType(i)->print(rso);
+					throw RuntimeException(rso.str());
+				}
 			auto result = self->CreateCall(pointer, llvmArguments);
 			return getValueFor(result);
 		}
@@ -532,6 +617,8 @@ gsl::not_null<Type*> cMCompiler::language::buildBodyBuilder(
 	appendNullConstant(builder, backendns, llvmValue, llvmType);
 	appendBitcast(builder, backendns, llvmValue, llvmType);
 	appendPtrToInt(builder, backendns, llvmValue, llvmType);
+	appendBranch(builder, backendns, llvmValue, llvmType);
+	appendBlock(builder, backendns, llvmValue, llvmType);
 
 	return builder;
 }
