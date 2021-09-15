@@ -31,6 +31,16 @@ void cMCompiler::language::buildTypeFunctions(not_null<Namespace*> backendNs, no
 			return std::make_unique<GenericRuntimeWrapper<llvm::Type>>(llvm::Type::getInt32Ty(cr->llvmContext), TypeReference{ llvmType, 0 });
 		});
 
+	g = backendNs->append<Function>("llvmInt8Type");
+	g->setReturnType({ llvmType, 0 });
+	g->appendVariable("compilationResult", { compilationResult, 0 });
+
+	compileTimeFunctions::FuntionLibrary::instance().addFunctionDefinition(g, [llvmType](auto&& params, auto)
+		{
+			auto cr = dereferenceAs<GenericRuntimeWrapper<CompilationResult>>(params["compilationResult"].get())->value();
+			return std::make_unique<GenericRuntimeWrapper<llvm::Type>>(llvm::Type::getInt8Ty(cr->llvmContext), TypeReference{ llvmType, 0 });
+		});
+
 	g = backendNs->append<Function>("llvmCstringType");
 	g->setReturnType({ llvmType, 0 });
 	g->appendVariable("compilationResult", { compilationResult, 0 });
@@ -38,7 +48,7 @@ void cMCompiler::language::buildTypeFunctions(not_null<Namespace*> backendNs, no
 	compileTimeFunctions::FuntionLibrary::instance().addFunctionDefinition(g, [llvmType](auto&& params, auto)
 		{
 			auto cr = dereferenceAs<GenericRuntimeWrapper<CompilationResult>>(params["compilationResult"].get())->value();
-			return std::make_unique<GenericRuntimeWrapper<llvm::Type>>(llvm::Type::getInt8PtrTy(cr->llvmContext), TypeReference{ llvmType, 0 });
+			return std::make_unique<GenericRuntimeWrapper<llvm::Type>>(llvm::ArrayType::get(llvm::Type::getInt8Ty(cr->llvmContext), 0), TypeReference{ llvmType, 0 });
 		});
 
 

@@ -91,6 +91,12 @@ private fn getFunction(f: functionDescriptor, registry: packageRegistry*) -> llv
 				registry._functions.push(f, r);
 				return r;
 			}
+			if(f.name() == "operator_[]")
+			{
+				let r = getIndexingOperator(f, registry);
+				registry._functions.push(f, r);
+				return r;
+			}
 		}
 		if(f.isBasedOnGeneric())
 		{

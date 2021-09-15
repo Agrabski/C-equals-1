@@ -3,6 +3,7 @@
 #include <llvm/IR/Function.h>
 #include <llvm/IR/IRBuilder.h>
 #include <llvm/IR/Type.h>
+#include <llvm/Support/TypeSize.h>
 #include "../BuiltInPackageBuildUtility.hpp"
 #include "../CreateGetter.hpp"
 #include "../RuntimeTypesConversionUtility.hpp"
@@ -95,9 +96,21 @@ void getPointer(
 
 			auto ty = llvm::PointerType::getUnqual(type);
 			return std::make_unique<GenericRuntimeWrapper<llvm::Type>>(ty, TypeReference{ llvmType, 0 });
-		})
-		->setReturnType({ llvmType, 0 });
-		f->appendVariable("type", { llvmType, 0 });
+		}
+	)->setReturnType({ llvmType, 0 });
+	f->appendVariable("type", { llvmType, 0 });
+
+	f = mod->append<Function>("getUnsizedVector");
+	createCustomFunction(f, mod, [llvmType](auto&& params, auto)->runtime_value
+		{
+			auto type = dereferenceAs<GenericRuntimeWrapper<llvm::Type>>(params["type"].get())->value();
+			auto self = dereferenceAs<GenericRuntimeWrapper<llvm::Module>>(params["self"].get())->value();
+
+			auto ty = llvm::ArrayType::get(type, 0);
+			return std::make_unique<GenericRuntimeWrapper<llvm::Type>>(ty, TypeReference{ llvmType, 0 });
+		}
+	)->setReturnType({ llvmType, 0 });
+	f->appendVariable("type", { llvmType, 0 });
 }
 
 void appendArrayType(

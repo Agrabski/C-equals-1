@@ -103,6 +103,14 @@ private fn build(instruction: functionCallExpression*, builder: llvmIrBodyBuilde
 		));
 	}
 	print("evaluated parameters");
+	print<functionCallExpression*>(instruction);
+	print(instruction._compiletimeFunction.qualifiedName());
+	print(instruction._runtimeFunction.qualifiedName());
+	if(f.isNull())
+	{
+		print<functionCallExpression*>(instruction);
+		print(instruction._compiletimeFunction.qualifiedName());
+	}
 	return builder.appendFunctionCall(getFunction(f, registry), &values);
 }
 

@@ -123,6 +123,11 @@ void appendAssign(
 			auto pointer = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["pointer"].get())->value();
 
 			auto valueType = value->getType();
+			if (!llvm::isa<llvm::PointerType>(pointer->getType()))
+			{
+				pointer->dump();
+				value->dump();
+			}
 			auto pointerType = cast<llvm::PointerType>(pointer->getType())->getElementType();
 
 			if (valueType != pointerType)
@@ -130,6 +135,8 @@ void appendAssign(
 				// todo: incorporate values into the exception
 				std::string exceptionMessage = "Cannot store ";
 				llvm::raw_string_ostream rso = llvm::raw_string_ostream(exceptionMessage);
+				value->dump();
+				pointer->dump();
 				valueType->print(rso);
 				rso << " into pointer of type ";
 				pointer->getType()->print(rso);
@@ -374,6 +381,28 @@ void appendGetFieldValue(
 	f->appendVariable("objectIndex", { getUsize(), 0 });
 	f->appendVariable("memberIndex", { getUsize(), 0 });
 
+	f = createCustomFunction(
+		builder->append<Function>("apendGetElementPointer"),
+		builder,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<GenericRuntimeWrapper<llvm::IRBuilder<>>>(a["self"].get())->value();
+			auto pointer = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["pointer"].get())->value();
+			auto objectIndex = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["objectIndex"].get())->value();
+			auto memberIndex = convertToIntegral<usize>(*a["memberIndex"]);
+
+			llvm::Value* indexList[] = {
+				objectIndex,
+				llvm::ConstantInt::get(llvm::IntegerType::getInt32Ty(self->getContext()), memberIndex)
+			};
+			auto result = self->CreateGEP(pointer, indexList);
+			return getValueFor(result);
+		}
+	);
+	f->appendVariable("pointer", { llvmValue, 0 });
+	f->appendVariable("objectIndex", { llvmValue, 0 });
+	f->appendVariable("memberIndex", { getUsize(), 0 });
+
 }
 
 
@@ -417,6 +446,7 @@ void appendBranch(
 		{
 			auto const& elseBranch = dereferenceAs<GenericRuntimeWrapper<llvm::IRBuilder<>>>(a["elseBranch"].get())->value();
 			auto const& condition = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["condition"].get())->value();
+			condition->dump();
 			return getValueFor(self->CreateCondBr(condition, ifBranch->GetInsertBlock(), elseBranch->GetInsertBlock()));
 		}
 		else

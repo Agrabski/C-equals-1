@@ -6,7 +6,3 @@ public struct i8 {}
 
 [TypeMapsTo("unsigned_8_bit_integer")]
 public struct u8 {}
-
-[TypeMapsTo("unsigned_8_bit_integer")]
-public struct char {}
-

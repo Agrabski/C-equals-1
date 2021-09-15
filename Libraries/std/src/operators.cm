@@ -1,5 +1,6 @@
+import {bool} from {cm1mLang}
 
-public fn operator != (a: integerIterator, b: integerIterator)
+public fn operator != (a: integerIterator, b: integerIterator) -> bool
 {
 	return a.get() != b.get();
 }

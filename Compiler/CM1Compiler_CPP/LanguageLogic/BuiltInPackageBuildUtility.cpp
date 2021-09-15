@@ -496,6 +496,13 @@ void completeBuildingFunction(gsl::not_null<Type*> t)
 
 			return buildBooleanValue(arg1->value() != arg2->value());
 		});
+	createNativeObjectGetter<Function>(
+		"isNull", t, { getBool(), 0 },
+		[](Function* f)
+		{
+			return buildBooleanValue(f == nullptr);
+		}
+	);
 
 }
 
@@ -880,6 +887,15 @@ void buildString(gsl::not_null<Type*> string)
 	);
 	indexOperator->appendVariable("index", { getUsize(), 0 });
 
+	indexOperator = string->append<Function>("operator_[]");
+	indexOperator->setAccessibility(Accessibility::Public);
+	indexOperator->setReturnType({ getChar(), 0 });
+	indexOperator->appendVariable("self", { string, 1 });
+	indexOperator->appendVariable("index", { getUsize(), 0 });
+	indexOperator->metadata().appendFlag(FunctionFlags::ExcludeAtCompileTime);
+
+
+
 	cMCompiler::language::createOperator(
 		defaultPackage__->rootNamespace(),
 		"==",
@@ -958,6 +974,11 @@ void buildPackage()
 			newType->setAccessibility(Accessibility::Public);
 			auto indexOperator = newType->append<Function>("operator_[]");
 			createIndexer(indexOperator, newType, genericParameters[0]);
+			indexOperator = newType->append<Function>("operator_[]");
+			indexOperator->appendVariable("self", { newType, 1 });
+			indexOperator->appendVariable("index", { getUsize(), 0 });
+			indexOperator->setReturnType(genericParameters[0].reference());
+			indexOperator->metadata().appendFlag(FunctionFlags::ExcludeAtCompileTime);
 
 			createCustomFunction(
 				newType->append<Function>("push"),

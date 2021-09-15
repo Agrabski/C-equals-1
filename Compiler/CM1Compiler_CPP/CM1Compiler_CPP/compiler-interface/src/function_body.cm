@@ -6,6 +6,7 @@ import {
 	assigmentStatement
 	functionCallStatement
 	ifStatement
+	whileStatement
 }
 from {cm1mLang::compiler::ir}
 import {fieldDescriptor functionDescriptor} from {cm1mLang::compiler}
@@ -56,6 +57,14 @@ private fn build_instruction(instruction: IInstruction*, builder: llvmIrBodyBuil
 	if(cast<ifStatement, IInstruction>(instruction) != null<ifStatement>())
 		build(
 			cast<ifStatement, IInstruction>(instruction),
+			builder,
+			variables,
+			registry
+		);
+
+	if(cast<whileStatement, IInstruction>(instruction) != null<whileStatement>())
+		build(
+			cast<whileStatement, IInstruction>(instruction),
 			builder,
 			variables,
 			registry
@@ -149,4 +158,26 @@ private fn build(instruction: ifStatement*, builder: llvmIrBodyBuilder*, variabl
 	build_block(&(instruction._elseBranch), &ifBranchBuilder, variables, registry);
 	ifBranchBuilder.appendBranch(*builder);
 	elseBranchBuilder.appendBranch(*builder);
+}
+
+private fn build(instruction: whileStatement*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*)
+{
+	let loopEntry = builder.appendBlock("loop_entry_point");
+	let condition = build_expression(
+		instruction._expression,
+		&loopEntry,
+		variables,
+		registry,
+		false()
+	);
+	let loopBody = builder.appendBlock("loop_body");
+	let afterLoop = builder.appendBlock("after_loop");
+
+	builder.appendBranch(loopEntry);
+	loopEntry.appendBranch(loopBody, afterLoop, condition);
+	builder.switchToNewBlock();
+	afterLoop.appendBranch(*builder);
+
+	build_block(&(instruction._body), &loopBody, variables, registry);
+	loopBody.appendBranch(loopEntry);
 }

@@ -50,7 +50,7 @@ namespace cMCompiler::language
 	[[nodiscard]]
 	T convertToIntegral(dataStructures::execution::IRuntimeValue& value)
 	{
-		auto integerValue = dereferenceAs<dataStructures::execution::IntegerValue>(&value);
+		not_null integerValue = dereferenceAs<dataStructures::execution::IntegerValue>(&value);
 		return *reinterpret_cast<T*>(integerValue->rawNumber().get());
 	}
 }

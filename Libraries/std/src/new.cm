@@ -1,4 +1,4 @@
-import {usize compiletime_heap_allocate null} from {cm1mLang}
+import {usize compiletime_heap_allocate null char} from {cm1mLang}
 import {RunTimeOnly} from {compiler}
 
 [RunTimeOnly()]

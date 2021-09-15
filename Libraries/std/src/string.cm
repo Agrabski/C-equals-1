@@ -1,4 +1,4 @@
-import {string} from {cm1mLang}
+import {string char} from {cm1mLang}
 
 class dyn_string
 {
