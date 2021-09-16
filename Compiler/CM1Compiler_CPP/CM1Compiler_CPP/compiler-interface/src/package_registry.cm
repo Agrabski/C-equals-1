@@ -44,10 +44,10 @@ private class packageRegistry
 	private fn getModuleForFile(path: string) -> llvmModule
 	{
 		for(i in enumerate(0, self._data.length()))
-			if(self._data.get(i).path == path)
+			if(self._data.get(i).path == "module")
 				return self._data.get(i).module;
-		let newModule = self._compilationResult.appendModule(path);
-		let pair = pathPackagePair(path, newModule);
+		let newModule = self._compilationResult.appendModule("module");
+		let pair = pathPackagePair("module", newModule);
 		self._data.push(pair);
 		return newModule;
 	}

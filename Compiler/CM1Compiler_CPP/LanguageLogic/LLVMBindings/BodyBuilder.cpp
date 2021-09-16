@@ -395,6 +395,7 @@ void appendGetFieldValue(
 				objectIndex,
 				llvm::ConstantInt::get(llvm::IntegerType::getInt32Ty(self->getContext()), memberIndex)
 			};
+			pointer->dump();
 			auto result = self->CreateGEP(pointer, indexList);
 			return getValueFor(result);
 		}

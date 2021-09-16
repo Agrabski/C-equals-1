@@ -86,7 +86,7 @@ void cMCompiler::compiler::llvmIntegration::compileToBinary(
 		module->dump();
 	for (auto& module : result->modules)
 	{
-		if (llvm::verifyModule(*module, &llvm::outs()))
+		if (!llvm::verifyModule(*module, &llvm::outs()))
 		{
 			module->setDataLayout(machine->createDataLayout());
 			module->setTargetTriple(triplet);
