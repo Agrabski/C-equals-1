@@ -48,6 +48,7 @@
     <ClInclude Include="FunctionUtility.hpp" />
     <ClInclude Include="Generic\GenericInstantiationUtility.hpp" />
     <ClInclude Include="IntermidiateRepresentationEmmiter.hpp" />
+    <ClInclude Include="IRInlining.hpp" />
     <ClInclude Include="LLVMIntegration\LLVMIRUtility.hpp" />
     <ClInclude Include="PackageBuildUtility.hpp" />
     <ClInclude Include="PackageDiscoveryUtility.hpp" />
@@ -70,6 +71,7 @@
     <ClCompile Include="FunctionUtility.cpp" />
     <ClCompile Include="Generic\GenericInstantiationUtility.cpp" />
     <ClCompile Include="IntermidiateRepresentationEmmiter.cpp" />
+    <ClCompile Include="IRInlining.cpp" />
     <ClCompile Include="LLVMIntegration\LLVMIRUtility.cpp" />
     <ClCompile Include="PackageBuildUtility.cpp" />
     <ClCompile Include="PackageDiscoveryUtility.cpp" />

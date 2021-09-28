@@ -49,6 +49,23 @@ namespace cMCompiler::dataStructures::execution
 			return allocated_.end();
 		}
 
+		void insert(size_t position, ArrayValue& content)
+		{
+			auto iterator = allocated_.begin();
+			for (size_t i = position + 1; i > 0; i--)
+				iterator++;
+			for (auto& e : content)
+				iterator = ++allocated_.insert(iterator, std::move(e));
+		}
+
+		void erase(size_t position)
+		{
+			auto iterator = allocated_.begin();
+			for (size_t i = position; i > 0; i--)
+				iterator++;
+			allocated_.erase(iterator);
+		}
+
 		std::size_t size() const noexcept { return allocated_.size(); }
 
 		// Inherited via IRuntimeValue

@@ -211,3 +211,18 @@ std::unique_ptr<dataStructures::execution::ReferenceValue> cMCompiler::compiler:
 	}
 	std::terminate();
 }
+
+language::runtime_value cMCompiler::compiler::evaluate(language::runtime_value& expression, bool expectNull, std::map<not_null<dataStructures::Variable*>, language::runtime_value>& variables)
+{
+	auto evaluator = ExpressionEvaluator([&](std::string const& name) -> runtime_value&
+		{
+			auto value = std::find_if(variables.begin(), variables.end(), [&](const auto& kv)
+				{
+					return kv.first->name() == name;
+				});
+			assert(value != variables.end());
+			auto& result = variables[value->first];
+			return result;
+		});
+	return evaluator.evaluate(expression, expectNull);
+}

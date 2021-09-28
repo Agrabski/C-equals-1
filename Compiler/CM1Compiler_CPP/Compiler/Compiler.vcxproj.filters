@@ -87,6 +87,9 @@
     <ClInclude Include="Environment.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="IRInlining.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CompilationUnitDatabaseBuilder.cpp">
@@ -144,6 +147,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Environment.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IRInlining.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -40,6 +40,7 @@
     <ClInclude Include="GenericUtility.hpp" />
     <ClInclude Include="GetterExecution.hpp" />
     <ClInclude Include="InstantiateGeneric.hpp" />
+    <ClInclude Include="IRPredicates.hpp" />
     <ClInclude Include="IRUtility.hpp" />
     <ClInclude Include="LiteralUtility.hpp" />
     <ClInclude Include="LLVMBindings\BodyBuilder.hpp" />
@@ -87,6 +88,7 @@
     <ClCompile Include="GenericUtility.cpp" />
     <ClCompile Include="GetterExecution.cpp" />
     <ClCompile Include="InstantiateGeneric.cpp" />
+    <ClCompile Include="IRPredicates.cpp" />
     <ClCompile Include="IRUtility.cpp" />
     <ClCompile Include="LiteralUtility.cpp" />
     <ClCompile Include="LLVMBindings\BodyBuilder.cpp" />

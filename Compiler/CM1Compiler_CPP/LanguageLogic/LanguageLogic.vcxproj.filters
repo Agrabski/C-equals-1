@@ -150,6 +150,9 @@
     <ClInclude Include="MetadataHolderBindings.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="IRPredicates.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NamespaceBuilder.cpp">
@@ -264,6 +267,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GenericUtility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IRPredicates.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
