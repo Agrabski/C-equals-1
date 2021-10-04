@@ -27,6 +27,11 @@ namespace cMCompiler::dataStructures::execution
 			return ReferenceValue::make(&values_[name], getMemberType(name));
 		}
 
+		IRuntimeValue* getRawValue(std::string const& name)
+		{
+			return values_.at(name).get();
+		}
+
 		TypeReference const& getMemberType(std::string const& name) const final;
 
 		void setValue(std::string const& name, std::unique_ptr<IRuntimeValue>&& value) final

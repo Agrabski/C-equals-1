@@ -41,6 +41,10 @@ namespace cMCompiler::dataStructures
 		// Inherited via INamedObject
 		execution::json emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const final;
 
+
+		static constexpr auto onDeclare = "onDeclare";
+		static constexpr auto onGetAddress = "onGetAddress";
+		static constexpr auto onReference = "onReference";
 	};
 
 }

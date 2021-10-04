@@ -4,6 +4,7 @@
 #include "AttributeUtility.hpp"
 #include "FunctionUtility.hpp"
 #include "ExpressionBuilder.hpp"
+#include "AttributeSpecialFunctionsExecution.hpp"
 
 antlrcpp::Any cMCompiler::compiler::Preprocessor::visitTypeDeclaration(CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext* ctx)
 {
@@ -71,7 +72,9 @@ void cMCompiler::compiler::Preprocessor::executeAttachmentFunctions()
 
 void cMCompiler::compiler::Preprocessor::executeAttributeSpecialFunctions()
 {
-	// todo: run
+	for (not_null f : database_.getAllFunctions())
+		for (auto& statement : *f->code())
+			executeAttributeFunctionsForStatement(statement);
 }
 
 void cMCompiler::compiler::Preprocessor::preprocess(Parser::CompilationUnit& compilationUnit)

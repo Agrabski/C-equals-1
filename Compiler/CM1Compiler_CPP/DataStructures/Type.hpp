@@ -101,6 +101,14 @@ namespace cMCompiler::dataStructures
 			implementedInterfaces_.push_back(t);
 		}
 
+		Function* getMethod(std::string const& name) noexcept
+		{
+			auto found = std::find_if(methods_.begin(), methods_.end(), [&](auto const& e) {return e->name() == name; });
+			if (found != methods_.end())
+				return found->get();
+			return nullptr;
+		}
+
 		Field* appendField(std::string const& name, TypeReference type);
 
 		std::vector<gsl::not_null<Field*>> fields()

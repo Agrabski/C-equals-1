@@ -36,6 +36,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AttributeSpecialFunctionsExecution.hpp" />
     <ClInclude Include="AttributeUtility.hpp" />
     <ClInclude Include="CompilationUnitDatabaseBuilder.hpp" />
     <ClInclude Include="compilerInterfaceUtility.hpp" />
@@ -58,6 +59,7 @@
     <ClInclude Include="TypeUtility.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AttributeSpecialFunctionsExecution.cpp" />
     <ClCompile Include="AttributeUtility.cpp" />
     <ClCompile Include="CompilationUnitDatabaseBuilder.cpp" />
     <ClCompile Include="compilerInterfaceUtility.cpp" />
