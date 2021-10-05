@@ -32,6 +32,11 @@ namespace cMCompiler::dataStructures::execution
 			return values_.at(name).get();
 		}
 
+		bool hasValue(std::string const& name)
+		{
+			return values_.contains(name);
+		}
+
 		TypeReference const& getMemberType(std::string const& name) const final;
 
 		void setValue(std::string const& name, std::unique_ptr<IRuntimeValue>&& value) final

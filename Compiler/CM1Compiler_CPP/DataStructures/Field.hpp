@@ -31,6 +31,9 @@ namespace cMCompiler::dataStructures
 
 		// Inherited via INamedObject
 		execution::json emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const final;
+
+
+		static constexpr auto onAccess = "onAccess";
 	};
 
 }

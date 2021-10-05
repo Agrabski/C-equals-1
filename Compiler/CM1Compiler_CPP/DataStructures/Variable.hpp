@@ -43,7 +43,6 @@ namespace cMCompiler::dataStructures
 
 
 		static constexpr auto onDeclare = "onDeclare";
-		static constexpr auto onGetAddress = "onGetAddress";
 		static constexpr auto onReference = "onReference";
 	};
 

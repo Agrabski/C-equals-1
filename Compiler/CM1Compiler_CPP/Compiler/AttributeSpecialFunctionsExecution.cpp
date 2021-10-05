@@ -4,9 +4,12 @@
 #include "../LanguageLogic/RuntimeTypesConversionUtility.hpp"
 #include "../LanguageLogic/IRUtility.hpp"
 #include "FunctionExecutionUtility.hpp"
+#include "../DataStructures/execution/RuntimeFieldDescriptor.hpp"
 
 using cMCompiler::dataStructures::AttributeInstance;
 using cMCompiler::dataStructures::Function;
+using cMCompiler::dataStructures::Variable;
+using cMCompiler::dataStructures::Field;
 using namespace cMCompiler::dataStructures::execution;
 using cMCompiler::language::dereferenceAs;
 using cMCompiler::language::runtime_value;
@@ -62,6 +65,13 @@ void executeAttachmentFunctionsForFunctionCallStatement(cMCompiler::language::ru
 	executeAttachmentFunctionForExpression(function);
 }
 
+void executeAttachmentFunctionsForReturn(not_null<IRuntimeValue*> statement)
+{
+	not_null object = dereferenceAs<ObjectValue>(statement);
+	if (object->hasValue("_expression"))
+		executeAttachmentFunctionForExpression(object->getRawValue("_expression"));
+}
+
 void executeAttachmentFunctionsForAssigment(cMCompiler::language::runtime_value& statement)
 {
 	using cMCompiler::dataStructures::Variable;
@@ -78,24 +88,74 @@ void cMCompiler::compiler::executeAttributeFunctionsForStatement(language::runti
 	not_null stmnt = statement.get();
 	using language::isOfType;
 	if (isOfType(stmnt, language::getVariableDeclarationStatementDescriptor()))
-		executeAttachmentFunctionsForVariableDeclaration(statement);
+		return executeAttachmentFunctionsForVariableDeclaration(statement);
 	if (isOfType(stmnt, language::getAssigmentStatementDescriptor()))
-		executeAttachmentFunctionsForAssigment(statement);
+		return executeAttachmentFunctionsForAssigment(statement);
 	if (isOfType(stmnt, language::getFunctionCallStatementDescriptor()))
-		executeAttachmentFunctionsForFunctionCallStatement(statement);
+		return executeAttachmentFunctionsForFunctionCallStatement(statement);
+	if (isOfType(stmnt, language::getScopeTerminationStatementDescriptor()))
+		return;
+	if (isOfType(stmnt, language::getReturnStatementDescriptor()))
+		return executeAttachmentFunctionsForReturn(stmnt);
+	// todo: while statement
+	// todo: if statement
 	std::terminate();
+}
+
+void executeAttibuteFunctionForVariableReferenceExpression(not_null<IRuntimeValue*> expresion)
+{
+	not_null object = dereferenceAs<ObjectValue>(expresion);
+	auto variable = dereferenceAs<RuntimeVariableDescriptor>(object->getRawValue("_variable"))->value();
+
+	executeFunctions(getAttributesAndSpecialFunctions(*variable, Variable::onReference), expresion);
+}
+
+void executeAttributeFunctionForFieldAccessExpression(not_null<IRuntimeValue*> expresion)
+{
+	not_null obj = dereferenceAs<ObjectValue>(expresion);
+
+	auto exp = obj->getRawValue("_expression");
+	auto field = dereferenceAs<RuntimeFieldDescriptor>(obj->getRawValue("_field"))->value();
+
+	executeFunctions(getAttributesAndSpecialFunctions(*field, Field::onAccess), expresion);
+	executeAttachmentFunctionForExpression(exp);
+}
+
+void executeAttributeFunctionForAddressofExpression(not_null<IRuntimeValue*> expresion)
+{
+	not_null object = dereferenceAs<ObjectValue>(expresion);
+	executeAttachmentFunctionForExpression(object->getRawValue("_expression"));
+}
+
+void executeAttributeFunctionForBinaryOperatorExpression(not_null<IRuntimeValue*> expresion)
+{
+	not_null object = dereferenceAs<ObjectValue>(expresion);
+	not_null cFunction = dereferenceAs<RuntimeFunctionDescriptor>(object->getRawValue("_compiletimeFunction"))->value();
+	not_null rFunction = dereferenceAs<RuntimeFunctionDescriptor>(object->getRawValue("_runtimeFunction"))->value();
+
+	if (cFunction)
+		executeFunctions(getAttributesAndSpecialFunctions(*cFunction, Function::onCall), expresion);
+	if (rFunction)
+		executeFunctions(getAttributesAndSpecialFunctions(*rFunction, Function::onCall), expresion);
+	not_null arg1 = object->getRawValue("_arg1");
+	not_null arg2 = object->getRawValue("_arg2");
+	executeAttachmentFunctionForExpression(arg1);
+	executeAttachmentFunctionForExpression(arg2);
 }
 
 void executeAttibuteFunctionForFunctionCallExpression(not_null<IRuntimeValue*> expresion)
 {
 	not_null object = dereferenceAs<ObjectValue>(expresion);
-	not_null cFunction = dereferenceAs<RuntimeFunctionDescriptor>(object->getRawValue("_compiletimeFunction"))->value();
-	not_null rFunction = dereferenceAs<RuntimeFunctionDescriptor>(object->getRawValue("_runtimetimeFunction"))->value();
+	auto cFunction = dereferenceAs<RuntimeFunctionDescriptor>(object->getRawValue("_compiletimeFunction"))->value();
+	auto rFunction = dereferenceAs<RuntimeFunctionDescriptor>(object->getRawValue("_runtimeFunction"))->value();
 
-	executeFunctions(getAttributesAndSpecialFunctions(*cFunction, Function::onCall), expresion);
-	executeFunctions(getAttributesAndSpecialFunctions(*rFunction, Function::onCall), expresion);
-	// todo: arguments
-	std::terminate();
+	if (cFunction)
+		executeFunctions(getAttributesAndSpecialFunctions(*cFunction, Function::onCall), expresion);
+	if (rFunction)
+		executeFunctions(getAttributesAndSpecialFunctions(*rFunction, Function::onCall), expresion);
+	not_null args = dereferenceAs<ArrayValue>(object->getRawValue("_arguments"));
+	for (auto& arg : *args)
+		executeAttachmentFunctionForExpression(arg.get());
 }
 
 
@@ -105,6 +165,16 @@ void cMCompiler::compiler::executeAttachmentFunctionForExpression(not_null<IRunt
 
 	using language::isOfType;
 	if (isOfType(exp, language::getFunctionCallExpressionDescriptor()))
-		executeAttibuteFunctionForFunctionCallExpression(expression);
+		return executeAttibuteFunctionForFunctionCallExpression(expression);
+	if (isOfType(exp, language::getVariableReferenceExpressionDescriptor()))
+		return executeAttibuteFunctionForVariableReferenceExpression(exp);
+	if (isOfType(exp, language::getFieldAccessExpressionDescriptor()))
+		return executeAttributeFunctionForFieldAccessExpression(exp);
+	if (isOfType(exp, language::getBinaryOperatorExpressionDescriptor()))
+		return executeAttributeFunctionForBinaryOperatorExpression(exp);
+	if (isOfType(exp, language::getLiteralExpressionDescriptor()))
+		return;
+	if(isOfType(exp, language::getAdressofExpressionDescriptor()))
+		return executeAttributeFunctionForAddressofExpression(exp);
 	std::terminate();
 }
