@@ -124,8 +124,8 @@ cMCompiler::language::runtime_value cMCompiler::language::buildMethodCallExpress
 		expressions.push_back(e.get());
 
 	auto result = buildFunctionCallExpression(
-		compile != nullptr ? getValueFor(compile) : nullptr,
-		run != nullptr ? getValueFor(run) : nullptr,
+		getValueFor(compile),
+		getValueFor(run),
 		language::convertToCollection(std::move(argumentExpressions), { getExpressionDescriptor(), 1 }),
 		std::move(pointerToSource));
 	assert(dynamic_cast<dataStructures::execution::ReferenceValue*>(result.get()) != nullptr);
@@ -168,8 +168,8 @@ cMCompiler::language::runtime_value cMCompiler::language::buildMethodCallExpress
 	assert(compile != nullptr || run != nullptr);
 
 	auto result = buildFunctionCallExpression(
-		compile != nullptr ? getValueFor(compile) : nullptr,
-		run != nullptr ? getValueFor(run) : nullptr,
+		getValueFor(compile),
+		getValueFor(run),
 		language::convertToCollection(std::move(argumentExpressions), { getExpressionDescriptor(), 1 }),
 		std::move(pointerToSource));
 	assert(dynamic_cast<dataStructures::execution::ReferenceValue*>(result.get()) != nullptr);

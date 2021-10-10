@@ -40,6 +40,7 @@ namespace cMCompiler::language
 					[retType](T* s) -> runtime_value
 					{
 						auto self = convert(s);
+						auto name = self->name();
 						using namespace std::views;
 						auto attributes = self->attributes()
 							| filter(getIsDescribedByTypePredicate(retType));

@@ -93,6 +93,23 @@ std::vector<cMCompiler::language::runtime_value> cMCompiler::compiler::Expressio
 	return result;
 }
 
+cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::buildExpression(gsl::not_null<CMinusEqualsMinus1Revision0Parser::LiteralFunctionContext*> ctx, language::runtime_value&& referenceToParent)
+{
+	std::stringstream ss{ ctx->typeSpecifier()->getText() };
+	auto type = Parser::ParserAdapter().parseType(ss);
+	return language::buildValueLiteralExpression(
+		language::moveToHeap(language::getValueFor(
+			getType(
+				nameResolver_,
+				context_,
+				type.get(),
+				filepath_
+			))),
+		language::buildSourcePointer(filepath_.string(), *ctx)
+	);
+}
+
+
 cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::buildExpression(gsl::not_null<CMinusEqualsMinus1Revision0Parser::DereferenceExpressionContext*> ctx, language::runtime_value&& referenceToParent)
 {
 	return language::buildDereferenceExpression(
@@ -289,6 +306,9 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 
 cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::buildExpression(gsl::not_null<CMinusEqualsMinus1Revision0Parser::FunctionCallContext*> ctx, language::runtime_value&& referenceToParent)
 {
+	if (ctx->literalFunction() != nullptr)
+		return buildExpression(ctx->literalFunction(), std::move(referenceToParent));
+
 	auto name = ctx->identifier()->getText();
 	auto special = buildSpecialFunction(ctx, name);
 	if (special)

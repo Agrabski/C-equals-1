@@ -44,15 +44,15 @@ namespace cMCompiler::compiler
 		runThroughFiles(dbBuilder, files);
 	}
 
-	std::vector<std::unique_ptr<dataStructures::PackageDatabase>> buildByManifest(std::vector<std::filesystem::path> const& pathToManifest);
+	std::vector<not_null<dataStructures::PackageDatabase*>> buildByManifest(std::vector<std::filesystem::path> const& pathToManifest);
 
 	void supplyDependencies(
 		gsl::not_null<dataStructures::PackageDatabase*>package,
-		std::vector<std::unique_ptr<dataStructures::PackageDatabase>> const& packages,
+		std::vector<not_null<dataStructures::PackageDatabase*>> const& packages,
 		std::map<dataStructures::PackageDatabase*, std::vector<std::string>>const& depNames);
 
 	void supplyDependencies(
-		std::vector<std::unique_ptr<dataStructures::PackageDatabase>>& packages,
+		std::vector<not_null<dataStructures::PackageDatabase*>>& packages,
 		std::map<dataStructures::PackageDatabase*, std::vector<std::string>>const& depNames);
 
 	dataStructures::PackageDatabase* getGlobalPackage(std::string const& name);

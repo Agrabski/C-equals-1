@@ -1,6 +1,5 @@
 import {usize} from {cm1mLang}
 import {ReplaceWithLLVMIR} from {compiler}
 
-[ReplaceWithLLVMIR("null.llvm", "T", nameof(T))]
 public fn null<T>() -> T*
 {}

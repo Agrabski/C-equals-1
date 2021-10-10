@@ -6,6 +6,6 @@
 
 namespace cMCompiler::compiler
 {
-	std::vector<std::unique_ptr<dataStructures::PackageDatabase>> loadCompilerInterfacePackage(dataStructures::CompilationContext const&);
+	std::vector<not_null<dataStructures::PackageDatabase*>> loadCompilerInterfacePackage(dataStructures::CompilationContext const&);
 	gsl::not_null<dataStructures::Function*> getCompilerInterfaceEntryPoint(dataStructures::PackageDatabase& interfacePackage);
 }

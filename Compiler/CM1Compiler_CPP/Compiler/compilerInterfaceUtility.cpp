@@ -4,7 +4,7 @@
 
 using namespace cMCompiler;
 
-std::vector<std::unique_ptr<dataStructures::PackageDatabase>> cMCompiler::compiler::loadCompilerInterfacePackage(
+std::vector<not_null<dataStructures::PackageDatabase*>> cMCompiler::compiler::loadCompilerInterfacePackage(
 	dataStructures::CompilationContext const& context)
 {
 	if (context.compilerInterfaceManifestFile)

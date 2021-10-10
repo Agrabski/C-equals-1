@@ -7,7 +7,7 @@ std::vector<File> cMCompiler::fileSystem::loadFiles(std::filesystem::path const&
 	auto x = std::filesystem::absolute(path);
 	for (auto& f : std::filesystem::recursive_directory_iterator(path))
 		if (!f.is_directory() && f.path().has_extension() && f.path().extension() == ".cm")
-			result.emplace_back(f);
+			result.emplace_back(std::filesystem::relative(f.path(), path));
 	return result;
 
 }

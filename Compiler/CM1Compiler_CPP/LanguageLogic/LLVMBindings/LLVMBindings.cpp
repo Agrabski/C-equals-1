@@ -58,7 +58,7 @@ not_null<Type*> buildCompilationResultDescriptor(
 			auto err = llvm::SMDiagnostic();
 
 			auto m = llvm::parseIR(llvm::MemoryBufferRef(*stream), err, compilationResult->llvmContext);
-
+			m->dump();
 			auto resultModule = m.get();
 			compilationResult->modules.push_back(std::move(m));
 			return std::make_unique<GenericRuntimeWrapper<llvm::Module>>(resultModule, TypeReference{ moduleDescriptor, 0 });

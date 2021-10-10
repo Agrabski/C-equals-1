@@ -9,7 +9,7 @@ private fn getArrayLength(f: functionDescriptor, registry: packageRegistry*) -> 
 {
 	let mod = registry.getModuleFor(f);
 	let func = mod.appendFunction(
-			f.name(),
+			getFunctionName(f),
 			getParameterTypes(f, registry),
 			getParameterNames(f, registry),
 			getType(f.returnType(), registry)

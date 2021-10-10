@@ -1,7 +1,7 @@
 import {functionDescriptor packageDescriptor typeDescriptor} from {cm1mLang::compiler}
 import {llvmFunction llvmModule llvmType compilationResult llvmValue} from {cm1mLang::compiler::backend}
 import {enumerate print dictionary} from {std}
-import {ReplaceWithLLVMIR} from {std::compiler}
+import {ReplaceWithLLVMIR mapToExternalSymbol} from {std::compiler}
 import {variableDescriptor} from {cm1mLang::compiler::ir}
 import {string null dictionary bool} from {cm1mLang}
 
@@ -9,12 +9,23 @@ private fn getFunction(f: functionDescriptor, registry: packageRegistry*) -> llv
 {
 	if(registry._functions.hasKey(f))
 		return *registry._functions.get(f);
-	print(f.qualifiedName());
 
 	let attribute = f.get_attribute<_att_ ReplaceWithLLVMIR>();
-
+	let external = f.get_attribute<_att_ mapToExternalSymbol>();
+	print(f.name());
+	print<_att_ mapToExternalSymbol*>(external);
+	if(external != null<_att_ mapToExternalSymbol>())
+	{
+		let g = createFunctionFromExternal(f, registry, external);
+		registry._functions.push(f, g);
+		return g;
+	}
 	if(attribute != null<_att_ ReplaceWithLLVMIR>())
-		return createFunctionFromLLVMIR(f, registry._compilationResult, attribute);
+	{
+		let g = createFunctionFromLLVMIR(f, registry._compilationResult, attribute);
+		registry._functions.push(f, g);
+		return g;
+	}
 	else
 	{
 		if(f.isIntrinsic())
@@ -107,11 +118,16 @@ private fn getFunction(f: functionDescriptor, registry: packageRegistry*) -> llv
 		if(f.isBasedOnGeneric())
 		{
 			if(f.genericInstantiationInfo().generic() == genericFunctionof(null))
-				return getNull(f, registry);
+			{
+				let n = getNull(f, registry);
+				registry._functions.push(f, n);
+				return n;
+			}
+
 		}
 		let mod = registry.getModuleFor(f);
 		let func = mod.appendFunction(
-			f.name(),
+			getFunctionName(f),
 			getParameterTypes(f, registry),
 			getParameterNames(f, registry),
 			getType(f.returnType(), registry)
@@ -122,6 +138,20 @@ private fn getFunction(f: functionDescriptor, registry: packageRegistry*) -> llv
 		return func;
 	}
 }
+
+private fn createFunctionFromExternal(f: functionDescriptor, registry: packageRegistry*, attribute: _att_ mapToExternalSymbol*) -> llvmFunction
+{
+	print("external");
+	let mod = registry.getModuleFor(f);
+	let f = mod.appendFunction(
+		attribute._symbolName,
+		getParameterTypes(f, registry),
+		getParameterNames(f, registry),
+		getType(f.returnType(), registry)
+	);
+	return f;
+}
+
 
 private fn createFunctionFromLLVMIR(f: functionDescriptor, cr: compilationResult, attribute: _att_ ReplaceWithLLVMIR*) -> llvmFunction
 {
@@ -158,5 +188,30 @@ private fn getParameterNames(f: functionDescriptor, registry: packageRegistry*) 
 		result.push(parameters[i].name());
 	}
 	return result;
+}
+
+private fn getFunctionName(f: functionDescriptor) -> string {
+	let baseName = f.qualifiedName();
+	let params = f.parameters();
+	for(i in enumerate(0, params.length()))
+	{
+		baseName = baseName + "__" + (params[i].type().toString());
+	}
+	return baseName
+		.replace(":", "_")
+		.replace("_<", "less")
+		.replace("_>", "greater")
+		.replace("<", "_")
+		.replace(">", "_")
+		.replace("[", "__left_bracket__")
+		.replace("]", "__right_bracket__")
+		.replace("+", "__plus__")
+		.replace("-", "__minus__")
+		.replace("*", "__star__")
+		.replace("/", "__slash__")
+		.replace("==", "__equals__")
+		.replace("!=", "__not_equals__")
+		.replace(",", "__comma__")
+		.replace("@", "__at__");
 }
 

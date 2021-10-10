@@ -1,0 +1,5 @@
+import {usize} from {cm1mLang}
+
+public fn add(a: usize, b: usize) -> usize {
+	return a + b;
+}

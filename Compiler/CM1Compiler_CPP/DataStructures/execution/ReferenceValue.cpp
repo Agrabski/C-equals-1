@@ -10,6 +10,8 @@ std::string cMCompiler::dataStructures::execution::ReferenceValue::toString() co
 {
 	using namespace std::string_literals;
 	std::stringstream ss;
+	if (value_ == nullptr)
+		return "null";
 	ss << "[object at: " << value_->get() << "]"s;
 	return ss.str();
 }

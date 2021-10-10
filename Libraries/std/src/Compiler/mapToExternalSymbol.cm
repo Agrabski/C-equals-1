@@ -5,8 +5,8 @@ namespace compiler
 {
 	public att<function type> mapToExternalSymbol
 	{
-		private _symbolName : string;
-		private _assemblyName : string;
+		public _symbolName : string;
+		public _assemblyName : string;
 		public fn construct(symbolName: string, assemblyName: string)
 		{
 			self._symbolName = symbolName;

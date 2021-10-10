@@ -17,6 +17,11 @@ std::unique_ptr<IRuntimeValue> cMCompiler::language::compileTimeFunctions::print
 		std::cout << "*";
 		v = dereferenceOnce(v);
 	}
+	if (v == nullptr)
+	{
+		std::cout << "null";
+		return nullptr;
+	}
 	std::cout << v->toString() << std::endl;
 	return nullptr;
 }

@@ -26,6 +26,11 @@ importDeclaration:
 
 importAliasDeclaration: identifier (':' identifier)?;
 
+literalFunction
+    : 'typeof' '(' typeSpecifier ')'
+
+    ;
+
 typeDeclaration:
 	(attributeSequence)? AccessSpecifier? classTypeSpecifier identifier genericSpecifier? (
 		':' implementedInterfacesSequence
@@ -135,8 +140,9 @@ whileHeader: 'while' ParamOpen expression ParamClose;
 
 infiniteLoopStatement: 'loop' compoundStatement;
 
-functionCall:
-	identifier genericUsage? ParamOpen (
+functionCall
+    : literalFunction
+	| identifier genericUsage? ParamOpen (
 		functionCallParameter (Comma functionCallParameter)*
 	)? ParamClose;
 

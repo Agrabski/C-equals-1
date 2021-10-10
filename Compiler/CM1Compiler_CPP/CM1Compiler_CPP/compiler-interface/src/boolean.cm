@@ -9,7 +9,7 @@ private fn getTrue(f: functionDescriptor, registry: packageRegistry*) -> llvmFun
 {
 	let mod = registry.getModuleFor(f);
 	let func = mod.appendFunction(
-			f.name(),
+			getFunctionName(f),
 			getParameterTypes(f, registry),
 			getParameterNames(f, registry),
 			getType(f.returnType(), registry)
@@ -25,7 +25,7 @@ private fn getFalse(f: functionDescriptor, registry: packageRegistry*) -> llvmFu
 {
 	let mod = registry.getModuleFor(f);
 	let func = mod.appendFunction(
-			f.name(),
+			getFunctionName(f),
 			getParameterTypes(f, registry),
 			getParameterNames(f, registry),
 			getType(f.returnType(), registry)

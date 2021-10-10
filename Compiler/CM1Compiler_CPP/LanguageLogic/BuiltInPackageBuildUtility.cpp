@@ -370,6 +370,27 @@ void completeBuildingType(gsl::not_null<Type*> type)
 			return buildBooleanValue(v->type->metadata().hasFlag(TypeFlags::ExcludeAtRuntime));
 		}
 	);
+
+	createNativeObjectGetter<TypeReference>(
+		"toString",
+		type,
+		{ getString(), 0 },
+		[](auto* v)
+		{
+			std::stringstream ss;
+			ss << *v;
+			return buildStringValue(ss.str());
+		}
+	);
+	createNativeObjectGetter<TypeReference>(
+		"name",
+		type,
+		{ getString(), 0 },
+		[](auto* v)
+		{
+			return buildStringValue(v->typeName());
+		}
+	);
 }
 
 void completeBuildingNamespace(gsl::not_null<Type*> t)

@@ -90,7 +90,6 @@ private fn build(instruction: functionCallExpression*, builder: llvmIrBodyBuilde
 	let f = instruction._runtimeFunction;
 	let values = <llvmValue>[];
 	let arguments = instruction._arguments;
-	print("started parameter evaluation");
 	for(i in enumerate(0, arguments.length()))
 	{
 		print<IExpression*>(arguments[i]);
@@ -102,10 +101,6 @@ private fn build(instruction: functionCallExpression*, builder: llvmIrBodyBuilde
 			false()
 		));
 	}
-	print("evaluated parameters");
-	print<functionCallExpression*>(instruction);
-	print(instruction._compiletimeFunction.qualifiedName());
-	print(instruction._runtimeFunction.qualifiedName());
 	if(f.isNull())
 	{
 		print<functionCallExpression*>(instruction);

@@ -9,7 +9,7 @@ private fn getSimpleComparisonOperator(f: functionDescriptor, registry: packageR
 {
 	let mod = registry.getModuleFor(f);
 	let func = mod.appendFunction(
-			f.name(),
+			getFunctionName(f),
 			getParameterTypes(f, registry),
 			getParameterNames(f, registry),
 			getType(f.returnType(), registry)
@@ -24,7 +24,7 @@ private fn getSimpleNotEqualsOperator(f: functionDescriptor, registry: packageRe
 {
 	let mod = registry.getModuleFor(f);
 	let func = mod.appendFunction(
-			f.name(),
+			getFunctionName(f),
 			getParameterTypes(f, registry),
 			getParameterNames(f, registry),
 			getType(f.returnType(), registry)
@@ -45,7 +45,7 @@ private fn getSimpleGreaterOperator(f: functionDescriptor, registry: packageRegi
 {
 	let mod = registry.getModuleFor(f);
 	let func = mod.appendFunction(
-			f.name(),
+			getFunctionName(f),
 			getParameterTypes(f, registry),
 			getParameterNames(f, registry),
 			getType(f.returnType(), registry)
@@ -60,7 +60,7 @@ private fn getSimpleLessOperator(f: functionDescriptor, registry: packageRegistr
 {
 	let mod = registry.getModuleFor(f);
 	let func = mod.appendFunction(
-			f.name(),
+			getFunctionName(f),
 			getParameterTypes(f, registry),
 			getParameterNames(f, registry),
 			getType(f.returnType(), registry)
@@ -75,7 +75,7 @@ private fn getIntegerMultiplication(f: functionDescriptor, registry: packageRegi
 {
 	let mod = registry.getModuleFor(f);
 	let func = mod.appendFunction(
-			f.name(),
+			getFunctionName(f),
 			getParameterTypes(f, registry),
 			getParameterNames(f, registry),
 			getType(f.returnType(), registry)
@@ -90,7 +90,7 @@ private fn getIntegerAddition(f: functionDescriptor, registry: packageRegistry*)
 {
 	let mod = registry.getModuleFor(f);
 	let func = mod.appendFunction(
-			f.name(),
+			getFunctionName(f),
 			getParameterTypes(f, registry),
 			getParameterNames(f, registry),
 			getType(f.returnType(), registry)
@@ -105,7 +105,7 @@ private fn getIntegerDifference(f: functionDescriptor, registry: packageRegistry
 {
 	let mod = registry.getModuleFor(f);
 	let func = mod.appendFunction(
-			f.name(),
+			getFunctionName(f),
 			getParameterTypes(f, registry),
 			getParameterNames(f, registry),
 			getType(f.returnType(), registry)
@@ -120,7 +120,7 @@ private fn getIntegerDivision(f: functionDescriptor, registry: packageRegistry*)
 {
 	let mod = registry.getModuleFor(f);
 	let func = mod.appendFunction(
-			f.name(),
+			getFunctionName(f),
 			getParameterTypes(f, registry),
 			getParameterNames(f, registry),
 			getType(f.returnType(), registry)
@@ -135,7 +135,7 @@ private fn getNull(f: functionDescriptor, registry: packageRegistry*) -> llvmFun
 {
 	let mod = registry.getModuleFor(f);
 	let func = mod.appendFunction(
-			f.name(),
+			getFunctionName(f),
 			getParameterTypes(f, registry),
 			getParameterNames(f, registry),
 			getType(f.returnType(), registry)
@@ -150,7 +150,7 @@ private fn getCast(f: functionDescriptor, registry: packageRegistry*) -> llvmFun
 {
 	let mod = registry.getModuleFor(f);
 	let func = mod.appendFunction(
-			f.name(),
+			getFunctionName(f),
 			getParameterTypes(f, registry),
 			getParameterNames(f, registry),
 			getType(f.returnType(), registry)
@@ -165,7 +165,7 @@ private fn getIndexingOperator(f: functionDescriptor, registry: packageRegistry*
 {
 	let mod = registry.getModuleFor(f);
 	let func = mod.appendFunction(
-			f.name(),
+			getFunctionName(f),
 			getParameterTypes(f, registry),
 			getParameterNames(f, registry),
 			getType(f.returnType(), registry)
@@ -182,7 +182,7 @@ private fn getStringIndexingOperator(f: functionDescriptor, registry: packageReg
 {
 	let mod = registry.getModuleFor(f);
 	let func = mod.appendFunction(
-			f.name(),
+			getFunctionName(f),
 			getParameterTypes(f, registry),
 			getParameterNames(f, registry),
 			getType(f.returnType(), registry)

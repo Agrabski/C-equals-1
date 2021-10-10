@@ -99,7 +99,7 @@ void cMCompiler::compiler::executeAttributeFunctionsForStatement(language::runti
 		return executeAttachmentFunctionsForReturn(stmnt);
 	// todo: while statement
 	// todo: if statement
-	std::terminate();
+	//std::terminate();
 }
 
 void executeAttibuteFunctionForVariableReferenceExpression(not_null<IRuntimeValue*> expresion)
@@ -130,13 +130,13 @@ void executeAttributeFunctionForAddressofExpression(not_null<IRuntimeValue*> exp
 void executeAttributeFunctionForBinaryOperatorExpression(not_null<IRuntimeValue*> expresion)
 {
 	not_null object = dereferenceAs<ObjectValue>(expresion);
-	not_null cFunction = dereferenceAs<RuntimeFunctionDescriptor>(object->getRawValue("_compiletimeFunction"))->value();
-	not_null rFunction = dereferenceAs<RuntimeFunctionDescriptor>(object->getRawValue("_runtimeFunction"))->value();
+	not_null cFunction = dereferenceAs<RuntimeFunctionDescriptor>(object->getRawValue("_compiletimeFunction"));
+	not_null rFunction = dereferenceAs<RuntimeFunctionDescriptor>(object->getRawValue("_runtimeFunction"));
 
-	if (cFunction)
-		executeFunctions(getAttributesAndSpecialFunctions(*cFunction, Function::onCall), expresion);
-	if (rFunction)
-		executeFunctions(getAttributesAndSpecialFunctions(*rFunction, Function::onCall), expresion);
+	if (cFunction->value())
+		executeFunctions(getAttributesAndSpecialFunctions(*cFunction->value(), Function::onCall), expresion);
+	if (rFunction->value())
+		executeFunctions(getAttributesAndSpecialFunctions(*rFunction->value(), Function::onCall), expresion);
 	not_null arg1 = object->getRawValue("_arg1");
 	not_null arg2 = object->getRawValue("_arg2");
 	executeAttachmentFunctionForExpression(arg1);
@@ -146,13 +146,13 @@ void executeAttributeFunctionForBinaryOperatorExpression(not_null<IRuntimeValue*
 void executeAttibuteFunctionForFunctionCallExpression(not_null<IRuntimeValue*> expresion)
 {
 	not_null object = dereferenceAs<ObjectValue>(expresion);
-	auto cFunction = dereferenceAs<RuntimeFunctionDescriptor>(object->getRawValue("_compiletimeFunction"))->value();
-	auto rFunction = dereferenceAs<RuntimeFunctionDescriptor>(object->getRawValue("_runtimeFunction"))->value();
+	auto cFunction = dereferenceAs<RuntimeFunctionDescriptor>(object->getRawValue("_compiletimeFunction"));
+	auto rFunction = dereferenceAs<RuntimeFunctionDescriptor>(object->getRawValue("_runtimeFunction"));
 
-	if (cFunction)
-		executeFunctions(getAttributesAndSpecialFunctions(*cFunction, Function::onCall), expresion);
-	if (rFunction)
-		executeFunctions(getAttributesAndSpecialFunctions(*rFunction, Function::onCall), expresion);
+	if (cFunction && cFunction->value())
+		executeFunctions(getAttributesAndSpecialFunctions(*cFunction->value(), Function::onCall), expresion);
+	if (rFunction && rFunction->value())
+		executeFunctions(getAttributesAndSpecialFunctions(*rFunction->value(), Function::onCall), expresion);
 	not_null args = dereferenceAs<ArrayValue>(object->getRawValue("_arguments"));
 	for (auto& arg : *args)
 		executeAttachmentFunctionForExpression(arg.get());
@@ -176,5 +176,6 @@ void cMCompiler::compiler::executeAttachmentFunctionForExpression(not_null<IRunt
 		return;
 	if(isOfType(exp, language::getAdressofExpressionDescriptor()))
 		return executeAttributeFunctionForAddressofExpression(exp);
-	std::terminate();
+	//todo: more
+	//std::terminate();
 }
