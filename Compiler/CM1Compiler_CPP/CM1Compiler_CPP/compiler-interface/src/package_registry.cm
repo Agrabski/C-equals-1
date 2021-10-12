@@ -108,7 +108,7 @@ private class packageRegistry
 			{
 				let elementType = self.getLLVMTypeFor(instantiationData.parameters()[0]);
 				let result = module.appendStruct(t.package().name() + t.qualifiedName());
-				result.setFields(<llvmType>[module.getUnsizedVector(elementType), llvmInt32Type(self._compilationResult)]);
+				result.setFields(<llvmType>[module.getPointer(module.getUnsizedVector(elementType)), llvmInt32Type(self._compilationResult)]);
 				return result;
 			}
 		}

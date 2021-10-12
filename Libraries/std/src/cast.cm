@@ -1,7 +1,17 @@
 import {usize} from {cm1mLang}
-import {ReplaceWithLLVMIR} from {compiler}
+import {RunTimeOnly} from {compiler}
 
+[RunTimeOnly()]
 public fn unsafe_cast<typename T, typename Y>(i: T*) -> Y*
 {
 	return null<Y>();
+}
+
+[RunTimeOnly()]
+private fn array_cast<typename T>(bytes: char*, size: usize) -> T[]
+{
+	let result: T[];
+	result.____data = bytes;
+	result.____count = size;
+	return result;
 }

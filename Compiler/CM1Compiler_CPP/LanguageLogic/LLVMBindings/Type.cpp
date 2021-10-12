@@ -1,6 +1,7 @@
 #include "Type.hpp"
 #include <llvm/IR/Type.h>
 #include <llvm/IR/DerivedTypes.h>
+#include <llvm/IR/DataLayout.h>
 #include "../CreateGetter.hpp"
 #include "../BuiltInPackageBuildUtility.hpp"
 #include "../RuntimeTypesConversionUtility.hpp"

@@ -74,21 +74,23 @@ private fn build_instruction(instruction: IInstruction*, builder: llvmIrBodyBuil
 private fn build(instruction: variableDeclarationStatement*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*)
 {
 	let var = instruction._variable;
-		let value = build_expression(
-		instruction._expression,
-		builder,
-		variables,
-		registry,
-		false()
-	);
 	let pointer = builder.appendAlloca(
 		getType(var.type(), registry),
 		var.name()
 	);
 	variables.push(var, pointer);
 
-	builder.appendStore(value, pointer);
-
+	if(instruction._expression != null<IExpression>())
+	{
+		let value = build_expression(
+		instruction._expression,
+		builder,
+		variables,
+		registry,
+		false()
+		);
+		builder.appendStore(value, pointer);
+	}
 }
 
 private fn build(instruction: returnStatement*, builder: llvmIrBodyBuilder*, variables: dictionary<variableDescriptor, llvmValue>*, registry: packageRegistry*)

@@ -146,6 +146,27 @@ private fn getNull(f: functionDescriptor, registry: packageRegistry*) -> llvmFun
 	return func;
 }
 
+private fn getSizeof(f: functionDescriptor, registry: packageRegistry*, t: typeDescriptor) -> llvmFunction
+{
+	let mod = registry.getModuleFor(f);
+	let func = mod.appendFunction(
+			getFunctionName(f),
+			getParameterTypes(f, registry),
+			getParameterNames(f, registry),
+			getType(f.returnType(), registry)
+			);
+	let builder = func.getBuilder();
+
+	let add = builder.apendGetElementPointer(
+		builder.appendNullPointer(getType(t.reference(), registry)),
+		1
+	);
+	builder.appendRet(
+	builder.appendPtrToInt(add, getType(f.returnType(), registry)));
+	
+	return func;
+}
+
 private fn getCast(f: functionDescriptor, registry: packageRegistry*) -> llvmFunction
 {
 	let mod = registry.getModuleFor(f);
@@ -171,7 +192,7 @@ private fn getIndexingOperator(f: functionDescriptor, registry: packageRegistry*
 			getType(f.returnType(), registry)
 			);
 	let builder = func.getBuilder();
-	let add = builder.apendGetElementPointer(func.getParameter(0), 0, 0);
+	let add = builder.appendLoad(builder.apendGetElementPointer(func.getParameter(0), 0, 0));
 	
 
 	builder.appendRet(builder.apendGetElementPointer(add, func.getParameter(1), 0));

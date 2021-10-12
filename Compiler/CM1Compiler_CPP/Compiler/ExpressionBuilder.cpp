@@ -229,7 +229,7 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 	}
 	if (ctx->dereferenceExpression())
 		return buildExpression(ctx->dereferenceExpression(), nullptr);
-	std::terminate();//todo: index expression
+	std::terminate();
 }
 
 cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::buildBinaryOperatorExpression(gsl::not_null<CMinusEqualsMinus1Revision0Parser::ExpressionContext*> ctx, language::runtime_value&& referenceToParent)

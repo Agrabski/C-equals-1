@@ -1000,6 +1000,8 @@ void buildPackage()
 			indexOperator->appendVariable("index", { getUsize(), 0 });
 			indexOperator->setReturnType(genericParameters[0].reference());
 			indexOperator->metadata().appendFlag(FunctionFlags::ExcludeAtCompileTime);
+			newType->appendField("____data", {nullptr, 1});
+			newType->appendField("____count", {getUsize(), 0});
 
 			createCustomFunction(
 				newType->append<Function>("push"),

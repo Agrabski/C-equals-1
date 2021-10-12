@@ -1,6 +1,6 @@
 import {functionDescriptor packageDescriptor typeDescriptor} from {cm1mLang::compiler}
 import {llvmFunction llvmModule llvmType compilationResult llvmValue} from {cm1mLang::compiler::backend}
-import {enumerate print dictionary} from {std}
+import {enumerate print dictionary sizeof unsafe_cast} from {std}
 import {ReplaceWithLLVMIR mapToExternalSymbol} from {std::compiler}
 import {variableDescriptor} from {cm1mLang::compiler::ir}
 import {string null dictionary bool} from {cm1mLang}
@@ -124,6 +124,20 @@ private fn getFunction(f: functionDescriptor, registry: packageRegistry*) -> llv
 				return n;
 			}
 
+			
+			if(f.genericInstantiationInfo().generic() == genericFunctionof(sizeof))
+			{
+				let n = getSizeof(f, registry, f.genericInstantiationInfo().parameters()[0]);
+				registry._functions.push(f, n);
+				return n;
+			}
+
+			if(f.genericInstantiationInfo().generic() == genericFunctionof(unsafe_cast))
+			{
+				let n = getCast(f, registry);
+				registry._functions.push(f, n);
+				return n;
+			}
 		}
 		let mod = registry.getModuleFor(f);
 		let func = mod.appendFunction(

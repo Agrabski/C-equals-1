@@ -130,18 +130,27 @@ void appendAssign(
 			}
 			auto pointerType = cast<llvm::PointerType>(pointer->getType())->getElementType();
 
-			if (valueType != pointerType)
+			if (llvm::isa<llvm::PointerType>(pointerType)
+				&& cast<llvm::PointerType>(pointerType)->getElementType()->isArrayTy() && valueType != pointerType && valueType->isPointerTy())
 			{
-				// todo: incorporate values into the exception
-				std::string exceptionMessage = "Cannot store ";
-				llvm::raw_string_ostream rso = llvm::raw_string_ostream(exceptionMessage);
-				value->dump();
 				pointer->dump();
-				valueType->print(rso);
-				rso << " into pointer of type ";
-				pointer->getType()->print(rso);
-				throw cMCompiler::dataStructures::RuntimeException(rso.str());
+				value->dump();
+				value = self->CreateBitCast(value, pointerType);
 			}
+			else
+
+				if (valueType != pointerType)
+				{
+					// todo: incorporate values into the exception
+					std::string exceptionMessage = "Cannot store ";
+					llvm::raw_string_ostream rso = llvm::raw_string_ostream(exceptionMessage);
+					value->dump();
+					pointer->dump();
+					valueType->print(rso);
+					rso << " into pointer of type ";
+					pointer->getType()->print(rso);
+					throw cMCompiler::dataStructures::RuntimeException(rso.str());
+				}
 			self->CreateStore(value, pointer);
 			return nullptr;
 		}
@@ -373,6 +382,7 @@ void appendGetFieldValue(
 				llvm::ConstantInt::get(llvm::IntegerType::getInt32Ty(self->getContext()), memberIndex)
 			};
 
+			pointer->dump();
 			auto result = self->CreateGEP(pointer, indexList);
 			return getValueFor(result);
 		}
@@ -403,6 +413,27 @@ void appendGetFieldValue(
 	f->appendVariable("pointer", { llvmValue, 0 });
 	f->appendVariable("objectIndex", { llvmValue, 0 });
 	f->appendVariable("memberIndex", { getUsize(), 0 });
+
+	f = createCustomFunction(
+		builder->append<Function>("apendGetElementPointer"),
+		builder,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<GenericRuntimeWrapper<llvm::IRBuilder<>>>(a["self"].get())->value();
+			auto pointer = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["pointer"].get())->value();
+			auto objectIndex = convertToIntegral<usize>(*a["objectIndex"]);
+
+			llvm::Value* indexList[] = {
+				llvm::ConstantInt::get(llvm::IntegerType::getInt32Ty(self->getContext()), objectIndex),
+			};
+
+			pointer->dump();
+			auto result = self->CreateGEP(pointer, indexList);
+			return getValueFor(result);
+		}
+	);
+	f->appendVariable("pointer", { llvmValue, 0 });
+	f->appendVariable("objectIndex", { getUsize(), 0 });
 
 }
 

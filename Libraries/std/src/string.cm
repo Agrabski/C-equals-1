@@ -2,7 +2,7 @@ import {string char} from {cm1mLang}
 
 class dyn_string
 {
-	private _text : @unique<char[]>;
+	private _text : char[];
 	
 	public fn construct()
 	{
@@ -13,6 +13,6 @@ class dyn_string
 	{
 		self._text = new_array<char>(text.length());
 		for(index in enumerate(0, text.length()))
-			self._text.get()[index] = text[index];
+			self._text[index] = text[index];
 	}
 }

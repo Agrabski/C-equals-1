@@ -52,7 +52,8 @@ void executeAttachmentFunctionsForVariableDeclaration(cMCompiler::language::runt
 	auto variable = dereferenceAs<RuntimeVariableDescriptor>(object->getMemberValue("_variable").get())->value();
 
 	auto expression = object->getRawValue("_expression");
-	cMCompiler::compiler::executeAttachmentFunctionForExpression(expression);
+	if (expression)
+		cMCompiler::compiler::executeAttachmentFunctionForExpression(expression);
 
 	executeFunctions(getAttributesAndSpecialFunctions(*variable, Variable::onDeclare), statement.get());
 }
@@ -174,7 +175,7 @@ void cMCompiler::compiler::executeAttachmentFunctionForExpression(not_null<IRunt
 		return executeAttributeFunctionForBinaryOperatorExpression(exp);
 	if (isOfType(exp, language::getLiteralExpressionDescriptor()))
 		return;
-	if(isOfType(exp, language::getAdressofExpressionDescriptor()))
+	if (isOfType(exp, language::getAdressofExpressionDescriptor()))
 		return executeAttributeFunctionForAddressofExpression(exp);
 	//todo: more
 	//std::terminate();
