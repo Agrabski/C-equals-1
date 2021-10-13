@@ -159,6 +159,9 @@
     <ClInclude Include="Libraries\Libraries.hpp">
       <Filter>Header Files\Libraries</Filter>
     </ClInclude>
+    <ClInclude Include="CompileTimeInfrastrucutre\CompilationOptions.hpp">
+      <Filter>Header Files\CompileTimeInfrastrucutre</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NamespaceBuilder.cpp">

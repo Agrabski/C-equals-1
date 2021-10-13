@@ -34,6 +34,7 @@
     <ClInclude Include="CompileTimeFunctions\ReplaceWithCompilerFunction.hpp" />
     <ClInclude Include="CompileTimeFunctions\ReplaceWithCompilerType.hpp" />
     <ClInclude Include="CompileTimeFunctions\ReplaceWithExternalSymbol.hpp" />
+    <ClInclude Include="CompileTimeInfrastrucutre\CompilationOptions.hpp" />
     <ClInclude Include="CompileTimeInfrastrucutre\CompileTimeHeap.hpp" />
     <ClInclude Include="CreateGetter.hpp" />
     <ClInclude Include="ExpressionUtility.hpp" />
