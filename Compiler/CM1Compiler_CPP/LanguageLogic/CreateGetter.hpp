@@ -42,6 +42,14 @@ namespace cMCompiler::language
 			generic_parameters genericParameters)> body
 	);
 
+	gsl::not_null<dataStructures::Function*> createCustomFunction(
+		gsl::not_null<dataStructures::Function*> function,
+		std::function<
+		std::unique_ptr<dataStructures::execution::IRuntimeValue>(
+			value_map&& valueMap,
+			generic_parameters genericParameters)> body
+	);
+
 	void createIndexer(gsl::not_null<dataStructures::Function*> function, gsl::not_null<dataStructures::Type*> type, dataStructures::TypeReference returnType);
 
 	void createOperator(

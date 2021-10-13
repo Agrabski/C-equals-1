@@ -33,6 +33,13 @@ gsl::not_null<Function*> cMCompiler::language::createCustomFunction(
 	return function;
 }
 
+gsl::not_null<Function*> cMCompiler::language::createCustomFunction(gsl::not_null<dataStructures::Function*> function, std::function<std::unique_ptr<dataStructures::execution::IRuntimeValue>(value_map&& valueMap, generic_parameters genericParameters)> body)
+{
+	compileTimeFunctions::FuntionLibrary::instance().addFunctionDefinition(function, body);
+	function->metadata().appendFlag(FunctionFlags::ExcludeAtRuntime);
+	return function;
+}
+
 
 void cMCompiler::language::createIndexer(gsl::not_null<dataStructures::Function*> function, gsl::not_null<dataStructures::Type*> type, dataStructures::TypeReference returnType)
 {

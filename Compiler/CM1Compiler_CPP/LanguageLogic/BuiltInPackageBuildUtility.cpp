@@ -24,6 +24,7 @@
 #include "../DataStructures/execution/GenericRuntimeWrapper.hpp"
 #include "MetadataHolderBindings.hpp"
 #include "TypeCoercionUtility.hpp"
+#include "Libraries/Libraries.hpp"
 
 using namespace cMCompiler::dataStructures::execution;
 
@@ -1143,7 +1144,7 @@ void buildPackage()
 		f->metadata().appendFlag(cMCompiler::dataStructures::FunctionFlags::ExcludeAtCompileTime);
 	}
 
-
+	libraries::createLibraries(defaultPackage__->rootNamespace());
 	setSourcePointer(result->rootNamespace());
 }
 
