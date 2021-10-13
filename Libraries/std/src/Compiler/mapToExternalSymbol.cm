@@ -1,4 +1,4 @@
-import {functionDescriptor typeDescriptor replaceWithSymbol ignoreBody} from {cm1mLang::compiler}
+import {functionDescriptor typeDescriptor ignoreBody} from {cm1mLang::compiler}
 import {string} from {cm1mLang}
 
 namespace compiler
@@ -15,14 +15,12 @@ namespace compiler
 
 		public fn attach(f: functionDescriptor)
 		{
-			replaceWithSymbol(f, self._symbolName, self._assemblyName);
 			ignoreBody(f);
 		}
 
 		
 		public fn attach(t: typeDescriptor)
 		{
-			replaceWithSymbol(t, self._symbolName, self._assemblyName);
 		}
 	}
 }
