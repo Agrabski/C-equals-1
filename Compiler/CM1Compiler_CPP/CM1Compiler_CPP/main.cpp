@@ -12,8 +12,9 @@
 #include "../Compiler/compilerInterfaceUtility.hpp"
 #include "../Compiler/ExceptionHandling.hpp"
 #include "../Compiler/LLVMIntegration/LLVMIRUtility.hpp"
+#include "../LanguageLogic/CompileTimeInfrastrucutre/CompilationOptions.hpp"
 
-
+using cMCompiler::language::compileTimeInfrastructure::CompilationOptions;
 
 int main(int argc, char* argv[])
 {
@@ -26,7 +27,9 @@ int main(int argc, char* argv[])
 		using namespace std::filesystem;
 		auto packages = cMCompiler::compiler::buildByManifest({ context->manifestFile });
 		auto emiter = cMCompiler::compiler::IntermidiateRepresentationEmmiter();
-
+		CompilationOptions::instance = std::make_unique<CompilationOptions>(
+			std::filesystem::absolute("out")
+			);
 		std::filesystem::create_directory("out");
 		try
 		{
@@ -54,6 +57,7 @@ int main(int argc, char* argv[])
 		catch (std::exception const& e)
 		{
 			std::cerr << e.what();
+			return -1;
 		}
 	}
 
