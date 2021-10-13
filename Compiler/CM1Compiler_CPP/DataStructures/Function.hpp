@@ -37,6 +37,7 @@ namespace cMCompiler::dataStructures
 
 	struct FunctionMetadata : public MetadataObject<FunctionFlags, FunctionFlags::None>
 	{
+		bool ignoreBody = false;
 	};
 
 	std::ostream& operator<<(std::ostream& stream, FunctionFlags flags);

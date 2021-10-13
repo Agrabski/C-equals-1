@@ -671,6 +671,12 @@ void buildCompilerLibrary(gsl::not_null<Namespace*> rootNamespace)
 		FuntionLibrary::instance().addFunctionDefinition(replace, markCompileTimeOnly);
 	}
 	{
+		auto replace = ns->append<Function>("ignoreBody");
+		replace->setAccessibility(Accessibility::Public);
+		replace->appendVariable("function", { function, 0 });
+		FuntionLibrary::instance().addFunctionDefinition(replace, ignoreBody);
+	}
+	{
 		auto replace = ns->append<Function>("markRunTimeOnly");
 		replace->setAccessibility(Accessibility::Public);
 		replace->appendVariable("function", { function, 0 });

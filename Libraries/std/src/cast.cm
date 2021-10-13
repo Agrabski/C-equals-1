@@ -1,10 +1,10 @@
 import {usize} from {cm1mLang}
-import {RunTimeOnly} from {compiler}
+import {RunTimeOnly IgnoreBody} from {compiler}
 
 [RunTimeOnly()]
+[IgnoreBody()]
 public fn unsafe_cast<typename T, typename Y>(i: T*) -> Y*
 {
-	return null<Y>();
 }
 
 [RunTimeOnly()]

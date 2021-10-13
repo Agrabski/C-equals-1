@@ -73,8 +73,9 @@ void cMCompiler::compiler::Preprocessor::executeAttachmentFunctions()
 void cMCompiler::compiler::Preprocessor::executeAttributeSpecialFunctions()
 {
 	for (not_null f : database_.getAllFunctions())
-		for (auto& statement : *f->code())
-			executeAttributeFunctionsForStatement(statement);
+		if (f->code())
+			for (auto& statement : *f->code())
+				executeAttributeFunctionsForStatement(statement);
 }
 
 void cMCompiler::compiler::Preprocessor::preprocess(Parser::CompilationUnit& compilationUnit)

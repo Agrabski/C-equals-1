@@ -193,8 +193,11 @@ void cMCompiler::compiler::finalizeFunction(
 		//todo: attributes
 	}
 	//todo: function attributes
-	auto builder = FunctionBodyBuilder(f, resolver, context, file);
-	ctx->functionBody()->accept(&builder);
+	if (!f->metadata().ignoreBody)
+	{
+		auto builder = FunctionBodyBuilder(f, resolver, context, file);
+		ctx->functionBody()->accept(&builder);
+	}
 	f->setSourceLocation(language::buildSourcePointer(file.string(), *ctx));
 	f->finalize();
 }

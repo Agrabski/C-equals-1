@@ -1,0 +1,12 @@
+import {ignoreBody functionDescriptor} from {cm1mLang::compiler}
+
+namespace compiler 
+{
+	public att<function> ignoreBody
+	{
+		public fn attach(f: functionDescriptor)
+		{
+			ignoreBody(f);
+		}
+	}
+}

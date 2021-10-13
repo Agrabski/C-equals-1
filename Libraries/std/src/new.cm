@@ -23,9 +23,7 @@ public fn operator new unique<typename T>() -> @unique<T>
 
 [mapToExternalSymbol("malloc", "")]
 private fn unsafe_new(size: usize) -> char*
-{
-	return null<char>();
-}
+{}
 
 [mapToExternalSymbol("free", "")]
 internal fn delete<typename T>(val: T*)

@@ -53,7 +53,7 @@ execution::json cMCompiler::dataStructures::Function::emmit(ir::INameGetter cons
 		{"attributes", emmitAttributes(nameLookupFunction, manager)},
 		{"parameters", execution::serializeArray(parameters_, nameLookupFunction, manager)},
 		{"locals", execution::serializeArray(localVariables_, nameLookupFunction, manager)},
-		{"body", intermidiateRepresentation_->emmit(nameLookupFunction, manager)},
+		{"body", intermidiateRepresentation_ ? intermidiateRepresentation_->emmit(nameLookupFunction, manager) : execution::json{}},
 		{"return_type", nameLookupFunction.get(returnType_)}
 	};
 }
