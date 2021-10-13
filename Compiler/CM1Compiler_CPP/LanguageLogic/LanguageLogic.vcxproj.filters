@@ -25,6 +25,9 @@
     <Filter Include="Header Files\LLVMBindings">
       <UniqueIdentifier>{076e66b5-58cc-491f-8fd0-591acf6daccd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Libraries">
+      <UniqueIdentifier>{8623be76-b2b0-430c-986d-5ae04c0eeba4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NameResolver.hpp">
@@ -150,6 +153,12 @@
     <ClInclude Include="MetadataHolderBindings.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Libraries\FilesystemLibrary.hpp">
+      <Filter>Header Files\Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\Libraries.hpp">
+      <Filter>Header Files\Libraries</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NamespaceBuilder.cpp">
@@ -264,6 +273,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GenericUtility.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\Libraries.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\FilesystemLibrary.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -41,6 +41,8 @@
     <ClInclude Include="GetterExecution.hpp" />
     <ClInclude Include="InstantiateGeneric.hpp" />
     <ClInclude Include="IRUtility.hpp" />
+    <ClInclude Include="Libraries\FilesystemLibrary.hpp" />
+    <ClInclude Include="Libraries\Libraries.hpp" />
     <ClInclude Include="LiteralUtility.hpp" />
     <ClInclude Include="LLVMBindings\BodyBuilder.hpp" />
     <ClInclude Include="LLVMBindings\Function.hpp" />
@@ -88,6 +90,8 @@
     <ClCompile Include="GetterExecution.cpp" />
     <ClCompile Include="InstantiateGeneric.cpp" />
     <ClCompile Include="IRUtility.cpp" />
+    <ClCompile Include="Libraries\FilesystemLibrary.cpp" />
+    <ClCompile Include="Libraries\Libraries.cpp" />
     <ClCompile Include="LiteralUtility.cpp" />
     <ClCompile Include="LLVMBindings\BodyBuilder.cpp" />
     <ClCompile Include="LLVMBindings\Function.cpp" />
