@@ -16,8 +16,10 @@ declaration:
 	| importDeclaration
 	| attributeDeclaration;
 
-attributeDeclaration: (AccessSpecifier)? 'att' Less attributeTarget+ Greater identifier OpenBracket
-		classContentSequence CloseBracket;
+attributeDeclaration: (AccessSpecifier)? 'att' Less attributeTarget+ Greater identifier ':' implementedInterfacesSequence
+ OpenBracket
+		classContentSequence
+ CloseBracket;
 
 attributeTarget: ('type' | 'variable' | 'function');
 

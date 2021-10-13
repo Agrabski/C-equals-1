@@ -1,5 +1,6 @@
 #include "AttributeUtility.hpp"
 #include "BuiltInPackageBuildUtility.hpp"
+#include "TypeCoercionUtility.hpp"
 
 using namespace cMCompiler::language;
 using namespace cMCompiler::dataStructures;
@@ -28,8 +29,8 @@ AttributeInstance* cMCompiler::language::getAttribute(AttributeTarget& target, A
 std::function<bool(not_null<AttributeInstance*>att)> cMCompiler::language::getIsDescribedByTypePredicate(dataStructures::TypeReference t)
 {
 	auto type = t.type;
-	return [type](not_null<AttributeInstance*> attribute)
+	return [type](not_null<AttributeInstance*> attribute) -> bool
 	{
-		return attribute->basedOn()->describingType() == type;
+		return coerce({ attribute->basedOn()->describingType(), 1 }, { type, 1 }).has_value();
 	};
 }
