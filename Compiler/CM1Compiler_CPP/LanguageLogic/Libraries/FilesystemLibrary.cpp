@@ -53,7 +53,7 @@ void createWriteStringToFile(not_null<Type*> fd, not_null<Namespace*> ns, not_nu
 		[](auto&& a, auto b) -> cMCompiler::language::runtime_value
 		{
 			auto text = dereferenceAs<execution::StringValue>(a["text"].get())->value();
-			auto file = dereferenceAs<execution::GenericRuntimeWrapper<std::iostream>>(a["text"].get())->value();
+			auto file = dereferenceAs<execution::GenericRuntimeWrapper<std::iostream>>(a["file"].get())->value();
 			*file << text;
 			return nullptr;
 		}
@@ -64,10 +64,80 @@ void createWriteStringToFile(not_null<Type*> fd, not_null<Namespace*> ns, not_nu
 	f->metadata().appendFlag(FunctionFlags::ExcludeAtCompileTime);
 }
 
+void createWriteUsizeToFile(not_null<Type*> fd, not_null<Namespace*> ns, not_null<Type*> usize)
+{
+	auto f = ns->append<Function>("write");
+	f->appendVariable("file", { fd, 1 });
+	f->appendVariable("text", { usize, 0 });
+	cMCompiler::language::createCustomFunction(
+		f,
+		[](auto&& a, auto b) -> cMCompiler::language::runtime_value
+		{
+			auto text = dereferenceAs<execution::IntegerValue>(a["text"].get())->toString();
+			auto file = dereferenceAs<execution::GenericRuntimeWrapper<std::iostream>>(a["file"].get())->value();
+			*file << text;
+			return nullptr;
+		}
+	);
+	f = ns->append<Function>("write");
+	f->appendVariable("file", { fd, 1 });
+	f->appendVariable("text", { usize, 0 });
+	f->metadata().appendFlag(FunctionFlags::ExcludeAtCompileTime);
+}
+
+void createWriteBoolToFile(not_null<Type*> fd, not_null<Namespace*> ns, not_null<Type*> boolean)
+{
+	auto f = ns->append<Function>("write");
+	f->appendVariable("file", { fd, 1 });
+	f->appendVariable("text", { boolean, 0 });
+	cMCompiler::language::createCustomFunction(
+		f,
+		[](auto&& a, auto b) -> cMCompiler::language::runtime_value
+		{
+			auto text = dereferenceAs<execution::BooleanValue>(a["text"].get())->toString();
+			auto file = dereferenceAs<execution::GenericRuntimeWrapper<std::iostream>>(a["file"].get())->value();
+			*file << text;
+			return nullptr;
+		}
+	);
+	f = ns->append<Function>("write");
+	f->appendVariable("file", { fd, 1 });
+	f->appendVariable("text", { boolean, 0 });
+	f->metadata().appendFlag(FunctionFlags::ExcludeAtCompileTime);
+}
+
 void createFileWriteFunctions(not_null<Type*> fd, not_null<Namespace*> ns, not_null<Type*> string)
 {
 	createWriteStringToFile(fd, ns, string);
+	createWriteBoolToFile(fd, ns, getBool());
+	createWriteUsizeToFile(fd, ns, getUsize());
 }
+
+void createReadStringFromFile(not_null<Type*> fd, not_null<Namespace*> ns, not_null<Type*> string)
+{
+	auto f = ns->append<Function>("readAll");
+	f->appendVariable("file", { fd, 1 });
+	cMCompiler::language::createCustomFunction(
+		f,
+		[](auto&& a, auto b) -> cMCompiler::language::runtime_value
+		{
+			auto file = dereferenceAs<execution::GenericRuntimeWrapper<std::iostream>>(a["file"].get())->value();
+			std::string result((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+			return buildStringValue(result);
+		}
+	);
+	f->setReturnType({ string, 0 });
+	f = ns->append<Function>("write");
+	f->appendVariable("file", { fd, 1 });
+	f->setReturnType({ string, 0 });
+	f->metadata().appendFlag(FunctionFlags::ExcludeAtCompileTime);
+}
+
+void createFileReadFunctions(not_null<Type*> fd, not_null<Namespace*> ns, not_null<Type*> string)
+{
+	createReadStringFromFile(fd, ns, string);
+}
+
 
 void createGetOutputDirectory(not_null<Type*> fd, not_null<Namespace*> ns, not_null<Type*> string)
 {
@@ -88,6 +158,8 @@ void cMCompiler::language::libraries::createFilesystemLibrary(not_null<Namespace
 
 	auto fd = createFileDescriptor(rootNs);
 	createFileWriteFunctions(fd, rootNs, getString());
+	createOpen(fd, rootNs, getString());
+	createGetOutputDirectory(fd, rootNs, getString());
 }
 
 runtime_value cMCompiler::language::getValueFor(std::unique_ptr<std::iostream>&& str)
