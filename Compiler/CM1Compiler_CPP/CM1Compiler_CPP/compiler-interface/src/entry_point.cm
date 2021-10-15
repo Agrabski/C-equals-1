@@ -2,6 +2,7 @@ import {compilerEntryPoint packageDescriptor typeDescriptor functionDescriptor} 
 import {usize string bool true false null cast} from {cm1mLang}
 import {compilationResult llvmType llvmFunction llvmVoidType} from {cm1mLang::compiler::backend}
 import {enumerate print dictionary list} from {std}
+import {IBindingsGenerator} from {bindingGenerator}
 
 [compilerEntryPoint()]
 public fn entryPoint(packages: packageDescriptor[], result: compilationResult) {
@@ -38,7 +39,10 @@ private fn compilePackage(package: packageDescriptor, registry: packageRegistry*
 			}
 			else
 			{
-				getFunction(func, registry);
+				let f = getFunction(func, registry);
+				let generator = func.get_attribute<IBindingsGenerator>();
+				if(generator != null<IBindingsGenerator>())
+					generator.generate(f.name(), func, registry)
 			}
 		}
 	}

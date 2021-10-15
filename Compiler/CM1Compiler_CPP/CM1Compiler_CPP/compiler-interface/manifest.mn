@@ -1,5 +1,5 @@
 {
 	"name": "compiler-interface",
 	"guid": "23500bbf-be92-4cb7-9c54-17523ea939f1",
-	"dependencies": ["cm1mLang", "std"]
+	"dependencies": ["cm1mLang", "std", "bindingGenerator"]
 }

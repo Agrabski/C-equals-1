@@ -2,6 +2,7 @@ import {compilerEntryPoint usize bool char packageDescriptor string null array} 
 import {llvmModule compilationResult llvmType llvmInt8Type llvmInt32Type llvmCstringType llvmFunction llvmBoolType} from {cm1mLang::compiler::backend}
 import {functionDescriptor typeDescriptor packageDescriptor} from {cm1mLang::compiler}
 import {enumerate list print dictionary} from {std}
+import {ITypeMapping} from {bindingGenerator}
 
 private struct pathPackagePair
 {

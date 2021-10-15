@@ -1,5 +1,17 @@
+import {functionDescriptor} from {cm1mLang::compiler}
+import {IBindingsGenerator} from {bindingGenerator}
 
-public att<function> cBindings
+public att<function> cBindings : IBindingsGenerator
 {
-	
+	private _function: functionDescriptor;
+	public fn attach(f: functionDescriptor)
+	{
+		self._function = f;
+	}
+
+	public fn generate(symbolName: string, f: functionDescriptor, typeMapping: ITypeMapping*)
+	{
+		
+	}
+
 }

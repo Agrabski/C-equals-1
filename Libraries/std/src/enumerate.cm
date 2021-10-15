@@ -1,5 +1,5 @@
 import {usize} from {cm1mLang}
-
+import {cBindings} from {cBindings}
 
 public class integerIterator
 {
@@ -61,6 +61,7 @@ public class atHocCollection<typename From,typename To>
 	}
 }
 
+[cBindings()]
 public fn enumerate(fr: usize, to: usize) -> atHocCollection<integerIterator, integerIterator>
 {
 	return atHocCollection<integerIterator, integerIterator>(integerIterator(fr, 1), integerIterator(to, 1));

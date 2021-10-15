@@ -33,12 +33,14 @@ void createOpen(not_null<Type*> fd, not_null<Namespace*> ns, not_null<Type*> str
 		[](auto&& a, auto b) -> cMCompiler::language::runtime_value
 		{
 			auto path = dereferenceAs<execution::StringValue>(a["path"].get())->value();
+			auto mode = convertToIntegral<cMCompiler::dataStructures::execution::usize>(*dereferenceAs<execution::IntegerValue>(a["mode"].get()));
 			auto stream = std::make_unique<std::fstream>(path, std::ios_base::in | std::ios_base::out);
 			return getValueFor(std::move(stream));
 		}
 	);
 	f = ns->append<Function>("open");
 	f->appendVariable("path", { string, 1 });
+	f->appendVariable("mode", { getUsize(), 0});
 	f->setReturnType({ fd, 0 });
 	f->metadata().appendFlag(FunctionFlags::ExcludeAtCompileTime);
 }
@@ -109,8 +111,8 @@ void createWriteBoolToFile(not_null<Type*> fd, not_null<Namespace*> ns, not_null
 void createFileWriteFunctions(not_null<Type*> fd, not_null<Namespace*> ns, not_null<Type*> string)
 {
 	createWriteStringToFile(fd, ns, string);
-	createWriteBoolToFile(fd, ns, getBool());
-	createWriteUsizeToFile(fd, ns, getUsize());
+	//createWriteBoolToFile(fd, ns, getBool());
+	//createWriteUsizeToFile(fd, ns, getUsize());
 }
 
 void createReadStringFromFile(not_null<Type*> fd, not_null<Namespace*> ns, not_null<Type*> string)
