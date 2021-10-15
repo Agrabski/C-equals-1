@@ -1,5 +1,5 @@
 {
 	"name": "cBindings",
-	"guid": "542abdc4-ab04-4298-ac3c-a1e4f5c758a2",
-	"dependencies": ["cm1mLang"]
+	"guid": "542abdc4-ab04-4298-5c3c-a1e4f5c758a2",
+	"dependencies": ["cm1mLang", "bindingGenerator"]
 }

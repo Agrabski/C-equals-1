@@ -110,10 +110,11 @@ void cMCompiler::compiler::confirmType(
 		if (ctx->classContentSequence() != nullptr)
 			for (not_null<CMinusEqualsMinus1Revision0Parser::FieldDeclarationContext*> member : ctx->classContentSequence()->fieldDeclaration())
 			{
+				auto typeName = member->typeSpecifier();
 				auto t = getType(
 					resolver,
 					context,
-					member->typeSpecifier(),
+					typeName,
 					file
 				);
 				auto var = type->appendField(member->identifier()->getText(), t);

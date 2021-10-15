@@ -193,7 +193,7 @@ void cMCompiler::compiler::finalizeFunction(
 		//todo: attributes
 	}
 	//todo: function attributes
-	if (!f->metadata().ignoreBody)
+	if (!f->metadata().ignoreBody && ctx->functionBody())
 	{
 		auto builder = FunctionBodyBuilder(f, resolver, context, file);
 		ctx->functionBody()->accept(&builder);

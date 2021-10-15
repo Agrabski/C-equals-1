@@ -16,7 +16,7 @@ declaration:
 	| importDeclaration
 	| attributeDeclaration;
 
-attributeDeclaration: (AccessSpecifier)? 'att' Less attributeTarget+ Greater identifier ':' implementedInterfacesSequence
+attributeDeclaration: (AccessSpecifier)? 'att' Less attributeTarget+ Greater identifier (':' implementedInterfacesSequence)?
  OpenBracket
 		classContentSequence
  CloseBracket;
@@ -73,7 +73,7 @@ namespaceDeclaration:
 
 functionDeclaration:
 	(attributeSequence)? AccessSpecifier? 'fn' functionName genericSpecifier? ParamOpen
-		parameterList ParamClose ('->' typeSpecifier)? functionBody;
+		parameterList ParamClose ('->' typeSpecifier)? (functionBody| ';');
 
 parameterList: | parameter | (parameter ',')+ parameter;
 
