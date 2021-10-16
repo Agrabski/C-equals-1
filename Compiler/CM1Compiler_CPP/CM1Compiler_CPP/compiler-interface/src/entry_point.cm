@@ -42,7 +42,7 @@ private fn compilePackage(package: packageDescriptor, registry: packageRegistry*
 				let f = getFunction(func, registry);
 				let generator = func.get_attribute<IBindingsGenerator>();
 				if(generator != null<IBindingsGenerator>())
-					generator.generate(f.name(), func, registry)
+					generator.generate(f.name(), func, registry);
 			}
 		}
 	}

@@ -1,4 +1,6 @@
-import {functionDescriptor} from {cm1mLang::compiler}
+import {string} from {cm1mLang}
+import {getOutputDirectory open write fileDescriptor} from {cm1mLang::filesystem}
+import {functionDescriptor typeDescriptor} from {cm1mLang::compiler}
 import {IBindingsGenerator} from {bindingGenerator}
 
 public att<function> cBindings : IBindingsGenerator
@@ -11,7 +13,34 @@ public att<function> cBindings : IBindingsGenerator
 
 	public fn generate(symbolName: string, f: functionDescriptor, typeMapping: ITypeMapping*)
 	{
-		
+		let file = open(getOutputDirectory() + symbolName + ".h", 1);
+		let returnTypeName = self.getTypeName(f.returnType(), typeMapping, file);
+		let parameterDeclarations = <string>[];
+		let params = f.parameters();
+		let i = 0;
+		while(i < params.length())
+		{
+			let p = self.getTypeName(params[i].type(), typeMapping, file) + " " + (params[i].name());
+			parameterDeclarations.push(p);
+			i = i + 1;
+		}
+		let header = "extern " + returnTypeName + " ";
+		header = header + symbolName + "(";
+		i = 0;
+		while(i < parameterDeclarations.length())
+		{
+			header = header + *(parameterDeclarations[i]);
+			if(i != (parameterDeclarations.length() - 1))
+				header = header + ", ";
+			i = i + 1;
+		}
+		write(file, header + ");");
+
+	}
+
+	private fn getTypeName(t: typeDescriptor, typeMapping: ITypeMapping*, file: fileDescriptor) -> string
+	{
+		return t.name();
 	}
 
 }

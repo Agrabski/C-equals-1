@@ -8,6 +8,7 @@
 #include "../LanguageLogic/IRUtility.hpp"
 #include "../Utilities/range.hpp"
 #include "../LanguageLogic/TypeCoercionUtility.hpp"
+#include "../LanguageLogic/RuntimeTypesConversionUtility.hpp"
 #include <Windows.h>
 #include <excpt.h>
 #include <winnt.h>
@@ -55,12 +56,13 @@ std::unique_ptr<IRuntimeValue> cMCompiler::compiler::execute(
 	dataStructures::SourcePointer lastInstruction;
 	std::unique_ptr<IRuntimeValue> returnValue = nullptr;
 
-	for (auto const i : utilities::range(valueMap.size()))
-	{
-		auto const& valueType = valueMap[i]->type();
-		auto parameterType = functionDefinition->parameters()[i]->type();
-		assert(language::coerce(valueType, parameterType));
-	}
+	//for (auto const i : utilities::range(valueMap.size()))
+	//{
+	//	auto const& valueType = valueMap[i]->type();
+	//	auto parameterType = functionDefinition->parameters()[i]->type();
+	//	assert(language::coerce(valueType, parameterType));
+	//}
+
 
 	auto f = language::compileTimeFunctions::FuntionLibrary::instance().getFunction(functionDefinition);
 	if (f)
@@ -70,6 +72,20 @@ std::unique_ptr<IRuntimeValue> cMCompiler::compiler::execute(
 		for (not_null const var : functionDefinition->parameters())
 			values[var->name()] = std::move(valueMap[i++]);
 		return (*f)(std::move(values), std::map<std::string, not_null<dataStructures::Type*>>());
+	}
+	
+	if (functionDefinition->code() == nullptr)
+	{
+		auto& self = valueMap.front();
+		auto s = language::dereference(self.get());
+		auto methods = s->type().type->methods();
+		auto method = std::find_if(methods.begin(), methods.end(), [=](auto& e)
+			{
+				//todo: non exhaustive predicate
+				return e->name() == functionDefinition->name() && e->parameters().size() == functionDefinition->parameters().size();
+			});
+		if (method != end(methods))
+			functionDefinition = *method;
 	}
 
 	auto function = [&]()
@@ -89,6 +105,8 @@ std::unique_ptr<IRuntimeValue> cMCompiler::compiler::execute(
 		auto eval = ExpressionEvaluator(variableLookup);
 		auto statementEvaluator = StatementEvaluator(*functionDefinition, eval, locals);
 		// todo: do finalisation
+		if (functionDefinition->name() == "generate")
+			std::cout << "bugme";
 		for (auto& instruction : *instructions)
 		{
 			lastInstruction = language::getSourcePointerFromInstruction(instruction);

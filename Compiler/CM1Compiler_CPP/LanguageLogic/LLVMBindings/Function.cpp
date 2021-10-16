@@ -9,6 +9,7 @@
 #include "../CreateGetter.hpp"
 #include "../BuiltInPackageBuildUtility.hpp"
 #include "../RuntimeTypesConversionUtility.hpp"
+#include "../LiteralUtility.hpp"
 
 using namespace cMCompiler::dataStructures;
 using namespace cMCompiler::dataStructures::execution;
@@ -51,11 +52,27 @@ void appendGetParameter(not_null<Type*> functionType, not_null<Type*> llvmType, 
 	f->setReturnType({ llvmValue, 0 });
 }
 
+void appendGetName(not_null<Type*> functionType, not_null<Type*> llvmType, not_null<Namespace*> backendNs, not_null<Type*> llvmValue, not_null<Type*> llvmFunction)
+{
+	auto f = createCustomFunction(
+		functionType->append<Function>("name"),
+		functionType,
+		[](auto&& a, auto b)
+		{
+			auto self = dereferenceAs<GenericRuntimeWrapper<llvm::Function>>(a["self"].get())->value();
+			
+			return cMCompiler::language::buildStringValue(std::string{ self->getName() });
+		}
+	);
+}
+
+
 gsl::not_null<Type*> cMCompiler::language::buildFunctionDescriptor(gsl::not_null<dataStructures::Namespace*> backendns, gsl::not_null<dataStructures::Type*> llvmType, not_null<Type*> llvmValue)
 {
 	auto result = backendns->append<Type>("llvmFunction");
 	appendBodyBuilding(result, llvmType, backendns, llvmValue, result);
 	appendGetParameter(result, llvmType, backendns, llvmValue, result);
+	appendGetName(result, llvmType, backendns, llvmValue, result);
 	result->metadata().appendFlag(TypeFlags::ExcludeAtRuntime);
 	//todo: do
 	return result;
