@@ -20,8 +20,9 @@ namespace cMCompiler::compiler
 	void runThroughFiles(cMCompiler::compiler::CompilationUnitDataBaseBuilder& builder, std::vector<FileType> const& files)
 	{
 		do
-			for (auto& file : files)
+			for (FileType const& file : files)
 			{
+				std::cout << file.path() << std::endl;
 				auto parseTree = parse(file);
 				builder.setFile(std::filesystem::relative(file.path()));
 				builder.buildDatabase(*parseTree);

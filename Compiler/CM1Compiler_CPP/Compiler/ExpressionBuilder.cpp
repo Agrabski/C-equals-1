@@ -178,7 +178,11 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 		text.erase(text.end() - 1);
 		auto value = language::moveToHeap(
 			utilities::pointer_cast<dataStructures::execution::IRuntimeValue>(
-				language::buildStringValue(boost::regex_replace(text, boost::regex("\\\\(.|\\s)"), "$1"))
+				language::buildStringValue(
+					boost::regex_replace(
+						boost::regex_replace(text, boost::regex("\\\\n"), "\n"),
+						boost::regex("\\\\\\\""), "\"")
+				)
 				)
 		);
 		// todo: parent
@@ -371,7 +375,7 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 		);
 	}
 	if (compileTime == nullptr && runtime == nullptr)
- 		std::cerr << "Function " << name << " does not exist";
+		std::cerr << "Function " << name << " does not exist";
 	assert((compileTime != nullptr) || (runtime != nullptr));
 
 	return language::buildFunctionCallExpression(

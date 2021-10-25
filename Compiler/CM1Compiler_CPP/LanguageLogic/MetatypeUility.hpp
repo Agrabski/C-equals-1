@@ -12,6 +12,9 @@
 #include "../DataStructures/execution/ArrayValue.hpp"
 #include "../DataStructures/execution/InstructionCode.hpp"
 
+namespace llvm {
+	class Type;
+}
 
 namespace cMCompiler::language
 {
@@ -43,6 +46,7 @@ namespace cMCompiler::language
 	dataStructures::Type* getType(dataStructures::PackageDatabase*);
 	dataStructures::Type* getType(dataStructures::TypeReference*);
 	dataStructures::Type* getType(dataStructures::Variable*);
+	dataStructures::Type* getType(llvm::Type*);
 
 	runtime_value getValueFor(dataStructures::TypeReference);
 	runtime_value getValueFor(dataStructures::Type* t);

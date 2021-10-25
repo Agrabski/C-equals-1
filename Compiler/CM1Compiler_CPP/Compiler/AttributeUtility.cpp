@@ -45,6 +45,7 @@ void cMCompiler::compiler::confirmAttribute(
 	not_null attribute = parent->get<dataStructures::Attribute>(ctx->identifier()->getText());
 	for (not_null member : ctx->classContentSequence()->fieldDeclaration())
 	{
+		auto tName = member->typeSpecifier()->getText();
 		auto type = getType(
 			resolver,
 			context,

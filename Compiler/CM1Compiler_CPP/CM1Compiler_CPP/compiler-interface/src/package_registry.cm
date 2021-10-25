@@ -27,7 +27,7 @@ private struct typeMapPair
 	}
 }
 
-private class packageRegistry
+private class packageRegistry : ITypeMapping
 {
 	private _data: list<pathPackagePair>;
 	private _types: list<typeMapPair>;

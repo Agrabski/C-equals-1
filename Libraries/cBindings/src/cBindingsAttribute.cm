@@ -1,7 +1,7 @@
 import {string} from {cm1mLang}
 import {getOutputDirectory open write fileDescriptor} from {cm1mLang::filesystem}
 import {functionDescriptor typeDescriptor} from {cm1mLang::compiler}
-import {IBindingsGenerator} from {bindingGenerator}
+import {IBindingsGenerator ITypeMapping} from {bindingGenerator}
 
 public att<function> cBindings : IBindingsGenerator
 {
@@ -34,13 +34,74 @@ public att<function> cBindings : IBindingsGenerator
 				header = header + ", ";
 			i = i + 1;
 		}
+		write(file, self.generateGuardOpen(symbolName));
 		write(file, header + ");");
+		write(file, self.generateGuardClose(symbolName));
 
 	}
 
 	private fn getTypeName(t: typeDescriptor, typeMapping: ITypeMapping*, file: fileDescriptor) -> string
 	{
-		return t.name();
+		let name = self.escapeTypeName(t.qualifiedName());
+		write(file, "#include \"" + name + ".h\"\n");
+		let typeFile = open(getOutputDirectory() + name + ".h", 1);
+		self.writeTypeDeclaration(t.baseType(), typeMapping, typeFile);
+		return name;
+	}
+
+	private fn writeTypeDeclaration(t: typeDescriptor, typeMapping: ITypeMapping*, file: fileDescriptor) 
+	{
+		let name = self.escapeTypeName(t.qualifiedName());
+		write(file, self.generateGuardOpen(name));
+
+		let lType = typeMapping.getLLVMTypeFor(t);
+		if(lType.isStructType())
+		{
+			let members = <string>[];
+			
+			let cTypeFields = t.fields();
+			let i = 0;
+			while(i < cTypeFields.length())
+			{
+				let typeName = self.getTypeName((cTypeFields[i]).type(), typeMapping, file);
+
+				let memberName = (cTypeFields[i]).name();
+				members.push(typeName + " " + memberName + ";\n");
+				i = i + 1;
+			}
+
+			write(file, "typedef struct {\n");
+			let i = 0;
+			while(i < members.length())
+			{
+				write(file, (*(members[i])) + "\n");
+				i = i + 1;
+			}
+			write(file, "} " + name + ";\n");
+		}
+		else
+		{
+			write(file, "typedef size_t "+ self.escapeTypeName(t.qualifiedName()) + " ;\n");
+		}
+
+
+		write(file, self.generateGuardClose(self.escapeTypeName(t.qualifiedName())));
+	}
+
+	private fn generateGuardOpen(name: string) -> string {
+		return "#ifndef guard" + name + "\n#define guard" + name + "\n";
+	}
+
+	private fn generateGuardClose(name: string) -> string {
+		return "\n#endif\n";
+	}
+
+	private fn escapeTypeName(name: string) -> string {
+		return name
+			.replace(":", "_")
+			.replace("<", "_l_")
+			.replace(">", "_r_")
+			.replace(",", "_c_");
 	}
 
 }
