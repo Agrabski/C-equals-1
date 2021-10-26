@@ -1,8 +1,11 @@
 grammar CMinusEqualsMinus1Revision0;
 
+
 compilationUnit:
 	languageStandardDeclaration declarationSequence EOF
 	| declarationSequence;
+
+STRING: '"' ( 'return' | 'in' | ESC | ~[\\"])* '"';
 
 languageStandardDeclaration:
 	'standard' '=' IntegerLiteral SemiColon;
@@ -16,8 +19,10 @@ declaration:
 	| importDeclaration
 	| attributeDeclaration;
 
-attributeDeclaration: (AccessSpecifier)? 'att' Less attributeTarget+ Greater identifier OpenBracket
-		classContentSequence CloseBracket;
+attributeDeclaration: (AccessSpecifier)? 'att' Less attributeTarget+ Greater identifier (':' implementedInterfacesSequence)?
+ OpenBracket
+		classContentSequence
+ CloseBracket;
 
 attributeTarget: ('type' | 'variable' | 'function');
 
@@ -71,7 +76,7 @@ namespaceDeclaration:
 
 functionDeclaration:
 	(attributeSequence)? AccessSpecifier? 'fn' functionName genericSpecifier? ParamOpen
-		parameterList ParamClose ('->' typeSpecifier)? functionBody;
+		parameterList ParamClose ('->' typeSpecifier)? (functionBody| ';');
 
 parameterList: | parameter | (parameter ',')+ parameter;
 
@@ -190,8 +195,6 @@ AccessSpecifier: Public | Private | Internal;
 
 OpenBracket: '{';
 CloseBracket: '}';
-DOUBLEQUOTE: '"';
-SINGLEQUOTE: '\'';
 ParamOpen: '(';
 ParamClose: ')';
 ATTROBITEOPEN: '[';
@@ -286,8 +289,8 @@ SimpleIdentifier: LETTER (LETTER | DIGIT)*;
 
 IntegerLiteral: '-'?(DIGIT)+;
 DIGIT: [0-9];
-fragment ESC: '\\"' | '\\\\' | '\\\n';
-STRING: '"' ( ESC | ~[\\"\r\n])* '"';
+fragment ESC: '\\"' | '\\\\' | '\\n';
+
 AnyCharacter: ('\\"');
 LETTER: [a-zA-Z_];
 Whitespace: [ \t]+ -> skip;

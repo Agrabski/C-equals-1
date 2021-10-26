@@ -70,6 +70,30 @@ public fn check_for_null() -> usize
 			Assert::AreEqual(cMCompiler::language::convertToIntegral<execution::usize>(*result.get()), execution::usize{ 0 });
 
 		}
+
+		TEST_METHOD(InterfacedAttributeCanBeFound)
+		{
+			auto ss = std::stringstream(R"___(
+public interface IAttribute {}
+public att<function> Test : IAttribute{}
+class x{
+[Test()]
+public fn attribute_test() -> usize
+{
+	return 1;
+}
+}
+public fn get_attribute_function() -> IAttribute*
+{
+	return typeof(x).methods()[0].get_attribute<IAttribute>();
+}
+)___");
+			auto mod = compile("test", ss);
+
+			auto result = execute(mod->rootNamespace()->get<Function>("get_attribute_function"), {});
+			Assert::AreEqual(cMCompiler::language::convertToIntegral<execution::usize>(*result.get()), execution::usize{ 0 });
+
+		}
 	};
 }
 

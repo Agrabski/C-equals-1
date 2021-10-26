@@ -1,5 +1,6 @@
 #include "GenericInstantiationUtility.hpp"
 #include <ranges>
+#include <algorithm>
 #include "../../ParserAdapter/ParserAdapter.hpp"
 #include "../FunctionUtility.hpp"
 #include "../../LanguageLogic/GenericUtility.hpp"
@@ -9,6 +10,7 @@
 #include "../TypeUtility.hpp"
 #include "../../LanguageLogic/FunctionPredicates.hpp"
 #include "../../LanguageLogic/OverloadResolutionUtility.hpp"
+#include "../Preprocessor.hpp"
 
 using namespace cMCompiler;
 using namespace cMCompiler::dataStructures;
@@ -19,7 +21,7 @@ not_null<dataStructures::Function*> cMCompiler::compiler::instantiate
 	dataStructures::Generic<Function>& function,
 	std::vector<dataStructures::TypeReference> const& genericParameters,
 	language::NameResolver& resolver,
-	dataStructures::NameResolutionContext const& c,
+	language::NameResolutionContext const& c,
 	std::filesystem::path const& file
 )
 {
@@ -41,7 +43,7 @@ not_null<dataStructures::Function*> cMCompiler::compiler::instantiate
 	auto tree = function.fillGeneric(genericParameters);
 	auto x = tree->getText();
 	not_null functionTree = dynamic_cast<CMinusEqualsMinus1Revision0Parser::FunctionDeclarationContext*>(tree.get());
-	not_null f = createFunction(dynamic_cast<Namespace*>(function.parent()), function.name());
+	not_null f = createFunction(c.package_->rootNamespace(), function.name());
 	instantiations.emplace_back(&function, genericParameters, f);
 	f->name() = language::getGenericMangledName(function, genericParameters);
 	language::setOverloadResolutionInformation(f, genericParameters);
@@ -67,6 +69,12 @@ not_null<dataStructures::Function*> cMCompiler::compiler::instantiate
 		&function,
 		genericParameters
 		});
+	if (functionTree->attributeSequence())
+	{
+		for (not_null<CMinusEqualsMinus1Revision0Parser::AttributeContext*> attribute : functionTree->attributeSequence()->attribute())
+			attachAttribute(f, attribute, resolver, context, ep);
+
+	}
 	return f;
 }
 
@@ -75,7 +83,7 @@ not_null<dataStructures::Type*> cMCompiler::compiler::instantiate
 	dataStructures::Generic<Type>& genericType,
 	std::vector<dataStructures::TypeReference> const& genericParameters,
 	language::NameResolver& resolver,
-	dataStructures::NameResolutionContext const& c,
+	language::NameResolutionContext const& c,
 	std::filesystem::path const& file
 )
 {
@@ -98,7 +106,7 @@ not_null<dataStructures::Type*> cMCompiler::compiler::instantiate
 	auto x = genericType.fillGeneric(genericParameters);
 	not_null ast = dynamic_cast<CMinusEqualsMinus1Revision0Parser::TypeDeclarationContext*>(x.get());
 	not_null type = createType(
-		dynamic_cast<Namespace*>(genericType.parent()),
+		c.package_->rootNamespace(),
 		resolver,
 		context,
 		ast,
@@ -135,5 +143,20 @@ not_null<dataStructures::Type*> cMCompiler::compiler::instantiate
 		&genericType,
 		genericParameters
 		});
+	for (auto f : ast->classContentSequence()->functionDeclaration())
+		if (f->attributeSequence())
+		{
+			auto methods = type->methods();
+			auto method = std::ranges::find_if(methods, [&](auto const& e)
+				{
+					// todo: parameter match
+					return
+						e->name() == f->functionName()->getText() &&
+						std::ranges::count_if(e->attributes(), [](auto const&) {return true; }) == 0;
+				});
+			for (not_null<CMinusEqualsMinus1Revision0Parser::AttributeContext*> attribute : f->attributeSequence()->attribute())
+				attachAttribute(*method, attribute, resolver, context, ep);
+
+		}
 	return type;
 }

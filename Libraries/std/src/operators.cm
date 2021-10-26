@@ -1,5 +1,7 @@
 import {bool} from {cm1mLang}
+import {cBindings} from {cBindings}
 
+[cBindings()]
 public fn operator != (a: integerIterator, b: integerIterator) -> bool
 {
 	return a.get() != b.get();

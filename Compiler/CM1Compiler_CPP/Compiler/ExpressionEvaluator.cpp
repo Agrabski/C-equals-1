@@ -183,7 +183,8 @@ runtime_value cMCompiler::compiler::ExpressionEvaluator::evaluate(language::runt
 	if (result->type() != type)
 	{
 		auto r = language::dereferenceOnce(result.get());
-		if (r != nullptr && !language::coerce(r->type(), type))
+		// todo: what the fuck are you doing?!
+		if (r != nullptr && !language::coerce(r->type(), type) && !language::coerce(type, r->type()))
 			throw std::exception("invalid value type");
 		if (r != nullptr)
 			if (result == nullptr && !expectNull)

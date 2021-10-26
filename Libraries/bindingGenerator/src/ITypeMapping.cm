@@ -1,0 +1,7 @@
+import {typeDescriptor} from {cm1mLang::compiler}
+import {llvmType} from from {cm1mLang::compiler::backend}
+
+public interface ITypeMapping
+{
+	public fn getLLVMTypeFor(t: typeDescriptor) -> llvmType;
+}

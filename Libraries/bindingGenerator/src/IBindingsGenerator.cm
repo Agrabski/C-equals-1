@@ -1,0 +1,6 @@
+import {functionDescriptor} from {cm1mLang::compiler}
+
+public interface IBindingsGenerator
+{
+	public fn generate(symbolName: string, f: functionDescriptor, typeMapping: ITypeMapping*);
+}

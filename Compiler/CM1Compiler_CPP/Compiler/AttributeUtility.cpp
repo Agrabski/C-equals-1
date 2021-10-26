@@ -45,6 +45,7 @@ void cMCompiler::compiler::confirmAttribute(
 	not_null attribute = parent->get<dataStructures::Attribute>(ctx->identifier()->getText());
 	for (not_null member : ctx->classContentSequence()->fieldDeclaration())
 	{
+		auto tName = member->typeSpecifier()->getText();
 		auto type = getType(
 			resolver,
 			context,
@@ -54,6 +55,15 @@ void cMCompiler::compiler::confirmAttribute(
 		auto access = dataStructures::parse(member->AccessSpecifier()->getText());
 		var->setAccessibility(access);
 	}
+	if (ctx->implementedInterfacesSequence() != nullptr)
+		for (not_null interface : ctx->implementedInterfacesSequence()->typeReference())
+		{
+			getType(resolver, context, interface, file);
+			auto implementedType = resolver.resolve<dataStructures::Type>(interface->getText(), context);
+			if (implementedType == nullptr)
+				std::terminate(); //todo: report error
+			attribute->describingType()->appendInterface(implementedType);
+		}
 
 	auto functions = attribute->methods();
 	for (not_null member : ctx->classContentSequence()->functionDeclaration())

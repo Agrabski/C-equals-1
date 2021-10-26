@@ -174,14 +174,16 @@ namespace cMCompiler::language
 					auto candidates = d->rootNamespace()->get<dataStructures::Generic<dataStructures::Function>>();
 					auto result = candidates
 						| filter([](auto f) {return f->name() == "operator_new_unique"; })
-						| transform([&](auto g) {
-						return compiler::instantiate(
-							*g,
-							{ type },
-							*this,
-							context,
-							std::filesystem::path());
-							})
+						| transform([&](auto g)
+							{
+								return compiler::instantiate(
+									*g,
+									{ type },
+									*this,
+									context,
+									std::filesystem::path());
+							}
+						)
 						| filter(getFunctionPredicate(forceCompileTime, forceRuntime));
 							if (result.begin() != result.end())
 								return *result.begin();

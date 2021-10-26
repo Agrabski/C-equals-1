@@ -16,6 +16,7 @@
 #include "OverloadResolutionUtility.hpp"
 #include "TypeCoercionUtility.hpp"
 #include "../DataStructures/execution/RuntimePackageDescriptor.hpp"
+#include "LLVMBindings/Type.hpp"
 
 using namespace cMCompiler::dataStructures::execution;
 using namespace cMCompiler::dataStructures;
@@ -252,6 +253,11 @@ Type* cMCompiler::language::getType(dataStructures::TypeReference*)
 Type* cMCompiler::language::getType(dataStructures::Variable*)
 {
 	return getVariableDescriptor();
+}
+
+cMCompiler::dataStructures::Type* cMCompiler::language::getType(llvm::Type*)
+{
+	return getLlvmType();
 }
 
 std::unique_ptr<IRuntimeValue> cMCompiler::language::getValueFor(TypeReference value)

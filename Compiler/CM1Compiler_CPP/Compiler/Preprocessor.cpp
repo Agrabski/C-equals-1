@@ -10,7 +10,8 @@ antlrcpp::Any cMCompiler::compiler::Preprocessor::visitTypeDeclaration(CMinusEqu
 {
 	auto ep = ExpressionBuilder(filePath_, nameResolver_, context_, [](const auto&) {return nullptr; });
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> dummyValue = nullptr;
-	if (ctx->genericSpecifier() == nullptr) {
+	if (ctx->genericSpecifier() == nullptr)
+	{
 		auto name = ctx->identifier()->getText();
 		not_null type = context_.namespaceStack_.back()->get<dataStructures::Type>(name);
 		if (ctx->attributeSequence() != nullptr)
@@ -30,6 +31,22 @@ antlrcpp::Any cMCompiler::compiler::Preprocessor::visitTypeDeclaration(CMinusEqu
 				auto instance = createAttributeInstance(*type, attributeType, std::move(parameters));
 				type->appendAttribute(std::move(instance));
 			}
+		for (auto f : ctx->classContentSequence()->functionDeclaration())
+			if (f->attributeSequence())
+			{
+				auto methods = type->methods();
+				auto method = std::ranges::find_if(methods, [&](auto const& e)
+					{
+						// todo: parameter match
+						return 
+							e->name() == f->functionName()->getText() &&
+							std::ranges::count_if(e->attributes(), [](auto const&) {return true; }) == 0;
+					});
+				for (not_null<CMinusEqualsMinus1Revision0Parser::AttributeContext*> attribute : f->attributeSequence()->attribute())
+					attachAttribute(*method, attribute, nameResolver_, context_, ep);
+
+			}
+
 	}
 	return antlrcpp::Any();
 }
