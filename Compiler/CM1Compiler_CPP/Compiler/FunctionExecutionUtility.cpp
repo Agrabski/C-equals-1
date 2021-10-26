@@ -105,8 +105,6 @@ std::unique_ptr<IRuntimeValue> cMCompiler::compiler::execute(
 		auto eval = ExpressionEvaluator(variableLookup);
 		auto statementEvaluator = StatementEvaluator(*functionDefinition, eval, locals);
 		// todo: do finalisation
-		if (functionDefinition->name() == "generate")
-			std::cout << "bugme";
 		for (auto& instruction : *instructions)
 		{
 			lastInstruction = language::getSourcePointerFromInstruction(instruction);

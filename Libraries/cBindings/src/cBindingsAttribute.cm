@@ -1,4 +1,4 @@
-import {string} from {cm1mLang}
+import {string usize} from {cm1mLang}
 import {getOutputDirectory open write fileDescriptor} from {cm1mLang::filesystem}
 import {functionDescriptor typeDescriptor} from {cm1mLang::compiler}
 import {IBindingsGenerator ITypeMapping} from {bindingGenerator}
@@ -42,10 +42,24 @@ public att<function> cBindings : IBindingsGenerator
 
 	private fn getTypeName(t: typeDescriptor, typeMapping: ITypeMapping*, file: fileDescriptor) -> string
 	{
-		let name = self.escapeTypeName(t.qualifiedName());
-		write(file, "#include \"" + name + ".h\"\n");
-		let typeFile = open(getOutputDirectory() + name + ".h", 1);
-		self.writeTypeDeclaration(t.baseType(), typeMapping, typeFile);
+
+		let name = "";
+		if(t.isVoidType())
+			name = "void ";
+		else
+		{
+			name = self.escapeTypeName(t.qualifiedName());
+			write(file, "#include \"" + name + ".h\"\n");
+			let typeFile = open(getOutputDirectory() + name + ".h", 1);
+			self.writeTypeDeclaration(t.baseType(), typeMapping, typeFile);
+			name = name + " ";
+		}
+		let i = 0;
+		while(i < t.referenceCount())
+		{
+			name = name + "*";
+			i = i + 1;
+		}
 		return name;
 	}
 
@@ -81,7 +95,12 @@ public att<function> cBindings : IBindingsGenerator
 		}
 		else
 		{
-			write(file, "typedef size_t "+ self.escapeTypeName(t.qualifiedName()) + " ;\n");
+			let nativeCType = "";
+			if(t == typeof(usize))
+				nativeCType = "size_t";
+			else
+				nativeCType = "int"
+			write(file, "typedef " + nativeCType + " "+ self.escapeTypeName(t.qualifiedName()) + " ;\n");
 		}
 
 

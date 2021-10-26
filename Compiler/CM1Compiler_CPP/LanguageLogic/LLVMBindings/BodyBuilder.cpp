@@ -123,20 +123,11 @@ void appendAssign(
 			auto pointer = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["pointer"].get())->value();
 
 			auto valueType = value->getType();
-			if (!llvm::isa<llvm::PointerType>(pointer->getType()))
-			{
-				pointer->dump();
-				value->dump();
-			}
 			auto pointerType = cast<llvm::PointerType>(pointer->getType())->getElementType();
 
 			if (llvm::isa<llvm::PointerType>(pointerType)
 				&& cast<llvm::PointerType>(pointerType)->getElementType()->isArrayTy() && valueType != pointerType && valueType->isPointerTy())
-			{
-				pointer->dump();
-				value->dump();
 				value = self->CreateBitCast(value, pointerType);
-			}
 			else
 
 				if (valueType != pointerType)
@@ -382,7 +373,6 @@ void appendGetFieldValue(
 				llvm::ConstantInt::get(llvm::IntegerType::getInt32Ty(self->getContext()), memberIndex)
 			};
 
-			pointer->dump();
 			auto result = self->CreateGEP(pointer, indexList);
 			return getValueFor(result);
 		}
@@ -405,7 +395,6 @@ void appendGetFieldValue(
 				objectIndex,
 				llvm::ConstantInt::get(llvm::IntegerType::getInt32Ty(self->getContext()), memberIndex)
 			};
-			pointer->dump();
 			auto result = self->CreateGEP(pointer, indexList);
 			return getValueFor(result);
 		}
@@ -427,7 +416,6 @@ void appendGetFieldValue(
 				llvm::ConstantInt::get(llvm::IntegerType::getInt32Ty(self->getContext()), objectIndex),
 			};
 
-			pointer->dump();
 			auto result = self->CreateGEP(pointer, indexList);
 			return getValueFor(result);
 		}
@@ -478,7 +466,6 @@ void appendBranch(
 		{
 			auto const& elseBranch = dereferenceAs<GenericRuntimeWrapper<llvm::IRBuilder<>>>(a["elseBranch"].get())->value();
 			auto const& condition = dereferenceAs<GenericRuntimeWrapper<llvm::Value>>(a["condition"].get())->value();
-			condition->dump();
 			return getValueFor(self->CreateCondBr(condition, ifBranch->GetInsertBlock(), elseBranch->GetInsertBlock()));
 		}
 		else

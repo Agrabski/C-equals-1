@@ -10,11 +10,14 @@ public class integerIterator
 		self._value = value;
 		self._step = step;
 	}
+
+	[cBindings()]
 	public fn get() -> usize
 	{
 		return self._value;
 	}
 
+	[cBindings()]
 	public fn advance()
 	{
 		self._value = self._value + self._step;
@@ -33,11 +36,13 @@ public class enumeration<typename From,typename To>
 		self._to = to;
 	}
 
+	[cBindings()]
 	public fn begin() -> From
 	{
 		return self._from;
 	}
 
+	[cBindings()]
 	public fn end() -> To
 	{
 		return self._to;
@@ -55,6 +60,7 @@ public class atHocCollection<typename From,typename To>
 		self._to = to;
 	}
 
+	[cBindings()]
 	public fn iterate() -> enumeration<From, To>
 	{
 		return enumeration<From, To>(self._from, self._to);
