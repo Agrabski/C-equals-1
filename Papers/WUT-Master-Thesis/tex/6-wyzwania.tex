@@ -4,21 +4,34 @@ Gdzie wsadzić instancję generyka?
 
 \subsection{Funkcje generyczne z ograniczeniami}
 
-Funkcje mogą być wykluczane w trakcie uruchomienia lub kompilacji. Jeśli generyk takiej funkcji zostanie stworzony z typem dalej ograniczającym wykonywalność tej funkcji, ona może być wykonywalna nigdy.
+Funkcje mogą być wykluczane z użycia w trakcie uruchomienia lub kompilacji. Jeśli generyk takiej funkcji zostanie stworzony z typem dalej ograniczającym wykonywalność tej funkcji, ona może być wykonywalna nigdy.
+
+Na wczesnych etapach implementacji, instancje takich generyków były szczególnie problematyczne, ze względu na to jak rozwiązywanie przeciążeń jest zaimplementowane w C-=-1 (rozdział \ref{Function_overload_resolution}).
+W związku z tym, w wypadku użycia funkcji generycznej, kompilator powołuje instancje wszystkich wersji tego szablonu, ze zgodną ilością parametrów.
+Niektóre z nich, mogą być niepoprawne w danym kontekście. 
+
+Na przykład operator \lstinline{new unique} został zdefiniowany w dwóch wersjach: na czas uruchomienia oraz kompilacji.
+W czasie uruchomienia, odwołuje się on do funckji \lstinline{unsafe_new} która alokuje zadaną ilość bajtów na stercie.
+W czasie kompilacji wywołuje funkcję generyczną \lstinline{compiletime_heap_allocate} która zwraca referencję na instancję zadanego typu.
+Szczegóły zostały opisane w rozdziale \ref{operator_new}.
+
+Sygnatury tych operatorów niczym się nie różnią.
+Język rozpoznaje je jako oddzielne, rozróżnialne byty wyłącznie dlatego, że atrybuty którymi został adnotowane zmieniają ich dostępność w czasie kompilacji i uruchomienia.
 
 \subsection{Operator new}
-
+\label{operator_new}
 Operator \lstinline{new} w C-=-1, tak jak w C++ służy do dynamicznej alokacji pamięci na stercie.
 
-
 \subsection{Wybór przeciążenia funkcji}
+\label{Function_overload_resolution}
 To czy funkcja jest wykonywalna w czasie kompilacji albo uruchomienia można ustalić bardzo późno w trakcie budowy modelu semantycznego.
 
+Na pytanie "czy ta funkcja może być użyta w tym kontekście", kompilator jest w stanie odpowiedzieć dopiero kiedy wykonanły się na niej funkcje \lstinline{attach} wszystkich powiązanych z nią atrybutów 
 \subsection{Wyrażenia literałowe}
 
 Wyrażenie literałowe przedstawia stałą wartość.
 Na przykład w języku C++ \lstinline{int a = 4;} deklaruje i inicjalizuje zmienną a literałem 4.
-Wyrażenia lietrałowe mogą reprezentować stałe różnych typów wbudowanych 
+Wyrażenia lietrałowe mogą reprezentować stałe różnych typów wbudowanych.
 
 \subsection{Integracja z back-endem}
 Przy pierwszym podejściu do budowy reprezentacji pośredniej, użyto dedykowanych struktur danych. Było to podejście najbardziej naturalne i dające najwięcej bezpieczeństwa dzięki silnemu typowaniu. Wszystkie struktury danych opisane w rozdziale \ref{reprezentacja_posrednia} miały powiązane ze sobą klasy C++.
