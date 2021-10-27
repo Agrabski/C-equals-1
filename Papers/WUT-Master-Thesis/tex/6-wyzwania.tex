@@ -18,6 +18,11 @@ Szczegóły zostały opisane w rozdziale \ref{operator_new}.
 Sygnatury tych operatorów niczym się nie różnią.
 Język rozpoznaje je jako oddzielne, rozróżnialne byty wyłącznie dlatego, że atrybuty którymi został adnotowane zmieniają ich dostępność w czasie kompilacji i uruchomienia.
 
+Na wczesnych etapach implementacji, instancje funkcji generycznych były tworzone, przy założeniu że ich kod będzie poprawny semantycznie.
+Takie samo założenie obowiązuje przy tworzeniu zwykłych funkcji, ponieważ ze względu na ograniczenia czasowe, raportowanie o błędach kompilacji nie jest częścią pracy.
+Kompilator najpierw kompletował reprezentacje pośrednią instancji wszystkich wersji generyków pasujących do danego użycia.
+Przy próbie dynamicznej alokacji typu który nie mógł istnieć w czasie uruchomienia, takiego jak deskryptor funkcji, prowadziło to do odrzucenia poprawnego programu.
+%todo: complete
 \subsection{Operator new}
 \label{operator_new}
 Operator \lstinline{new} w C-=-1, tak jak w C++ służy do dynamicznej alokacji pamięci na stercie.
