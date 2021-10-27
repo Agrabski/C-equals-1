@@ -10,6 +10,7 @@ class @unique<typename T>
 			delete<T>(self._allocated);
 	}
 
+	[NoDiscard()]
 	public fn move() -> @unique<T>
 	{
 		let result = @unique<T>(self._allocated);

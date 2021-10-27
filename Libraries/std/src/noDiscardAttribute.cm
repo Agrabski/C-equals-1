@@ -1,0 +1,18 @@
+import {ignoreBody functionDescriptor} from {cm1mLang::compiler}
+import {functionCallExpression} from {cm1mLang::compiler::ir}
+import {usize} from {cm1mLang}
+
+public att<function> NoDiscard
+{
+	public fn attach(f: functionDescriptor)
+	{}
+
+	public fn onCall(f: functionDescriptor, call: functionCallExpression*)
+	{
+	}
+}
+
+private fn test()
+{
+	enumerate(1,2);
+}

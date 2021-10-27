@@ -26,6 +26,7 @@ public class list<typename T> //: ICollection<T>
 		}
 	}
 
+	[NoDiscard()]
 	public fn get(index: usize) -> T*
 	{
 		if(self._begin.get() == null<listElement<T>>())
@@ -42,6 +43,7 @@ public class list<typename T> //: ICollection<T>
 		return &(currElement._allocated);
 	}
 
+	[NoDiscard()]
 	public fn length() -> usize
 	{
 		let result = 0;
