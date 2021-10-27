@@ -26,17 +26,17 @@ Oznacza to że pewne elementy składni, obecne w innych językach, stają się z
 Większość języków programowania zawiera mechanizm umożliwiający import symboli zewnętrznych.
 Mogą one pochodzić z kodu napisanego w innym języku lub z już skompilowanej biblioteki.
 
-W wypadku C/C++, wymaga to użycia słowa \mintinline{Cpp}{external}, do zdefiniowania symbolu zewnętrznego oraz przekazania odpowiedniego argumentu do linkera.
+W wypadku C/C++, wymaga to użycia słowa \lstinline{external}, do zdefiniowania symbolu zewnętrznego oraz przekazania odpowiedniego argumentu do linkera.
 W C-=-1 ten sam rezultat można osiągnąć, przypisując funkcji odpowiednie metadane, które potem zostaną odczytane przez interfejs backendu.
 Wbudowana wersja tego programu obsługuje wczytywanie definicji funkcji z plików lib oraz zastępowanie jej ciała kodem LLVM.
 Mechanizm metadanych został dokładniej opisany w rozdziale \ref{final_solution}.
 
-Listing \ref{lst:replaceWithLLVMAttribute} przedstawia atrybut \mintinline{Cpp}{replaceWithLLVMIR} z biblioteki standardowej C-=-1. 
+Listing \ref{lst:replaceWithLLVMAttribute} przedstawia atrybut \lstinline{replaceWithLLVMIR} z biblioteki standardowej C-=-1. 
 Pobiera on kod LLVMIR z pliku wskazanego przez użytkownika, a następnie ustawia w definicji wybranej funkcji zmienną "llvm-representation".
 Backend interface może potem odczytać tą wartość i wykorzystać ją do wygenerowania kodu dla backendu.
 
+
 \begin{lstlisting}[
-    language=Cm1,
     numbers=left,
     firstnumber=0,
     caption={Atrybut zastępujący ciało funkcji kodem LLVM},
