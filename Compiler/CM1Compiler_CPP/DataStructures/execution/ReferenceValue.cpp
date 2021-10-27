@@ -31,6 +31,8 @@ void cMCompiler::dataStructures::execution::ReferenceValue::performAssigment(std
 }
 cMCompiler::dataStructures::execution::json cMCompiler::dataStructures::execution::ReferenceValue::emmit(ir::INameGetter const& nameLookupFunction, ISerializationManager& manager) const
 {
+	if (value_ == nullptr)
+		return { "value", nullptr };
 	return {
 		{"value", manager.serializeReference(*value_)}
 	};

@@ -10,7 +10,7 @@ std::unique_ptr<IRuntimeValue> cMCompiler::language::compileTimeFunctions::raise
 	using namespace std::string_literals;
 	auto message = convertToString(*valueMap.at("message"s));
 	auto code = convertToIntegral<unsigned long long>(*valueMap.at("code"s));
-	auto pointer = convertToSourcePointer(*valueMap.at("pointerToSource"s));
+	auto pointer = convertToSourcePointer(valueMap.at("pointerToSource"s).get());
 	CompilerInterface::getInstance().raiseError(message, pointer, code);
 	return std::unique_ptr<IRuntimeValue>();
 }

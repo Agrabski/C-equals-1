@@ -13,7 +13,7 @@ namespace cMCompiler::language
 	using gsl::not_null;
 
 	[[nodiscard]]
-	dataStructures::SourcePointer convertToSourcePointer(dataStructures::execution::IRuntimeValue& value);
+	dataStructures::SourcePointer convertToSourcePointer(not_null<dataStructures::execution::IRuntimeValue*> value);
 
 	[[nodiscard]]
 	std::string convertToString(dataStructures::execution::IRuntimeValue& value);

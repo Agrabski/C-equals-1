@@ -6,14 +6,19 @@
 
 namespace cMCompiler::language
 {
-	runtime_value buildAdressofExpression(runtime_value&& value, runtime_value&& pointerToSource);
-
-
-	runtime_value buildValueLiteralExpression(runtime_value&& value, runtime_value&& pointerToSource);
+	runtime_value buildAdressofExpression(
+		runtime_value&& value,
+		runtime_value&& pointerToSource
+	);
+	runtime_value buildValueLiteralExpression(
+		runtime_value&& value,
+		runtime_value&& pointerToSource
+	);
 	runtime_value buildArrayLiteralExpression(
 		runtime_value&& expressions,
 		dataStructures::TypeReference valueType,
-		runtime_value&& pointerToSource);
+		runtime_value&& pointerToSource
+	);
 	runtime_value buildMethodCallExpression(
 		runtime_value&& expression,
 		dataStructures::TypeReference type,
@@ -23,15 +28,23 @@ namespace cMCompiler::language
 		runtime_value&& pointerToSource,
 		NameResolver nr,
 		NameResolutionContext context,
-		std::filesystem::path p);
+		std::filesystem::path p
+	);
 	runtime_value buildMethodCallExpression(
 		runtime_value&& expression,
 		dataStructures::TypeReference type,
 		std::vector<runtime_value>&& argumentExpressions,
 		std::string const& methodName,
-		runtime_value&& pointerToSource);
-	runtime_value buildFieldAccessExpression(runtime_value&& expression, gsl::not_null<dataStructures::Field*> field, runtime_value&& pointerToSource);
-	runtime_value buildVariableReferenceExpressionDescriptor(gsl::not_null<dataStructures::Variable*> var);
+		runtime_value&& pointerToSource
+	);
+	runtime_value buildFieldAccessExpression(
+		runtime_value&& expression,
+		gsl::not_null<dataStructures::Field*> field,
+		runtime_value&& pointerToSource
+	);
+	runtime_value buildVariableReferenceExpressionDescriptor(
+		gsl::not_null<dataStructures::Variable*> var
+	);
 
 	std::unique_ptr<dataStructures::execution::IRuntimeValue> buildFunctionCallExpression(
 		runtime_value&& referenceToCompiletimeFunction,
@@ -88,4 +101,6 @@ namespace cMCompiler::language
 
 
 	void setParent(not_null<dataStructures::execution::IRuntimeValue*> expression, runtime_value&& parentReference);
+	void setParentStatement(not_null<dataStructures::execution::IRuntimeValue*> expression, runtime_value&& parentReference);
+
 }
