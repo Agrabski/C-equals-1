@@ -1,3 +1,16 @@
 \section{Wnioski}
 
+C-=-1, z oczywistych powodów, pod wieloma wzgęldami jest gorszy od istniejących rozwiązań.
+Wiele udogodnień, traktowanych już jako standard, takich jak dedukcja parametrów generycznych czy semantyka przenoszenia nie zostało zaimplementowanych z powodu braku czasu.
+Ponadto wsparcie dla C-=-1 jest minimalne: nie istnieje edytor, który koloruje jego składnie, a kompilator oferuje w najlepszym wypadku bardzo podstawową diagnostykę.
+Jego celem nie było jednak zastąpić C++, Rust czy C\#, a zbadać jak priorytetyzacja wsparcia dla statycznego metaprogramowania wpływa na język oraz pisany w nim kod. 
+Pod tym względem, C-=-1 można uznać za sukces.
+
+
+
 \subsection{Kategoryzacja języka}
+
+C-=-1 od samego początku był definiowany jako kompilowany język programowania ze wsparciem dla statycznego metaprogramowania i wykonywania kodu w czasie kompilacji.
+Oryginalny projekt implementacji zakładał więc, że kompilator będzie zawierał w sobie moduł interpretujacy reprezentację pośrednią programu.
+Po wykonaniu transformacji na kodzie użytkownika, kompilator miał przejąć kontrolę i dokonać kompilacji do kodu maszynowego.
+Jedna

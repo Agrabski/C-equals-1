@@ -77,6 +77,7 @@ Interpreter C-=-1 operuje na reprezentacji pośredniej tego języka (rozdział 4
 \subsubsection{Referencje do obiektów C++}
 \subsection{Serializator}
 \subsection{Backend Interface}
+\label{Backend_Interface}
 Odpowiedzialnością interfejsu back-endu jest przetłumaczenie CIR na LIR. Na tym etapie kompilacji, cała reprezentacja pośrednia C-=-1 jest przechowywana w ramach struktur danych interpretera. Stworzyło to okazję do napisania części kompilatora w języku docelowym.
 To rozwiązanie zapewniło bezpieczeństwo typów w tej części kodu oraz ułatwiło rozwój C-=-1. Tworzenie kompilatora w języku docelowym jest typowym w konstrukcji tego typu narzędzi. Program tak skonstruowany nazywają się „Bootstrapping Compiler” [12]. 
 Implementacja tej części kompilatora w C-=-1 ułatwiła rozwój tego języka. Jedną z głównych zalet narzędzia skonstruowanego w ten sposób jest istnienie dużego projektu w języku docelowym. Wymusza to szybszy rozwój języka oraz umożliwia znajdowanie błędów w kompilatorze.
