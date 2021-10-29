@@ -12,8 +12,6 @@ private fn getFunction(f: functionDescriptor, registry: packageRegistry*) -> llv
 
 	let attribute = f.get_attribute<_att_ ReplaceWithLLVMIR>();
 	let external = f.get_attribute<_att_ mapToExternalSymbol>();
-	print(f.name());
-	print<_att_ mapToExternalSymbol*>(external);
 	if(external != null<_att_ mapToExternalSymbol>())
 	{
 		let g = createFunctionFromExternal(f, registry, external);
@@ -167,7 +165,6 @@ private fn getFunction(f: functionDescriptor, registry: packageRegistry*) -> llv
 
 private fn createFunctionFromExternal(f: functionDescriptor, registry: packageRegistry*, attribute: _att_ mapToExternalSymbol*) -> llvmFunction
 {
-	print("external");
 	let mod = registry.getModuleFor(f);
 	let f = mod.appendFunction(
 		attribute._symbolName,
