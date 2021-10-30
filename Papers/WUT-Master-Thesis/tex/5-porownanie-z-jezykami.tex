@@ -33,7 +33,6 @@ Mogą one pochodzić z kodu napisanego w innym języku lub z już skompilowanej 
 W wypadku C/C++, wymaga to użycia słowa \lstinline{external}, do zdefiniowania symbolu zewnętrznego oraz przekazania odpowiedniego argumentu do linkera.
 W C-=-1 ten sam rezultat można osiągnąć, przypisując funkcji odpowiednie metadane, które potem zostaną odczytane przez interfejs backendu.
 Wbudowana wersja tego programu obsługuje wczytywanie definicji funkcji z plików lib oraz zastępowanie jej ciała kodem LLVM.
-Mechanizm metadanych został dokładniej opisany w rozdziale \ref{final_solution}.
 
 Listing \ref{lst:replaceWithLLVMAttribute} przedstawia atrybut \lstinline{replaceWithLLVMIR} z biblioteki standardowej C-=-1. 
 Pobiera on kod LLVMIR z pliku wskazanego przez użytkownika, a następnie ustawia w definicji wybranej funkcji zmienną "llvm-representation".
