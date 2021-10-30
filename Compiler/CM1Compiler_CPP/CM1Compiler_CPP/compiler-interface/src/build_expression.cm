@@ -75,7 +75,6 @@ private fn build_expression(instruction: IExpression*, builder: llvmIrBodyBuilde
 			registry,
 			isLeftExpression
 		);
-	print<IExpression*>(instruction);
 	return build(
 	cast<constructorInvocationExpression, IExpression>(instruction),
 	builder,
@@ -92,7 +91,6 @@ private fn build(instruction: functionCallExpression*, builder: llvmIrBodyBuilde
 	let arguments = instruction._arguments;
 	for(i in enumerate(0, arguments.length()))
 	{
-		print<IExpression*>(arguments[i]);
 		values.push(build_expression(
 			arguments[i],
 			builder,
@@ -103,7 +101,6 @@ private fn build(instruction: functionCallExpression*, builder: llvmIrBodyBuilde
 	}
 	if(f.isNull())
 	{
-		print<functionCallExpression*>(instruction);
 		print(instruction._compiletimeFunction.qualifiedName());
 	}
 	return builder.appendFunctionCall(getFunction(f, registry), &values);
@@ -118,7 +115,6 @@ private fn build(instruction: constructorInvocationExpression*, builder: llvmIrB
 	values.push(self);
 	for(i in enumerate(0, arguments.length()))
 	{
-		print<IExpression*>(arguments[i]);
 		values.push(build_expression(
 			arguments[i],
 			builder,
@@ -178,7 +174,6 @@ private fn build(instruction: literalExpression*, builder: llvmIrBodyBuilder*, v
 			*cast<usize, void>(instruction._value),
 			getType(instruction.type(), registry)
 		);
-	print<literalExpression*>(instruction);
 	return builder.appendIntegerLiteral(
 	*cast<usize, void>(instruction._value),
 	getType(instruction.type(), registry)

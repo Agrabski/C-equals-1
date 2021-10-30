@@ -1,0 +1,20 @@
+import {ignoreBody functionDescriptor raiseError} from {cm1mLang::compiler}
+import {functionCallExpression IInstruction} from {cm1mLang::compiler::ir}
+import {usize null} from {cm1mLang}
+
+public att<function> NoDiscard
+{
+	public fn attach(f: functionDescriptor)
+	{}
+
+	public fn onCall(call: functionCallExpression*)
+	{
+		if(call._parentStatment != null<IInstruction>())
+			raiseError(&(call._pointerToSource), "Return value of a no-discard function is not used", 123);
+	}
+}
+
+private fn test()
+{
+	enumerate(1,2);
+}

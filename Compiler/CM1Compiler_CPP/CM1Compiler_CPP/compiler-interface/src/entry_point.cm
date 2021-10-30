@@ -43,8 +43,6 @@ private fn compilePackage(package: packageDescriptor, registry: packageRegistry*
 				let generator = func.get_attribute<IBindingsGenerator>();
 				if(generator != null<IBindingsGenerator>())
 				{
-					print("generating");
-					print(f.name());
 					generator.generate(f.name(), func, registry);
 				}
 			}

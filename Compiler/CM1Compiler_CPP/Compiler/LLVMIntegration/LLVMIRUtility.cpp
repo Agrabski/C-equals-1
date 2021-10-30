@@ -18,6 +18,7 @@
 #include "../compilerInterfaceUtility.hpp"
 #include "../FunctionExecutionUtility.hpp"
 #include "../../LanguageLogic/MetatypeUility.hpp"
+#include "../../LanguageLogic/CompilerInterface.hpp"
 #include "../../LanguageLogic/LLVMBindings/LLVMBindings.hpp"
 #include "../../DataStructures/execution/StringValue.hpp"
 #include "../../DataStructures/RuntimeException.hpp"
@@ -26,6 +27,7 @@
 using namespace cMCompiler::compiler;
 using namespace cMCompiler::dataStructures;
 using namespace cMCompiler::compiler::llvmIntegration;
+
 
 std::unique_ptr<CompilationResult> cMCompiler::compiler::llvmIntegration::compileToLLVMIr(
 	dataStructures::PackageDatabase& compilerInterface,
