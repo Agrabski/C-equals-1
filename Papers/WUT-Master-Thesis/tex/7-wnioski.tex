@@ -15,4 +15,20 @@ Oryginalny projekt implementacji zakładał więc, że kompilator będzie zawier
 Po wykonaniu transformacji na kodzie użytkownika, kompilator miał przejąć kontrolę i dokonać kompilacji do kodu maszynowego.
 
 Jednak w wyniku zmian opisanych w rozdziale \ref{Backend_Interface}, kompilacja do kodu maszynowego została zaimplementowana w interpretowanym C-=-1.
+Oznacza to, że kompilator składa się wyłącznie z frontendu oraz środowiska uruchomieniowego które, udostępnia intefejs biblioteki llvm.
+Z tego powodu, w ogólnym przypadku, C-=-1 można zaklasyfikować jako silnie typowany język interpretowany.
 
+Należy jednak pamiętać, że ten język zawiera w sobie rozróżnienie między kodem wykonywalnym w czasie uruchomienia a kompilacji.
+Ponadto, jego projekt zawiera semantykę typową dla języków kompilowanych: jawną alokację obiektów na stercie, ręczne zarządzanie pamięcią oraz wskazania. 
+Ten aspekt został opisany w rozdziale \ref{Language_desig}.
+Tak więc najlepszym sposobem na zkategoryzowanie C-=-1 jest uznanie go za hybrydę pomiędzy językiem kompilowanym a interpretowanym.
+
+
+\subsection{Rozszerzalność języka}
+
+Umożliwienie programiście modyfikowanie kodu oraz tworzenie własnych adnotacji sprawia, że język można bardzo łatwo rozszerzyć o nowe mechanizmy.
+W rozdziale \ref{Language_extensibility} opisano przykłady składni nie wspieranej przez C-=-1, a którą można dodać przy użyciu proponowanego mechanizmu atrybutów.
+
+Wykorzystując go, programista może zawęzić zbiór programów akceptowanych przez kompilator, przy użyciu analizy statycznej.
+W rozdziałach \ref{no_discard} oraz \ref{const} przedstawiono przykłady adnotacji istniejących w C++ jako część języka, które można dodać do C-=-1.
+Po dodaniu mechanizmu wyjątków, trywialną będzie też implementacja atrybutu \lstinline{noexcept}, oznaczającego funkcje która nigdy nie rzuca.

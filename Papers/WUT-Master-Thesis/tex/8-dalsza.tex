@@ -1,0 +1,45 @@
+\section{Dalsza praca}
+
+Ta praca oferuje szereg ciekawych wniosków na temat zaproponowanego podejścia do projektowania języków programowania.
+Pozostawia jendak też kilka otwartych pytań.
+Odpowiedź na nie, jest kluczowa dla dalszego rozwoju tej ideii i stanowi barierę przed praktyczną jej aplikacją.
+
+\subsection{Obsługa rozszerzeń języka}
+Pierwszy poważny problem jest powiązany z możliwością rozszerzania języka, opisaną w rozdziale \ref{Language_extensibility}.
+Programista, tworzący własne adnotacje zapewniające statyczną analizę, nie ma obecnie możliwości adnotowania kodu bibliotecznego.
+Problem który z tego wynika można zilustrować na przykładzie atrybutu \lstinline{const}.
+
+Załóżmy, że atrybut const nie istnieje w biblitece standardowej C-=-1.
+Programista, pracujący nad projektem A, tworzy taką adnotację, aby poprawić jakość produkowanego kodu.
+Problem pojawia się kiedy próbuje użyć biblioteki standardowej.
+Funkcja \lstinline{indexof}, na przykład, przyjmuje wskazanie na tablicę oraz na szukany element.
+Ponieważ atrybut \lstinline{const} został zdefiniowany w biblitotece A, funkcje z biblioteki standardowej nie są nim adnotowane.
+
+Oznacza to, że programista pracujący nad biblioteką A ma obecnie następujące możliwości:
+\begin{enumerate}
+	\item\label{option:abandon_attribute} Porzucenie atrybutu \lstinline{const} i dalszą pracę bez analizy statycznej.
+	\item\label{option:embed_in_attribute} Zaszycie które elementy biblioteki standardowej powinny mieć tą adnotację w kodzie atrybutu.
+	\item\label{option:std_library_fascade} Stworzenie 'nakładki' na bibliotekę standardową.%todo: lepsze słowo% 
+	\item\label{option:analize_function_bodies} Implementacja atrybutu w taki sposób aby analizował też ciała wołanych funkcji.
+	\item\label{option:own_std_lib} Implementacja własnej biblioteki standardowej.
+\end{enumerate}
+Alternatywa \ref{option:abandon_attribute} jest oczywiście najprostsza, ale sprawia, że proponowany mechanizm atrybutów staje bezużyteczny. 
+Użytkownicy języka powinni mieć możliwość definiowania własnych analizatorów i ich zastosowanie bez ograniczeń.
+
+Możliwości \ref{option:embed_in_attribute} oraz \ref{option:std_library_fascade} zapewniają używalność stworzonego atrybutu, ale wymagają dużej ilości pracy.
+%todo: finish
+
+%todo: cite C#8 nullable reference types
+
+\subsection{Adnotacje a generyki}
+
+trzeba dorzucić możliwość aplikacji atrybutu const do parametrów generyka, np list< [const] usize>
+
+\subsection{Modyfikowanie kodu}
+
+Jednym z celów tej pracy było zbadanie, jak umożliwienie modyfikowania kodu w trakcie kompilacji, wpływa na tworzone oprogramowanie.
+Niestety ze względu na błędną wycenę wielkości tego projektu, ten aspekt został pominięty.
+
+Większość potrzebnych prac została już wykonana.
+Model semantyczny programu jest trzymany w strukturach danych które można modyfikować z interpretowanego kodu.
+Proces kompilacji został zaprojektowany z uwzględnieniem zmian w reprezentacji pośredniej.
