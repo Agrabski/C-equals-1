@@ -82,7 +82,7 @@ Odpowiedzialnością interfejsu back-endu jest przetłumaczenie CIR na LIR. Na t
 To rozwiązanie zapewniło bezpieczeństwo typów w tej części kodu oraz ułatwiło rozwój C-=-1. Tworzenie kompilatora w języku docelowym jest typowym w konstrukcji tego typu narzędzi. Program tak skonstruowany nazywają się „Bootstrapping Compiler” [12]. 
 Implementacja tej części kompilatora w C-=-1 ułatwiła rozwój tego języka. Jedną z głównych zalet narzędzia skonstruowanego w ten sposób jest istnienie dużego projektu w języku docelowym. Wymusza to szybszy rozwój języka oraz umożliwia znajdowanie błędów w kompilatorze.
 \subsubsection{Funkcje eksponowane przez kompilator}
-Używając mechanizmów, opisanych w rozdziałach 4.3.3 oraz 4.3.4, interfejsowi backendu narzędzie do budowy LIR zdefiniowane w LLVM. Za jego pomocą może generować reprezentacje pośrednią LLVM.
+Używając mechanizmów, opisanych w rozdziałach 4.3.3 oraz 4.3.4, udostępniono interfejsowi backendu narzędzie do budowy LIR zdefiniowane w LLVM. Za jego pomocą może generować reprezentacje pośrednią LLVM.
 W ramach biblioteki backendu, istnieje cała gama funkcji oraz typów używanych do emitowania reprezentacji pośredniej. Duża ich część została wyeksponowana interfejsowi backendu.
 \subsubsection{Implementacja interfejsu backendu}
 Razem z plikiem wykonywalnym kompilatora, dystrybuowany jest kod źródłowy paczki, zawierającej interfejs backendu. Przed kompilacją kodu użytkownika, kompilator wczytuje ten moduł. Zaletą tego rozwiązania jest możliwość wymiany tego komponentu, bez rekompilacji całego narzędzia.

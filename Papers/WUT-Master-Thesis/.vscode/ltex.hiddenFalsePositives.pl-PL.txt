@@ -1,0 +1,1 @@
+{"rule":"KONCEPT","sentence":"^\\QKoncepty są definiowane jako zbiór wymagań, które typ musi spełnić.\\E$"}

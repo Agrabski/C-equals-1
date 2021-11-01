@@ -12,24 +12,54 @@ Na rynku, istnieją rozwiązania, które wykorzystują takie adnotacje do modyfi
 Ponadto, jakiekolwiek zmiany w kodzie aplikacji, będą zachodzić w trakcie uruchomienia, nie kompilacji.
 Oznacza to narzuty, które w wielu kontekstach są nieakceptowalne.
 \subsubsection{Refleksja}
+
+Informacja o organizacji programu jest integralną częścią skompilowanego pliku C\#.
+W czasie uruchomienia aplikacja ma pełny wgląd we własną strukturę.
+Ponieważ w C\# występuje dynamiczna refleksja, program ma również dostęp do metadanych w bibliotekach ładowanych w czasie pracy.
+
+Ten mechanizm niesie ze sobą też pewne koszty.
+Refleksja w czasie uruchomienia niesie za sobą poważne koszty, które w niektórych kontekstach są nieakceptowalne.
+Ponadto, obecność informacji o typach i funkcjach w skompilowanym pliku znacząco ułatwia dekompilację.
+
+Można też argumentować, że dostęp do metadanych programu w trakcie uruchomienia utrudnia optymalizacje.
+Program może przeglądać własną strukturę i dynamiczne wywoływać kod na podstawie pozyskanych informacji.
+W związku z tym niektóre typy optymalizacji takie jak inlining nie są możliwe.
+
 \subsubsection{Analizatory kodu}
+
 Jednym z wyników publicznego udostępnienia kodu kompilatora Roslyn, było udostępnienie programistom API kompilatora służącego do walidacji kodu.
+Programista może więc stworzyć własny analizator w ramach swojego projektu.
+Zaletą tego podejścia  jest spójność używanego języka.
+Projekt pisany w C\# może być analizowany w C\#, bez żadnych dodatkowych restrykcji.
+Unika to problemu tworzenia dodatkowego dialektu języka, jaki występuje w C++.
 
 \subsubsection{Generatory kodu}
+
 C\#9 wprowadził możliwość pisania generatorów kodu. Jest to bardzo podobne rozwiązanie do makr w języku Rust. Generatory kodu to specjalne klasy, których kod jest wykonywany w trakcie kompilacji. 
-Mechanizm C\# jest jednak bardziej zaawansowany. Umożliwia generowanie kodu używając wszystkich elementów języka, zamiast zapewniać prosty szablon. Te generatory, tak jak w Rust, nie mają jednak dostępu do informacji zbieranych przez kompilator, poza drzewem składniowym oraz nie mogą modyfikować istniejącego kodu.\par
-Generatory kodu nadal są rozwijane i w najbliższym czasie nie wejdą do stabilnego C\#. Stanowią one jednak ciekawą zmianę w kierunku języka, w stronę większego wsparcia dla statycznego meta-programowania.
+Mechanizm C\# jest jednak bardziej zaawansowany.
+Umożliwia generowanie kodu, używając wszystkich elementów języka, zamiast zapewniać prosty szablon.
+Te generatory, tak jak w Rust, nie mają jednak dostępu do informacji zbieranych przez kompilator, poza drzewem składniowym oraz nie mogą modyfikować istniejącego kodu.
+
+Generatory kodu nadal są rozwijane i w najbliższym czasie nie wejdą do stabilnego C\#. Stanowią one jednak ciekawą zmianę w kierunku języka, w stronę większego wsparcia dla statycznego metaprogramowania.
+
 \subsection {Rust}
 Ponieważ Rust jest stosunkowo młody, jego projektanci mogli czerpać z doświadczeń innych języków. Wyraźnie widać to w jego składni, zintegrowanym systemie zarządzania zależnościami oraz bardzo przyjaznym kompilatorze.\par
 Z tego powodu, nie zawiera on też tradycyjnego preprocesora, takiego jak w C/C++ czy C\#. Makra w Rust są tak naprawdę funkcjami operującymi na drzewie składniowym programu. Jest to zdecydowany postęp względem prostego zastępowania tekstu jak w C/C++, lecz ma też swoje wady.\par
-Makra w języku Rust nadal operują na, co prawda ustrukturyzowanym, ale nadal, tekście. Oznacza to, że nie mają one dostępu do systemu typów ani żadnych innych informacji zgromadzonych przez kompilator.\par
+Makra w języku Rust nadal operują na, co prawda strukturyzowanym, ale nadal, tekście. Oznacza to, że nie mają one dostępu do systemu typów ani żadnych innych informacji zgromadzonych przez kompilator.\par
 \subsection{C++20}
-C++ zawiera szeroką gamę mechanizmów meta-programistycznych oraz technik do statycznej walidacji kodu. Były one stopniowo wprowadzane do języka przez cały czas jego istnienia, bez spójnego planu.\par
+C++ zawiera szeroką gamę mechanizmów metaprogramistycznych oraz technik do statycznej walidacji kodu. Były one stopniowo wprowadzane do języka przez cały czas jego istnienia, bez spójnego planu.\par
 \subsubsection{Szablony}
-Szablony w C++ można rozumieć jako oddzielny, funkcyjny, zdolny do symulacji maszyny Turinga, język programowania \cite{template_turing_complete}. Meta-programowanie szablonowe powstało nie jako świadomy wysiłek twórców języka, lecz jako naturalna, nieprzewidziana konsekwencja jego zasad.\par
+Szablony w C++ można rozumieć jako oddzielny, funkcyjny, zdolny do symulacji maszyny Turinga, język programowania \cite{template_turing_complete}.
+Metaprogramowanie szablonowe powstało nie jako świadomy wysiłek twórców języka, lecz jako naturalna, nieprzewidziana konsekwencja jego zasad.
+
 \subsubsection{Koncepty}
-Koncepty zostały wprowadzone w C++20 jako sposób na lepsze dokumentowanie szablonów, oraz czytelniejsze komunikaty o błędzie w wypadku niepoprawnego użycia. Używa się ich do ograniczania, które typy mogą zostać wykorzystane w danym szablonie.\par
-Koncepty są definiowane jako zbiór wymagań, które typ musi spełnić. Mogą to być proste wyrażenia logiczne jak i weryfikowanie czy dana metoda istnieje oraz jaki typ zwraca. W przeciwieństwie do pozostałych omawianych mechanizmów, koncepty bronią programistę przed niezrozumiałymi błędami kompilacji zamiast przed błędami czasu uruchomienia.\par
+Koncepty zostały wprowadzone w C++20 jako sposób na lepsze dokumentowanie szablonów, oraz czytelniejsze komunikaty o błędzie w wypadku niepoprawnego użycia.
+Używa się ich do ograniczania, które typy mogą zostać wykorzystane w danym szablonie.
+
+Koncepty są definiowane jako zbiór wymagań, które typ musi spełnić.
+Mogą to być proste wyrażenia logiczne jak i weryfikowanie czy dana metoda istnieje oraz jaki typ zwraca.
+W przeciwieństwie do pozostałych omawianych mechanizmów, koncepty bronią programistę przed niezrozumiałymi błędami kompilacji zamiast przed błędami czasu uruchomienia.
+
 \subsubsection{Atrybuty}
 Atrybuty zostały oficjalnie wprowadzone do języka w C++11. Umożliwiają one przekazanie kompilatorowi dodatkowych informacji na temat kodu źródłowego. Te dane są potem wykorzystywane w trakcie kompilacji do wydawania lub ignorowania ostrzeżeń. Dwa przykłady warte omówienia to fallthrough oraz no\_discard, ponieważ prezentują obydwa przypadki zastosowania atrybutu.\par
 Atrybut fallthrough powstał, aby rozwiązać typowy problem języków zawierających konstrukcję switch. W większości zastosowań, celem programisty jest stworzenie zestawu niezależnych od siebie przypadków, spośród których zostanie wykonany jeden na podstawie wartości jakiejś zmiennej.\par
