@@ -267,6 +267,7 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildFiel
 	t->appendField("_type", { getTypeDescriptor(), 0 });
 	t->appendField("_parentExpression", { getExpressionDescriptor(), 1 });
 	t->appendField("_pointerToSource", { getPointerToSource(), 0 });
+	t->appendField("_parentStatment", { getIInstruction(), 1 });
 
 	t->append<Function>("parentExpression")->setReturnType({ getExpressionDescriptor(), 1 });
 
@@ -291,6 +292,7 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildBina
 	result->appendField("_runtimeFunction", { getFunctionDescriptor(), 0 })->setAccessibility(Accessibility::Private);
 	result->appendField("_arg1", { getExpressionDescriptor(), 1 });
 	result->appendField("_arg2", { getExpressionDescriptor(), 1 });
+	result->appendField("_parentStatment", { getIInstruction(), 1 });
 
 	result->appendField("_pointerToSource", { getPointerToSource(), 0 });
 	createGetter(result->append<Function>("pointerToSource"), result);
@@ -319,6 +321,7 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildCons
 	createGetter(result->append<Function>("runtimetimeConstructor")->setReturnType({ getFunctionDescriptor(), 0 }), result)->setAccessibility(Accessibility::Public);
 	createGetter(result->append<Function>("arguments")->setReturnType({ getCollectionTypeFor({getExpressionDescriptor(), 1}), 1 }), result)->setAccessibility(Accessibility::Public);
 	result->appendField("_parentExpression", { getExpressionDescriptor(), 1 });
+	result->appendField("_parentStatment", { getIInstruction(), 1 });
 	result->appendField("_pointerToSource", { getPointerToSource(), 0 });
 
 	createCustomFunction(result->append<Function>("type"), result,
@@ -361,6 +364,7 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildLite
 	createGetter(t->append<Function>("value"), t);
 	t->appendField("_parentExpression", { getExpressionDescriptor(), 1 });
 	t->appendField("_pointerToSource", { getPointerToSource(), 0 });
+	t->appendField("_parentStatment", { getIInstruction(), 1 });
 	t->appendInterface(getExpressionDescriptor());
 
 	createCustomFunction(t->append<Function>("type"), t, [](value_map&& a, generic_parameters) -> runtime_value
@@ -382,6 +386,7 @@ gsl::not_null<Type*> cMCompiler::language::builddereferenceExpressionDescriptor(
 	t->appendField("_parentExpression", { getExpressionDescriptor(), 1 });
 	t->appendField("_expression", { getExpressionDescriptor(), 1 });
 	t->appendField("_pointerToSource", { getPointerToSource(), 0 });
+	t->appendField("_parentStatment", { getIInstruction(), 1 });
 	t->appendInterface(getExpressionDescriptor());
 
 	createCustomFunction(t->append<Function>("type"), t, [](value_map&& a, generic_parameters) -> runtime_value
@@ -403,6 +408,7 @@ gsl::not_null<Type*> cMCompiler::language::buildArrayLiteralExpressionDescriptor
 	t->appendField("_value", { nullptr, 1 });
 	t->appendField("_type", { getTypeDescriptor(), 0 });
 	t->appendField("_elementType", { getTypeDescriptor(), 0 });
+	t->appendField("_parentStatment", { getIInstruction(), 1 });
 	createGetter(t->append<Function>("value"), t);
 	t->appendField("_parentExpression", { getExpressionDescriptor(), 1 });
 	t->appendField("_pointerToSource", { getPointerToSource(), 0 });
@@ -426,6 +432,8 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildAdre
 	auto f = result->append<Function>("expression"s)->setReturnType({ getExpressionDescriptor(), 1 });
 	f->setAccessibility(Accessibility::Public);
 	createGetter(f, result);
+	result->appendField("_parentStatment", { getIInstruction(), 1 });
+
 	result->appendField("_expression"s, { getExpressionDescriptor(), 1 });
 	auto t = result->append<Function>("type"s)->setReturnType({ getTypeDescriptor(), 0 });
 	t->setAccessibility(Accessibility::Public);
@@ -460,6 +468,7 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildFunc
 	createGetter(result->append<Function>("runtimetimeFunction")->setReturnType({ getFunctionDescriptor(), 0 }), result)->setAccessibility(Accessibility::Public);
 	createGetter(result->append<Function>("arguments")->setReturnType({ getCollectionTypeFor({getExpressionDescriptor(), 1}),1 }), result)->setAccessibility(Accessibility::Public);
 	result->appendField("_parentExpression", { getExpressionDescriptor(), 1 });
+	result->appendField("_parentStatment", { getIInstruction(), 1 });
 	result->appendField("_pointerToSource", { getPointerToSource(), 0 });
 
 	createCustomFunction(result->append<Function>("type"), result,
@@ -533,6 +542,7 @@ gsl::not_null<Type*> cMCompiler::language::buildNewExpressionDescriptor(gsl::not
 	createGetter(result->append<Function>("arguments")->setReturnType({ getCollectionTypeFor({getExpressionDescriptor(), 1}),1 }), result)->setAccessibility(Accessibility::Public);
 	result->appendField("_parentExpression", { getExpressionDescriptor(), 1 });
 	result->appendField("_pointerToSource", { getPointerToSource(), 0 });
+	result->appendField("_parentStatment", { getIInstruction(), 1 });
 
 	createCustomFunction(result->append<Function>("type"), result,
 		[](value_map&& a, generic_parameters)->runtime_value

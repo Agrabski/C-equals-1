@@ -7,12 +7,12 @@
 
 using namespace cMCompiler::dataStructures;
 
-SourcePointer cMCompiler::language::convertToSourcePointer(execution::IRuntimeValue& value)
+SourcePointer cMCompiler::language::convertToSourcePointer(not_null<execution::IRuntimeValue*> value)
 {
-	auto& object = dynamic_cast<execution::ObjectValue&>(value);
+	auto object = dereferenceAs<execution::ObjectValue>(value);
 	return SourcePointer(
-		convertToString(*object.getMemberValue("lineNumber")->value()->get()),
-		convertToIntegral<unsigned long long>(*object.getMemberValue("lineNumber")->value()->get())
+		convertToString(*object->getMemberValue("filename")->value()->get()),
+		convertToIntegral<unsigned long long>(*object->getMemberValue("lineNumber")->value()->get())
 	);
 }
 

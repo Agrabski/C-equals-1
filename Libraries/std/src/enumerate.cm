@@ -67,6 +67,7 @@ public class atHocCollection<typename From,typename To>
 	}
 }
 
+[NoDiscard()]
 [cBindings()]
 public fn enumerate(fr: usize, to: usize) -> atHocCollection<integerIterator, integerIterator>
 {

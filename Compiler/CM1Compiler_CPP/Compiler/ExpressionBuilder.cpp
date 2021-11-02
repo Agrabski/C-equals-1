@@ -296,7 +296,8 @@ cMCompiler::language::runtime_value cMCompiler::compiler::ExpressionBuilder::bui
 		auto fieldName = ctx->identifier()->getText();
 		auto fields = type.type->fields();
 		auto field = std::find_if(fields.begin(), fields.end(), [&](auto const e) noexcept {return e->name() == fieldName; });
-		assert(field != fields.end());
+		if (field == fields.end())
+			std::terminate();
 		auto result = language::buildFieldAccessExpression(
 			std::move(expression),
 			*field,
