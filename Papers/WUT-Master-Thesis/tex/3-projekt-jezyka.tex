@@ -32,9 +32,11 @@ Ponieważ programista nie musi jawnie precyzować że procedura jest wykonywalna
 Taka możliwość tworzy także pewne wyzwania, dokładniej opisane w rozdziale \ref{compile_time_constant_evaluation}.
 
 \subsubsection{Atrybuty}
+\label{Attributes_definition}
 
 Atrybuty, pod względem 
 \subsection{Mechanizm atrybutów}
+\label{Attributes_cm1}
 \subsection{Reprezentacja pośrednia}\label{reprezentacja_posrednia}
 Programista C-=-1 ma możliwość analizować oraz modyfikować reprezentację pośrednią swojego programu w czasie kompilacji. C-=-1 Intermidiate Representation, w skrócie CIR jest nieznacznie uproszczoną wersją języka, reprezentowaną jako struktura danych.
 Użytkownik wchodzi w interakcje z CIR za pomocą zestawu interfejsów opisanych w załączniku 1. Wszystkie typy instrukcji oraz wyrażeń mają ze sobą powiązany konkretny typ. Wyjątkiem jest ScopeTerminationStatement które nie jest powiązane z żadną instrukcją pisaną przez użytkownika. Instrukcja zakończenia zakresu jest wstawiana przez kompilator na koniec każdej instrukcji złożonej i jest odpowiedzialna za wywołanie finalizatorów zmiennych lokalnych (opisane w rozdziale \ref{klasy}).
