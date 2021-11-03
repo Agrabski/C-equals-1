@@ -105,12 +105,78 @@ Pełne wsparcie dla tego modyfikatora, przy użyciu atrybutu, wymaga od C-=-1 na
   \item \label{prop:Reference_adnotations} Przy aplikowaniu atrybutu do zmiennej typu referencyjnego, istnieje sposób na rozróżnienie między stałym wskazaniem a wskazaniem na stałą.
 \end{enumerate}
 
-Właściwość \ref{prop:Attribute_function_overloading} jest już udokumentowaną, choć nieprzetestowaną, częścią języka (rozdział \ref{Attributes_definition}).
+Właściwość \ref{prop:Attribute_function_overloading} częściowo zaplanowaną, ale niezrealizowaną częścią języka (rozdział \ref{Attributes_definition}).
+Atrybuty powiązane z parametrami deklaracji mają być traktowane jako wymagania na wartościach przekazywanych przy wywołaniu funkcji.
+Ta potrzeba wywodzi się z tego, że dokładne znaczenie danej operacji w jest zależne od modyfikatorów zaaplikowanych do używanych wartości. %todo: wording. example
+Wymaga to dalszego rozszerzenia systemu atrybutów, tak aby można było aplikować adnotacje do wartości zwracanych z funkcji.
 
+
+Zapewnienie właściwości \ref{prop:Generic_adnotations}, jest najtrudniejsze i wymaga dalej idącej pracy teorytycznej.
+Zaaplikowanie systemu atrybutów do implementacji modyfikatora \lstinline{const} oznacza śledzenie wartości, nie koniecznie pól, zmiennych, typów czy funkcji.
+Listing \ref{lst:const_problem_example} przedstawia problem rozwiązywany przez właściwość \ref{prop:Generic_adnotations}.
+Na linii 2, deklarowana jest zmienna typu \lstinline{usize} z modyfikatorem \lstinline{const}.
+Następnie, na linii 4, wskazanie na nią jest wstawiane do listy.
+W tym miejscu analizator wygeneruje błąd kompilacji, ponieważ pozyskujemy nie-stałe wskazanie na stałą wartość, co może naruszyć chroniony niezmiennik.
+Rozwiązaniem byłoby zadeklarowanie listy jako zawierającej wskazania na stałe.
+W obecnej formie języka, nie jest to jednak możliwe.
+
+\begin{minipage}{\linewidth}
+  
+  \begin{lstlisting}[
+    numbers=left,
+    firstnumber=0,
+    caption={Śledzenie wartości, używając atrybutu const},
+    aboveskip=0pt,
+    label={lst:const_problem_example}
+    ]
+fn main() -> usize
+{
+  [const()] let x = 3;
+  let list = List<usize*>();
+  list.push(&x);
+  [const()] let pointer = &x;
+}
+\end{lstlisting}
+\end{minipage}
+
+
+Właściwość \ref{prop:Reference_adnotations} jest blisko powiązana z właściowścią \ref{prop:Generic_adnotations}.
+Rozróżnienie pomiędzy aplikacją adnotacji do wskazania a wskazywanej wartości, jest konieczne aby zapewnić nienaruszenie niezmienników dotyczących wartości.
+Listing \ref{lst:const_problem_example} przedstawia ten problem.
+Na linii 5, do zmiennej \lstinline{pointer} przypisywany jest adres zmiennej \lstinline{x}.
+Pomimo zaaplikowania atrybutu \lstinline{const} do nowej zmiennej, analizator generuje błąd.
+Adnotacja została tutaj zaaplikowana do wartości wskazania, nie do wskazywanej wartości.
+W C-=-1 istnieją sposoby na obejście tego ograniczenia, jednak lepsze rozwiązanie powinno powstać w wyniku prac opisanych w rozdziale \ref{further:adnotated_type_system}.%todo: example?
+
+Wszystkie te właściwości wskazują na silne powiązanie pomiędzy systemem adnotacji a typów.
+Sposób na połączenie tych aspektów C-=-1 powinno zostać bardziej dogłębnie zbadane w przyszłej pracy.
+Szczegóły tych badań zostały opisane dokładniej w rozdziale \ref{further:adnotated_type_system}.
+
+
+W C/C++ modyfikator \lstinline{const} jest integralną częścią systemu typów.
+Typ \lstinline{int*} jest różny od \lstinline{int const*} i konwersja między nimi istnieje tylko w jedną stronę.
+Wszystkie problemy, wymienione w tym rozdziale nie mają odzwierciedlenia w C/C++, ponieważ ten modyfikator w nich jest częścią systemu typów a nie rozszerzeniem języka.
 
 \subsection{Generowanie kodu}
 
+Model semantyczny programu, w języku C-=-1, jest mutowalną strukturą danych.
+Oznacza to, że kod atrybutów może ją modyfikować w trakcie kompilacji, dodając, usuwając bądź zmieniając kolejność instrukcji i wyrażeń.
+Ten aspekt języka, daje programiście szereg nowych możliwości.
+
 \subsubsection{Atrybut Flags}
+
+Jednym z najprostszych przykładów użycia możliwości generowania kodu, jest zadeklarowanie typu enumeracyjnego jako zbiór flag.
+Aby to osiągnąć, wszystkie wartości enumeratora muszą być kolejnymi potęgami liczby 2, tak aby binarna alternatywa dowolnych dwóch opcji była unikatowo identyfikowalna.%todo: wording
+
+W większości języków programowania, nie ma możliwości automatycznego przypisywania wartości enumeratora w ten sposób.
+W C++ nie istnieje też żaden analizator który wykrywałby błędną definicję takiej flagi.
+Przydzielenie wartości oraz weryfikacja czy są one poprawne, jest opdowiedzialnością programisty.
+
+W C\# istnieje atrybut \lstinline{Flags}.
+Służy on do walidowania wartości enumeratora i generuje ostrzerzenia w wypadku wykrycia błędu, ale nie przypisuje ich sam.
+Programista nadal musi samodzielnie je ustalić.
+
+%todo: cm1
 
 \subsection{Testowanie kodu}
 
