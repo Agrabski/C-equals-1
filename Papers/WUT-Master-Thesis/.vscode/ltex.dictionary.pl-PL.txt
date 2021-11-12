@@ -5,3 +5,14 @@ Bjarne
 Stroustrup-a
 inkrementację
 c̈m1
+metaprogramistycznych
+metaprogramistyczne
+Rust
+C9
+metaprogramowania
+Metaprogramowanie
+fallthrough
+constexpr
+nodiscard
+Yauhen
+Klimiankou
