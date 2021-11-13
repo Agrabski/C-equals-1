@@ -1,17 +1,23 @@
 \section{Porównanie z innymi językami}
-Ponieważ C-=-1 jest językiem badawczym, nie można go porównywać z językami stosowanymi w przemyśle pod względem wygody użycia. Warto jednak przeanalizować, w jaki sposób zaproponowane mechanizmy wpływają na jego użyteczność.
+Ponieważ C-=-1 jest językiem badawczym, nie można go porównywać z językami stosowanymi w przemyśle pod względem wygody użycia.
+Warto jednak przeanalizować, w jaki sposób zaproponowane mechanizmy wpływają na jego użyteczność.
+
 \subsection{Wsparcie dla paradygmatów programowania}
-Teoretycznie niemalże w każdym języku da się programować w każdym paradygmacie. Jednak w zależności od struktury tego języka, może być to zadanie prostsze lub trudniejsze. 
+Teoretycznie niemalże w każdym języku da się programować w każdym paradygmacie. Jednak w zależności od jego, może być to zadanie prostsze lub trudniejsze. 
+
 \subsubsection{Aspect oriented programming}
-Nieoczekiwanym skutkiem zaproponowanych mechanizmów jest wsparcie dla AOP.
+Nieoczekiwanym skutkiem zaproponowanych mechanizmów jest wsparcie dla programowania aspektowego (Aspect Oriented Programming, AOP).
+
 \subsubsection{Obiektowe}
 C-=-1 został zaprojektowany z myślą o wsparciu stylu obiektowego. Użytkownik może deklarować typy, metody oraz interfejsy. W przeciwieństwie do C++ czy C\#, w C-=-1 nie ma jednak koncepcji dziedziczenia między konkretnymi klasami.
 
-Klasy i interfejsy mogą implementować inne interfejsy. To jest jedyny mechanizm dynamicznego polimorfizmu w C-=-1. Ta decyzja została podjęta częściowo w celu uproszczenia języka, a częściowo ponieważ dziedziczenie między konkretnymi klasami jest uważane za złą praktykę.
+Klasy i interfejsy mogą implementować inne interfejsy.
+To jest jedyny mechanizm dynamicznego polimorfizmu w C-=-1.
+Ta decyzja została podjęta częściowo w celu uproszczenia języka, a częściowo, ponieważ dziedziczenie między konkretnymi klasami jest uważane za złą praktykę \cite{gang_of_four:design_patterns}.
 
 \subsection{Analiza kodu}
 Podstawowym celem C-=-1 było zbadanie możliwości statycznej analizy kodu, używając zaproponowanych mechanizmów metaprogramowania.
-W kolejnych rozdziałach omówione zostaną przykładowe analizatory, które zostały zaimplementowane w ramach biblioteki standardowej, bądź których implementacja jest możliwa.
+W kolejnych rozdziałach omówione zostaną przykładowe analizatory, które zostały zaimplementowane w ramach biblioteki standardowej bądź których implementacja jest możliwa.
 Ma to zademonstrować praktyczne aplikacje udostępnienia programiście modelu semantycznego tworzonego programu.
 
 
@@ -19,15 +25,15 @@ Ma to zademonstrować praktyczne aplikacje udostępnienia programiście modelu s
 \subsubsection{Atrybut noDiscard}
 \label{no_discard}
 
-Atrybut \lstinline{noDiscard} służy do zapewnienia, że wynik funkcji nie zostanie zgnorowany.
-Tego typu adnotacja istnieje w C++ od wersji 17.
+Atrybut \lstinline{noDiscard} służy do zapewnienia, że wynik funkcji nie zostanie zignorowany.
+Tego typu adnotacja istnieje w C++ od wersji 17\cite{ISO:cpp17}.
 Ma on na celu wyeliminować błędy takie jak ignorowanie kodu błędu, czy niepoprawne wywołanie funkcji o mylącej nazwie.
 
-W C-=-1, w przeciwieństwie do większości języków niskiego poziomu, stworzenie analizatora który zapewnia taki niezmiennik jest trywialne.
+W C-=-1, w przeciwieństwie do większości języków niskiego poziomu, stworzenie analizatora, który zapewnia taki niezmiennik, jest trywialne.
 Listing \ref{lst:noDiscardCm1} zawiera kod atrybutu \lstinline{noDiscard} z biblioteki standardowej C-=-1.
-Na linii 4 deklaruje on specjalną funkcję \lstinline{onCall} (specjalne funkcje atrybutów zostały opisane w rozdziale \ref{Attributes_mechanism_cm1}), która reaguje na wywołania funkcji do której został zaaplikowany.
+Na linii 4 deklaruje on specjalną funkcję \lstinline{onCall} (specjalne funkcje atrybutów zostały opisane w rozdziale \ref{Attributes_mechanism_cm1}), która reaguje na wywołanie funkcji, do której został zaaplikowany.
 
-Wewnątrz tego podprogramu, atrybut sprawdza czy bezpośrednim rodzicem tego wyrażenia jest wyrażenie czy instrukcja.
+Wewnątrz tego podprogramu, atrybut sprawdza, czy bezpośrednim rodzicem tego wyrażenia jest wyrażenie, czy instrukcja.
 Jeśli jest nim instrukcja, oznacza to że wynik wywołania jest ignorowany i trzeba zgłosić błąd, używając funkcji \lstinline{raiseError}.
 W przeciwnym wypadku żadne akcje nie są konieczne.
 
@@ -36,7 +42,7 @@ Zignorowanie wartości zwracanej przez funkcję oznaczoną tą odnotacją, tak j
 Ponadto, kompilator otrzymuje wskazanie do pliku źródłowego na punkt, który wywołał ten błąd.
 Ta informacja może być potem użyta do zaprezentowania programiście dokładniejszej diagnostyki, bądź do podkreślenia kodu w zintegrowanym środowisku programistycznym (rozdział \ref{IDE_integration}).
 
-Ten przykład dobrze ilustruje, że mając dostęp do modelu semantycznego programu, implementajca niektórych typów analizy staje się trywialna.
+Ten przykład dobrze ilustruje, że mając dostęp do modelu semantycznego programu, implementacja niektórych typów analizy staje się trywialna.
 W większości języków programowania taka analiza wymaga modyfikacji kompilatora albo zewnętrznego narzędzia.
 
 \begin{minipage}{\linewidth}
@@ -155,7 +161,7 @@ Szczegóły tych badań zostały opisane dokładniej w rozdziale \ref{further:ad
 
 W C/C++ modyfikator \lstinline{const} jest integralną częścią systemu typów.
 Typ \lstinline{int*} jest różny od \lstinline{int const*} i konwersja między nimi istnieje tylko w jedną stronę.
-Wszystkie problemy, wymienione w tym rozdziale nie mają odzwierciedlenia w C/C++, ponieważ ten modyfikator w nich jest częścią systemu typów a nie rozszerzeniem języka.
+Wszystkie problemy, wymienione w tym rozdziale nie mają odzwierciedlenia w C/C++, ponieważ ten modyfikator w nich jest częścią systemu typów, a nie rozszerzeniem języka.
 
 \subsection{Generowanie kodu}
 
