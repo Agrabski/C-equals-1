@@ -1,9 +1,10 @@
 \section{Projekt języka}
 \label{Language_desig}
 %todo: talk about limitations on interpreting and compilation, which functions can be executed, when
-Język C-=-1 w przeciwieństwie do większości współczesnych języków programowania jest oparty na eksponowaniu programiście struktur danych tworzonych przez kompilator. Deskryptory typów, funkcji, przestrzeni nazw oraz enumeratorów, razem z reprezentacją pośrednią kodu są udokumentowaną częścią języka (załącznik nr. 1).
-Aby umożliwić użytkownikowi wykorzystanie tych struktur danych, C-=-1 musi zapewnić sposób na napisanie kodu wykonywanego w czasie kompilacji, który może nimi manipulować. W tym celu, postanowiono rozszerzyć koncepcję atrybutu aby umożliwić inspekcję i modyfikację reprezentacji pośredniej.
-C-=-1 został zaprojektowany na bazie założeń C++. Obydwa te języki są statycznie typowane, kompilowane oraz nie wymagają specjalnego środowiska uruchomieniowego. Przy projektowaniu C-=-1 skorzystano jednak z doświadczeń wyciągniętych z C++ w aspektach takich jak dziedziczenie wielobazowe czy zarządzanie pamięcią. Obydwa te aspekty zostały opisane odpowiednio w rozdziałach \ref{elementy_jezyka} oraz \ref{struktura_paczki}
+Język C-=-1 w przeciwieństwie do większości współczesnych języków programowania jest oparty na udostępnieniu programiście struktur danych tworzonych przez kompilator. Deskryptory typów, funkcji, przestrzeni nazw oraz enumeratorów, razem z reprezentacją pośrednią kodu są udokumentowaną częścią języka (załącznik nr 1).
+Aby umożliwić użytkownikowi wykorzystanie tych struktur danych, C-=-1 musi zapewnić sposób na napisanie kodu wykonywanego w czasie kompilacji, który może nimi manipulować. W tym celu postanowiono rozszerzyć koncepcję atrybutu, aby umożliwić inspekcję i modyfikację reprezentacji pośredniej.
+C-=-1 został zaprojektowany na bazie założeń C++. Obydwa te języki są statycznie typowane, kompilowane oraz nie wymagają specjalnego środowiska uruchomieniowego.
+Przy projektowaniu C-=-1 skorzystano jednak z doświadczeń wyciągniętych z C++ w aspektach takich jak dziedziczenie wielobazowe czy zarządzanie pamięcią. Obydwa te aspekty zostały opisane odpowiednio w rozdziałach \ref{elementy_jezyka} oraz \ref{struktura_paczki}
 
 \subsection{Składnia}
 
@@ -22,13 +23,13 @@ Ponieważ C-=-1 w swojej obecnej formie nie wspiera wyjątków, nie gwarantuje w
 W C-=-1 funkcje oraz metody działają na tej samej zasadzie co w C++.
 Istotną różnicą jest możliwość ich wykonania w czasie kompilacji.
 Domyślnie, funkcje mogą być wykonywane w dowolnym kontekście.
-O ile programista nie sprecyzował żadnych ograniczeń, podprogram może zostać wykonany zarówno w czasie uruchomienia jak i kompilacji.
+O ile programista nie sprecyzował żadnych ograniczeń, podprogram może zostać wykonany zarówno w czasie uruchomienia, jak i kompilacji.
 Wywoływanie funkcji w trakcie kompilacji ma kilka różnych zastosowań.
 
-Najbardziej oczywistym przykładem, który był historyczną motywacją dla rozwoju kompilatorów w tym kierunku, jest optymalizacja programu.
-Jeśli wyrażenie zależy wyłacznie od stałych, kompilator może podjąć decyzję o jego ewaluacji do stałej.
+Optymalizacja programu, historycznie stanowiła podstawową motywację dla wykonywania kodu w czasie kompilacji.
+Jeśli wyrażenie zależy wyłącznie od stałych, kompilator może podjąć decyzję o jego ewaluacji do stałej.
 C-=-1, w przeciwieństwie do C++, umożliwia optymalizację niemalże dowolnej funkcji w ten sposób.
-Ponieważ programista nie musi jawnie precyzować że procedura jest wykonywalna w czasie kompilacji, język unika problemów powiązanych z modyfikatorem \lstinline{constexpr} z C++ \cite{Klimiankou:contexpr_great_good_wrong_idea}
+Ponieważ programista nie musi jawnie precyzować, że procedura jest wykonywalna w czasie kompilacji, język C-=-1 unika problemów powiązanych z modyfikatorem \lstinline{constexpr} z C++ \cite{Klimiankou:contexpr_great_good_wrong_idea}
 Taka możliwość tworzy także pewne wyzwania, dokładniej opisane w rozdziale \ref{compile_time_constant_evaluation}.
 
 \subsubsection{Atrybuty}
@@ -41,8 +42,9 @@ Atrybuty, pod względem
 Programista C-=-1 ma możliwość analizować oraz modyfikować reprezentację pośrednią swojego programu w czasie kompilacji. C-=-1 Intermidiate Representation, w skrócie CIR jest nieznacznie uproszczoną wersją języka, reprezentowaną jako struktura danych.
 Użytkownik wchodzi w interakcje z CIR za pomocą zestawu interfejsów opisanych w załączniku 1. Wszystkie typy instrukcji oraz wyrażeń mają ze sobą powiązany konkretny typ. Wyjątkiem jest ScopeTerminationStatement które nie jest powiązane z żadną instrukcją pisaną przez użytkownika. Instrukcja zakończenia zakresu jest wstawiana przez kompilator na koniec każdej instrukcji złożonej i jest odpowiedzialna za wywołanie finalizatorów zmiennych lokalnych (opisane w rozdziale \ref{klasy}).
 \subsection{Zarządzanie pamięcią}
-Zarządzanie pamięcią w C-=-1 jest oparte na C++11. W 2011 do biblioteki standardowej zostały wprowadzone nowe typy „inteligentnych wskaźników”: unique\_ptr, shared\_ptr oraz weak\_ptr [7]. Miały one na celu wprowadzenie do języka mechanizmów umożliwiających tanie i automatyczne zarządzanie pamięcią oraz semantyczne podkreślenie relacji między obiektami.
-Korzystając z doświadczeń C++, gdzie te wskazania stały się zalecanym sposobem zarządzania pamięcią [8], inteligentne wskazania są integralną częścią C-=-1.
-\subsection{Struktura paczki}\label{struktura_paczki}
-Projekt w języku C-=-1 jest identyfikowany przez plik manifestu o rozszerzeniu .mn. Pliki źródłowe mają rozszerzenia .cm. W tym samym folderze co manifest, znajduje się folder src. Kompilator zakłada że wszystkie pliki o rozszerzenia .cm będące jego potomkami należą do projektu definiowanego przez manifest.
-W pliku .mn zdefiniowane są metadane na temat paczki takie jak autor, wersja czy zależności. Ten aspekt języka jest modelowany na bazie Rust i pliku cargo.toml.
+Zarządzanie pamięcią w C-=-1 jest oparte na C++11. W 2011 do biblioteki standardowej zostały wprowadzone nowe typy 'inteligentnych wskaźników': \lstinline{unique\_ptr}, \lstinline{shared\_ptr} oraz \lstinline{weak\_ptr}\cite{ISO:2012:III}.
+Miały one na celu wprowadzenie do języka mechanizmów umożliwiających tanie i automatyczne zarządzanie pamięcią oraz semantyczne podkreślenie relacji między obiektami.
+Korzystając z doświadczeń C++, gdzie te wskazania stały się zalecanym sposobem zarządzania pamięcią\cite{cpp:core_guidelines}, inteligentne wskazania są integralną częścią C-=-1.
+\subsection{Struktura pakietu}\label{struktura_paczki}
+Projekt w języku C-=-1 jest identyfikowany przez plik manifestu o rozszerzeniu .mn. Pliki źródłowe mają rozszerzenia .cm. W tym samym folderze co manifest znajduje się folder \lstinline{src}. Kompilator zakłada, że wszystkie pliki o rozszerzenia \lstinline{.cm} będące jego potomkami należą do projektu definiowanego przez manifest.
+W pliku .mn zdefiniowane są metadane na temat pakietu takie jak autor, wersja czy zależności. Ten aspekt języka jest modelowany na bazie Rust i pliku \lstinline{cargo.toml}.

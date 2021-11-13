@@ -16,3 +16,5 @@ constexpr
 nodiscard
 Yauhen
 Klimiankou
+enumeratorów
+uruchomieniowego
