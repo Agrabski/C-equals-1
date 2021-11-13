@@ -5,7 +5,7 @@ Warto jednak przeanalizować, w jaki sposób zaproponowane mechanizmy wpływają
 \subsection{Wsparcie dla paradygmatów programowania}
 Teoretycznie niemalże w każdym języku da się programować w każdym paradygmacie. Jednak w zależności od jego, może być to zadanie prostsze lub trudniejsze. 
 
-\subsubsection{Aspect oriented programming}
+\subsubsection{Aspect Oriented Programming}
 Nieoczekiwanym skutkiem zaproponowanych mechanizmów jest wsparcie dla programowania aspektowego (Aspect Oriented Programming, AOP).
 
 \subsubsection{Obiektowe}
@@ -38,9 +38,9 @@ Jeśli jest nim instrukcja, oznacza to że wynik wywołania jest ignorowany i tr
 W przeciwnym wypadku żadne akcje nie są konieczne.
 
 Listing \ref{lst:noDiscardUsageCm1} demonstruje zastosowanie atrybut \lstinline{noDiscard}.
-Zignorowanie wartości zwracanej przez funkcję oznaczoną tą odnotacją, tak jak na linii 5, powoduje zgłoszenie błędu o kodzie i komunikacie zgodnym z linią 7 listingu \ref{lst:noDiscardCm1}.
+Zignorowanie wartości zwracanej przez funkcję oznaczoną tą adnotacją, tak jak na linii 5, powoduje zgłoszenie błędu o kodzie i komunikacie zgodnym z linią 7 listingu \ref{lst:noDiscardCm1}.
 Ponadto, kompilator otrzymuje wskazanie do pliku źródłowego na punkt, który wywołał ten błąd.
-Ta informacja może być potem użyta do zaprezentowania programiście dokładniejszej diagnostyki, bądź do podkreślenia kodu w zintegrowanym środowisku programistycznym (rozdział \ref{IDE_integration}).
+Ta informacja może być potem użyta do zaprezentowania programiście dokładniejszej diagnostyki bądź do podkreślenia kodu w zintegrowanym środowisku programistycznym (rozdział \ref{IDE_integration}).
 
 Ten przykład dobrze ilustruje, że mając dostęp do modelu semantycznego programu, implementacja niektórych typów analizy staje się trywialna.
 W większości języków programowania taka analiza wymaga modyfikacji kompilatora albo zewnętrznego narzędzia.

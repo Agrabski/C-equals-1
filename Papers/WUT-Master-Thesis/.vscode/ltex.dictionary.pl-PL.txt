@@ -36,3 +36,7 @@ Representation
 LLVMIR
 backendu
 rekompilacji
+Oriented
+Programming
+AOP
+Aspect
