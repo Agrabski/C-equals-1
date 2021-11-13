@@ -33,7 +33,7 @@ W związku z tym niektóre typy optymalizacji takie jak \lstinline{inlining} nie
 
 \subsubsection{Analizatory kodu}
 
-Jednym z wyników publicznego udostępnienia kodu kompilatora Roslyn\cite{roslyn}, było udostępnienie programistom API kompilatora służącego do walidacji kodu.
+Jednym z wyników publicznego udostępnienia kodu kompilatora Roslyn\cite{roslyn}, było udostępnienie programistom API kompilatora służącego do analizy kodu.
 Programista może więc stworzyć własny analizator w ramach swojego projektu.
 Zaletą tego podejścia  jest spójność używanego języka.
 Projekt pisany w C\# może być analizowany w C\#, bez żadnych dodatkowych restrykcji.
@@ -55,7 +55,7 @@ Ponieważ Rust \cite{rust} jest stosunkowo młody, jego projektanci mogli czerpa
 Z tego powodu, nie zawiera on też tradycyjnego preprocesora, takiego jak w C/C++ czy C\#. Makra w Rust są tak naprawdę funkcjami operującymi na drzewie składniowym programu. Jest to zdecydowany postęp względem prostego zastępowania tekstu jak w C/C++, lecz ma też swoje wady.\par
 Makra w języku Rust nadal operują na, co prawda strukturyzowanym, ale nadal, tekście. Oznacza to, że nie mają one dostępu do systemu typów ani żadnych innych informacji zgromadzonych przez kompilator.\par
 \subsection{C++20}
-C++ \cite{ISO:cpp20} zawiera szeroką gamę mechanizmów metaprogramistycznych oraz technik do statycznej walidacji kodu. Były one stopniowo wprowadzane do języka przez cały czas jego istnienia, bez spójnego planu.\par
+C++ \cite{ISO:cpp20} zawiera szeroką gamę mechanizmów metaprogramistycznych oraz technik do statycznej analizy kodu. Były one stopniowo wprowadzane do języka przez cały czas jego istnienia, bez spójnego planu.\par
 \subsubsection{Szablony}
 Szablony w C++ można rozumieć jako oddzielny, funkcyjny, zdolny do symulacji maszyny Turinga, język programowania \cite{template_turing_complete}.
 Metaprogramowanie szablonowe powstało nie jako świadomy wysiłek twórców języka, lecz jako naturalna, nieprzewidziana konsekwencja jego zasad.

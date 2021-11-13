@@ -9,8 +9,8 @@ C-=-1 został zaprojektowany z myślą o wsparciu stylu obiektowego. Użytkownik
 
 Klasy i interfejsy mogą implementować inne interfejsy. To jest jedyny mechanizm dynamicznego polimorfizmu w C-=-1. Ta decyzja została podjęta częściowo w celu uproszczenia języka, a częściowo ponieważ dziedziczenie między konkretnymi klasami jest uważane za złą praktykę.
 
-\subsection{Walidacja kodu}
-Podstawowym celem C-=-1 było zbadanie możliwości statycznej walidacji kodu, używając zaproponowanych mechanizmów metaprogramowania.
+\subsection{Analiza kodu}
+Podstawowym celem C-=-1 było zbadanie możliwości statycznej analizy kodu, używając zaproponowanych mechanizmów metaprogramowania.
 W kolejnych rozdziałach omówione zostaną przykładowe analizatory, które zostały zaimplementowane w ramach biblioteki standardowej, bądź których implementacja jest możliwa.
 Ma to zademonstrować praktyczne aplikacje udostępnienia programiście modelu semantycznego tworzonego programu.
 
@@ -23,9 +23,9 @@ Atrybut \lstinline{noDiscard} służy do zapewnienia, że wynik funkcji nie zost
 Tego typu adnotacja istnieje w C++ od wersji 17.
 Ma on na celu wyeliminować błędy takie jak ignorowanie kodu błędu, czy niepoprawne wywołanie funkcji o mylącej nazwie.
 
-W C-=-1, w przeciwieństwie do większości języków niskiego poziomu, stworzenie analizatora który zapewnia taką walidację jest trywialne.
+W C-=-1, w przeciwieństwie do większości języków niskiego poziomu, stworzenie analizatora który zapewnia taki niezmiennik jest trywialne.
 Listing \ref{lst:noDiscardCm1} zawiera kod atrybutu \lstinline{noDiscard} z biblioteki standardowej C-=-1.
-Na linii 4 deklaruje on specjalną funkcję \lstinline{onCall} (specjalne funkcje atrybutów zostały opisane w rozdziale \ref{Attributes_cm1}), która reaguje na wywołania funkcji do której został zaaplikowany.
+Na linii 4 deklaruje on specjalną funkcję \lstinline{onCall} (specjalne funkcje atrybutów zostały opisane w rozdziale \ref{Attributes_mechanism_cm1}), która reaguje na wywołania funkcji do której został zaaplikowany.
 
 Wewnątrz tego podprogramu, atrybut sprawdza czy bezpośrednim rodzicem tego wyrażenia jest wyrażenie czy instrukcja.
 Jeśli jest nim instrukcja, oznacza to że wynik wywołania jest ignorowany i trzeba zgłosić błąd, używając funkcji \lstinline{raiseError}.
@@ -36,7 +36,7 @@ Zignorowanie wartości zwracanej przez funkcję oznaczoną tą odnotacją, tak j
 Ponadto, kompilator otrzymuje wskazanie do pliku źródłowego na punkt, który wywołał ten błąd.
 Ta informacja może być potem użyta do zaprezentowania programiście dokładniejszej diagnostyki, bądź do podkreślenia kodu w zintegrowanym środowisku programistycznym (rozdział \ref{IDE_integration}).
 
-Ten przykład dobrze ilustruje, że mając dostęp do modelu semantycznego programu, implementajca niektórych typów walidacji staje się trywialna.
+Ten przykład dobrze ilustruje, że mając dostęp do modelu semantycznego programu, implementajca niektórych typów analizy staje się trywialna.
 W większości języków programowania taka analiza wymaga modyfikacji kompilatora albo zewnętrznego narzędzia.
 
 \begin{minipage}{\linewidth}
