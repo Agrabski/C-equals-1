@@ -194,44 +194,119 @@ Oznacza to że pewne elementy składni, obecne w innych językach, stają się z
 Większość języków programowania zawiera mechanizm umożliwiający import symboli zewnętrznych.
 Mogą one pochodzić z kodu napisanego w innym języku lub z już skompilowanej biblioteki.
 
-W wypadku C/C++, wymaga to użycia słowa \lstinline{external}, do zdefiniowania symbolu zewnętrznego oraz przekazania odpowiedniego argumentu do linkera.
-W C-=-1 ten sam rezultat można osiągnąć, przypisując funkcji odpowiednie metadane, które potem zostaną odczytane przez interfejs backendu.
-Wbudowana wersja tego programu obsługuje wczytywanie definicji funkcji z plików lib oraz zastępowanie jej ciała kodem LLVM.
+W wypadku C/C++ wymaga to użycia słowa \lstinline{external}, do zdefiniowania symbolu zewnętrznego oraz przekazania odpowiedniego argumentu do linkera.
+W C-=-1 nie ma słowa kluczowego \lstinline{extern}.
+Deklaracja symbolu zewnętrznego wymaga stworzenia atrybutu, który zostanie potem obsłużony w interfejsie backendu.
 
-Listing \ref{lst:replaceWithLLVMAttribute} przedstawia atrybut \lstinline{replaceWithLLVMIR} z biblioteki standardowej C-=-1. 
-Pobiera on kod LLVMIR z pliku wskazanego przez użytkownika, a następnie ustawia w definicji wybranej funkcji zmienną "llvm-representation".
-Backend interface może potem odczytać tą wartość i wykorzystać ją do wygenerowania kodu dla backendu.
+Listing \ref{lst:extern_cm1} przedstawia przykładową implementację tej funkcjonalności.
+Interfejs\\ \lstinline{ISymbolNameOverride} ma zwiększyć separację między interfejsem backendu a kodem kontrolującym nazwę symbolu.
+Otwiera to drzwi większej ilości możliwych implementacji.
 
+Atrybut \lstinline{MarkAsExternal} ma natomiast dwie role.
+Po pierwsze, przechowuje nazwę symbolu, który jest importowany.
+W ten sposób użytkownik nie jest przywiązany do nazwy symbolu zadeklarowanej w skompilowanym pliku bibliotecznym.
+Umożliwia to też na importowanie funkcji z C++, których nazwy zostały zmieszane i zawierają znaki nieakceptowalne w identyfikatorach.
 
-\begin{lstlisting}[
+Po drugie, wywołuje \lstinline{ignoreBody}.
+Ta funkcja informuje kompilator, że powinien zignorować ciało podprogramu i analizować wyłącznie nagłówek.
+To wywołanie jest konieczne, ponieważ kompilator zapewnia poprawność programu, analizując zawartość funkcji.
+Dlatego, jeśli funkcja zwracająca jakąś wartość, nie zawiera instrukcji \lstinline{return}, program zostanie odrzucony.
+W wypadku podprogramów importowanych z zewnątrz, ich ciało jest zbędne.
+
+Listing \ref{lst:selected_backend_interface} zawiera wybrane funkcje z domyślnego interfejsu backendu, powiązane z symbolami zewnętrznymi.
+Funkcja \lstinline{getFunctionName} ma za zadanie wygenerować nazwę symbolu, kompatybilną z C.
+Linie od 2 do 4 obsługują atrybuty implementujące \lstinline{ISymbolNameOverride}.
+Sprawdzają one, czy z daną funkcją powiązany jest atrybut nadpisujący nazwę symbolu i zwraca wygenerowaną przez niego wartość.
+
+Funkcja \lstinline{buildFunction} ma stworzyć reprezentację pośrednią LLVM funkcji przekazanej jako parametr.
+Linie 29 do 33 zawierają kod obsługujący symbole zewnętrzne.
+Te instrukcje sprawdzają, czy z funkcją powiązany jest atrybut implementujący \lstinline{ISymbolNameOverride}.
+Jeśli tak, ciało procedury jest ignorowane.
+W przeciwnym wypadku interfejs backendu buduje funkcję normalnie.
+W LLVM, procedury niezawierające ciała, są uznawane za symbole zewnętrzne.
+
+Zaprezentowana implementacja jest bardzo prosta 
+
+\begin{minipage}{\linewidth}
+  
+  \begin{lstlisting}[
     numbers=left,
     firstnumber=0,
-    caption={Atrybut zastępujący ciało funkcji kodem LLVM},
+    caption={Atrybut deklarujący funkcję jako symbol zewnętrzny},
     aboveskip=0pt,
-    label={lst:replaceWithLLVMAttribute}
-]
-public att<function> ReplaceWithLLVMIR
+    label={lst:extern_cm1}
+    ]
+public interface ISymbolNameOverride
 {
-  private _filename: string;
-  private _nameOftypeToReplace: string;
-  private _nameToReplace: string;
+  public fn createSymbolName() -> string;
+}
 
-  public fn construct(
-    filename: string,
-    nameOfTypeToReplace: string,
-    nameToReplace: string)
+public att<function> MarkAsExternal : ISymbolNameOverride
+{
+  private _symbolName : string;
+  public fn construct(symbolName: string)
   {
-    self._filename = filename;
-    self._nameOftypeToReplace = nameOfTypeToReplace;
-    self._nameToReplace = nameToReplace
+    self._symbolName = symbolName;
   }
 
   public fn attach(f: functionDescriptor)
   {
-    let ir = read_all_file(self._filename);
-    ir = ir.replace("$" + self._nameOftypeToReplace, self._nameToReplace);
-    f.store("llvm-representation", ir);
+    ignoreBody(f);
+  }
+
+  public fn createSymbolName() -> string
+  {
+    return self._symbolName;
+  }
+}
+\end{lstlisting}
+\end{minipage}
+
+\begin{minipage}{\linewidth}
+  
+  \begin{lstlisting}[
+    numbers=left,
+    firstnumber=0,
+    caption={Wybrane fragmenty interfejsu backendu},
+    aboveskip=0pt,
+    label={lst:selected_backend_interface}
+    ]
+
+private fn getFunctionName(f: functionDescriptor) -> string {
+  let attribute = f.get_attribute<ISymbolNameOverride>();
+  if(attribute != null<ISymbolNameOverride>())
+    return attribute.createSymbolName();
+  let baseName = f.qualifiedName();
+  let params = f.parameters();
+  for(i in enumerate(0, params.length()))
+  {
+    baseName = baseName + "__" + (params[i].type().toString());
+  }
+  return baseName
+    .replace(":", "_")
+    [...]
+    .replace("@", "__at__");
+}
+
+private fn buildFunction(
+  f: functionDescriptor,
+  llvmF: llvmFunction,
+  registry: packageRegistry*,
+  mod: llvmModule)
+{
+  let variables = dictionary<variableDescriptor, llvmValue>();
+  let params = f.parameters();
+  for(i in enumerate(0, params.length()))
+    variables.push(params[i], llvmF.getParameter(i));
+  let builder = llvmF.getBuilder();
+  let attribute = f.get_attribute<ISymbolNameOverride>();
+  if(attribute != null<ISymbolNameOverride>())
+  {
+    let code = f.code();
+    build_block(&code, &builder, &variables, registry);
   }
 }
 
 \end{lstlisting}
+\end{minipage}
+
