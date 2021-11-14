@@ -40,3 +40,9 @@ Oriented
 Programming
 AOP
 Aspect
+metakodu
+Frontend
+f1
+f2
+f3
+frontend

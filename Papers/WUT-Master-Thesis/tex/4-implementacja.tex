@@ -53,22 +53,32 @@ Kompilacja programu używając paczek C-=-1 jest zbliżona do kompilowania progr
 Cały program jest kompilowany tym samym narzędziem, na tej samej maszynie i z tymi samymi flagami. Serializator został dokładnie opisany w rozdziale \ref{serializer}.
 
 Kompilator C-=-1 używa LLVM jako back-endu. W związku z tym, koniecznym jest przetłumaczenie CIR na reprezentację pośrednią LLVM (w dalszej części pracy nazywanej LLVMIR). Dlatego do kompilatora dodano element Backend Interface, który dokonuje tej konwersji. Obydwa te komponenty są opisane w rozdziałach \ref{Backend_Interface} oraz \ref{implementation:backend}.
- 
+
+Diagram \ref{compilation_process_diagram} przedstawia ogólny proces kompilacji.
+Kod użytkownika jest dzielony na dwie części: atrybuty i funkcje oraz typy.
+Ten podział wynika z konieczności analizy metakodu przed przetworzeniem normalnego kodu programu.
+
+
 \begin{figure}[]
     \caption{diagram procesu kompilacji języka C-=-1}
     \label{compilation_process_diagram}
-    \includegraphics[scale=0.8]{img/compilation_process.png}
+    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{img/compilation_process.png}
     \centering
 \end{figure}
 
 \subsection{Front-end}
 Front-end kompilatora C-=-1 jest odpowiedzialny za analizę tekstu kodu źródłowego. Rysunek \ref{compilation_process_diagram} przedstawia diagram procesu kompilacji.
 Front-end gra w nim kluczową rolę w początkowych fazach, przetwarzając zawartość plików źródłowych.
-Sposób w który źródła są odczytywane oraz analizowane jest opisany w rozdziale \ref{implementation:parser}.
+Sposób, w który źródła są odczytywane oraz analizowane jest opisany w rozdziale \ref{implementation:parser}.
 
-Zrealizowanie tego procesu wymagało aby ten komponent kompilatora potrafił funkcjonować w różnych trybach w zależności od obecnie wykonywanego kroku.
+Zrealizowanie tego procesu wymagało, aby ten komponent kompilatora potrafił funkcjonować w różnych trybach w zależności od obecnie wykonywanego kroku.
 Ponadto, ponieważ w C-=-1, w przeciwieństwie do C++, kolejność deklaracji nie ma znaczenia, front-end musiał radzić sobie z zależnościami kołowymi.
 Ogół działania front-endu jest opisany w rozdziale \ref{implementation:source_processing_phases}.
+
+Frontend kompilatora jest również odpowiedzialny za tworzenie instancji atrybutów, kiedy przetwarza kod funkcji i typów.
+Dlatego program użytkownika jest dzielony, przed analizą.
+Przetworzenie typów i funkcji wymaga kompletnego modelu semantycznego atrybutów.
+
 \subsubsection{Parser}
 \label{implementation:parser}
 Do analizy tekstu wejściowego, użyto generatora parserów Rose\cite{grabski2020}.
@@ -76,8 +86,39 @@ Jest to narzędzie bazujące na Antlr, które znacząco ułatwia manipulowanie d
 Te dodatkowe możliwości są wykorzystywane przy przetwarzaniu szablonów (rozdział \ref{Generic_adnotations}).
 Kompilator trzyma w pamięci tylko jedno drzewo rozkładu na raz, co oznacza, że każdy plik jest wczytywany wielokrotnie.
 Ta decyzja ma ograniczyć ilość zużywanej w danym momencie pamięci operacyjnej.
+
 \subsubsection{Fazy przetwarzania plików źródłowych}
 \label{implementation:source_processing_phases}
+
+Frontend kompilatora C-=-1 operuje w trzech fazach: \lstinline{create}, \lstinline{confirm} oraz \lstinline{finalize}.
+Aby zapewnić, że kolejność deklaracji w programie nie ma znaczenia (w przeciwieństwie do C/C++), fazy są wykonywane dla wszystkich plików.
+Najpierw wszystkie pliki przechodzą przez \lstinline{create}, potem przez \lstinline{confirm} a na koniec przez \lstinline{finalize}.
+
+Faza \lstinline{create} zbiera nazwy bytów wewnątrz kodu aplikacji.
+Tworzy wszystkie przestrzenie nazw, typy, funkcje oraz atrybuty.
+W tym kroku kompilator nie analizuje zawartości tych obiektów.
+Nie bierze pod uwagę pól i metod typów oraz parametrów i typów zwracanych funkcji.
+Jeżeli w kodzie użytkownika istnieje na przykład funkcja mająca 4 przeciążenia, po fazie \lstinline{create} w modelu semantycznym będą istnieć 4 identyczne kopie tej deklaracji.
+
+W fazie \lstinline{confirm} deklaracje są uzupełniane.
+Do deklaracji funkcji dodawane są parametry i typ zwracany.
+Typy są uzupełniane o pola oraz implementowane interfejsy.
+Ponieważ na tym etapie kompilator zna wszystkie nazwy typów występujących w programie, kolejność deklaracji nie ma znaczenia, a deklaracje zapowiadające nie są konieczne.
+
+Ostatnia faza to \lstinline{finalize}.
+Jedyna operacja wykonywana w jej trakcie to analiza ciał funkcji oraz metod.
+Ten krok wykonywany jest na końcu, aby upewnić się, że kompilator jest w stanie rozwiązać przeciążenia wszystkich funkcji, do których odwołania mogą się pojawić.
+
+Frontend kompilatora C-=-1 działa w trzech trybach, w zależności od fazy kompilacji.
+Na diagramie \ref{compilation_process_diagram} oznaczone zostały jako f1, f2 i f3.
+W każdej z nich frontend zachowuje się inaczej.
+\begin{itemize}
+    \item W trybie f1 kompilator przechodzi przez wszystkie fazy i operuje wyłącznie na kodzie atrybutów.
+    Funkcje oraz typy są ignorowane.
+    \item W trybie f2 frontend przechodzi tylko przez fazy \lstinline{create} oraz \lstinline{confirm}, tylko na kodzie typów i funkcji.
+    Przy okazji, korzystając z zebranych już informacji w trybie f1, tworzone są instancje atrybutów.
+    \item W trybie f3 frontend wykonuje wyłącznie krok \lstinline{finalize} na funkcjach oraz metodach
+\end{itemize}
 
 
 \subsubsection{Zarządzanie zależnościami}
@@ -100,19 +141,26 @@ W przeciwieństwie do języków takich jak CIL (Common Intermediate Language) \c
 Szczegółowy opis działania interpretera znajduje się w rozdziale \ref{interpreter}.
 
 Główne różnice w strukturze między C-=-1 a CIR polegają na bardziej dosłownym wyrażeniu programu. W reprezentacji pośredniej wszystkie odniesienia są w pełni kwalifikowane nazwą paczki i przestrzenią nazw. Finalizatory są wywoływane wprost, używając specjalnej instrukcji. Zamiast rozwiązywania przeciążeń funkcji, CIR odnosi się do konkretnego przeciążenia przez unikatowy identyfikator.
+
 \subsubsection{Szablony}
 \label{implementation:generics}
+
 \subsection{Interpreter}
 \label{interpreter}
 Interpreter C-=-1 operuje na reprezentacji pośredniej tego języka (rozdział \ref{implementation:intermidiate_representation}).
 \subsubsection{Reprezentacja obiektów}
+
 \subsubsection{Wykonanie kodu}
+
 \subsubsection{Funkcje specjalne}
 \label{implementation:interpreter:special_functions}
+
 \subsubsection{Referencje do obiektów C++}
 \label{implementation:interpreter:cpp_object_references}
+
 \subsection{Serializator}
 \label{serializer}
+
 \subsection{Backend Interface}
 \label{Backend_Interface}
 Odpowiedzialnością interfejsu back-endu jest przetłumaczenie CIR na LLVMIR.
