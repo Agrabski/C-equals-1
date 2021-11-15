@@ -83,7 +83,7 @@ Przetworzenie typów i funkcji wymaga kompletnego modelu semantycznego atrybutó
 \label{implementation:parser}
 Do analizy tekstu wejściowego, użyto generatora parserów Rose\cite{grabski2020}.
 Jest to narzędzie bazujące na Antlr, które znacząco ułatwia manipulowanie drzewem składniowym (ang. AST).
-Te dodatkowe możliwości są wykorzystywane przy przetwarzaniu szablonów (rozdział \ref{Generic_adnotations}).
+Te dodatkowe możliwości są wykorzystywane przy przetwarzaniu szablonów (rozdział \ref{implementation:generics}).
 Kompilator trzyma w pamięci tylko jedno drzewo rozkładu na raz, co oznacza, że każdy plik jest wczytywany wielokrotnie.
 Ta decyzja ma ograniczyć ilość zużywanej w danym momencie pamięci operacyjnej.
 
@@ -147,10 +147,36 @@ Główne różnice w strukturze między C-=-1 a CIR polegają na bardziej dosło
 
 \subsection{Interpreter}
 \label{interpreter}
-Interpreter C-=-1 operuje na reprezentacji pośredniej tego języka (rozdział \ref{implementation:intermidiate_representation}).
+
+Interpreter jest najważniejszym komponentem kompilatora C-=-1.
+Diagram \ref{compilation_process_diagram} pokazuje, że w procesie kompilacji jest używany 3 razy (i1-i3).
+Jest używany do konstrukcji atrybutów (i1), wykonywania operacji metaprogramistycznych (i2) oraz do generowania pliku wykonywalnego (i3).
+
+Interpreter C-=-1 używa generycznych struktur danych opisanych w rozdziale \ref{implementation:interpreter:object_representation} zarówno jako danych, jak i reprezentacji wykonywanego programu.
+Ta decyzja została podjęta, ponieważ częstym przypadkiem użycia tego komponentu jest modyfikacja programu, który niedługo będzie wykonywany.
+Na przykład, jeśli kompilowana paczka jest częścią większego projektu, kod modyfikowany w kroku i2, może, przy kompilacji następnej paczki, zostać wykonany.
+Wykonywanie kodu przez interpreter zostało dokładnie opisane w rozdziale \ref{implementation:interpreter:code_execution}.
+
+To podejście ma jednak też swoje wady.
+Ponieważ interpreter działa wyłącznie na generycznych strukturach danych, silne typowanie języka C++ nie jest w stanie wykryć pewnych błędów.
+Ponadto, taka implementacja jest mniej efektywna niż użycie dedykowanych typów.
+
 \subsubsection{Reprezentacja obiektów}
+\label{implementation:interpreter:object_representation}
+
+W kontekście działania interpretera C-=-1 przypomina bardziej dynamicznie typowany język skryptowy taki jak Python niż statycznie typowany, kompilowany język jak C\# czy C++.
+Interpreter działa na generycznych strukturach danych, typowych dla języka interpretowanego.
+Rysunek \ref{implementation:data_structures:uml_diagram} przedstawia diagram UML klas używanych przez ten moduł.
+
+
+\begin{figure}
+    \caption{Diagram UML struktur danych interpretera C-=-1}
+    \label{implementation:data_structures:uml_diagram}
+    \includegraphics[width=\textwidth]{interpreter_data_structures_uml.png}
+\end{figure}
 
 \subsubsection{Wykonanie kodu}
+\label{implementation:interpreter:code_execution}
 
 \subsubsection{Funkcje specjalne}
 \label{implementation:interpreter:special_functions}
