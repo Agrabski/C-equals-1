@@ -8,21 +8,21 @@ Te istniejące rozwiązania będą stanowić podstawę dla analizy możliwości 
 
 
 \subsection{C\#}
-Język C\# od początku swojego istnienia wspierał refleksję.
-Środowisko uruchomieniowe DotNet zostało zaprojektowane z myślą o dynamicznym ładowaniu plików bibliotecznych.
+Język C\# od początku swojego istnienia wspierał refleksję\cite{csharp:getType}.
+Środowisko uruchomieniowe DotNet zostało zaprojektowane z myślą o dynamicznym ładowaniu plików bibliotecznych \cite{csharp:assemblies}.
 W związku z tym większość mechanizmów metaprogramistycznych w językach opartych na nim jest używana w trakcie uruchomienia.
-W ostatnich wersjach Microsoft dodał jednak pewne możliwości do generowania i analizowania kodu w trakcie kompilacji.
+W ostatnich wersjach Microsoft dodał jednak pewne możliwości do generowania i analizowania kodu w trakcie kompilacji, w ramach otwartego kompilatora Roslyn \cite{csharp:source_generators}.
+
 \subsubsection{Atrybuty}
-W języku C\# atrybuty służą głównie do przechowywania metadanych.
+W języku C\# atrybuty służą głównie do przechowywania metadanych \cite{csharp:attributes}.
 Na rynku, istnieją rozwiązania, które wykorzystują takie adnotacje do modyfikacji programu, jednak takie zastosowanie nie jest proste.
 Ponadto, jakiekolwiek zmiany w kodzie aplikacji, będą zachodzić w trakcie uruchomienia, nie kompilacji.
-Oznacza to narzuty, które w wielu kontekstach są nieakceptowalne.
+Oznacza to narzuty, zarówno czasu wykonania, jak i wielkości pliku wykonywalnego, które w wielu kontekstach są nieakceptowalne \cite{csharp:reflection_cost, cpp:reflection:high_performance}.
 \subsubsection{Refleksja}
 
 Informacja o organizacji programu jest integralną częścią skompilowanego pliku C\#.
 W czasie uruchomienia aplikacja ma pełny wgląd we własną strukturę.
 Ponieważ w C\# występuje dynamiczna refleksja, program ma również dostęp do metadanych w bibliotekach ładowanych w czasie pracy.
-
 Ten mechanizm niesie ze sobą też pewne koszty.
 Refleksja w czasie uruchomienia niesie za sobą poważne koszty, które w niektórych kontekstach są nieakceptowalne.
 Ponadto, obecność informacji o typach i funkcjach w skompilowanym pliku znacząco ułatwia dekompilację.
@@ -41,7 +41,8 @@ Unika to problemu tworzenia dodatkowego dialektu języka, jaki występuje w C++.
 
 \subsubsection{Generatory kodu}
 
-C\#9 wprowadził możliwość pisania generatorów kodu. Jest to bardzo podobne rozwiązanie do makr w języku Rust. Generatory kodu to specjalne klasy, których kod jest wykonywany w trakcie kompilacji. 
+Kompilator Roslyn w języku C\#9 wprowadził również, możliwość pisania generatorów kodu \cite{csharp:source_generators,roslyn}.
+Jest to bardzo podobne rozwiązanie do makr w języku Rust. Generatory kodu to specjalne klasy, których kod jest wykonywany w trakcie kompilacji. 
 Mechanizm C\# jest jednak bardziej zaawansowany.
 Umożliwia generowanie kodu, używając wszystkich elementów języka, zamiast zapewniać prosty szablon.
 Te generatory, tak jak w Rust \cite{rust}, nie mają jednak dostępu do informacji zbieranych przez kompilator, poza drzewem składniowym oraz nie mogą modyfikować istniejącego kodu.
