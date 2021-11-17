@@ -4,7 +4,7 @@ metaprogramowania.
 Zostały one zaprojektowane z myślą o statycznej analizie kodu oraz prostocie projektowania nowych analizatorów.
 Statyczna analiza kodu to technika wyciągania wniosków na temat programu, na podstawie wyłącznie jego kodu źródłowego \cite{survey_of_metaprograming}.
 
-Jednym z ważniejszych celów analizatora jest wykrywanie typowych błędów programistycznych, zanim program zostanie skompilowany.
+Jednym z ważniejszych celów analizatora jest wykrywanie typowych błędów programistycznych, bez uruchomienia programu.
 Ostatnia dekada rozwoju języków programowania i narzędzi z nimi związanych wskazuje, że zapotrzebowanie na statyczną analizę kodu rośnie.
 W tym samym czasie doszło do gwałtownego wzrostu zainteresowania metaprogramowaniem. Ten termin obejmuje zarówno refleksję, czyli pozyskiwanie informacji o strukturze programu, jak i modyfikację kodu. W zależności od tego, czy dany mechanizm jest aktywny w czasie kompilacji, czy uruchomienia, nazywamy go odpowiednio statycznym lub dynamicznym.
 Meta-program można zdefiniować jako aplikację, która spełnia jedno z następujących wymagań \cite{nielson2004principles}:
@@ -16,8 +16,9 @@ Meta-program można zdefiniować jako aplikację, która spełnia jedno z nastę
 
 Zaproponowane w tej pracy mechanizmy, opisane dokładniej w rozdziale \ref{Attributes_definition}, umożliwiają stworzenie aplikacji jawnie złożonej z dwóch części.
 Konwencjonalnego programu, który zostanie skompilowany do formy wykonywalnej oraz meta-programu, który zostanie wykonany w czasie kompilacji.
-Jego celem jest wykonanie analizy oraz modyfikacji konwencjonalnej części kodu.
-Aby to osiągnąć, zaprojektowany został nowy, uproszczony język programowania zawierający proponowane mechanizmy. To podejście zostało przyjęte, aby ułatwić pisanie kompilatora, poświęcając wygodę programisty.
+Celem meta-kodu jest wykonanie analizy oraz modyfikacji konwencjonalnej części aplikacji.
+Aby to osiągnąć, zaprojektowany został nowy, uproszczony język programowania zawierający proponowane mechanizmy.
+Nie użyto istniejącego języka, aby ułatwić stworzenie kompilatora.
 
 Kontynuując tradycję zaczętą przez Bjarne Stroustrup-a nazwa, którą nadano temu nowemu językowi, jest żartem programistycznym. C++ swoją nazwę wziął od jednego ze sposobów na inkrementację zmiennej o nazwie C \cite{stroustrup_com}. 
 W ten sam sposób, w który C++ jest rozwiniętą wersją C, C-=-1 (wymawiane 'cm1') jest nietypową alternatywą dla C++. C-=-1 zostało nazwane na podstawie C++ ponieważ dzieli z nim podstawy filozoficzne oraz niektóre decyzje projektowe. Te podobieństwa zostały opisane w rozdziale 3.
