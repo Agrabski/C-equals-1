@@ -42,10 +42,10 @@ Unika to problemu tworzenia dodatkowego dialektu języka, jaki występuje w C++.
 \subsubsection{Generatory kodu}
 
 Kompilator Roslyn w języku C\#9 wprowadził również, możliwość pisania generatorów kodu \cite{csharp:source_generators,roslyn}.
-Jest to bardzo podobne rozwiązanie do makr w języku Rust. Generatory kodu to specjalne klasy, których kod jest wykonywany w trakcie kompilacji. 
+Jest to bardzo podobne rozwiązanie do makr w języku Rust \cite{rust}. Generatory kodu to specjalne klasy, których kod jest wykonywany w trakcie kompilacji. 
 Mechanizm C\# jest jednak bardziej zaawansowany.
 Umożliwia generowanie kodu, używając wszystkich elementów języka, zamiast zapewniać prosty szablon.
-Te generatory, tak jak w Rust \cite{rust}, nie mają jednak dostępu do informacji zbieranych przez kompilator, poza drzewem składniowym oraz nie mogą modyfikować istniejącego kodu.
+Te generatory, tak jak w Rust, nie mają jednak dostępu do informacji zbieranych przez kompilator, poza drzewem składniowym oraz nie mogą modyfikować istniejącego kodu.
 
 Generatory kodu nadal są rozwijane i stanowią już część stabilnego C\#.
 Stanowią one jednak ciekawą zmianę w kierunku rozwoju języka. 
@@ -62,7 +62,7 @@ Szablony w C++ można rozumieć jako oddzielny, funkcyjny, zdolny do symulacji m
 Metaprogramowanie szablonowe powstało nie jako świadomy wysiłek twórców języka, lecz jako naturalna, nieprzewidziana konsekwencja jego zasad.
 
 \subsubsection{Koncepty}
-Koncepty zostały wprowadzone w C++20 \cite{ISO:cpp20} jako sposób na lepsze dokumentowanie szablonów oraz czytelniejsze komunikaty o błędzie w wypadku niepoprawnego użycia.
+Koncepty (ang: concept) zostały wprowadzone w C++20 \cite{ISO:cpp20} jako sposób na lepsze dokumentowanie szablonów oraz czytelniejsze komunikaty o błędzie w wypadku niepoprawnego użycia.
 Używa się ich do ograniczania, które typy mogą zostać wykorzystane w danym szablonie.
 
 Koncepty są definiowane jako zbiór wymagań, które typ musi spełnić.
@@ -78,12 +78,12 @@ Dwa przykłady warte omówienia to \lstinline{fallthrough} oraz \lstinline{no\_d
 Atrybut \lstinline{fallthrough} powstał, aby rozwiązać typowy problem języków zawierających konstrukcję \lstinline{switch}. W większości zastosowań celem programisty jest stworzenie zestawu niezależnych od siebie przypadków, spośród których zostanie wykonany jeden na podstawie wartości jakiejś zmiennej.\par
 Niestety domyślnym zachowaniem konstrukcji \lstinline{switch}, po wykonaniu bloku jest przejście do następnego (tak zwany \lstinline{fallthrough}). Kompilatory zaczęły więc wydawać ostrzeżenie, jeśli blok case nie zostanie zakończony instrukcją \lstinline{break}. To tworzy jednak inny problem: czasami programista chce osiągnąć dokładnie takie zachowanie. Niektóre kompilatory zaczęły przez to zwracać uwagę na komentarze, szukając tam wyrażenia \lstinline{fallthrough} (w GCC flaga -Wimplicit-fallthrough=3) \cite{gcc_warnings}.\par
 W C++11 sformalizowano to zachowanie, tworząc atrybut \lstinline{fallthrough} \cite{ISO:2012:III}. Zaaplikowanie go do przypadku konstrukcji \lstinline{switch}, powstrzymuje kompilator przed wydaniem ostrzeżenia.\par
-Atrybut no\_discard, zamiast uciszać ostrzeżenie, generuje je. Jego zadaniem jest wykrywanie sytuacji, w których programista ignoruje wartość zwracaną przez funkcję. Można go zaaplikować zarówno do typów (wtedy każda funkcja zwracająca ten typ staje się no\_discard) lub do funkcji.\par
-Typowym przykładem zastosowania tego atrybutu są kody błędów. Ze względu na duży koszt mechanizmu wyjątków w C++, w niektórych projektach się ich nie stosuje. Zamiast tego, funkcje których wykonanie może się nie powieść, zwracają strukturę informującą o błędzie. Ponieważ programista wołający taką funkcję, nie ma obowiązku sprawdzić wyniku tego wywołania, łatwo było o błąd. Stąd konieczność atrybutu \lstinline{no\_discard}.
+Atrybut \lstinline{no\_discard}, zamiast uciszać ostrzeżenie, generuje je. Jego zadaniem jest wykrywanie sytuacji, w których programista ignoruje wartość zwracaną przez funkcję. Można go zaaplikować zarówno do typów (wtedy każda funkcja zwracająca ten typ staje się \lstinline{no\_discard}) lub do funkcji.\par
+Typowym przykładem zastosowania tego atrybutu są kody błędów. Ze względu na duży koszt mechanizmu wyjątków w C++, w niektórych projektach się ich nie stosuje. Zamiast tego, funkcje których wykonanie może się nie powieść, zwracają strukturę informującą o błędzie. Ponieważ programista wywołujący taką funkcję, nie ma obowiązku sprawdzić wyniku tego wywołania, łatwo było o błąd. Stąd konieczność atrybutu \lstinline{no\_discard}.
 
 Podstawową wadą atrybutów w C++ jest fakt, że są one zachowaniem bezpośrednio wpisanym w kompilator. Nie istnieje możliwość napisania własnego atrybutu a ich lista, jest bardzo krótka.\par
 \subsubsection{Funkcje constexpr}
-Język C++11 wprowadził koncepcję \lstinline{constexpr}. Zaaplikowanie tego modyfikatora do zmiennej lub funkcji, informuje kompilator, że mogą one być ewaluowane w trakcie kompilacji. Funkcje \lstinline{constexpr} mają też nałożony szereg ograniczeń co do swojej struktury. Z każdą kolejną wersją języka są one rozluźniane, jednak nie każda funkcja może być ewaluowana w trakcie kompilacji.
+Język C++11 wprowadził koncepcję \lstinline{constexpr}. Zaaplikowanie tego modyfikatora do zmiennej lub funkcji, informuje kompilator, że mogą one być ewaluowane w trakcie kompilacji. Funkcje \lstinline{constexpr} mają też nałożony szereg ograniczeń co do swojej struktury. Z każdą kolejną wersją języka jest ich coraz mniej, jednak nie każda funkcja może być ewaluowana w trakcie kompilacji.
 
 Ponadto, funkcje \lstinline{constexpr} nie mają większego dostępu do struktury programu niż normalny program. Nie dają one możliwości modyfikowania istniejącego ani generowania nowego kodu. Stanowią one więc jedynie sposób na optymalizację programu.
 W związku z tym mechanizm \lstinline{constexpr} został skrytykowany za jawne definiowanie które funkcje są wykonywalne w czasie kompilacji.
