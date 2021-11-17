@@ -83,7 +83,8 @@ Typowym przykładem zastosowania tego atrybutu są kody błędów. Ze względu n
 
 Podstawową wadą atrybutów w C++ jest fakt, że są one zachowaniem bezpośrednio wpisanym w kompilator. Nie istnieje możliwość napisania własnego atrybutu a ich lista, jest bardzo krótka.\par
 \subsubsection{Funkcje constexpr}
-Język C++11 wprowadził koncepcję \lstinline{constexpr}. Zaaplikowanie tego modyfikatora do zmiennej lub funkcji, informuje kompilator, że mogą one być ewaluowane w trakcie kompilacji. Funkcje \lstinline{constexpr} mają też nałożony szereg ograniczeń co do swojej struktury. Z każdą kolejną wersją języka jest ich coraz mniej, jednak nie każda funkcja może być ewaluowana w trakcie kompilacji.
+Język C++11 wprowadził koncepcję \lstinline{constexpr}. %todo: cite cpp11
+Zaaplikowanie tego modyfikatora do zmiennej lub funkcji, informuje kompilator, że mogą one być ewaluowane w trakcie kompilacji. Funkcje \lstinline{constexpr} mają też nałożony szereg ograniczeń co do swojej struktury. Z każdą kolejną wersją języka jest ich coraz mniej, jednak nie każda funkcja może być ewaluowana w trakcie kompilacji.
 
 Ponadto, funkcje \lstinline{constexpr} nie mają większego dostępu do struktury programu niż normalny program. Nie dają one możliwości modyfikowania istniejącego ani generowania nowego kodu. Stanowią one więc jedynie sposób na optymalizację programu.
 W związku z tym mechanizm \lstinline{constexpr} został skrytykowany za jawne definiowanie które funkcje są wykonywalne w czasie kompilacji.
