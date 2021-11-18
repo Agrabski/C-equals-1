@@ -1,7 +1,7 @@
 \section{Istniejące rozwiązania}
 
 Wśród przemysłowo stosowanych języków programowania istnieje szeroka gama mechanizmów metaprogramistycznych. Stosuje się w nich zarówno statyczną, jak i dynamiczną refleksję. 
-W popularnie używanych językach mechanizmy dynamiczne są zwykle dużo bardziej rozbudowane, przyjazne użytkownikowi i potężne.
+W popularnie używanych językach mechanizmy dynamiczne są zwykle dużo bardziej rozbudowane, przyjazne użytkownikowi i potężne.%remove potęzne
 
 W tym rozdziale zostaną przedstawione wybrane języki programowania oraz dostępne w nich mechanizmy metaprogramistyczne.
 Te istniejące rozwiązania będą stanowić podstawę dla analizy możliwości C-=-1.
@@ -31,6 +31,7 @@ Ponadto, obecność informacji o typach i funkcjach w skompilowanym pliku znacz�
 Można też argumentować, że dostęp do metadanych programu w trakcie uruchomienia utrudnia optymalizacje.
 Program może przeglądać własną strukturę i dynamiczne wywoływać kod na podstawie pozyskanych informacji.
 W związku z tym niektóre typy optymalizacji takie jak \lstinline{inlining} nie są możliwe.%todo: source. this is promising https://github.com/dotnet/csharplang/discussions/1413 but for fuck sake i cant qoute it
+%todo: what is inlining?
 
 \subsubsection{Analizatory kodu}
 
@@ -59,7 +60,7 @@ Makra w języku Rust nadal operują na, co prawda strukturyzowanym, ale nadal, t
 \subsection{C++20}
 C++ \cite{ISO:cpp20} zawiera szeroką gamę mechanizmów metaprogramistycznych oraz technik do statycznej analizy kodu. Były one stopniowo wprowadzane do języka przez cały czas jego istnienia, bez spójnego planu.\par
 \subsubsection{Szablony}
-Szablony w C++ można rozumieć jako oddzielny, funkcyjny, zdolny do symulacji maszyny Turinga, język programowania \cite{template_turing_complete}.
+Szablony w C++ można rozumieć jako oddzielny, funkcyjny, zdolny do symulacji maszyny Turinga \cite{template_turing_complete}, język programowania.
 Metaprogramowanie szablonowe powstało nie jako świadomy wysiłek twórców języka, lecz jako naturalna, nieprzewidziana konsekwencja jego zasad.
 
 \subsubsection{Koncepty}
@@ -68,7 +69,7 @@ Używa się ich do ograniczania, które typy mogą zostać wykorzystane w danym 
 
 Koncepty są definiowane jako zbiór wymagań, które typ musi spełnić.
 Mogą to być proste wyrażenia logiczne, jak i weryfikowanie czy dana metoda istnieje oraz jaki typ zwraca.
-W przeciwieństwie do pozostałych omawianych mechanizmów koncepty bronią programistę przed niezrozumiałymi błędami kompilacji zamiast przed błędami czasu uruchomienia.
+W przeciwieństwie do pozostałych omawianych mechanizmów koncepty bronią programistę przed niezrozumiałymi błędami kompilacji zamiast przed błędami wykonania.
 
 \subsubsection{Atrybuty}
 Atrybuty zostały oficjalnie wprowadzone do języka w C++11\cite{ISO:2012:III}. 

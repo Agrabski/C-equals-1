@@ -82,6 +82,7 @@ Zignorowanie wartości zwracanej przez funkcję oznaczoną tą adnotacją, tak j
 Ponadto, kompilator otrzymuje wskazanie do pliku źródłowego na punkt, który wywołał ten błąd.
 Ta informacja może być potem użyta do przekazania programiście dokładniejszej diagnostyki bądź do podkreślenia kodu w zintegrowanym środowisku programistycznym (rozdział \ref{IDE_integration}).
 
+% reference listing
 Niniejszy przykład dobrze ilustruje, że mając dostęp do modelu semantycznego programu, implementacja niektórych typów analizy staje się trywialna.
 W większości języków programowania taka analiza wymaga modyfikacji kompilatora albo zewnętrznego narzędzia.
 
@@ -137,7 +138,7 @@ fn main() -> usize
 
 \subsubsection{Atrybut const}
 \label{const}
-
+%todo: remake to make it less confusing
 Ciekawszym przykładem analizatora, jest atrybut \lstinline{const}.
 Odpowiada on modyfikatorowi \lstinline{const} z języka C++.
 Zaaplikowanie go do typu oznacza, że do jego instancja jest niemodyfikowalna.
@@ -258,7 +259,7 @@ Programista nadal musi samodzielnie je ustalić.
 
 \subsection{Rozszerzalność języka}
 \label{Language_extensibility}
-Jedną z konsekwencji zaproponowanych mechanizmów jest możliwość rozszerzania języka bez modyfikacji kompilatora.
+Jedną z konsekwencji zaproponowanych mechanizmów języka C-=-1 jest możliwość rozszerzania języka bez modyfikacji kompilatora.
 Oznacza to że pewne elementy składni, obecne w innych językach, stają się zbędnę w C-=-1.
 \subsubsection{Symbole zewnętrzne}
 Większość języków programowania zawiera mechanizm umożliwiający import symboli zewnętrznych.

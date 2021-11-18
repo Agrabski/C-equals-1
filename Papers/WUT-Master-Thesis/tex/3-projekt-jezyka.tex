@@ -11,13 +11,34 @@ Przy projektowaniu C-=-1 skorzystano jednak z doświadczeń wyciągniętych z C+
 \subsection{Elementy języka}
 \label{elementy_jezyka}
 
-\subsubsection{Klasy}\label{klasy}
+\subsubsection{Klasy}
+\label{classes_definition}
 Klasy w języku C-=-1 działają analogicznie do języków z rodziny C.
 Są to zbiory danych (pola klasy) z którymi powiązane są pewne operacje (metody).
 Wszystkie elementy takiego typu mogą mieć ograniczenia dostępu.
 Dwoma istotnymi elementami klas w C-=-1 są metody specjalne \lstinline{construct} oraz \lstinline{finalize}.
 Można je zrozumieć jako odpowiedniki konstruktora oraz destruktora z C++.
 Ponieważ C-=-1 w swojej obecnej formie nie wspiera wyjątków, nie gwarantuje wykonania finalizatorów zmiennych lokalnych w wypadku nieoczekiwanego zakończenia programu.
+
+%todo: reference this
+\begin{minipage}{\linewidth}
+  
+	\begin{lstlisting}[
+	  numbers=left,
+	  firstnumber=0,
+	  caption={Fragment gramatyki C-=-1 deklarujący klasę},
+	  aboveskip=0pt,
+	  label={lst:class_grammar}
+	  ]
+typeDeclaration:
+(attributeSequence)? AccessSpecifier? classTypeSpecifier identifier 
+  genericSpecifier? (
+  ':' implementedInterfacesSequence
+  )? '{' classContentSequence '}';
+classTypeSpecifier: ('class' | 'interface' | 'struct');
+  \end{lstlisting}
+  \end{minipage}
+
 \subsubsection{Interfejsy}
 \subsubsection{Funkcje}
 W C-=-1 funkcje oraz metody działają na tej samej zasadzie co w C++.
@@ -33,19 +54,78 @@ Ponieważ programista nie musi jawnie precyzować, że procedura jest wykonywaln
 Taka możliwość tworzy także pewne wyzwania, dokładniej opisane w rozdziale \ref{compile_time_constant_evaluation}.
 
 \subsubsection{Atrybuty}
+% todo: stretch importance
 \label{Attributes_definition}
 
-Atrybuty, pod względem 
+Atrybuty są bardzo zbliżone do klas: składają się z metod, pól oraz konstruktorów i mogą implementować interfejsy.
+Podobieństwa te kończą się jednak na najbardziej podstawowych tych bytów.
+Klasy i atrybuty pełnią w C-=-1 diametralnie różne role i istnieją w odrębnych kontekstach.
+Atrybuty mogą być tworzone wyłącznie jako adnotacje do innych elementów programu, a ich instancje istnieją wyłącznie w czasie kompilacji.
+
+Listing \ref{lst:attribute_basic_example} zawiera przykład prostego atrybutu w C-=-1.
+Składniowo ta deklaracja jest niemalże identyczna, do deklaracji klasy opisanej w rozdziale \ref{classes_definition}.
+Największą różnicą jest użycie słowa kluczowego \lstinline{att} i deklaracja celu atrybutu, zamiast \lstinline{class}.
+
+\begin{minipage}{\linewidth}
+  
+	\begin{lstlisting}[
+	  numbers=left,
+	  firstnumber=0,
+	  caption={Fragment gramatyki C-=-1 deklarujący atrybut},
+	  aboveskip=0pt,
+	  label={lst:attribute_grammar}
+	  ]
+attributeDeclaration: 
+  (AccessSpecifier)? 'att' '<' attributeTarget+ '>' 
+  identifier (':' implementedInterfacesSequence)?
+  '{' classContentSequence '}';
+
+attributeTarget: ('type' | 'variable' | 'function');
+  \end{lstlisting}
+  \end{minipage}
+
+Listing \ref{lst:attribute_grammar} zawiera fragment gramatyki C-=-1, w notacji EBNF \cite{ebnf}.
+Wyraźnie widać w niej podobieństwo do deklaracji klasy z listingu \ref{lst:class_grammar}.
+Ciało atrybutu używa wręcz tej samej reguły co ciało klasy.
+Istotnym elementem gramatyki atrybutu, jest natomiast wspomniany wcześniej cel atrybutu (reguła \lstinline{attributeTarget}), deklarujący, do których elementów języka można przyłączyć dany atrybut.
+
+W obecnym stanie języka istnieją trzy cele: funkcje, zmienne i typy, zgodnie z linią piątą listingu \ref{lst:attribute_grammar}.
+Atrybut może być powiązany z wieloma celami.
+
+
+\begin{minipage}{\linewidth}
+  
+	\begin{lstlisting}[
+	  numbers=left,
+	  firstnumber=0,
+	  caption={Przykład atrybutu w C-=-1},
+	  aboveskip=0pt,
+	  label={lst:attribute_basic_example}
+	  ]
+  public att<function> SomeAttribute
+  {
+	private _number: usize;
+	public fn construct(number: usize)
+	{
+		self._number = number;
+	}
+	public fn attach(f: functionDescriptor)
+	{}
+  }
+  \end{lstlisting}
+  \end{minipage}
 \subsection{Mechanizm atrybutów}
 \label{Attributes_mechanism_cm1}
 \subsection{Reprezentacja pośrednia}\label{reprezentacja_posrednia}
 Programista C-=-1 może analizować oraz modyfikować reprezentację pośrednią swojego programu w czasie kompilacji. C-=-1 Intermidiate Representation, w skrócie CIR jest nieznacznie uproszczoną wersją języka, reprezentowaną jako struktura danych.
 Użytkownik wchodzi w interakcje z CIR za pomocą zestawu interfejsów opisanych w załączniku 1. Wszystkie typy instrukcji oraz wyrażeń mają ze sobą powiązany konkretny typ. Wyjątkiem jest \lstinline{ScopeTerminationStatement} który nie jest powiązany z żadną instrukcją pisaną przez użytkownika.
-Instrukcja zakończenia zakresu jest wstawiana przez kompilator na koniec każdej instrukcji złożonej i jest odpowiedzialna za wywołanie destruktorów zmiennych lokalnych (opisane w rozdziale \ref{klasy}).
+Instrukcja zakończenia zakresu jest wstawiana przez kompilator na koniec każdej instrukcji złożonej i jest odpowiedzialna za wywołanie destruktorów zmiennych lokalnych (opisane w rozdziale \ref{classes_definition}).
+
 \subsection{Zarządzanie pamięcią}
 Zarządzanie pamięcią w C-=-1 jest oparte na C++11. W 2011 do biblioteki standardowej zostały wprowadzone nowe typy 'inteligentnych wskaźników': \lstinline{unique_ptr}, \lstinline{shared_ptr} oraz \lstinline{weak_ptr}\cite{ISO:2012:III}.
 Miały one na celu wprowadzenie do języka mechanizmów umożliwiających tanie i automatyczne zarządzanie pamięcią oraz semantyczne podkreślenie relacji między obiektami.
 Korzystając z doświadczeń C++, gdzie te wskazania stały się zalecanym sposobem zarządzania pamięcią\cite{cpp:core_guidelines}, inteligentne wskazania są integralną częścią C-=-1.
 \subsection{Struktura pakietu}\label{struktura_paczki}
-Projekt w języku C-=-1 jest identyfikowany przez plik manifestu o rozszerzeniu .mn. Pliki źródłowe mają rozszerzenia .cm. W tym samym folderze co manifest znajduje się folder \lstinline{src}. Kompilator zakłada, że wszystkie pliki o rozszerzeniu \lstinline{.cm} będące jego potomkami należą do projektu definiowanego przez manifest.
+Projekt w języku C-=-1 jest identyfikowany przez plik manifestu (ang: manifest) o rozszerzeniu .mn. %todo: whats in this file? what is it used for
+Pliki źródłowe mają rozszerzenia .cm. W tym samym folderze co manifest znajduje się folder \lstinline{src}. Kompilator zakłada, że wszystkie pliki o rozszerzeniu \lstinline{.cm} będące jego potomkami należą do projektu definiowanego przez manifest.
 W pliku .mn zdefiniowane są metadane na temat pakietu takie jak autor, wersja czy zależności. Ten aspekt języka jest modelowany na bazie Rust i pliku \lstinline{cargo.toml}.
