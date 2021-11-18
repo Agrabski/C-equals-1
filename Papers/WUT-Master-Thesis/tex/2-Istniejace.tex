@@ -1,6 +1,7 @@
 \section{Istniejące rozwiązania}
 
-Wśród przemysłowo stosowanych języków programowania istnieje szeroka gama mechanizmów metaprogramistycznych. Stosuje się w nich zarówno statyczną, jak i dynamiczną refleksję. W popularnie używanych językach mechanizmy dynamiczne są zwykle dużo bardziej rozbudowane, przyjazne użytkownikowi i potężne.
+Wśród przemysłowo stosowanych języków programowania istnieje szeroka gama mechanizmów metaprogramistycznych. Stosuje się w nich zarówno statyczną, jak i dynamiczną refleksję. 
+W popularnie używanych językach mechanizmy dynamiczne są zwykle dużo bardziej rozbudowane, przyjazne użytkownikowi i potężne.
 
 W tym rozdziale zostaną przedstawione wybrane języki programowania oraz dostępne w nich mechanizmy metaprogramistyczne.
 Te istniejące rozwiązania będą stanowić podstawę dla analizy możliwości C-=-1.
@@ -29,7 +30,7 @@ Ponadto, obecność informacji o typach i funkcjach w skompilowanym pliku znacz�
 
 Można też argumentować, że dostęp do metadanych programu w trakcie uruchomienia utrudnia optymalizacje.
 Program może przeglądać własną strukturę i dynamiczne wywoływać kod na podstawie pozyskanych informacji.
-W związku z tym niektóre typy optymalizacji takie jak \lstinline{inlining} nie są możliwe.
+W związku z tym niektóre typy optymalizacji takie jak \lstinline{inlining} nie są możliwe.%todo: source. this is promising https://github.com/dotnet/csharplang/discussions/1413 but for fuck sake i cant qoute it
 
 \subsubsection{Analizatory kodu}
 
@@ -73,13 +74,13 @@ W przeciwieństwie do pozostałych omawianych mechanizmów koncepty bronią prog
 Atrybuty zostały oficjalnie wprowadzone do języka w C++11\cite{ISO:2012:III}. 
 Umożliwiają one przekazanie kompilatorowi dodatkowych informacji na temat kodu źródłowego.
 Te dane są potem wykorzystywane w trakcie kompilacji do wydawania lub ignorowania ostrzeżeń.
-Dwa przykłady warte omówienia to \lstinline{fallthrough} oraz \lstinline{no\_discard}, ponieważ prezentują obydwa przypadki zastosowania atrybutu.
+Dwa przykłady warte omówienia to \lstinline{fallthrough} oraz \lstinline{no_discard}, ponieważ prezentują obydwa przypadki zastosowania atrybutu.
 
 Atrybut \lstinline{fallthrough} powstał, aby rozwiązać typowy problem języków zawierających konstrukcję \lstinline{switch}. W większości zastosowań celem programisty jest stworzenie zestawu niezależnych od siebie przypadków, spośród których zostanie wykonany jeden na podstawie wartości jakiejś zmiennej.\par
 Niestety domyślnym zachowaniem konstrukcji \lstinline{switch}, po wykonaniu bloku jest przejście do następnego (tak zwany \lstinline{fallthrough}). Kompilatory zaczęły więc wydawać ostrzeżenie, jeśli blok case nie zostanie zakończony instrukcją \lstinline{break}. To tworzy jednak inny problem: czasami programista chce osiągnąć dokładnie takie zachowanie. Niektóre kompilatory zaczęły przez to zwracać uwagę na komentarze, szukając tam wyrażenia \lstinline{fallthrough} (w GCC flaga -Wimplicit-fallthrough=3) \cite{gcc_warnings}.\par
 W C++11 sformalizowano to zachowanie, tworząc atrybut \lstinline{fallthrough} \cite{ISO:2012:III}. Zaaplikowanie go do przypadku konstrukcji \lstinline{switch}, powstrzymuje kompilator przed wydaniem ostrzeżenia.\par
-Atrybut \lstinline{no\_discard}, zamiast uciszać ostrzeżenie, generuje je. Jego zadaniem jest wykrywanie sytuacji, w których programista ignoruje wartość zwracaną przez funkcję. Można go zaaplikować zarówno do typów (wtedy każda funkcja zwracająca ten typ staje się \lstinline{no\_discard}) lub do funkcji.\par
-Typowym przykładem zastosowania tego atrybutu są kody błędów. Ze względu na duży koszt mechanizmu wyjątków w C++, w niektórych projektach się ich nie stosuje. Zamiast tego, funkcje których wykonanie może się nie powieść, zwracają strukturę informującą o błędzie. Ponieważ programista wywołujący taką funkcję, nie ma obowiązku sprawdzić wyniku tego wywołania, łatwo było o błąd. Stąd konieczność atrybutu \lstinline{no\_discard}.
+Atrybut \lstinline{no_discard}, zamiast uciszać ostrzeżenie, generuje je. Jego zadaniem jest wykrywanie sytuacji, w których programista ignoruje wartość zwracaną przez funkcję. Można go zaaplikować zarówno do typów (wtedy każda funkcja zwracająca ten typ staje się \lstinline{no_discard}) lub do funkcji.\par
+Typowym przykładem zastosowania tego atrybutu są kody błędów. Ze względu na duży koszt mechanizmu wyjątków w C++, w niektórych projektach się ich nie stosuje. Zamiast tego, funkcje których wykonanie może się nie powieść, zwracają strukturę informującą o błędzie. Ponieważ programista wywołujący taką funkcję, nie ma obowiązku sprawdzić wyniku tego wywołania, łatwo było o błąd. Stąd konieczność atrybutu \lstinline{no_discard}.
 
 Podstawową wadą atrybutów w C++ jest fakt, że są one zachowaniem bezpośrednio wpisanym w kompilator. Nie istnieje możliwość napisania własnego atrybutu a ich lista, jest bardzo krótka.\par
 \subsubsection{Funkcje constexpr}

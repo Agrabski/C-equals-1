@@ -3,10 +3,50 @@ Ponieważ C-=-1 jest językiem badawczym, nie można go porównywać z językami
 Warto jednak przeanalizować, w jaki sposób zaproponowane mechanizmy wpływają na jego użyteczność.
 
 \subsection{Wsparcie dla paradygmatów programowania}
-Teoretycznie niemalże w każdym języku da się programować w każdym paradygmacie. Jednak w zależności od jego, może być to zadanie prostsze lub trudniejsze. 
+Teoretycznie niemalże w każdym języku da się programować w każdym paradygmacie. Jednak w zależności od jego, może być to zadanie prostsze lub trudniejsze.
+W niektórych wypadkach wymaga to wręcz użycia zewnętrznego narzędzia, poza kompilatorem \cite{aop:cpp}.
+W tym rozdziale zostaną przedstawione paradygmaty programowania wspierane w C-=-1, bez dodatkowych narzędzi i ingerencji w język.
 
 \subsubsection{Aspect Oriented Programming}
-Nieoczekiwanym skutkiem zaproponowanych mechanizmów jest wsparcie dla programowania aspektowego (Aspect Oriented Programming, AOP).
+Nieoczekiwanym skutkiem zaproponowanych mechanizmów jest wsparcie dla programowania aspektowego (Aspect Oriented Programming, AOP) \cite{aop}.
+Ta możliwość wynika z możliwości pisania samomodyfikującego kodu.
+
+Programowanie aspektowe rozszerza typowy model programowania obiektowego o aspekty.
+Składniowo, są podobne do klas.
+Poza metodami i polami aspekty mogą deklarować również rady, służące do modyfikowania kodu w tak zwanych punktach cięcia.
+Rada może wykonać dowolne operacje przed, po oraz zamiast wywołania funkcji zdefiniowanej przez punkt cięcia.
+
+C-=-1 teoretycznie umożliwia tworzenie oprogramowania w paradygmacie AOP.
+Jedyna przeszkoda przed praktycznym użyciem programowania aspektowego to niezaimplementowana biblioteka do generacji kodu.
+Listing \ref{lst:aop_in_cm1} przedstawia przykład zastosowania AOP w C-=-1, używając hipotetycznych funkcji do generacji kodu.
+
+%todo: make example
+%todo: describe example
+\begin{minipage}{\linewidth}
+  
+  \begin{lstlisting}[
+    numbers=left,
+    firstnumber=0,
+    caption={Programowanie Aspektowe w C-=-1},
+    aboveskip=0pt,
+    label={lst:aop_in_cm1}
+    ]
+public att<function> NoDiscard
+{
+  public fn attach(f: functionDescriptor)
+  {}
+  public fn onCall(call: functionCallExpression*)
+  {
+  if(call._parentStatment != null<IInstruction>())
+    raiseError(
+      &(call._pointerToSource), 
+      "Return value of a no-discard function is not used",
+      123
+    );
+  }
+}
+\end{lstlisting}
+\end{minipage}
 
 \subsubsection{Obiektowe}
 C-=-1 został zaprojektowany z myślą o wsparciu stylu obiektowego. Użytkownik może deklarować typy, metody oraz interfejsy. W przeciwieństwie do C++ czy C\#, w C-=-1 nie ma jednak koncepcji dziedziczenia między konkretnymi klasami.
@@ -31,18 +71,18 @@ Ma on na celu wyeliminować błędy takie jak ignorowanie kodu błędu, czy niep
 
 W C-=-1, w przeciwieństwie do większości języków niskiego poziomu, stworzenie analizatora, który zapewnia taki niezmiennik, jest trywialne.
 Listing \ref{lst:noDiscardCm1} zawiera kod atrybutu \lstinline{noDiscard} z biblioteki standardowej C-=-1.
-Na linii 4 deklaruje on specjalną funkcję \lstinline{onCall} (specjalne funkcje atrybutów zostały opisane w rozdziale \ref{Attributes_mechanism_cm1}), która reaguje na wywołanie funkcji, do której został zaaplikowany.
+Linia czwarta deklaruje specjalną funkcję \lstinline{onCall} (specjalne funkcje atrybutów zostały opisane w rozdziale \ref{Attributes_mechanism_cm1}), która reaguje na wywołanie funkcji, do której został zaaplikowany.
 
 Wewnątrz tego podprogramu, atrybut sprawdza, czy bezpośrednim rodzicem tego wyrażenia jest wyrażenie, czy instrukcja.
 Jeśli jest nim instrukcja, oznacza to że wynik wywołania jest ignorowany i trzeba zgłosić błąd, używając funkcji \lstinline{raiseError}.
 W przeciwnym wypadku żadne akcje nie są konieczne.
 
-Listing \ref{lst:noDiscardUsageCm1} demonstruje zastosowanie atrybut \lstinline{noDiscard}.
-Zignorowanie wartości zwracanej przez funkcję oznaczoną tą adnotacją, tak jak na linii 5, powoduje zgłoszenie błędu o kodzie i komunikacie zgodnym z linią 7 listingu \ref{lst:noDiscardCm1}.
+Na Listingu \ref{lst:noDiscardUsageCm1} przedstawiono zastosowanie atrybut \lstinline{noDiscard}.
+Zignorowanie wartości zwracanej przez funkcję oznaczoną tą adnotacją, tak jak w linii piątej, powoduje zgłoszenie błędu o kodzie i komunikacie zgodnym z linią siódmą listingu \ref{lst:noDiscardCm1}.
 Ponadto, kompilator otrzymuje wskazanie do pliku źródłowego na punkt, który wywołał ten błąd.
-Ta informacja może być potem użyta do zaprezentowania programiście dokładniejszej diagnostyki bądź do podkreślenia kodu w zintegrowanym środowisku programistycznym (rozdział \ref{IDE_integration}).
+Ta informacja może być potem użyta do przekazania programiście dokładniejszej diagnostyki bądź do podkreślenia kodu w zintegrowanym środowisku programistycznym (rozdział \ref{IDE_integration}).
 
-Ten przykład dobrze ilustruje, że mając dostęp do modelu semantycznego programu, implementacja niektórych typów analizy staje się trywialna.
+Niniejszy przykład dobrze ilustruje, że mając dostęp do modelu semantycznego programu, implementacja niektórych typów analizy staje się trywialna.
 W większości języków programowania taka analiza wymaga modyfikacji kompilatora albo zewnętrznego narzędzia.
 
 \begin{minipage}{\linewidth}
@@ -98,31 +138,61 @@ fn main() -> usize
 \subsubsection{Atrybut const}
 \label{const}
 
-Bardziej złożonym przykładem analizatora, jest atrybut \lstinline{const}.
-Odpowiada on modyfiaktorowi \lstinline{const} z języka C++.
+Ciekawszym przykładem analizatora, jest atrybut \lstinline{const}.
+Odpowiada on modyfikatorowi \lstinline{const} z języka C++.
 Zaaplikowanie go do typu oznacza, że do jego instancja jest niemodyfikowalna.
 Każda próba modyfikacji, po zainicjalizowaniu, jest błędem.
 
-W obecnym stanie kompilatora oraz języka, możliwa jest implementacja części tej funkcjonalności.
-Pełne wsparcie dla tego modyfikatora, przy użyciu atrybutu, wymaga od C-=-1 następujących właściwości:
+W obecnym stanie kompilatora oraz języka, możliwa jest implementacja tylko części tej analizy.
+Pełne wsparcie dla modyfikatora \lstinline{const}, przy użyciu atrybutu, wymaga od C-=-1 następujących właściwości:
 \begin{enumerate}
   \item \label{prop:Attribute_function_overloading} Atrybuty są brane pod uwagę w trakcie wyboru przeciążenia funkcji
   \item \label{prop:Generic_adnotations} Istnieje sposób na modyfikowanie zachowania zmiennych, pól i parametrów w generykach, przy tworzeniu ich instancji
   \item \label{prop:Reference_adnotations} Przy aplikowaniu atrybutu do zmiennej typu referencyjnego, istnieje sposób na rozróżnienie między stałym wskazaniem a wskazaniem na stałą.
 \end{enumerate}
 
-Właściwość \ref{prop:Attribute_function_overloading} częściowo zaplanowaną, ale niezrealizowaną częścią języka (rozdział \ref{Attributes_definition}).
-Atrybuty powiązane z parametrami deklaracji mają być traktowane jako wymagania na wartościach przekazywanych przy wywołaniu funkcji.
-Ta potrzeba wywodzi się z tego, że dokładne znaczenie danej operacji w jest zależne od modyfikatorów zaaplikowanych do używanych wartości. %todo: wording. example
-Wymaga to dalszego rozszerzenia systemu atrybutów, tak aby można było aplikować adnotacje do wartości zwracanych z funkcji.
+Właściwość \ref{prop:Attribute_function_overloading} jest częściowo zaplanowaną, ale niezrealizowaną częścią języka (rozdział \ref{Attributes_definition}).
+Atrybuty powiązane z parametrami funkcji mają być traktowane jako wymagania na wartościach przekazywanych przy jej wywołaniu.
+Przykładowo, deklaracja \lstinline{fn positive_parameter_fun([positive()] usize paramter)} wymusza na wołającym funckję \lstinline{positive_parameter_fun}, aby przekazywana jej wartość była adnotowana atrybutem \lstinline{positive}.
+Otwartym pytaniem pozostaje też, w jaki sposób traktować atrybuty przyjmujące parametr w kontekście wyboru przeciążenia funkcji.
+Ten problem został dokładniej opisany w rozdziale \ref{further:adnotated_type_system:attribute_equivalence}
+Zapewnienie tej właściwości wymaga ponadto dalszego rozszerzenia systemu atrybutów, tak aby można było aplikować adnotacje do wartości zwracanych z funkcji.
 
+Ta potrzeba wywodzi się z tego, że dokładne znaczenie danej operacji w jest zależne od modyfikatorów zaaplikowanych do używanych wartości.
+Listing \ref{lst:cpp_const_example} zawiera przykład użycia modyfikatora \lstinline{const} w C++.
+Przeciążenie metody \lstinline{member} jest wybierane, biorąc pod uwagę czy parametr \lstinline{this} jest \lstinline{const}.
+Tak więc w linii dziewiątej, wybierane jest przeciążenie nie-\lstinline{const} z linii trzeciej a w linii dziesiątej, przeciążenie \lstinline{const} z linii czwartej.
+%todo: wording. example
+
+\begin{minipage}{\linewidth}
+  \begin{lstlisting}[
+    numbers=left,
+    firstnumber=0,
+    caption={Przykład modyfikatora const w C++},
+    aboveskip=0pt,
+    label={lst:cpp_const_example}
+    ]
+  class Foo {
+    int member_;
+  public:
+    int& member();
+    int const& member() const;
+  };
+  int main() {
+    Foo foo;
+    Foo const constFoo;
+    foo.member() = 3;     // ok
+    constFoo.member() = 3;// error
+  }
+  \end{lstlisting}
+\end{minipage}
 
 Zapewnienie właściwości \ref{prop:Generic_adnotations}, jest najtrudniejsze i wymaga dalej idącej pracy teorytycznej.
 Zaaplikowanie systemu atrybutów do implementacji modyfikatora \lstinline{const} oznacza śledzenie wartości, nie koniecznie pól, zmiennych, typów czy funkcji.
 Listing \ref{lst:const_problem_example} przedstawia problem rozwiązywany przez właściwość \ref{prop:Generic_adnotations}.
-Na linii 2, deklarowana jest zmienna typu \lstinline{usize} z modyfikatorem \lstinline{const}.
-Następnie, na linii 4, wskazanie na nią jest wstawiane do listy.
-W tym miejscu analizator wygeneruje błąd kompilacji, ponieważ pozyskujemy nie-stałe wskazanie na stałą wartość, co może naruszyć chroniony niezmiennik.
+W linii drugiej, deklarowana jest zmienna typu \lstinline{usize} z modyfikatorem \lstinline{const}.
+Następnie, w linii czwartej, wskazanie na nią jest wstawiane do listy.
+W tym miejscu analizator wygeneruje błąd kompilacji, ponieważ tworzymy nie-stałe wskazanie na stałą wartość, co może naruszyć chroniony niezmiennik.
 Rozwiązaniem byłoby zadeklarowanie listy jako zawierającej wskazania na stałe.
 W obecnej formie języka, nie jest to jednak możliwe.
 
@@ -147,9 +217,9 @@ fn main() -> usize
 
 
 Właściwość \ref{prop:Reference_adnotations} jest blisko powiązana z właściowścią \ref{prop:Generic_adnotations}.
-Rozróżnienie pomiędzy aplikacją adnotacji do wskazania a wskazywanej wartości, jest konieczne aby zapewnić nienaruszenie niezmienników dotyczących wartości.
+Rozróżnienie pomiędzy aplikacją atrybutu do wskazania a wskazywanej wartości, jest konieczne aby zapewnić nienaruszenie niezmienników dotyczących wartości.
 Listing \ref{lst:const_problem_example} przedstawia ten problem.
-Na linii 5, do zmiennej \lstinline{pointer} przypisywany jest adres zmiennej \lstinline{x}.
+W linii piątej, do zmiennej \lstinline{pointer} przypisywany jest adres zmiennej \lstinline{x}.
 Pomimo zaaplikowania atrybutu \lstinline{const} do nowej zmiennej, analizator generuje błąd.
 Adnotacja została tutaj zaaplikowana do wartości wskazania, nie do wskazywanej wartości.
 W C-=-1 istnieją sposoby na obejście tego ograniczenia, jednak lepsze rozwiązanie powinno powstać w wyniku prac opisanych w rozdziale \ref{further:adnotated_type_system}.%todo: example?
@@ -215,17 +285,20 @@ W wypadku podprogramów importowanych z zewnątrz, ich ciało jest zbędne.
 
 Listing \ref{lst:selected_backend_interface} zawiera wybrane funkcje z domyślnego interfejsu backendu, powiązane z symbolami zewnętrznymi.
 Funkcja \lstinline{getFunctionName} ma za zadanie wygenerować nazwę symbolu, kompatybilną z C.
-Linie od 2 do 4 obsługują atrybuty implementujące \lstinline{ISymbolNameOverride}.
+Linie od drugiej do czwartej obsługują atrybuty implementujące \lstinline{ISymbolNameOverride}.
 Sprawdzają one, czy z daną funkcją powiązany jest atrybut nadpisujący nazwę symbolu i zwraca wygenerowaną przez niego wartość.
 
 Funkcja \lstinline{buildFunction} ma stworzyć reprezentację pośrednią LLVM funkcji przekazanej jako parametr.
-Linie 29 do 33 zawierają kod obsługujący symbole zewnętrzne.
+Linie od dwudziestej dziewiątej do trzydziestej trzeciej zawierają kod obsługujący symbole zewnętrzne.
 Te instrukcje sprawdzają, czy z funkcją powiązany jest atrybut implementujący \lstinline{ISymbolNameOverride}.
 Jeśli tak, ciało procedury jest ignorowane.
 W przeciwnym wypadku interfejs backendu buduje funkcję normalnie.
 W LLVM, procedury niezawierające ciała, są uznawane za symbole zewnętrzne.
 
-Zaprezentowana implementacja jest bardzo prosta 
+Zaprezentowana implementacja jest bardzo prosta, zmienia jedynie nazwę generowanego symbolu i ignoruje ciało budowanej funkcji.
+Mogą jednak istnieć scenariusze, w których użycie symbolu zewnętrznego wymaga bardziej złożonej obsługi.
+Przykładowo, jeśli wywołanie funkcji zdefiniowanej w innym języku wymaga marshallingu przekazywanych parametrów, bądź zwracanej wartości.
+Po niewielkich modyfikacjach zaproponowanego interfejsu obsługa takich przypadków byłaby możliwa.
 
 \begin{minipage}{\linewidth}
   

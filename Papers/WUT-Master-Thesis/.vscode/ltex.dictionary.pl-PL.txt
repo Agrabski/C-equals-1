@@ -21,7 +21,7 @@ uruchomieniowego
 Middle-end
 back-end
 LLVM
-Serialisator
+Serializator
 middle-end
 Optimiser
 serializowane
@@ -46,3 +46,4 @@ f1
 f2
 f3
 frontend
+marshallingu
