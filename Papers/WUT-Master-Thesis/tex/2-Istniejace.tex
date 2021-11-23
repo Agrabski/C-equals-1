@@ -1,7 +1,7 @@
 \section{Istniejące rozwiązania}
 
 Wśród przemysłowo stosowanych języków programowania istnieje szeroka gama mechanizmów metaprogramistycznych. Stosuje się w nich zarówno statyczną, jak i dynamiczną refleksję. 
-W popularnie używanych językach mechanizmy dynamiczne są zwykle dużo bardziej rozbudowane, przyjazne użytkownikowi i potężne.%remove potęzne
+W popularnie używanych językach mechanizmy dynamiczne są zwykle dużo bardziej rozbudowane i przyjazne użytkownikowi.
 
 W tym rozdziale zostaną przedstawione wybrane języki programowania oraz dostępne w nich mechanizmy metaprogramistyczne.
 Te istniejące rozwiązania będą stanowić podstawę dla analizy możliwości C-=-1.
@@ -30,7 +30,7 @@ Ponadto, obecność informacji o typach i funkcjach w skompilowanym pliku znacz�
 
 Można też argumentować, że dostęp do metadanych programu w trakcie uruchomienia utrudnia optymalizacje.
 Program może przeglądać własną strukturę i dynamiczne wywoływać kod na podstawie pozyskanych informacji.
-W związku z tym niektóre typy optymalizacji takie jak \lstinline{inlining} nie są możliwe.%todo: source. this is promising https://github.com/dotnet/csharplang/discussions/1413 but for fuck sake i cant qoute it
+W związku z tym niektóre typy optymalizacji takie jak \lstinline{inlining} (bezpośrednie użycie ciała funkcji, zamiast jej wywołania) nie są możliwe.%todo: source. this is promising https://github.com/dotnet/csharplang/discussions/1413 but for fuck sake i cant qoute it
 %todo: what is inlining?
 
 \subsubsection{Analizatory kodu}
