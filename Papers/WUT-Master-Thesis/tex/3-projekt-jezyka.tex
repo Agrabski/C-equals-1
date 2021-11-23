@@ -57,6 +57,10 @@ Taka możliwość tworzy także pewne wyzwania, dokładniej opisane w rozdziale 
 % todo: stretch importance
 \label{Attributes_definition}
 
+Atrybuty stanowią najważniejszy aspekt C-=-1.
+To za ich pomocą, programista ma dostęp do wszystkich mechanizmów metaprogramistycznych, będących tematem tej pracy.
+Możliwości, które atrybuty oferują, są dokładniej opisane w rozdziale \ref{Attributes_mechanism_cm1}.
+
 Atrybuty są bardzo zbliżone do klas: składają się z metod, pól oraz konstruktorów i mogą implementować interfejsy.
 Podobieństwa te kończą się jednak na najbardziej podstawowych tych bytów.
 Klasy i atrybuty pełnią w C-=-1 diametralnie różne role i istnieją w odrębnych kontekstach.
@@ -90,8 +94,7 @@ Ciało atrybutu używa wręcz tej samej reguły co ciało klasy.
 Istotnym elementem gramatyki atrybutu, jest natomiast wspomniany wcześniej cel atrybutu (reguła \lstinline{attributeTarget}), deklarujący, do których elementów języka można przyłączyć dany atrybut.
 
 W obecnym stanie języka istnieją trzy cele: funkcje, zmienne i typy, zgodnie z linią piątą listingu \ref{lst:attribute_grammar}.
-Atrybut może być powiązany z wieloma celami.
-
+Atrybut może być powiązany z wieloma celami, w zależności od których 
 
 \begin{minipage}{\linewidth}
   
@@ -116,6 +119,9 @@ Atrybut może być powiązany z wieloma celami.
   \end{minipage}
 \subsection{Mechanizm atrybutów}
 \label{Attributes_mechanism_cm1}
+\subsubsection{Funkcje specjalne}
+\label{design:attributes:special_functions}
+
 \subsection{Reprezentacja pośrednia}\label{reprezentacja_posrednia}
 Programista C-=-1 może analizować oraz modyfikować reprezentację pośrednią swojego programu w czasie kompilacji. C-=-1 Intermidiate Representation, w skrócie CIR jest nieznacznie uproszczoną wersją języka, reprezentowaną jako struktura danych.
 Użytkownik wchodzi w interakcje z CIR za pomocą zestawu interfejsów opisanych w załączniku 1. Wszystkie typy instrukcji oraz wyrażeń mają ze sobą powiązany konkretny typ. Wyjątkiem jest \lstinline{ScopeTerminationStatement} który nie jest powiązany z żadną instrukcją pisaną przez użytkownika.
