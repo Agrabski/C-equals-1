@@ -94,7 +94,7 @@ Istotnym elementem gramatyki atrybutu, jest natomiast wspomniany wcześniej cel 
 
 W obecnym stanie języka istnieją trzy cele: funkcje, zmienne i typy, zgodnie z linią piątą listingu \ref{lst:attribute_grammar}.
 Atrybut może być powiązany z wieloma celami.
-W zależności od obsługiwanych celów atrybut ma do zaimplementowania różny zestaw metod, reagujący na użycie danego elementu modelu semantycznego (rozdział \ref{design:semantic_model}).
+W zależności od obsługiwanych celów atrybut ma do zaimplementowania różny zestaw metod, reagujący na użycie danego elementu modelu semantycznego (rozdział \ref{implementation:intermidiate_representation}).
 Przykładowo dla funkcji, te metody to między innymi \lstinline{onCall}, powiązana z wywołaniem procedury.
 Wszystkie atrybuty mają również metodę \lstinline{attach}, wywoływaną po stworzeniu nagłówka elementu modelu.
 Te funkcje zostały opisane w rozdziale \ref{Attributes_mechanism_cm1}.
@@ -122,6 +122,28 @@ Te funkcje zostały opisane w rozdziale \ref{Attributes_mechanism_cm1}.
   \end{minipage}
 \subsection{Mechanizm atrybutów}
 \label{Attributes_mechanism_cm1}
+
+Celem istnienia atrybutów w C-=-1 jest: modyfikacja metadanych elementów programu oraz analiza i modyfikacja kodu.
+Kompilator bezpośrednio wywołuje ich metody, jako część procesu kompilacji, co zostało oznaczone na rysunku \ref{compilation_process_diagram}.
+W zależności od tego, które cele atrybut obsługuje, może zaimplementować różny zestaw funkcji specjalnych, opisanych w rozdziale \ref{design:attributes:special_functions}.
+
+Istotnym ograniczeniem atrybutów C-=-1 jest brak możliwości użycia elementów biblioteki, w której zostały zdefiniowane.
+To obostrzenie zostało wprowadzone, aby atrybuty można było aplikować wewnątrz tego samego projektu, oraz aby zapewnić większą deterministyczność kompilacji.
+Rysunek \ref{design:attributes:attribute_function_dependendcy} zawiera diagram zależności w programie, którego działanie byłoby zależne od implementacji kompilatora.
+\lstinline{Atrybut} modyfikuje kod funkcji, do której jest przyłączony.
+Zarówno \lstinline{Funckja A}, jak i \lstinline{Funkcja B} są nim adnotowane.
+\lstinline{Atrybut}, w trakcie modyfikowania kodu funkcji, wywołuje \lstinline{Funkcje A}.
+W tej sytuacji, ciało \lstinline{Funkcji B} zależy od kolejności, w której operacje metaprogramistyczne będą wykonywane.
+
+Jeśli kompilator najpierw weźmie pod uwagę \lstinline{Funkcje A}, zostanie ona zmodyfikowana, używając oryginalnej wersji \lstinline{Funkcji B}.
+Oznacza to, że skutki zaaplikowania \lstinline{Atrybutu} zależą od implementacji kompilatora.
+
+\begin{figure}
+	\caption{Diagram ilustrujący zależności między atrybutem a funkcjami}
+	\label{design:attributes:attribute_function_dependendcy}
+	\includegraphics{attribute_function_dependency.png}
+\end{figure}
+
 \subsubsection{Funkcje specjalne}
 \label{design:attributes:special_functions}
 
@@ -130,7 +152,7 @@ Programista C-=-1 może analizować oraz modyfikować reprezentację pośrednią
 C-=-1 Intermidiate Representation, w skrócie CIR jest nieznacznie uproszczoną wersją języka, reprezentowaną jako struktura danych.
 Użytkownik wchodzi w interakcje z CIR za pomocą zestawu interfejsów opisanych w załączniku 1.
 Wszystkie typy instrukcji oraz wyrażeń mają ze sobą powiązany konkretny typ.
-Wyjątkiem jest \lstinline{ScopeTerminationStatement} który nie jest powiązany z żadną instrukcją pisaną przez użytkownika.
+Wyjątkiem jest \lstinline{ScopeTerminationStatement}, który nie jest powiązany z żadną instrukcją pisaną przez użytkownika.
 Instrukcja zakończenia zakresu jest wstawiana przez kompilator na koniec każdej instrukcji złożonej i jest odpowiedzialna za wywołanie destruktorów zmiennych lokalnych (opisane w rozdziale \ref{classes_definition}).
 
 \begin{minipage}{\linewidth}
