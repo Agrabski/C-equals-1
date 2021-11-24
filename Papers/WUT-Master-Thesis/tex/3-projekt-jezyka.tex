@@ -134,18 +134,27 @@ Rysunek \ref{design:attributes:attribute_function_dependendcy} zawiera diagram z
 Zarówno \lstinline{Funckja A}, jak i \lstinline{Funkcja B} są nim adnotowane.
 \lstinline{Atrybut}, w trakcie modyfikowania kodu funkcji, wywołuje \lstinline{Funkcje A}.
 W tej sytuacji, ciało \lstinline{Funkcji B} zależy od kolejności, w której operacje metaprogramistyczne będą wykonywane.
-
 Jeśli kompilator najpierw weźmie pod uwagę \lstinline{Funkcje A}, zostanie ona zmodyfikowana, używając oryginalnej wersji \lstinline{Funkcji B}.
 Oznacza to, że skutki zaaplikowania \lstinline{Atrybutu} zależą od implementacji kompilatora.
+Ograniczenie na kodzie używalnym przez atrybut wynika też z funkcji specjalnej \lstinline{attach}.
+Jest ona wykonywana, kiedy istnieje tylko nagłówek dołączonego obiektu.
+W związku z tym kod atrybutu oraz wszystkie jego zależności muszą być skompletowane, zanim tworzenie reprezentacji pośredniej pakietu zostanie zakończone.
+
+Usunięcie wymagania, aby atrybutami można było adnotować elementy tego samego pakietu, umożliwiłoby używanie funkcji w nim zdefiniowanych.
+Nie podjęto jednak tej decyzji.
+Najbardziej prawdopodobnym scenariuszem użycia atrybutów, jest tworzenie prostych analizatorów i metaprogramów powiązanych z domeną aplikacji, używając bibliotek przeznaczonych do analizy kodu.
+Sytuacja, w której atrybut musi użyć kodu z pakietu, w którym jest zdefiniowany, jest mało prawdopodobna.
 
 \begin{figure}
-	\caption{Diagram ilustrujący zależności między atrybutem a funkcjami}
+	\caption{Diagram ilustrujący przykładowe zależności między atrybutem a funkcjami}
 	\label{design:attributes:attribute_function_dependendcy}
 	\includegraphics{attribute_function_dependency.png}
 \end{figure}
 
 \subsubsection{Funkcje specjalne}
 \label{design:attributes:special_functions}
+
+Funkcje specjalne atrybutów, służą do reagowania na użycie obiektu, z którym powiązana jest adnotacja.
 
 \subsection{Reprezentacja pośrednia}\label{reprezentacja_posrednia}
 Programista C-=-1 może analizować oraz modyfikować reprezentację pośrednią swojego programu w czasie kompilacji.
@@ -194,6 +203,7 @@ Zarządzanie pamięcią w C-=-1 jest oparte na C++11. W 2011 do biblioteki stand
 Miały one na celu wprowadzenie do języka mechanizmów umożliwiających tanie i automatyczne zarządzanie pamięcią oraz semantyczne podkreślenie relacji między obiektami.
 Korzystając z doświadczeń C++, gdzie te wskazania stały się zalecanym sposobem zarządzania pamięcią\cite{cpp:core_guidelines}, inteligentne wskazania są integralną częścią C-=-1.
 \subsection{Struktura pakietu}\label{struktura_paczki}
-Projekt w języku C-=-1 jest identyfikowany przez plik manifestu (ang: manifest) o rozszerzeniu .mn. %todo: whats in this file? what is it used for
+Projekt w języku C-=-1 jest identyfikowany przez plik manifestu (ang: manifest) o rozszerzeniu .mn. 
+Zawiera on metadane na temat pakietu: unikatowy identyfikator, dane autora, zależności i tym podobne.
 Pliki źródłowe mają rozszerzenia .cm. W tym samym folderze co manifest znajduje się folder \lstinline{src}. Kompilator zakłada, że wszystkie pliki o rozszerzeniu \lstinline{.cm} będące jego potomkami należą do projektu definiowanego przez manifest.
 W pliku .mn zdefiniowane są metadane na temat pakietu takie jak autor, wersja czy zależności. Ten aspekt języka jest modelowany na bazie Rust i pliku \lstinline{cargo.toml}.

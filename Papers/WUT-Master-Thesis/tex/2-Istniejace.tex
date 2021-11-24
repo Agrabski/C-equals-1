@@ -31,7 +31,6 @@ Ponadto, obecność informacji o typach i funkcjach w skompilowanym pliku znacz�
 Można też argumentować, że dostęp do metadanych programu w trakcie uruchomienia utrudnia optymalizacje.
 Program może przeglądać własną strukturę i dynamiczne wywoływać kod na podstawie pozyskanych informacji.
 W związku z tym niektóre typy optymalizacji takie jak \lstinline{inlining} (bezpośrednie użycie ciała funkcji, zamiast jej wywołania) nie są możliwe.%todo: source. this is promising https://github.com/dotnet/csharplang/discussions/1413 but for fuck sake i cant qoute it
-%todo: what is inlining?
 
 \subsubsection{Analizatory kodu}
 
@@ -85,7 +84,7 @@ Typowym przykładem zastosowania tego atrybutu są kody błędów. Ze względu n
 
 Podstawową wadą atrybutów w C++ jest fakt, że są one zachowaniem bezpośrednio wpisanym w kompilator. Nie istnieje możliwość napisania własnego atrybutu a ich lista, jest bardzo krótka.\par
 \subsubsection{Funkcje constexpr}
-Język C++11 wprowadził koncepcję \lstinline{constexpr}. %todo: cite cpp11
+Język C++11 wprowadził koncepcję \lstinline{constexpr}\cite{ISO:2012:III}.
 Zaaplikowanie tego modyfikatora do zmiennej lub funkcji, informuje kompilator, że mogą one być ewaluowane w trakcie kompilacji. Funkcje \lstinline{constexpr} mają też nałożony szereg ograniczeń co do swojej struktury. Z każdą kolejną wersją języka jest ich coraz mniej, jednak nie każda funkcja może być ewaluowana w trakcie kompilacji.
 
 Ponadto, funkcje \lstinline{constexpr} nie mają większego dostępu do struktury programu niż normalny program. Nie dają one możliwości modyfikowania istniejącego ani generowania nowego kodu. Stanowią one więc jedynie sposób na optymalizację programu.
