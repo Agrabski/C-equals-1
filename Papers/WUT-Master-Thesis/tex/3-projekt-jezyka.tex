@@ -155,6 +155,18 @@ Sytuacja, w której atrybut musi użyć kodu z pakietu, w którym jest zdefiniow
 \label{design:attributes:special_functions}
 
 Funkcje specjalne atrybutów, służą do reagowania na użycie obiektu, z którym powiązana jest adnotacja.
+Ma to ułatwić tworzenie analizatorów.
+Tworząc na przykład odpowiednik niezmiennika \lstinline{const} z C++, programista musi znaleźć wszystkie użycia zmiennej.
+W obecnej wersji C-=- istnieją następujące funkcję specjalne:
+\begin{itemize}
+	\item Funkcje\begin{itemize}
+		\item \lstinline{onCall}
+	\end{itemize}
+	\item Zmienne\begin{itemize}
+		\item \lstinline{onDeclare}
+		\item \lstinline{onReference}
+	\end{itemize}
+\end{itemize}
 
 \subsection{Reprezentacja pośrednia}\label{reprezentacja_posrednia}
 Programista C-=-1 może analizować oraz modyfikować reprezentację pośrednią swojego programu w czasie kompilacji.
