@@ -207,7 +207,7 @@ Wymusza to szybszy rozwój języka oraz umożliwia znajdowanie błędów w kompi
 \subsubsection{Funkcje eksponowane przez kompilator}
 
 Używając mechanizmów, opisanych w rozdziałach \ref{implementation:interpreter:special_functions} oraz \ref{implementation:interpreter:cpp_object_references}, udostępniono interfejsowi backendu narzędzie do budowy LLVMIR zdefiniowane w LLVM.
-W ramach biblioteki backendu istnieje cała gama funkcji oraz typów używanych do generowania reprezentacji pośredniej.
+W ramach biblioteki backendu istnieje cała gama funkcji oraz typów używanych do generowania reprezentacji pośredniej, co zostało opisane w rozdziale \ref{implementation:backend}.
 W języku C-=-1 dostępny jest minimalny ich podzbiór, konieczny do implementacji podstawowego kompilatora.
 
 \subsubsection{Implementacja interfejsu backendu}
@@ -215,8 +215,12 @@ W języku C-=-1 dostępny jest minimalny ich podzbiór, konieczny do implementac
 Razem z plikiem wykonywalnym kompilatora, dystrybuowany jest kod źródłowy pakietu, zawierającej \lstinline{interfejs backendu}. 
 Przed kompilacją kodu użytkownika, kompilator wczytuje ten moduł.
 Zaletą tego rozwiązania jest możliwość wymiany tego komponentu, bez rekompilacji całego narzędzia.
-Po załadowaniu tego pakiet kompilator szuka w niej funkcji oznaczonej atrybutem \lstinline{compilerEntryPoint} która służy jako punkt wejścia dla interfejsu. 
+Po załadowaniu tego pakiet kompilator szuka w niej funkcji oznaczonej atrybutem \lstinline{compilerEntryPoint}, która służy jako punkt wejścia dla interfejsu. 
 Ma ona za zadanie wygenerowanie LLVMIR dla przekazanej jej listy pakietów (LLVMIR została opisana w rozdziale \ref{implementation:backend}).
+
+Punkt wejścia \emph{interfejsu backendu} jako argumenty przyjmuje kolekcję pakietów do skompilowania oraz obiekt \lstinline{CompilationResult}.
+Wynik kompilacji odpowiada kontekstowi LLVM, śledzi tworzone moduły oraz globalny stan LLVM.
+Poza sygnaturą punktu wejścia, programista ma też obowiązek zapewnić specjalne traktowanie niektórych typów i funkcji z biblioteki podstawowej C-=-1. %todo: ref basic library
 
 \subsection{Backend}
 \label{implementation:backend}
