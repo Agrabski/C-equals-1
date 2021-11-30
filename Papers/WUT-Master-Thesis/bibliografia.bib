@@ -203,6 +203,52 @@ title = {C++ Templates are Turing Complete}
   volume={2},
   year={2009}
 }
+  @MastersThesis{Lattner:MSThesis02,
+    author  = {Chris Lattner},
+    title   = "{LLVM: An Infrastructure for Multi-Stage Optimization}",
+    school  = "{Computer Science Dept., University of Illinois at Urbana-Champaign}",
+    year    = {2002},
+    address = {Urbana, IL},
+    month   = {Dec}
+  }
+  @article{10.1145/2103621.2103709,
+author = {Zhao, Jianzhou and Nagarakatte, Santosh and Martin, Milo M.K. and Zdancewic, Steve},
+title = {Formalizing the LLVM Intermediate Representation for Verified Program Transformations},
+year = {2012},
+issue_date = {January 2012},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {47},
+number = {1},
+issn = {0362-1340},
+url = {https://doi.org/10.1145/2103621.2103709},
+doi = {10.1145/2103621.2103709},
+abstract = {This paper presents Vellvm (verified LLVM), a framework for reasoning about programs expressed in LLVM's intermediate representation and transformations that operate on it. Vellvm provides a mechanized formal semantics of LLVM's intermediate representation, its type system, and properties of its SSA form. The framework is built using the Coq interactive theorem prover. It includes multiple operational semantics and proves relations among them to facilitate different reasoning styles and proof techniques.To validate Vellvm's design, we extract an interpreter from the Coq formal semantics that can execute programs from LLVM test suite and thus be compared against LLVM reference implementations. To demonstrate Vellvm's practicality, we formalize and verify a previously proposed transformation that hardens C programs against spatial memory safety violations. Vellvm's tools allow us to extract a new, verified implementation of the transformation pass that plugs into the real LLVM infrastructure; its performance is competitive with the non-verified, ad-hoc original.},
+journal = {SIGPLAN Not.},
+month = {jan},
+pages = {427–440},
+numpages = {14},
+keywords = {memory safety, Coq, LLVM}
+}
+
+@inproceedings{llvmir,
+author = {Zhao, Jianzhou and Nagarakatte, Santosh and Martin, Milo M.K. and Zdancewic, Steve},
+title = {Formalizing the LLVM Intermediate Representation for Verified Program Transformations},
+year = {2012},
+isbn = {9781450310833},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2103656.2103709},
+doi = {10.1145/2103656.2103709},
+abstract = {This paper presents Vellvm (verified LLVM), a framework for reasoning about programs expressed in LLVM's intermediate representation and transformations that operate on it. Vellvm provides a mechanized formal semantics of LLVM's intermediate representation, its type system, and properties of its SSA form. The framework is built using the Coq interactive theorem prover. It includes multiple operational semantics and proves relations among them to facilitate different reasoning styles and proof techniques.To validate Vellvm's design, we extract an interpreter from the Coq formal semantics that can execute programs from LLVM test suite and thus be compared against LLVM reference implementations. To demonstrate Vellvm's practicality, we formalize and verify a previously proposed transformation that hardens C programs against spatial memory safety violations. Vellvm's tools allow us to extract a new, verified implementation of the transformation pass that plugs into the real LLVM infrastructure; its performance is competitive with the non-verified, ad-hoc original.},
+booktitle = {Proceedings of the 39th Annual ACM SIGPLAN-SIGACT Symposium on Principles of Programming Languages},
+pages = {427–440},
+numpages = {14},
+keywords = {Coq, LLVM, memory safety},
+location = {Philadelphia, PA, USA},
+series = {POPL '12}
+}
+
 
 @techreport{ISO:cpp20,
 type = {Standard},

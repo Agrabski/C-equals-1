@@ -142,10 +142,12 @@ CIR jest jednak dużo trudniejsza do interpretowania.
 W przeciwieństwie do języków takich jak CIL (Common Intermediate Language) \cite{ecma:cli}, CIR nie operuje abstrakcyjnej maszynie stosownej.
 Szczegółowy opis działania interpretera znajduje się w rozdziale \ref{interpreter}.
 
-Główne różnice w strukturze między C-=-1 a CIR polegają na bardziej dosłownym wyrażeniu programu. W reprezentacji pośredniej wszystkie odniesienia są w pełni kwalifikowane nazwą pakietu i przestrzenią nazw. Finalizatory są wywoływane wprost, używając specjalnej instrukcji. Zamiast rozwiązywania przeciążeń funkcji, CIR odnosi się do konkretnego przeciążenia przez unikatowy identyfikator.
+Główne różnice w strukturze między C-=-1 a CIR polegają na bardziej dosłownym wyrażeniu programu. W reprezentacji pośredniej wszystkie odniesienia są w pełni kwalifikowane nazwą pakietu i przestrzenią nazw. Destruktory są wywoływane wprost, używając specjalnej instrukcji. Zamiast rozwiązywania przeciążeń funkcji, CIR odnosi się do konkretnego przeciążenia przez unikatowy identyfikator.
 
 \subsubsection{Szablony}
 \label{implementation:generics}
+
+
 
 \subsection{Interpreter}
 \label{interpreter}
@@ -214,11 +216,32 @@ Razem z plikiem wykonywalnym kompilatora, dystrybuowany jest kod źródłowy pak
 Przed kompilacją kodu użytkownika, kompilator wczytuje ten moduł.
 Zaletą tego rozwiązania jest możliwość wymiany tego komponentu, bez rekompilacji całego narzędzia.
 Po załadowaniu tego pakiet kompilator szuka w niej funkcji oznaczonej atrybutem \lstinline{compilerEntryPoint} która służy jako punkt wejścia dla interfejsu. 
-Ma ona za zadanie wygenerowanie LLVMIR dla przekazanej jej listy pakietów.
+Ma ona za zadanie wygenerowanie LLVMIR dla przekazanej jej listy pakietów (LLVMIR została opisana w rozdziale \ref{implementation:backend}).
 
 \subsection{Backend}
 \label{implementation:backend}
-Do generowania kodu maszynowego została wykorzystana biblioteka LLVM.
+Do generowania kodu maszynowego została wykorzystana biblioteka LLVM \cite{Lattner:MSThesis02}.
+Ten pakiet jest obecnie używany jako backend całej rodziny języków C (C, C++, Objective-C) oraz języka Rust.
+Aby wspierać tak szeroki zakres języków źródłowych, LLVM definiuje własną reprezentację pośrednią kodu: LLVMIR.
+
+LLVMIR jest formą asemblera dla abstrakcyjnej maszyny stosowej \cite{llvmir}.
+Program, zapisany w tej formie, jest dużo prostszy do automatycznej analizy i optymalizacji, oraz może zostać łatwiej skompilowany do kodu maszynowego dowolnego procesora.
+Natomiast jego semantyczne podobieństwo do C, sprawia, że, stworzenie frontendu dla podobnego języka jest bardzo naturalne.
+
+Maszyna abstrakcyjna LLVMIR operuje na typach, odpowiadającym strukturom z języka C bez nazwanych pól, oraz na funkcjach.
+Funkcje mogą przyjmować nazwane parametry zarówno przez wartość, jak i wskazanie.
+W LLVMIR nie istnieją wyrażenia złożone.
+Wywołanie \lstinline{f(1 + 1)}, zapisane w C, należy wyrazić, najpierw jako deklaracja niemutowalnej zmiennej tymczasowej \lstinline{%0 = add i32 1, 1} a następnie jako wywołanie \lstinline{call void @f(i32 %0)}.
+
+LLVMIR nie zawiera koncepcji mutowalnej zmiennej.
+Wszystkie zmienne są wartościami stałymi i nie można ich modyfikować po przypisaniu.
+Sposobem na zasymulowanie zachowania zmiennej z języka C, jest użycie instrukcji \lstinline{alloca}.
+Alokuje ona miejsce na stosie, potrzebne dla danego typu i zwraca na nie wskazanie.
+Programista może potem tę lokalizację w pamięci zmieniać oraz wczytywać jej wartość.
+
+LLVM, poza kompilatorami LLVMIR do kodu maszynowego wielu różnych procesorów, zawiera też bibliotekę służącą do budowania LLVMIR.
+Ten zestaw narzędzi jest bardzo przydatny, ponieważ dzięki niemu programista może operować na dobrze zdefiniowanej strukturze danych, zamiast na tekstowej reprezentacji.
+
 \subsection{Biblioteka standardowa}
 
 \subsection{Narzędzia dodatkowe}

@@ -48,3 +48,6 @@ f3
 frontend
 marshallingu
 deterministyczność
+priorytetyzacja
+stosowej
+zasymulowanie

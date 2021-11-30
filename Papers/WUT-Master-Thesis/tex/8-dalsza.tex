@@ -15,7 +15,7 @@ Problem pojawia się, kiedy próbuje użyć biblioteki standardowej.
 Funkcja \lstinline{indexof}, na przykład, przyjmuje wskazanie na tablicę oraz na szukany element.
 Ponieważ atrybut \lstinline{const} został zdefiniowany w bibliotece A, funkcje z biblioteki standardowej nie są nim adnotowane.
 
-Oznacza to, że programista pracujący nad biblioteką A ma obecnie następujące możliwości:
+Oznacza to, że programista pracujący nad biblioteką A ma obecnie następujące alternatywy:
 \begin{enumerate}
 	\item\label{option:abandon_attribute} Porzucenie atrybutu \lstinline{const} i dalszą pracę bez analizy statycznej.
 	\item\label{option:embed_in_attribute} Zaszycie które elementy biblioteki standardowej powinny mieć tą adnotację w kodzie atrybutu.

@@ -6,16 +6,16 @@ Ponadto wsparcie dla C-=-1 jest minimalne: nie istnieje edytor, który koloruje 
 Jego celem nie było jednak zastąpić C++, Rust czy C\#, a zbadać jak priorytetyzacja wsparcia dla statycznego metaprogramowania wpływa na język oraz pisany w nim kod. 
 Pod tym względem, C-=-1 można uznać za sukces.
 
-Wiele aspektów tego języka, zostało niestety omówione wyłącznie na poziomie teorytycznym, ze względu na brak wsparcia kompilatora.
+Wiele aspektów tego języka, zostało niestety omówione wyłącznie na poziomie teoretycznym, ze względu na brak wsparcia kompilatora.
 Stworzenie nowego języka programowania jest zadaniem dużo bardziej złożonym i czasochłonnym niż zakładano na początku tej pracy.
-Z tego powodu, zabrakło czasu aby zrealizować projekt C-=-1 w pełni.
+Z tego powodu, zabrakło czasu, aby zrealizować projekt C-=-1 w pełni.
 
 
 \subsection{Kategoryzacja języka}
 
 C-=-1 od samego początku był definiowany jako kompilowany język programowania ze wsparciem dla statycznego metaprogramowania i wykonywania kodu w czasie kompilacji.
 Oryginalny projekt implementacji zakładał więc, że kompilator będzie zawierał w sobie moduł interpretujacy reprezentację pośrednią programu.
-Po wykonaniu transformacji na kodzie użytkownika, kompilator miał przejąć kontrolę i dokonać kompilacji do kodu maszynowego.
+Po wykonaniu transformacji na kodzie użytkownika kompilator miał przejąć kontrolę i dokonać kompilacji do kodu maszynowego.
 
 Jednak w wyniku zmian opisanych w rozdziale \ref{Backend_Interface}, kompilacja do kodu maszynowego została zaimplementowana w interpretowanym C-=-1.
 Oznacza to, że kompilator składa się wyłącznie z frontendu oraz środowiska uruchomieniowego które, udostępnia intefejs biblioteki llvm.
