@@ -1,19 +1,19 @@
 \section{Dalsza praca}
 
 Ta praca oferuje szereg ciekawych wniosków na temat zaproponowanego podejścia do projektowania języków programowania.
-Pozostawia jendak też kilka otwartych pytań.
-Odpowiedź na nie, jest kluczowa dla dalszego rozwoju tej ideii i stanowi barierę przed praktyczną jej aplikacją.
+Pozostawia jednak też kilka otwartych pytań.
+Odpowiedź na nie jest kluczowa dla dalszego rozwoju tej idei i stanowi barierę przed praktyczną jej aplikacją.
 
 \subsection{Obsługa rozszerzeń języka}
 Pierwszy poważny problem jest powiązany z możliwością rozszerzania języka, opisaną w rozdziale \ref{Language_extensibility}.
 Programista, tworzący własne adnotacje zapewniające statyczną analizę, nie ma obecnie możliwości adnotowania kodu bibliotecznego.
-Problem który z tego wynika można zilustrować na przykładzie atrybutu \lstinline{const}.
+Problem, który z tego wynika można zilustrować na przykładzie atrybutu \lstinline{const}.
 
-Załóżmy, że atrybut const nie istnieje w biblitece standardowej C-=-1.
+Załóżmy, że atrybut \lstinline{const} nie istnieje w bibliotece standardowej C-=-1.
 Programista, pracujący nad projektem A, tworzy taką adnotację, aby poprawić jakość produkowanego kodu.
-Problem pojawia się kiedy próbuje użyć biblioteki standardowej.
+Problem pojawia się, kiedy próbuje użyć biblioteki standardowej.
 Funkcja \lstinline{indexof}, na przykład, przyjmuje wskazanie na tablicę oraz na szukany element.
-Ponieważ atrybut \lstinline{const} został zdefiniowany w biblitotece A, funkcje z biblioteki standardowej nie są nim adnotowane.
+Ponieważ atrybut \lstinline{const} został zdefiniowany w bibliotece A, funkcje z biblioteki standardowej nie są nim adnotowane.
 
 Oznacza to, że programista pracujący nad biblioteką A ma obecnie następujące możliwości:
 \begin{enumerate}
@@ -59,7 +59,7 @@ Jednym z celów tej pracy było zbadanie, jak umożliwienie modyfikowania kodu w
 Niestety ze względu na błędną wycenę wielkości tego projektu, ten aspekt został pominięty.
 
 Większość potrzebnych prac została już wykonana.
-Model semantyczny programu jest trzymany w strukturach danych które można modyfikować z interpretowanego kodu.
+Model semantyczny programu jest trzymany w strukturach danych, które można modyfikować z interpretowanego kodu.
 Proces kompilacji został zaprojektowany z uwzględnieniem zmian w reprezentacji pośredniej.
 
 % todo: explain basic library

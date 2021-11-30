@@ -167,6 +167,17 @@ W obecnej wersji C-=- istnieją następujące funkcję specjalne:
 		\item \lstinline{onReference}
 	\end{itemize}
 \end{itemize}
+%todo: more, this is an important part of the thesis
+Ponadto, każdy cel ma ze sobą powiązaną funkcję \lstinline{attach}.
+Ta procedura jest wywoływana, kiedy nagłówek obiektu został stworzony.
+Na przykład dla funkcji, dzieje się to kiedy kompilator zebrał jej nazwę, parametry oraz typ zwracany.
+Dzieje się to na etapie \lstinline{confirm} przetwarzania pliku źródłowego, który został dokładniej opisany w rozdziale \ref{implementation:source_processing_phases}.
+
+Celem funkcji \lstinline{attach} jest modyfikowanie metadanych obiektu, zanim będą one potrzebne.
+Ta procedura to jedyny czas, kiedy kod użytkownika może zmieniać dane używane przy wybieraniu przeciążenia funkcji.
+To ograniczenie gra dużą rolę przy zapewnieniu deterministycznego wyniku kompilacji.
+Proces wyboru przeciążenia funkcji w C-=-1, jest złożony i został dokładniej opisany w rozdziale \ref{Function_overload_resolution}.
+
 
 \subsection{Reprezentacja pośrednia}\label{reprezentacja_posrednia}
 Programista C-=-1 może analizować oraz modyfikować reprezentację pośrednią swojego programu w czasie kompilacji.
