@@ -188,6 +188,23 @@ Rysunek \ref{implementation:data_structures:uml_diagram} przedstawia diagram UML
 \subsubsection{Referencje do obiektów C++}
 \label{implementation:interpreter:cpp_object_references}
 
+Umożliwienie C-=-1 modyfikacji modelu semantycznego programu, wymaga udostępnienie referencji %todo: finish
+
+\subsubsection{Biblioteka podstawowa}
+\label{implementation:interpreter:basic_library}
+
+Biblioteka podstawowa, w kontekście C-=-1, oznacza pakiet zawierający podstawowe funkcje oraz typy prymitywne.
+W każdym języku programowania koniecznym jest specjalne traktowanie pewnego zbioru elementów programu takich jak prymitywne typy liczbowe czy funkcje arytmetyczne na nich.
+W typowym kompilatorze wystarczy, że te obiekty zostaną uwzględnione przy generowaniu kodu.
+Na przykład zamiast wywołania operatora plus dla dwóch liczb całkowitych, zostanie wstawiona instrukcja \lstinline{add}.
+
+Ponieważ kompilator C-=-1 stanowi też jego pełne środowisko uruchomieniowe, musi zawierać wykonywalne definicje wszystkich operacji prymitywnych.
+Ponadto, biblioteka podstawowa zawiera funkcję służące do komunikacji z kompilatorem, takie jak \lstinline{ignoreBody}, \lstinline{excludeAtRuntime}, \lstinline{excludeAtCompiletime}.
+Służą one do modyfikowania metadanych funkcji przez atrybuty, co zostało dokładniej opisane w rozdziale \ref{Attributes_mechanism_cm1}.
+
+Wszystkie funkcje z biblioteki podstawowej wymagają marshallingu, pomiędzy interpretowanym C-=-1 a środowiskiem uruchomieniowym w C++.
+Ponieważ interpretowany C-=-1 działa na strukturach danych, opisanych w rozdziale \ref{implementation:interpreter:object_representation}, niekompatybilnych z C++, nie można użyć prostego rzutowania (poza przypadkiem z rozdziału \ref{implementation:interpreter:cpp_object_references}).
+
 \subsection{Serializator}
 \label{serializer}
 
@@ -212,7 +229,7 @@ W języku C-=-1 dostępny jest minimalny ich podzbiór, konieczny do implementac
 
 \subsubsection{Implementacja interfejsu backendu}
 
-Razem z plikiem wykonywalnym kompilatora, dystrybuowany jest kod źródłowy pakietu, zawierającej \lstinline{interfejs backendu}. 
+Razem z plikiem wykonywalnym kompilatora, dystrybuowany jest kod źródłowy pakietu, zawierającej \emph{interfejs backendu}. 
 Przed kompilacją kodu użytkownika, kompilator wczytuje ten moduł.
 Zaletą tego rozwiązania jest możliwość wymiany tego komponentu, bez rekompilacji całego narzędzia.
 Po załadowaniu tego pakiet kompilator szuka w niej funkcji oznaczonej atrybutem \lstinline{compilerEntryPoint}, która służy jako punkt wejścia dla interfejsu. 
@@ -220,7 +237,11 @@ Ma ona za zadanie wygenerowanie LLVMIR dla przekazanej jej listy pakietów (LLVM
 
 Punkt wejścia \emph{interfejsu backendu} jako argumenty przyjmuje kolekcję pakietów do skompilowania oraz obiekt \lstinline{CompilationResult}.
 Wynik kompilacji odpowiada kontekstowi LLVM, śledzi tworzone moduły oraz globalny stan LLVM.
-Poza sygnaturą punktu wejścia, programista ma też obowiązek zapewnić specjalne traktowanie niektórych typów i funkcji z biblioteki podstawowej C-=-1. %todo: ref basic library
+Poza sygnaturą punktu wejścia, programista ma też obowiązek zapewnić specjalne traktowanie niektórych typów i funkcji z biblioteki podstawowej C-=-1, opisanej w rozdziale \ref{implementation:interpreter:basic_library}
+
+\emph{Interfejs backendu} zaimplementowany w ramach tej pracy jest naiwny oraz niekompletny.
+Nie wykorzystuje żadnych bardziej zaawansowanych mechanizmów LLVM oraz nie generuje metadanych dla debuggera.
+Jego celem było zademonstrowanie możliwości języka C-=-1.
 
 \subsection{Backend}
 \label{implementation:backend}

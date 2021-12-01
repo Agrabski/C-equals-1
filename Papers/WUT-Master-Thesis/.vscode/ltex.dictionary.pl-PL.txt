@@ -51,3 +51,4 @@ deterministyczność
 priorytetyzacja
 stosowej
 zasymulowanie
+uruchomieniowym
