@@ -52,3 +52,4 @@ priorytetyzacja
 stosowej
 zasymulowanie
 uruchomieniowym
+natywnie

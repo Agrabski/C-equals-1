@@ -10,14 +10,14 @@ Ponieważ użytkownik ma pisać kod, który będzie modyfikował wewnętrzne str
 Kolejność operacji wykonywanych przez kompilator staje się przez to częścią języka.
 Proces kompilacji dzieli się na następujące etapy:
 \begin{enumerate}
-    \item Budowa reprezentacji pośredniej atrybutów
-    \item Zebranie definicji funkcji i typów
-    \item\label{compilation_step:attribute_attachment} Przyłączenie atrybutów
-    \item Budowa reprezentacji pośredniej funkcji i typów
-    \item Wykonanie meta-funkcji atrybutów
-    \item Zastąpienie wyrażeń zawierających statyczną refleksję ich wynikami
-    \item Zapisanie reprezentacji pośredniej pakietu
-    \item (opcjonalne) Konwersja do postaci pośredniej LLVM i kompilacja do kodu maszynowego
+  \item Budowa reprezentacji pośredniej atrybutów
+  \item Zebranie definicji funkcji i typów
+  \item\label{compilation_step:attribute_attachment} Przyłączenie atrybutów
+  \item Budowa reprezentacji pośredniej funkcji i typów
+  \item Wykonanie meta-funkcji atrybutów
+  \item Zastąpienie wyrażeń zawierających statyczną refleksję ich wynikami
+  \item Zapisanie reprezentacji pośredniej pakietu
+  \item (opcjonalne) Konwersja do postaci pośredniej LLVM i kompilacja do kodu maszynowego
 \end{enumerate}
 
 Współczesne kompilatory są typowo skonstruowane z trzech części: front-end, middle-end i back-end \cite{intro_to_compiler_design}.
@@ -31,12 +31,12 @@ Ten aspekt został opisany dokładniej w rozdziale \ref{Attributes_mechanism_cm1
 
 Kompilator C-=-1 dzieli się na następujące części:
 \begin{enumerate}
-    \item Frontend
-    \item Interpreter
-    \item Optimiser
-    \item Serializator
-    \item Backend Interface
-    \item Backend
+  \item Frontend
+  \item Interpreter
+  \item Optimiser
+  \item Serializator
+  \item Backend Interface
+  \item Backend
 \end{enumerate}
 Część z tych komponentów nazywa się tak samo, jak w klasycznej architekturze. Jest to zabieg celowy, ponieważ pełnią one te same funkcje. 
 Dodatkowe komponenty kompilatora, które zostały wydzielone to: Interpreter, Serializator oraz Back end Interface. % todo: italic
@@ -62,10 +62,10 @@ Ten podział wynika z konieczności analizy metakodu przed przetworzeniem normal
 
 
 \begin{figure}[]
-    \caption{diagram procesu kompilacji języka C-=-1}
-    \label{compilation_process_diagram}
-    \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{img/compilation_process.png}
-    \centering
+  \caption{diagram procesu kompilacji języka C-=-1}
+  \label{compilation_process_diagram}
+  \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{img/compilation_process.png}
+  \centering
 \end{figure}
 
 \subsection{Front-end}
@@ -115,11 +115,11 @@ Ten krok wykonywany jest na końcu, aby upewnić się, że kompilator jest w sta
 Na diagramie \ref{compilation_process_diagram} oznaczone zostały jako f1, f2 i f3.
 W każdej z nich frontend zachowuje się inaczej.
 \begin{itemize}
-    \item W trybie f1 kompilator przechodzi przez wszystkie fazy i operuje wyłącznie na kodzie atrybutów.
-    Funkcje oraz typy są ignorowane.
-    \item W trybie f2 frontend przechodzi tylko przez fazy \lstinline{create} oraz \lstinline{confirm}, tylko na kodzie typów i funkcji.
-    Przy okazji, korzystając z zebranych już informacji w trybie f1, tworzone są instancje atrybutów.
-    \item W trybie f3 frontend wykonuje wyłącznie krok \lstinline{finalize} na funkcjach oraz metodach
+  \item W trybie f1 kompilator przechodzi przez wszystkie fazy i operuje wyłącznie na kodzie atrybutów.
+  Funkcje oraz typy są ignorowane.
+  \item W trybie f2 frontend przechodzi tylko przez fazy \lstinline{create} oraz \lstinline{confirm}, tylko na kodzie typów i funkcji.
+  Przy okazji, korzystając z zebranych już informacji w trybie f1, tworzone są instancje atrybutów.
+  \item W trybie f3 frontend wykonuje wyłącznie krok \lstinline{finalize} na funkcjach oraz metodach
 \end{itemize}
 
 
@@ -174,9 +174,9 @@ Rysunek \ref{implementation:data_structures:uml_diagram} przedstawia diagram UML
 
 
 \begin{figure}
-    \caption{Diagram UML struktur danych interpretera C-=-1}
-    \label{implementation:data_structures:uml_diagram}
-    \includegraphics[width=\textwidth]{interpreter_data_structures_uml.png}
+  \caption{Diagram UML struktur danych interpretera C-=-1}
+  \label{implementation:data_structures:uml_diagram}
+  \includegraphics[width=\textwidth]{interpreter_data_structures_uml.png}
 \end{figure}
 
 \subsubsection{Wykonanie kodu}
@@ -205,6 +205,64 @@ Służą one do modyfikowania metadanych funkcji przez atrybuty, co zostało dok
 
 Wszystkie funkcje z biblioteki podstawowej wymagają marshallingu, pomiędzy interpretowanym C-=-1 a środowiskiem uruchomieniowym w C++.
 Ponieważ interpretowany C-=-1 działa na strukturach danych, opisanych w rozdziale \ref{implementation:interpreter:object_representation}, niekompatybilnych z C++, nie można użyć prostego rzutowania (poza przypadkiem z rozdziału \ref{implementation:interpreter:cpp_object_references}).
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[
+  numbers=left,
+  firstnumber=0,
+  caption={Przykład budowania funkcji z biblioteki podstawowej C-=-1},
+  aboveskip=0pt,
+  label={lst:marshalling_cm1}
+  ]
+void completeBuildingType(gsl::not_null<Type*> type) {
+...
+  createCustomFunction(
+    type
+    ->append<Function>("methods")
+    ->setReturnType(TypeReference {
+      getCollectionTypeFor(TypeReference{
+        getFunctionDescriptor(), 0 
+      }),
+      0 
+      }),
+    type,
+    [](
+      map<string, unique_ptr<IRuntimeValue>>&& parameters,
+      map<string, not_null<Type*>>genericParameters)
+    {
+      auto self = dereferenceAs<RuntimeTypeDescriptor>(
+        parameters["self"].get())->value();
+      auto methods = self.type->methods();
+      return convertCollection(methods, TypeReference{
+        getFunctionDescriptor(),
+        0
+      });
+    }
+  )->setAccessibility(Accessibility::Public);
+...
+}
+\end{lstlisting}
+\end{minipage}
+
+Listing \ref{lst:marshalling_cm1} zawiera przykład budowania funkcji będącej częścią biblioteki podstawowej.
+\lstinline{createCustomFunction} oznacza wybraną  funkcję jako zaimplementowaną natywnie w C++.
+W liniach od trzeciej do dziesiątej, do deskryptora typu, dodawana jest metoda o nazwie \lstinline{methods}, zwracająca kolekcję deskryptorów funkcji.
+W liniach od dwunastej do dwudziestej trzeciej tworzony jest obiekt funkcyjny lambda, który będzie służył jako ciało tej funkcji.
+Ta procedura przyjmuje dwa argumenty: \lstinline{parameters} oraz \lstinline{genericParameters}.
+
+Pierwszy z parametrów zawiera argumenty wywołania, indeksowane po nazwie parametru.
+Na przykład dla wywołania \lstinline{f(1 + 1)} funkcji \lstinline{int f(int number)}, parametr \lstinline{parameters} pod kluczem \lstinline{number} zawierałby wartość 2.
+W przykładzie z listingu \ref{lst:marshalling_cm1}, ponieważ zastępowane jest ciało metody, dostępna jest zmienna \lstinline{self}, będąca odpowiednikiem \lstinline{this} z C++.
+Drugi parametr zawiera parametry generyczne, używane przy implementacji szablonów.
+
+Linie od szesnastej do dwudziestej drugiej listingu \ref{lst:marshalling_cm1} zawierają kod wykonywany zamiast metody \lstinline{methods}.
+Jego ogólna struktura jest dosyć typowa dla pod-programów w bibliotece podstawowej.
+W liniach szesnastej i siedemnastej dochodzi do marshallingu ze struktur danych interpretera C-=-1 do natywnego obiektu C++.
+W ten sposób pobierany jest obiekt deskryptora typu na, którym została wykonana ta metoda.
+Zmienna \lstinline{self} ma więc typ \lstinline{TypeReference}, składający się z poziomu referencji oraz odniesienia do typu w modelu semantycznym.
+Następnie, w linii osiemnastej, wywoływana jest metoda \lstinline{methods}, pobierająca wszystkie metody tego typu.
+Na koniec, w linii dziewiętnastej dochodzi do marshallingu z natywnego \lstinline{vectora} C++ na kolekcję C-=-1.
+
 
 \subsection{Serializator}
 \label{serializer}
