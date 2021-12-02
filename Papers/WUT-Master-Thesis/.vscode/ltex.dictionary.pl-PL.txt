@@ -53,3 +53,4 @@ stosowej
 zasymulowanie
 uruchomieniowym
 natywnie
+parametryzowanego

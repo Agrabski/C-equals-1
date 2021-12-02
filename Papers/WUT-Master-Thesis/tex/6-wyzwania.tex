@@ -5,15 +5,71 @@ W szczególności są one powiązane z możliwością wykonywania różnego kodu
 
 \subsection{Instancje generyków jako element modelu semantycznego}
 Jednym z wyzwań powiązanych z publicznością reprezentacji pośredniej, jest lokalizacja instancji generyków w modelu semantycznym.
-Ponieważ generyk 
+Instancja szablonu może zależeć od typów lub funkcji pochodzących z pakietów, które nie były dostępne w czasie kompilacji generyka.
+
+Rysunek \ref{generic_packages_dependencies} zawiera diagram przedstawiający taki przypadek.
+Pakiety \emph{A} oraz \emph{B} są od siebie niezależne.
+W \emph{A} zdefiniowany został generyk \lstinline{List}, natomiast w \emph{B} jest typ \lstinline{Type}.
+Pakiet \emph{C} zależy od \emph{A} i \emph{B} i używa szablonu \lstinline{List}, specjalizując, go przy użyciu \lstinline{Type}.
+W ten sposób powstaje nowy typ: \lstinline{List<Type>}.
+Umieszczenie tego nowego bytu w modelu semantycznym, nie naruszając jego spójności oraz w sposób zrozumiały dla programisty nie jest proste.
+
+Na podstawie diagramu na rysunku \ref{generic_packages_dependencies} można zaproponować cztery miejsca, w których można umieścić instancję generyka.
+Sytuacja tam przedstawiona jest najogólniejszym przypadkiem tego problemu, mając na uwadze, że dowolna kombinacja tych pakietów może być sobie równa (na przykład \emph{C} może być tym pakietem co \emph{A}), oraz że typów, od których zależy \lstinline{List}, może być więcej i mogą być zdefiniowane w różnych pakietach.
+Miejsca, w których można umieścić instancję szablonu to: \begin{enumerate}
+	\item \label{generic_location:A} Pakiet A.
+	\item \label{generic_location:B} Pakiet B.
+	\item \label{generic_location:C} Pakiet C.
+	\item \label{generic_location:new} Nowy pakiet.
+\end{enumerate}
+
+Miejsca \ref{generic_location:A} i \ref{generic_location:B} łatwo odrzucić.
+Jeśli umieścić instancję generyka w pakiecie \emph{B} to w przypadku, w którym pakiet \emph{A} z rysunku \ref{generic_packages_dependencies} zależałby od pakietu \emph{B}, stworzenie \lstinline{List<Type>} doprowadziłoby do zależności cyklicznej między pakietami.
+Ponadto, jeśli generyk \lstinline{List} zależałby od typów z kilku różnych pakietów, to w którym z nich zawrzeć jego instancję, byłoby niejednoznaczne.
+Umieszczanie instancji generyka w pakiecie \emph{A} prowadzi do analogicznych problemów.
+
+Miejsce \ref{generic_location:C} w najprostszym przypadku (takim jak na rysunku \ref{generic_packages_dependencies}) może wydać się najlepsze.
+Pakiet \emph{A} ma w końcu dostęp do wszystkich zależności \lstinline{List<Type>}.
+Taka decyzja tworzy jednak problemy ze spójnością modelu przy bardziej złożonej strukturze zależności.
+Rysunek \ref{generic_packages_dependencies:option:a} zawiera diagram sytuacji, w której występuje ten problem.
+Pakiety \emph{C} oraz \emph{D} zależą od generyka z \emph{A} parametryzowanego typem z \emph{B}.
+Ponieważ \emph{C} i \emph{D} są od siebie niezależne, w obydwu powstały instancje tego szablonu, oznaczone numerami 1 i 2.
+Pakiet \emph{E}, pośrednio zależny od \lstinline{List<Type>}, nie może teraz jednoznacznie wyznaczyć, z której instancji skorzystać.
+Nawet jeśli wprowadzić jakiegoś rodzaju mechanizm na rozwiązywanie takich konfliktów, spójność modelu semantycznego została naruszona i zostało wprowadzone źródło błędów programisty.
+
+Miejsce \ref{generic_location:new} zostało ostatecznie wybrane jako najlepsze rozwiązanie tego problemu.
+Instancje generyków są umieszczane w specjalnym pakiecie, istniejącym tylko na czas kompilacji.
+Tworzy to pewne niespójności w modelu semantycznym, ponieważ ta biblioteka nie jest poprawnie zdefiniowana.
+Nie zależy od żadnego innego pakietu, a wszystkie inne pakiety zależą od niej.
+Te wyjątki do normalnej konstrukcji modelu semantycznego zostały przyjęte, aby przyśpieszyć implementację.
+Rozwiązanie niezawierające takiego problemu zostało przedstawione na rysunku \ref{generic_location:new}.
+Dla każdego pakietu zawierającego generyki generowany jest nowy pakiet, przechowujący wyłącznie ich instancje.
+Ta nowa biblioteka, zależy od biblioteki deklarującej szablon oraz wszystkich pakietów, od których zależy instancja.
+W ten sposób skonstruowany model semantyczny jest spójny i jasny dla programisty.
 
 \begin{figure}
 	\caption{Diagram przykładowej relacji pomiędzy pakietami zawierającymi typ generyczny}
-	\includegraphics[width=\textwidth]{img/generic_misplaced.png}
+	\label{generic_packages_dependencies}
+	\begin{center}
+		\includegraphics[width=\textwidth]{img/generic_misplaced.png}
+	\end{center}
 \end{figure}
 
-%todo: finish
-Gdzie wsadzić instancję generyka?
+\begin{figure}
+	\caption{Diagram przykładowej relacji pomiędzy pakietami zawierającymi typ generyczny, przy umieszczaniu instancji w generującym pakiecie}
+	\label{generic_packages_dependencies:option:a}
+	\begin{center}
+		\includegraphics[width=\textwidth]{img/generics_placed_in_a.png}
+	\end{center}
+\end{figure}
+
+\begin{figure}
+	\caption{Diagram przykładowej relacji pomiędzy pakietami zawierającymi typ generyczny, przy umieszczaniu instancji w nowym pakiecie}
+	\label{generic_packages_dependencies:option:new}
+	\begin{center}
+		\includegraphics[width=\textwidth]{img/generics_placed_in_new.png}
+	\end{center}
+\end{figure}
 
 \subsection{Kod wykonywany w fazie kompilacji}
 O tym, czemu atrybuty są przetwarzane przed kodem i nie mogą używać funkcji z biblioteki, w której zostały zdefiniowane.

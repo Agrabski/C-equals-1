@@ -14,7 +14,7 @@ Z tego powodu, zabrakło czasu, aby zrealizować projekt C-=-1 w pełni.
 \subsection{Kategoryzacja języka}
 
 C-=-1 od samego początku był definiowany jako kompilowany język programowania ze wsparciem dla statycznego metaprogramowania i wykonywania kodu w czasie kompilacji.
-Oryginalny projekt implementacji zakładał więc, że kompilator będzie zawierał w sobie moduł interpretujacy reprezentację pośrednią programu.
+Oryginalny projekt implementacji zakładał więc, że kompilator będzie zawierał w sobie moduł interpretujący reprezentację pośrednią programu.
 Po wykonaniu transformacji na kodzie użytkownika kompilator miał przejąć kontrolę i dokonać kompilacji do kodu maszynowego.
 
 Jednak w wyniku zmian opisanych w rozdziale \ref{Backend_Interface}, kompilacja do kodu maszynowego została zaimplementowana w interpretowanym C-=-1.
@@ -30,7 +30,7 @@ Tak więc najlepszym sposobem na zkategoryzowanie C-=-1 jest uznanie go za hybry
 \subsection{Rozszerzalność języka}
 
 Umożliwienie programiście modyfikowanie kodu oraz tworzenie własnych adnotacji sprawia, że język można bardzo łatwo rozszerzyć o nowe mechanizmy.
-W rozdziale \ref{Language_extensibility} opisano przykłady składni nie wspieranej przez C-=-1, a którą można dodać przy użyciu proponowanego mechanizmu atrybutów.
+W rozdziale \ref{Language_extensibility} opisano przykłady składni niewspieranej przez C-=-1, a którą można dodać przy użyciu proponowanego mechanizmu atrybutów.
 
 Wykorzystując go, programista może zawęzić zbiór programów akceptowanych przez kompilator, przy użyciu analizy statycznej.
 W rozdziałach \ref{no_discard} oraz \ref{const} przedstawiono przykłady adnotacji istniejących w C++ jako część języka, które można dodać do C-=-1.
@@ -45,7 +45,7 @@ Dokładne uzasadnienie i opis implementacji znajduje się w rozdziale \ref{backe
 Opisane tam wyzwania stanowią argument przeciwko konstruowaniu języków programowania w ten sposób. 
 Chwilowo nie ma alternatywnej implementacji, która zachowuje silne typowanie w kodzie kompilatora.
 
-Inny problem, dotyczy samej konstrukcji języka.
+Inny problem dotyczy samej konstrukcji języka.
 Zaproponowane w tej pracy mechanizmy metaprogramistyczne, mogą prowadzić do zwiększenia poziomu złożoności tworzonego kodu.
 Ponieważ atrybuty w C-=-1 mogą nadpisywać kod użytkownika, nadużycie tego mechanizmu może prowadzić do trudno przewidywalnego zachowania.
 Zasadność tej krytyki powinna być tematem przyszłych badań.
