@@ -189,6 +189,16 @@ Natomiast \lstinline{GenericRuntimeWrapper} stanowi referencję do natywnego obi
 \subsubsection{Wykonanie kodu}
 \label{implementation:interpreter:code_execution}
 
+Interpreter C-=-1 stanowi środowisko uruchomieniowe, stanowiące dużą warstwę abstrakcji od maszyny, na której jest uruchomiony.
+W tym trybie, z perspektywy programisty, nie istnieje stos, a obiekty nie mają ani adresów, ani wielkości.
+Interpreter C-=-1 działa na zmiennych lokalnych, referencjach oraz stercie.
+
+W kompilatorze C-=-1 istnieje globalna sterta obiektów interpretera.
+Znajduje się na niej zarówno reprezentacja pośrednia programu, jak i dane alokowane przez interpretowany kod użytkownika.
+W obecnej implementacji sterta jest niezarządzana i wymaga, aby programista ręcznie zwolnił pamięć.
+Ten brak wynika z braku czasu i powinien zostać uzupełniony w przyszłej wersji kompilatora.
+Dodanie odśmiecania pamięci może też pomóc w odnajdywaniu wycieków pamięci: jeśli ten sam kod jest wykonywany w czasie uruchomienia i kompilacji oraz, w czasie kompilacji wyciekła z niego pamięć, to ten sam efekt prawdopodobnie występuje w trakcie uruchomienia.
+
 \subsubsection{Funkcje specjalne}
 \label{implementation:interpreter:special_functions}
 
