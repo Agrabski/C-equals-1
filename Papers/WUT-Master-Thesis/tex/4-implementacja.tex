@@ -199,8 +199,47 @@ W obecnej implementacji sterta jest niezarządzana i wymaga, aby programista rę
 Ten brak wynika z braku czasu i powinien zostać uzupełniony w przyszłej wersji kompilatora.
 Dodanie odśmiecania pamięci może też pomóc w odnajdywaniu wycieków pamięci: jeśli ten sam kod jest wykonywany w czasie uruchomienia i kompilacji oraz, w czasie kompilacji wyciekła z niego pamięć, to ten sam efekt prawdopodobnie występuje w trakcie uruchomienia.
 
+\begin{lstlisting}[
+  caption=Nagłówek głównej funkcji interpretera,
+  label=interpreter_header
+]
+std::unique_ptr<IRuntimeValue> execute
+(
+  gsl::not_null<Function*> functionDefinition,
+  std::vector<std::unique_ptr<IRuntimeValue>>&& arguments
+);
+\end{lstlisting}
+
+Listing \ref{interpreter_header} zawiera nagłówek głównej funkcji interpretera.
+To ona jest odpowiedzialna za wykonywanie kodu w kompilatorze C-=-1, niezależnie od kontekstu.
+Ta funkcja przyjmuje dwa parametry: \lstinline{functionDefinition} będący wskazaniem na model semantyczny wykonywanej procedury oraz \lstinline{arguments} zawierający wektor wartości argumentów.
+
+W trakcie wykonywania kodu funkcja \lstinline{execute} z listingu \ref{interpreter_header} zapewnia także obsługę błędów.
+Już na wczesnym etapie projektu, zapewnienie użytkownikowi, chociaż tak podstawowej diagnostyki, jak stos wywołań, okazało się konieczne.
+W tym celu, poza obsługą podstawowych wyjątków C++, dodano także obsługę przerwań związanych z błędem dostępu do pamięci, przy użyciu strukturyzowanej obsługi wyjątków, specyficznej dla platformy Windows \cite{structured_exception_handling, structured_exception_handling:microsoft}.
+Procedura wykonania funkcji jest otoczona blokiem \lstinline{try}, obsługującym wyjątki C++ oraz blokiem \lstinline{__try} obsługującym przerwania systemu operacyjnego.
+W razie błędu istnieją dwa scenariusze obsługi: jeśli został rzucony \lstinline{cMCompiler::dataStructures::RuntimeException}, nazwa obecnej funkcji i obecnie wykonywana instrukcja są dodawane do \lstinline{stacktrace} wyjątku.
+W przeciwnym wypadku rzucany jest \lstinline{cMCompiler::dataStructures::RuntimeException} z komunikatem odzwierciedlającym źródło błędu.
+Ten wyjątek jest następnie przechwytywany poza interpreterem i informacje w nim zawarte są wyświetlane użytkownikowi.
+W ten sposób programista C-=-1 wie, w którym rejonie jego programu wystąpił błąd.
+
+W interpretacji kodu istotną rolę gra typ \lstinline{cMCompiler::compiler::StatementEvaluator}.
+Poza obsługą błędów funkcja \lstinline{execute} przygotowywuje ten typ do wykonania procedury zdefiniowanej przez \lstinline{functionDefinition} oraz śledzi obecnie wykonywaną instrukcję.
+
+
 \subsubsection{Funkcje specjalne}
 \label{implementation:interpreter:special_functions}
+
+\subsubsection{Przyłączanie atrybutów}
+\label{implementation:interpreter:attribute_attachment}
+
+Funkcje atrybutów w C-=-1, opisane w rozdziale \ref{design:attributes:special_functions}, w czasie kompilacji, stanowią odpowiednik funkcji \lstinline{main} w czasie uruchomienia.
+Stanowią punkty wejściowe dla kodu wykonującego operacje metaprogramistyczne oraz analizę statyczną.
+W związku z tym, metody oraz konstruktory są wywoływane w 'próżni'.
+
+W szczególności konstruktory atrybutów są wykonywane w nietypowy sposób.
+Tworzenie instancji adnotacji to jedyny przypadek, w którym interpreter C-=-1 ewaluuje wyrażenia poza kontekstem funkcji, bez dostępu do żadnych zmiennych.
+
 
 \subsubsection{Referencje do obiektów C++}
 \label{implementation:interpreter:cpp_object_references}
