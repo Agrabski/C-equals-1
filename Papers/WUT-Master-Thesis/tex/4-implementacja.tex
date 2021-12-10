@@ -224,9 +224,12 @@ Ten wyjątek jest następnie przechwytywany poza interpreterem i informacje w ni
 W ten sposób programista C-=-1 wie, w którym rejonie jego programu wystąpił błąd.
 
 W interpretacji kodu istotną rolę gra typ \lstinline{cMCompiler::compiler::StatementEvaluator}.
-Poza obsługą błędów funkcja \lstinline{execute} przygotowywuje ten typ do wykonania procedury zdefiniowanej przez \lstinline{functionDefinition} oraz śledzi obecnie wykonywaną instrukcję.
+Poza obsługą błędów funkcja \lstinline{execute} przygotowuje ten typ do wykonania procedury zdefiniowanej przez \lstinline{functionDefinition}, przechowuje wartości zmiennych lokalnych oraz śledzi obecnie wykonywaną instrukcję.
+W celu stworzenia ewaluatora instrukcji najpierw tworzony jest ewaluator wyrażeń: \lstinline{ExpressionEvaluator}.
+Ten typ jako zależność przyjmuje w konstruktorze funkcję znajdującą wartości zmiennych lokalnych.
+\lstinline{ExpressionEvaluator} jest też używany przy tworzeniu instancji atrybutów do wyliczania wartości parametrów, co zostało opisane w rozdziale \ref{implementation:interpreter:attribute_attachment}.
 
-
+%todo: more?
 \subsubsection{Funkcje specjalne}
 \label{implementation:interpreter:special_functions}
 
@@ -245,6 +248,18 @@ Tworzenie instancji adnotacji to jedyny przypadek, w którym interpreter C-=-1 e
 \label{implementation:interpreter:cpp_object_references}
 
 Umożliwienie C-=-1 modyfikacji modelu semantycznego programu, wymaga udostępnienie referencji do natywnych obiektów języka implementacji kompilatora. %todo: jesus fucking christ, wording
+Programista musi mieć na przykład dostęp do reprezentacji funkcji w modelu semantycznym.
+Dlatego obiekt typu C-=-1 \lstinline{functionDescriptor} w pamięci kompilatora jest reprezentowany jako \lstinline{RuntimeFunctionDescriptor}, a nie jako \lstinline{ObjectValue}.
+Ponieważ elementy modelu semantycznego są zarządzane przez kompilator, obiekty reprezentujące je, posiadają wyłącznie proste wskazanie.
+W ten sam sposób obsłużone są referencje do elementów tworzonego przez \emph{backend interface} modułu, opisanego w rozdziale \ref{Backend_Interface}, przy użyciu typu \lstinline{GenericRuntimeWrapper}.
+Hierarchia dziedziczenia klas używanych do reprezentowania obiektów C-=-1 została przedstawiona na rysunku \ref{implementation:data_structures:uml_diagram}
+
+Niektóre referencje do obiektów C++ muszą jednak też zarządzać pamięcią.
+Do przykładów należą: strumienie powiązane z otwartymi plikami czy kontekst LLVM.
+Takie obiekty są zarządzane przez \lstinline{GenericOwningRuntimeWrapper}
+Różnica między nim a \lstinline{GenericRuntimeWrapper} to typ używanego wskazania.
+\lstinline{GenericOwningRuntimeWrapper} zamiast zwykłego wskazania, używa \lstinline{shared_ptr}.
+W ten sposób, ten wrapper nie tylko przechowuje referencję na obiekt, ale zarządza też jego czasem życia.
 %todo: finish
 
 \subsubsection{Biblioteka podstawowa}
