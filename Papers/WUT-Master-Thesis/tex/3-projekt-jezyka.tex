@@ -14,11 +14,11 @@ Przy projektowaniu C-=-1 skorzystano jednak z doświadczeń wyciągniętych z C+
 \subsubsection{Klasy}
 \label{classes_definition}
 Klasy w języku C-=-1 działają analogicznie do języków z rodziny C.
-Są to zbiory danych (pola klasy) z którymi powiązane są pewne operacje (metody).
+Są to zbiory danych (pola klasy), z którymi powiązane są pewne operacje (metody).
 Wszystkie elementy takiego typu mogą mieć ograniczenia dostępu.
 Dwoma istotnymi elementami klas w C-=-1 są metody specjalne \lstinline{construct} oraz \lstinline{finalize}.
 Można je zrozumieć jako odpowiedniki konstruktora oraz destruktora z C++.
-Ponieważ C-=-1 w swojej obecnej formie nie wspiera wyjątków, nie gwarantuje wykonania finalizatorów zmiennych lokalnych w wypadku nieoczekiwanego zakończenia programu.
+Ponieważ C-=-1 w swojej obecnej formie nie wspiera wyjątków, nie gwarantuje wykonania destruktorów zmiennych lokalnych w wypadku nieoczekiwanego zakończenia programu.
 
 %todo: reference this
 \begin{minipage}{\linewidth}
@@ -56,12 +56,12 @@ Taka możliwość tworzy także pewne wyzwania, dokładniej opisane w rozdziale 
 \subsubsection{Atrybuty}
 \label{Attributes_definition}
 
-Atrybuty stanowią najważniejszy aspekt C-=-1.
+Atrybuty stanowią istotny aspekt C-=-1.
 To za ich pomocą, programista ma dostęp do wszystkich mechanizmów metaprogramistycznych, będących tematem tej pracy.
 Możliwości, które atrybuty oferują, są dokładniej opisane w rozdziale \ref{Attributes_mechanism_cm1}.
 
 Atrybuty są bardzo zbliżone do klas: składają się z metod, pól oraz konstruktorów i mogą implementować interfejsy.
-Podobieństwa te kończą się jednak na najbardziej podstawowych tych bytów.
+Podobieństwa te kończą się jednak na najbardziej podstawowych właściwościach tych bytów.
 Klasy i atrybuty pełnią w C-=-1 diametralnie różne role i istnieją w odrębnych kontekstach.
 Atrybuty mogą być tworzone wyłącznie jako adnotacje do innych elementów programu, a ich instancje istnieją wyłącznie w czasie kompilacji.
 
@@ -128,7 +128,7 @@ Kompilator bezpośrednio wywołuje ich metody, jako część procesu kompilacji,
 W zależności od tego, które cele atrybut obsługuje, może zaimplementować różny zestaw funkcji specjalnych, opisanych w rozdziale \ref{design:attributes:special_functions}.
 
 Istotnym ograniczeniem atrybutów C-=-1 jest brak możliwości użycia elementów biblioteki, w której zostały zdefiniowane.
-To obostrzenie zostało wprowadzone, aby atrybuty można było aplikować wewnątrz tego samego projektu, oraz aby zapewnić większą deterministyczność kompilacji.
+To obostrzenie zostało wprowadzone, aby atrybuty można było aplikować wewnątrz tego samego projektu, oraz aby zapewnić deterministyczność kompilacji.
 Rysunek \ref{design:attributes:attribute_function_dependendcy} zawiera diagram zależności w programie, którego działanie byłoby zależne od implementacji kompilatora.
 \lstinline{Atrybut} modyfikuje kod funkcji, do której jest przyłączony.
 Zarówno \lstinline{Funckja A}, jak i \lstinline{Funkcja B} są nim adnotowane.
@@ -215,7 +215,7 @@ CIR, zamiast opierać się na tekście źródłowym, składa się z odniesień d
 Tak więc w kontekście przykładu z listingu \ref{lst:cpp_overloaded_function}, obiekty w modelu odpowiadające liniom 3 i 4 zawierałyby jednakowe wskazania na funkcje.
 CIR, w przeciwieństwie do drzewa AST składa się więc wyłącznie z informacji o znaczeniu semantycznym, nie składniowym.
 
-Przegląd literatury nie zawierał struktury danych o charakterystyce zbliżonej do CIR.
+Robiąc przegląd literatury, nie znaleziono struktury danych o charakterystyce zbliżonej do CIR.
 Zaproponowano więc nowy termin: reprezentacja semantyczna.
 Opisuje on strukturę danych, opisującą program, składającą się wyłącznie z informacji o znaczeniu semantycznym.
 Reprezentacja semantyczna zawiera komplet informacji potrzebnych do zrozumienia programu.
@@ -226,7 +226,7 @@ Zarządzanie pamięcią w C-=-1 jest oparte na C++11. W 2011 do biblioteki stand
 Miały one na celu wprowadzenie do języka mechanizmów umożliwiających tanie i automatyczne zarządzanie pamięcią oraz semantyczne podkreślenie relacji między obiektami.
 Korzystając z doświadczeń C++, gdzie te wskazania stały się zalecanym sposobem zarządzania pamięcią\cite{cpp:core_guidelines}, inteligentne wskazania są integralną częścią C-=-1.
 \subsection{Struktura pakietu}\label{struktura_paczki}
-Projekt w języku C-=-1 jest identyfikowany przez plik manifestu (ang: manifest) o rozszerzeniu .mn. 
+Projekt w języku C-=-1 jest identyfikowany przez plik manifestu (ang: manifest) o rozszerzeniu \lstinline{.mn}. 
 Zawiera on metadane na temat pakietu: unikatowy identyfikator, dane autora, zależności i tym podobne.
-Pliki źródłowe mają rozszerzenia .cm. W tym samym folderze co manifest znajduje się folder \lstinline{src}. Kompilator zakłada, że wszystkie pliki o rozszerzeniu \lstinline{.cm} będące jego potomkami należą do projektu definiowanego przez manifest.
-W pliku .mn zdefiniowane są metadane na temat pakietu takie jak autor, wersja czy zależności. Ten aspekt języka jest modelowany na bazie Rust i pliku \lstinline{cargo.toml}.
+Pliki źródłowe mają rozszerzenia \lstinline{.cm}. W tym samym folderze co manifest znajduje się folder \lstinline{src}. Kompilator zakłada, że wszystkie pliki o rozszerzeniu \lstinline{.cm} będące jego potomkami należą do projektu definiowanego przez manifest.
+W pliku \lstinline{.mn} zdefiniowane są metadane na temat pakietu takie jak autor, wersja czy zależności. Ten aspekt języka jest modelowany na bazie Rust i pliku \lstinline{cargo.toml}.

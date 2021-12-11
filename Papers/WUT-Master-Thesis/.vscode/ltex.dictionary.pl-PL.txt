@@ -54,3 +54,4 @@ zasymulowanie
 uruchomieniowym
 natywnie
 parametryzowanego
+Serializowany

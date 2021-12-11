@@ -48,7 +48,7 @@ public att<function> NoDiscard
 \end{lstlisting}
 \end{minipage}
 
-\subsubsection{Obiektowe}
+\subsubsection{Programowanie Obiektowe}
 C-=-1 został zaprojektowany z myślą o wsparciu stylu obiektowego. Użytkownik może deklarować typy, metody oraz interfejsy. W przeciwieństwie do C++ czy C\#, w C-=-1 nie ma jednak koncepcji dziedziczenia między konkretnymi klasami.
 
 Klasy i interfejsy mogą implementować inne interfejsy.
@@ -83,7 +83,7 @@ Ponadto, kompilator otrzymuje wskazanie do pliku źródłowego na punkt, który 
 Ta informacja może być potem użyta do przekazania programiście dokładniejszej diagnostyki bądź do podkreślenia kodu w zintegrowanym środowisku programistycznym (rozdział \ref{IDE_integration}).
 
 % reference listing
-Niniejszy przykład dobrze ilustruje, że mając dostęp do modelu semantycznego programu, implementacja niektórych typów analizy staje się trywialna.
+Przykład, zawarty w listingu \ref{lst:noDiscardCm1}, dobrze ilustruje, że mając dostęp do modelu semantycznego programu, implementacja niektórych typów analizy staje się trywialna.
 W większości języków programowania taka analiza wymaga modyfikacji kompilatora albo zewnętrznego narzędzia.
 
 \begin{minipage}{\linewidth}
@@ -139,13 +139,13 @@ fn main() -> usize
 \subsubsection{Atrybut const}
 \label{const}
 %todo: remake to make it less confusing
-Ciekawszym przykładem analizatora, jest atrybut \lstinline{const}.
+Ciekawym przykładem analizatora, jest atrybut \lstinline{const}.
 Odpowiada on modyfikatorowi \lstinline{const} z języka C++.
-Zaaplikowanie go do typu oznacza, że do jego instancja jest niemodyfikowalna.
+Zaaplikowanie go do typu oznacza, że jego instancja jest stała.
 Każda próba modyfikacji, po zainicjalizowaniu, jest błędem.
 
 W obecnym stanie kompilatora oraz języka, możliwa jest implementacja tylko części tej analizy.
-Pełne wsparcie dla modyfikatora \lstinline{const}, przy użyciu atrybutu, wymaga od C-=-1 następujących właściwości:
+Zaimplementowanie modyfikatora \lstinline{const} w pełni, przy użyciu atrybutu, wymaga od C-=-1 następujących właściwości:
 \begin{enumerate}
   \item \label{prop:Attribute_function_overloading} Atrybuty są brane pod uwagę w trakcie wyboru przeciążenia funkcji
   \item \label{prop:Generic_adnotations} Istnieje sposób na modyfikowanie zachowania zmiennych, pól i parametrów w generykach, przy tworzeniu ich instancji
@@ -190,7 +190,7 @@ Tak więc w linii dziewiątej, wybierane jest przeciążenie nie-\lstinline{cons
 
 Zapewnienie właściwości \ref{prop:Generic_adnotations}, jest najtrudniejsze i wymaga dalej idącej pracy teorytycznej.
 Zaaplikowanie systemu atrybutów do implementacji modyfikatora \lstinline{const} oznacza śledzenie wartości, nie koniecznie pól, zmiennych, typów czy funkcji.
-Listing \ref{lst:const_problem_example} przedstawia problem rozwiązywany przez właściwość \ref{prop:Generic_adnotations}.
+Listing \ref{lst:const_problem_example} zawiera przykład problemu rozwiązywanego przez właściwość \ref{prop:Generic_adnotations}.
 W linii drugiej, deklarowana jest zmienna typu \lstinline{usize} z modyfikatorem \lstinline{const}.
 Następnie, w linii czwartej, wskazanie na nią jest wstawiane do listy.
 W tym miejscu analizator wygeneruje błąd kompilacji, ponieważ tworzymy nie-stałe wskazanie na stałą wartość, co może naruszyć chroniony niezmiennik.
@@ -269,16 +269,15 @@ W wypadku C/C++ wymaga to użycia słowa \lstinline{external}, do zdefiniowania 
 W C-=-1 nie ma słowa kluczowego \lstinline{extern}.
 Deklaracja symbolu zewnętrznego wymaga stworzenia atrybutu, który zostanie potem obsłużony w interfejsie backendu.
 
-Listing \ref{lst:extern_cm1} przedstawia przykładową implementację tej funkcjonalności.
-Interfejs\\ \lstinline{ISymbolNameOverride} ma zwiększyć separację między interfejsem backendu a kodem kontrolującym nazwę symbolu.
-Otwiera to drzwi większej ilości możliwych implementacji.
+Listing \ref{lst:extern_cm1} przedstawia przykładową atrybut oznaczającą funkcję jako symbol zewnętrzny.
+Interfejs \lstinline{ISymbolNameOverride} ma zwiększyć separację między interfejsem backendu a kodem kontrolującym nazwę symbolu.
+Dzięki temu, w przyszłości będzie go można zaimplementować na inne sposoby, umożliwiając import symboli wymagających specjalnej obsługi.
 
 Atrybut \lstinline{MarkAsExternal} ma natomiast dwie role.
 Po pierwsze, przechowuje nazwę symbolu, który jest importowany.
 W ten sposób użytkownik nie jest przywiązany do nazwy symbolu zadeklarowanej w skompilowanym pliku bibliotecznym.
-Umożliwia to też na importowanie funkcji z C++, których nazwy zostały zmieszane i zawierają znaki nieakceptowalne w identyfikatorach.
-
-Po drugie, wywołuje \lstinline{ignoreBody}.
+Umożliwia to też importowanie funkcji z C++, których nazwy zostały zmieszane i zawierają znaki nieakceptowalne w identyfikatorach.
+Po drugie, \lstinline{MarkAsExternal} wywołuje procedurę \lstinline{ignoreBody}.
 Ta funkcja informuje kompilator, że powinien zignorować ciało podprogramu i analizować wyłącznie nagłówek.
 To wywołanie jest konieczne, ponieważ kompilator zapewnia poprawność programu, analizując zawartość funkcji.
 Dlatego, jeśli funkcja zwracająca jakąś wartość, nie zawiera instrukcji \lstinline{return}, program zostanie odrzucony.
@@ -298,7 +297,7 @@ W LLVM, procedury niezawierające ciała, są uznawane za symbole zewnętrzne.
 
 Zaprezentowana implementacja jest bardzo prosta, zmienia jedynie nazwę generowanego symbolu i ignoruje ciało budowanej funkcji.
 Mogą jednak istnieć scenariusze, w których użycie symbolu zewnętrznego wymaga bardziej złożonej obsługi.
-Przykładowo, jeśli wywołanie funkcji zdefiniowanej w innym języku wymaga marshallingu przekazywanych parametrów, bądź zwracanej wartości.
+Przykładowo, jeśli wywołanie funkcji zdefiniowanej w innym języku wymaga ''marshallingu'' przekazywanych parametrów, bądź zwracanej wartości.
 Po niewielkich modyfikacjach zaproponowanego interfejsu obsługa takich przypadków byłaby możliwa.
 
 \begin{minipage}{\linewidth}
