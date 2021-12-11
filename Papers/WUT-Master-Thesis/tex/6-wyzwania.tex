@@ -5,7 +5,7 @@ W szczególności są one powiązane z możliwością wykonywania różnego kodu
 
 \subsection{Instancje generyków jako element modelu semantycznego}
 \label{challenges:generic_instance_placement}
-Jednym z wyzwań powiązanych z publicznością reprezentacji pośredniej, jest lokalizacja instancji generyków w modelu semantycznym.
+Jednym z wyzwań powiązanych z udostępnieniem reprezentacji pośredniej programiście, jest wybór lokalizacji w modelu semantycznym, w której będą umieszczane instancje generyków.
 Instancja szablonu może zależeć od typów lub funkcji pochodzących z pakietów, które nie były dostępne w czasie kompilacji generyka.
 
 Rysunek \ref{generic_packages_dependencies} zawiera diagram przedstawiający taki przypadek.
@@ -24,7 +24,7 @@ Miejsca, w których można umieścić instancję szablonu to: \begin{enumerate}
 	\item \label{generic_location:new} Nowy pakiet.
 \end{enumerate}
 
-Miejsca \ref{generic_location:A} i \ref{generic_location:B} łatwo odrzucić.
+Pakiety \emph{A} i \emph{B} łatwo odrzucić.
 Jeśli umieścić instancję generyka w pakiecie \emph{B} to w przypadku, w którym pakiet \emph{A} z rysunku \ref{generic_packages_dependencies} zależałby od pakietu \emph{B}, stworzenie \lstinline{List<Type>} doprowadziłoby do zależności cyklicznej między pakietami.
 Ponadto, jeśli generyk \lstinline{List} zależałby od typów z kilku różnych pakietów, to w którym z nich zawrzeć jego instancję, byłoby niejednoznaczne.
 Umieszczanie instancji generyka w pakiecie \emph{A} prowadzi do analogicznych problemów.
