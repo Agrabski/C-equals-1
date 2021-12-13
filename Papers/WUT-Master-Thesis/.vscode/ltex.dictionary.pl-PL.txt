@@ -4,7 +4,6 @@ metaprogramowaniem
 Bjarne
 Stroustrup-a
 inkrementację
-c̈m1
 metaprogramistycznych
 metaprogramistyczne
 Rust
@@ -55,3 +54,5 @@ uruchomieniowym
 natywnie
 parametryzowanego
 Serializowany
+inicjalizuje
+literałowe

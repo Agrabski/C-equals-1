@@ -18,7 +18,7 @@ Są to zbiory danych (pola klasy), z którymi powiązane są pewne operacje (met
 Wszystkie elementy takiego typu mogą mieć ograniczenia dostępu.
 Dwoma istotnymi elementami klas w C-=-1 są metody specjalne \lstinline{construct} oraz \lstinline{finalize}.
 Można je zrozumieć jako odpowiedniki konstruktora oraz destruktora z C++.
-Ponieważ C-=-1 w swojej obecnej formie nie wspiera wyjątków, nie gwarantuje wykonania destruktorów zmiennych lokalnych w wypadku nieoczekiwanego zakończenia programu.
+Ponieważ C-=-1 w swojej obecnej formie nie ma wyjątków, nie gwarantuje wykonania destruktorów zmiennych lokalnych w wypadku nieoczekiwanego zakończenia programu.
 
 %todo: reference this
 \begin{minipage}{\linewidth}
@@ -26,7 +26,7 @@ Ponieważ C-=-1 w swojej obecnej formie nie wspiera wyjątków, nie gwarantuje w
 	\begin{lstlisting}[
 	  numbers=left,
 	  firstnumber=0,
-	  caption={Fragment gramatyki C-=-1 deklarujący klasę},
+	  caption={Fragment składni C-=-1 deklarujący klasę},
 	  aboveskip=0pt,
 	  label={lst:class_grammar}
 	  ]
@@ -74,7 +74,7 @@ Największą różnicą jest użycie słowa kluczowego \lstinline{att} i deklara
 	\begin{lstlisting}[
 	  numbers=left,
 	  firstnumber=0,
-	  caption={Fragment gramatyki C-=-1 deklarujący atrybut},
+	  caption={Fragment składni C-=-1 deklarujący atrybut},
 	  aboveskip=0pt,
 	  label={lst:attribute_grammar}
 	  ]
@@ -87,7 +87,7 @@ attributeTarget: ('type' | 'variable' | 'function');
   \end{lstlisting}
   \end{minipage}
 
-Listing \ref{lst:attribute_grammar} zawiera fragment gramatyki C-=-1, w notacji EBNF \cite{ebnf}.
+Listing \ref{lst:attribute_grammar} zawiera fragment składni C-=-1, w notacji EBNF \cite{ebnf}.
 Wyraźnie widać w niej podobieństwo do deklaracji klasy z listingu \ref{lst:class_grammar}.
 Ciało atrybutu używa wręcz tej samej reguły co ciało klasy.
 Istotnym elementem gramatyki atrybutu, jest natomiast wspomniany wcześniej cel atrybutu (reguła \lstinline{attributeTarget}), deklarujący, do których elementów języka można przyłączyć dany atrybut.

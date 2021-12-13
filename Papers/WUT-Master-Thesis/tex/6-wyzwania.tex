@@ -74,9 +74,6 @@ W ten sposób skonstruowany model semantyczny jest spójny i jasny dla programis
 	\end{center}
 \end{figure}
 
-\subsection{Kod wykonywany w fazie kompilacji}
-O tym, czemu atrybuty są przetwarzane przed kodem i nie mogą używać funkcji z biblioteki, w której zostały zdefiniowane.
-
 \subsection{Funkcje generyczne z ograniczeniami}
 \label{challenges:generic_function_limitations}
 Funkcje mogą być wykluczane z użycia w trakcie uruchomienia lub kompilacji. Jeśli generyk takiej funkcji zostanie stworzony z typem dalej ograniczającym wykonywalność tej funkcji, ona może być wykonywalna nigdy.
@@ -110,15 +107,40 @@ Operator \lstinline{new} w C-=-1, tak jak w C++ służy do dynamicznej alokacji 
 \label{Function_overload_resolution}
 To czy funkcja jest wykonywalna w czasie kompilacji albo uruchomienia można ustalić bardzo późno w trakcie budowy modelu semantycznego.
 
-Na pytanie 'czy ta funkcja może być użyta w tym kontekście', kompilator jest w stanie odpowiedzieć dopiero kiedy wykonanły się na niej funkcje \lstinline{attach} wszystkich powiązanych z nią atrybutów.
-
+Na pytanie 'czy ta funkcja może być użyta w tym kontekście', kompilator jest w stanie odpowiedzieć, dopiero kiedy wykonały się na niej funkcje \lstinline{attach} wszystkich powiązanych z nią atrybutów.
 %todo: example?
 
 \subsection{Wyrażenia literałowe}
 
 Wyrażenie literałowe przedstawia stałą wartość.
 Na przykład w języku C++ \lstinline{int a = 4;} deklaruje i inicjalizuje zmienną a literałem 4.
-Wyrażenia lietrałowe mogą reprezentować stałe różnych typów wbudowanych.
+Wyrażenia literałowe mogą reprezentować stałe różnych typów wbudowanych.
+Ich obsługa przez frontend kompilatora jest prosta, z wyjątkiem operatorów takich jak \lstinline{nameof} czy \lstinline{typeof} znanych ze współczesnych języków programowania.
+Składnia ich użycia jest identyczna do wywołania normalnej funkcji.
+Na przykład aby do zmiennej \lstinline{x} przypisać nazwę funkcji \lstinline{foo} piszemy: \lstinline{let x = nameof(foo);}.
+\begin{minipage}{\linewidth}
+	\begin{lstlisting}[
+		numbers=left,
+		firstnumber=0,
+		caption={Fragment składni C-=-1 opisujący wywołanie funkcji},
+		aboveskip=0pt,
+		label={lst:function_call_grammar}
+		]
+functionCall
+	: literalFunction
+	| identifier genericUsage? ParamOpen (
+	expression(Comma expression)*
+	)? ParamClose;
+
+literalFunction
+	: 'typeof' '(' typeSpecifier ')'
+	;
+	\end{lstlisting}
+\end{minipage}
+
+Pomimo tego, że operatory takie jak \lstinline{nameof} przypominają normalną funkcję, wymagają specjalnej obsługi przez frontend języka a w niektórych wypadkach wręcz przez gramatykę.
+Listing \ref{lst:function_call_grammar} zawiera fragment składni C-=-1 powiązany z wywołaniem funkcji.
+Przy rozpoznawaniu reguły \lstinline{functionCall}, parser w pierwszej kolejności spróbuje dopasować regułę \lstinline{literalFunction}, przed składnią normalnego wywołania.
 %todo: nameof, typeof
 
 \subsection{Integracja z back-endem}

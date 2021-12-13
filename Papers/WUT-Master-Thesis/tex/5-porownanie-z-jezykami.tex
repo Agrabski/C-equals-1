@@ -153,7 +153,7 @@ Zaimplementowanie modyfikatora \lstinline{const} w pełni, przy użyciu atrybutu
 \end{enumerate}
 
 Właściwość \ref{prop:Attribute_function_overloading} jest częściowo zaplanowaną, ale niezrealizowaną częścią języka (rozdział \ref{Attributes_definition}).
-Atrybuty powiązane z parametrami funkcji mają być traktowane jako wymagania na wartościach przekazywanych przy jej wywołaniu.
+Atrybuty powiązane z parametrami funkcji mają być traktowane jako wymagania na wartościach przekazywanych przy jej wywołaniu. %todo: think more
 Przykładowo, deklaracja \lstinline{fn positive_parameter_fun([positive()] usize paramter)} wymusza na wołającym funckję \lstinline{positive_parameter_fun}, aby przekazywana jej wartość była adnotowana atrybutem \lstinline{positive}.
 Otwartym pytaniem pozostaje też, w jaki sposób traktować atrybuty przyjmujące parametr w kontekście wyboru przeciążenia funkcji.
 Ten problem został dokładniej opisany w rozdziale \ref{further:adnotated_type_system:attribute_equivalence}
@@ -297,7 +297,7 @@ W LLVM, procedury niezawierające ciała, są uznawane za symbole zewnętrzne.
 
 Zaprezentowana implementacja jest bardzo prosta, zmienia jedynie nazwę generowanego symbolu i ignoruje ciało budowanej funkcji.
 Mogą jednak istnieć scenariusze, w których użycie symbolu zewnętrznego wymaga bardziej złożonej obsługi.
-Przykładowo, jeśli wywołanie funkcji zdefiniowanej w innym języku wymaga ''marshallingu'' przekazywanych parametrów, bądź zwracanej wartości.
+Przykładowo, jeśli wywołanie funkcji zdefiniowanej w innym języku wymaga konwersji (ang. marshalling) przekazywanych parametrów, bądź zwracanej wartości.
 Po niewielkich modyfikacjach zaproponowanego interfejsu obsługa takich przypadków byłaby możliwa.
 
 \begin{minipage}{\linewidth}

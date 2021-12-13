@@ -82,7 +82,7 @@ Ogół działania front-endu jest opisany w rozdziale \ref{implementation:source
 
 Frontend kompilatora jest również odpowiedzialny za tworzenie instancji atrybutów, kiedy przetwarza kod funkcji i typów.
 Dlatego program użytkownika jest dzielony, przed analizą.
-Przetworzenie typów i funkcji wymaga możliwości wykonania kodu atrybutów (kroki i1 oraz i2).
+Przetworzenie typów i funkcji wymaga możliwości wykonania kodu atrybutów (kroki i1 oraz i2 na diagramie \ref{compilation_process_diagram}).
 Z tego powodu, kompilator musi analizować kod metaprogramu, przed resztą aplikacji.
 
 \subsubsection{Parser}
@@ -197,6 +197,7 @@ Interpreter C-=-1 jest środowiskiem uruchomieniowym, stanowiącym dużą warstw
 W tym trybie, z perspektywy programisty, nie istnieje stos, a obiekty nie mają adresów, ani wielkości.
 Interpreter C-=-1 działa na zmiennych lokalnych, referencjach oraz stercie.
 %todo: wording
+%todo: analogia do tego jak człowiek rozumie program
 
 W kompilatorze C-=-1 istnieje globalna sterta obiektów interpretera.
 Znajduje się na niej zarówno reprezentacja pośrednia programu, jak i dane alokowane przez interpretowany kod użytkownika.
@@ -333,11 +334,11 @@ Drugi parametr zawiera parametry generyczne, używane przy implementacji szablon
 
 Linie od szesnastej do dwudziestej drugiej listingu \ref{lst:marshalling_cm1} zawierają kod wykonywany zamiast metody \lstinline{methods}.
 Jego ogólna struktura jest dosyć typowa dla pod-programów w bibliotece podstawowej.
-W liniach szesnastej i siedemnastej dochodzi do marshallingu ze struktur danych interpretera C-=-1 do natywnego obiektu C++.
+W liniach szesnastej i siedemnastej dochodzi do konwersji (ang. marshalling) ze struktur danych interpretera C-=-1 do natywnego obiektu C++. %todo: cite wikipedia
 W ten sposób pobierany jest obiekt deskryptora typu na, którym została wykonana ta metoda.
 Zmienna \lstinline{self} ma więc typ \lstinline{TypeReference}, składający się z poziomu referencji oraz odniesienia do typu w modelu semantycznym.
 Następnie, w linii osiemnastej, wywoływana jest metoda \lstinline{methods}, pobierająca wszystkie metody tego typu.
-Na koniec, w linii dziewiętnastej dochodzi do marshallingu z natywnego \lstinline{vectora} C++ na kolekcję C-=-1.
+Na koniec, w linii dziewiętnastej dochodzi do konwersji z natywnego \lstinline{vectora} C++ na kolekcję C-=-1.
 
 
 \subsection{Serializator}
