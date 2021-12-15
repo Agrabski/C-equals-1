@@ -8,6 +8,18 @@ Przy projektowaniu C-=-1 skorzystano jednak z doświadczeń wyciągniętych z C+
 
 \subsection{Składnia}
 
+Składnia języka C-=-1 została opisana używając języka definicji gramatyki narzędzia ANTLR \cite{antlr}, wzorowanego na EBNF \cite{ebnf}.
+Plik zawierający ten opis, znajduje się w repozytorium projektu, pod ścieżką \lstinline{Grammar\Revision0\CMinusEqualsMinus1Revision0.g4}.
+
+Składnia C-=-1 czerpie inspiracje z języka Rust.
+Typy zmiennych, czy zwracane z funkcji są precyzowane używając notacji postfiksowej, na przykład \lstinline{let x : int = 0;} zamiast \lstinline{int x = 0;}.
+C-=-1 zawiera też dedukcję typów inicjalizowanych zmiennych.
+Na przykład \lstinline{let x = 0;} nie trzeba precyzować typu zmiennej \lstinline{x} ponieważ jest ona inicjalizowana w spób umożliwiający dedukcję typu.
+
+W C-=-1 nie można w pełni kwalifikować nazw.
+Wszystkie elementy programu wykorzystywane w danym pliku, a pochodzące z innej przestrzeni nazw, muszą zostać jawnie zaimportowane na początku.
+%todo: finish
+
 \subsection{Elementy języka}
 \label{elementy_jezyka}
 
@@ -20,13 +32,16 @@ Dwoma istotnymi elementami klas w C-=-1 są metody specjalne \lstinline{construc
 Można je zrozumieć jako odpowiedniki konstruktora oraz destruktora z C++.
 Ponieważ C-=-1 w swojej obecnej formie nie ma wyjątków, nie gwarantuje wykonania destruktorów zmiennych lokalnych w wypadku nieoczekiwanego zakończenia programu.
 
+Listing \ref{lst:class_grammar} zawiera fragment składni C-=-1 wykorzystywany przy deklarowaniu klasy.
+%todo: finish
+
 %todo: reference this
 \begin{minipage}{\linewidth}
   
 	\begin{lstlisting}[
 	  numbers=left,
 	  firstnumber=0,
-	  caption={Fragment składni C-=-1 deklarujący klasę},
+	  caption={Fragment składni C-=-1 deklarujący typ},
 	  aboveskip=0pt,
 	  label={lst:class_grammar}
 	  ]
@@ -40,6 +55,13 @@ classTypeSpecifier: ('class' | 'interface' | 'struct');
   \end{minipage}
 
 \subsubsection{Interfejsy}
+
+Interfejs w C-=-1 to abstrakcyjna klasa mogąca zawierać wyłącznie nagłówki metod, które typy dziedziczące muszą implementować.
+Interfejsy mogą być implementowane przez atrybuty oraz klasy.
+Zarówno w kontekście interpretowanym jak i uruchomienia, konwersja z wskazania na klasę implementującą interfejs, na wskazanie na ten interfejs jest dozwolona bez rzutowania.
+Interfejsy są deklarowane używając tej samej składni co pozostałe typy (listing \ref{lst:class_grammar}).
+
+
 \subsubsection{Funkcje}
 W C-=-1 funkcje oraz metody działają na tej samej zasadzie co w C++.
 Istotną różnicą jest możliwość ich wykonania w czasie kompilacji.
@@ -119,7 +141,30 @@ Te funkcje zostały opisane w rozdziale \ref{Attributes_mechanism_cm1}.
 	{}
   }
   \end{lstlisting}
-  \end{minipage}
+\end{minipage}
+
+W kontekście interpretowanym kod użytkownika może operować na instancjach atrybutów.
+Mogą więc istnieć zmienne których typem jest dany atrybut.
+W celu ułatwienia implementacji kompilatora, dodano do języka obowiązek oznaczania atrybutów słowem kluczowym \lstinline{_att_} w kontekstach, w których oczekiwany jest typ.
+Listing \ref{lst:attribute_limitation_example} zawiera przykład tego ograniczenia.
+W linii czwartej, deklarując parametr typu \lstinline{MyAttribute}, programista musiał dodać słowo kluczowe \lstinline{_att_}
+
+\begin{lstlisting}[
+	numbers=left,
+	firstnumber=0,
+	caption={Przykład użycia atrybutu jako typu w C-=-1},
+	aboveskip=0pt,
+	label={lst:attribute_limitation_example}
+	]
+att<function> MyAttribute {
+	public fn method() {
+	}
+}
+fn functionAcceptingAttribute(parameter: _att_ MyAttribute) {
+	parameter.method();
+}
+\end{lstlisting}
+%todo: finish
 \subsection{Mechanizm atrybutów}
 \label{Attributes_mechanism_cm1}
 
