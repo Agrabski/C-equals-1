@@ -257,6 +257,114 @@ Programista nadal musi samodzielnie je ustalić.
 
 \subsection{Testowanie kodu}
 
+\subsection{Kompilacja szablonów}
+\label{comparison:template_type_erasure}
+%todo: o tym że da się dorobić type erasue
+%todo: cite in implementation chapter
+Jedną z ciekawych możliwości, wynikającej z istnienia modelu semantycznego w C-=-1, zawierającego w sobie funkcje generyczne, jest ich bardziej efektywna kompilacja.
+W C++ szablony są częstym źródłem rozrostu generowanego kodu maszynowego.
+Listing \ref{lst:comparison:bloat_cpp_example:cpp} zawiera przykład programu, w którym występuje ten problem natomiast w listingu \ref{lst:comparison:bloat_cpp_example:assembly} znajduje się kod assemblera x86-64 generowany przez kompilator Clang \cite{lattner2008llvm}.
+Przykład został przygotowany przy użyciu narzędzia Compiler Explorer \cite{godbolt}.
+
+Szablon zdefiniowany w linii piątej, listingu \ref{lst:comparison:bloat_cpp_example:cpp} jest prostym przykładem generyka, którego kod jest całkowicie niezależny od typów użytych do stworzenia jego instancji.
+Funkcja \lstinline{foo} przyjmuje będący wskazaniem na typ \lstinline{T} i używa go wyłącznie po konwersji do liczby całkowitej lub odejmując od niego rozmiar \lstinline{T}.
+Szablon procedury \lstinline{foo} można zaprezentować matematycznie, jako funkcję mapującą typ \(t\) na funkcję \(x -> size\_t\) czyli \( foo = t -> (x: t -> size\_t)\). Alternatywnie: \(foo : T_y -> F\), gdzie \(T_y\) to zbiór wszystkich typów, a \(F\) to zbiór wszystkich funkcji jednoargumentowych zwracających typ \(size\_t\).
+Każdą z instancji \lstinline{foo}, da się natomiast sprowadzić do formy:\\
+\(foo(t) = y(x: size\_t) -> size\_t = \begin{cases}
+  bar(x), & \text{jeśli} x < 500 \\
+  y(x - sizeof(t)) & \text{w przeciwnym wypadku}
+\end{cases}\)\\
+Tak więc dla danego zbioru typów \(A = \{t_1, t_2, ... t_n\}\), przeciwdziedzina funkcji \(foo\) : \(B = \{ f | f = foo(t) \land t \in A\}\) będzie miała rozmiar \(|B| = |\{y | y = sizeof(t) \land t \in A\}|\).
+W wypadku kodu z listingu \ref{lst:comparison:bloat_cpp_example:cpp}, obydwie instancje szablonu \lstinline{foo} powstały na podstawie typów o tych samych rozmiarach, więc powinna istnieć tylko jedna wersja tej funkcji.
+
+Listing \ref{lst:comparison:bloat_cpp_example:assembly} zawiera kod w assemblerze x86-64 wygenerowany przez narzędzie Clang dla źródła z listingu \ref{lst:comparison:bloat_cpp_example:cpp}.
+W liniach zerowej oraz dwudziestej drugiej znajdują się etykiety powiązane z instancjami generyka \lstinline{foo}.
+Pomimo tego, że kod obydwu procedur jest identyczny, zgodnie z rozważaniami z poprzedniego akapitu, kompilator wygenerował obydwie wersje.
+To jest przykład rozrostu kodu, któremu można zapobiec w C-=-1.
+%todo: finish
+
+\begin{lstlisting}[
+  numbers=left,
+  firstnumber=0,
+  caption={Przykładowy kod w C++ powodujący rozrost pliku wynikowego},
+  aboveskip=0pt,
+  label={lst:comparison:bloat_cpp_example:cpp}
+  ]
+  #include<vector>
+  #include<iostream>
+  
+  extern size_t bar(size_t v);
+  template<typename T>
+  size_t foo(T const* v) {
+      if((size_t)v > 500)
+          return foo(v - 1);
+      return  bar((size_t)v);
+  }
+  int main() {
+      int n = 3;
+      float y = 5;
+      std::cout<< foo(&n) + foo(&y);
+  }
+  
+
+
+\end{lstlisting}
+
+\begin{lstlisting}[
+  numbers=left,
+  firstnumber=0,
+  caption={Fragment assemblera x86-64 generowanego dla przykładu z listingu \ref{lst:comparison:bloat_cpp_example:cpp} przez kompilator Clang w wersji 13.0.0, z maksymalnym poziomem optymalizacji},
+  aboveskip=0pt,
+  breaklines=true,
+  label={lst:comparison:bloat_cpp_example:assembly}
+  ]
+  unsigned long foo<int>(int const*):  # @unsigned long foo<int>(int const*)
+  push    rbp
+  mov     rbp, rsp
+  sub     rsp, 16
+  mov     qword ptr [rbp - 16], rdi
+  mov     rax, qword ptr [rbp - 16]
+  cmp     rax, 500
+  jbe     .LBB2_2
+  mov     rdi, qword ptr [rbp - 16]
+  add     rdi, -4
+  call    unsigned long foo<int>(int const*)
+  mov     qword ptr [rbp - 8], rax
+  jmp     .LBB2_3
+.LBB2_2:
+  mov     rdi, qword ptr [rbp - 16]
+  call    bar(unsigned long)
+  mov     qword ptr [rbp - 8], rax
+.LBB2_3:
+  mov     rax, qword ptr [rbp - 8]
+  add     rsp, 16
+  pop     rbp
+  ret
+unsigned long foo<float>(float const*):# @unsigned long foo<float>(float const*)
+  push    rbp
+  mov     rbp, rsp
+  sub     rsp, 16
+  mov     qword ptr [rbp - 16], rdi
+  mov     rax, qword ptr [rbp - 16]
+  cmp     rax, 500
+  jbe     .LBB3_2
+  mov     rdi, qword ptr [rbp - 16]
+  add     rdi, -4
+  call    unsigned long foo<float>(float const*)
+  mov     qword ptr [rbp - 8], rax
+  jmp     .LBB3_3
+.LBB3_2:
+  mov     rdi, qword ptr [rbp - 16]
+  call    bar(unsigned long)
+  mov     qword ptr [rbp - 8], rax
+.LBB3_3:
+  mov     rax, qword ptr [rbp - 8]
+  add     rsp, 16
+  pop     rbp
+  ret
+\end{lstlisting}
+
+
 \subsection{Rozszerzalność języka}
 \label{Language_extensibility}
 Jedną z konsekwencji zaproponowanych mechanizmów języka C-=-1 jest możliwość rozszerzania języka bez modyfikacji kompilatora.

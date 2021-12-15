@@ -195,6 +195,7 @@ Natomiast \lstinline{GenericRuntimeWrapper} stanowi referencję do natywnego obi
 
 Interpreter C-=-1 jest środowiskiem uruchomieniowym, stanowiącym dużą warstwę abstrakcji od maszyny, na którym działa.
 W tym trybie, z perspektywy programisty, nie istnieje stos, a obiekty nie mają adresów, ani wielkości.
+Ten sposób wykonania kodu można porównać do sposobu, w który człowiek rozumie program.
 Interpreter C-=-1 działa na zmiennych lokalnych, referencjach oraz stercie.
 %todo: wording
 %todo: analogia do tego jak człowiek rozumie program
@@ -334,7 +335,7 @@ Drugi parametr zawiera parametry generyczne, używane przy implementacji szablon
 
 Linie od szesnastej do dwudziestej drugiej listingu \ref{lst:marshalling_cm1} zawierają kod wykonywany zamiast metody \lstinline{methods}.
 Jego ogólna struktura jest dosyć typowa dla pod-programów w bibliotece podstawowej.
-W liniach szesnastej i siedemnastej dochodzi do konwersji (ang. marshalling) ze struktur danych interpretera C-=-1 do natywnego obiektu C++. %todo: cite wikipedia
+W liniach szesnastej i siedemnastej dochodzi do konwersji (ang. marshalling)\cite{wiki:Marshalling} ze struktur danych interpretera C-=-1 do natywnego obiektu C++.
 W ten sposób pobierany jest obiekt deskryptora typu na, którym została wykonana ta metoda.
 Zmienna \lstinline{self} ma więc typ \lstinline{TypeReference}, składający się z poziomu referencji oraz odniesienia do typu w modelu semantycznym.
 Następnie, w linii osiemnastej, wywoływana jest metoda \lstinline{methods}, pobierająca wszystkie metody tego typu.
@@ -343,6 +344,9 @@ Na koniec, w linii dziewiętnastej dochodzi do konwersji z natywnego \lstinline{
 
 \subsection{Serializator}
 \label{serializer}
+
+Serializator jest komponentem kompilatora, zapisującym i wczytującym reprezentację obiektów do i z tekstu.
+
 
 \subsection{Backend Interface}
 \label{Backend_Interface}
@@ -357,14 +361,6 @@ Implementacja tej części kompilatora w C-=-1 ułatwiła rozwój tego języka.
 Jedną z głównych zalet narzędzia skonstruowanego w ten sposób jest istnienie dużego projektu w języku docelowym.
 Wymusza to szybszy rozwój języka oraz umożliwia znajdowanie błędów w kompilatorze.
 
-\subsubsection{Funkcje eksponowane przez kompilator}
-
-Używając mechanizmów, opisanych w rozdziałach \ref{implementation:interpreter:special_functions} oraz \ref{implementation:interpreter:cpp_object_references}, udostępniono interfejsowi backendu narzędzie do budowy LLVMIR zdefiniowane w LLVM.
-W ramach biblioteki backendu istnieje cała gama funkcji oraz typów używanych do generowania reprezentacji pośredniej, co zostało opisane w rozdziale \ref{implementation:backend}.
-W języku C-=-1 dostępny jest minimalny ich podzbiór, konieczny do implementacji podstawowego kompilatora.
-
-\subsubsection{Implementacja interfejsu backendu}
-
 Razem z plikiem wykonywalnym kompilatora, dystrybuowany jest kod źródłowy pakietu, zawierającej \emph{interfejs backendu}. 
 Przed kompilacją kodu użytkownika, kompilator wczytuje ten moduł.
 Zaletą tego rozwiązania jest możliwość wymiany tego komponentu, bez rekompilacji całego narzędzia.
@@ -378,6 +374,19 @@ Poza sygnaturą punktu wejścia, programista ma też obowiązek zapewnić specja
 \emph{Interfejs backendu} zaimplementowany w ramach tej pracy jest bardzo prosty oraz niekompletny.
 Nie wykorzystuje żadnych bardziej zaawansowanych mechanizmów LLVM oraz nie generuje metadanych dla debuggera.
 Jego celem było zademonstrowanie możliwości języka C-=-1.
+
+Najważniejszym przyjętym uproszczeniem jest kompilowanie całego programu jako jeden moduł LLVM.
+Zgodnie z zamysłem tej biblioteki, moduł powinien reprezentować jednostkę kompilacji.
+Traktowanie wszystkich pakietów, z których składa się program, jako jedną całość znacząco ułatwia jednak implementację.
+
+Centralnym elementem zaproponowanej implementacji \emph{interfejsu backendu} jest typ \lstinline{PackageRegistry}.
+Ten obiekt przechowuje mapowanie typów i funkcji reprezentacji pośredniej C-=-1 na typy oraz funkcje LLVMIR.
+%todo: finish
+\subsubsection{Funkcje eksponowane przez kompilator}
+
+Używając mechanizmów, opisanych w rozdziałach \ref{implementation:interpreter:special_functions} oraz \ref{implementation:interpreter:cpp_object_references}, udostępniono interfejsowi backendu narzędzie do budowy LLVMIR zdefiniowane w LLVM.
+W ramach biblioteki backendu istnieje cała gama funkcji oraz typów używanych do generowania reprezentacji pośredniej, co zostało opisane w rozdziale \ref{implementation:backend}.
+W języku C-=-1 dostępny jest minimalny ich podzbiór, konieczny do implementacji podstawowego kompilatora.
 
 \subsection{Backend}
 \label{implementation:backend}
@@ -405,13 +414,14 @@ Ten zestaw narzędzi jest bardzo przydatny, ponieważ dzięki niemu programista 
 
 \subsection{Biblioteka standardowa}
 
-\subsection{Narzędzia dodatkowe}
+\subsection{Przyszła praca}
 
-\subsubsection{Tryb interaktywny}
+Zaproponowana implementacja kompilatora oraz bibliotek C-=-1, jest bardzo prosta i niekompletna.
+Istnieje w niej wiele braków, które należy uzupełnić w ramach przyszłej pracy nad językiem.
 
-\subsubsection{Debugger}
+Najważniejszym problemem jest brak funkcji do generowania kodu w bibliotece podstawowej.
+Wiele z najciekawszych zastosowań C-=-1 polega właśnie na tej funkcjonalności i jej brak stanowi znaczącą przeszkodę przy analizie możliwości języka.
 
-\subsubsection{Wtyczka do VS code}
 \subsection{Wyzwania}
 Generyki są zależne od kontekstu
 Specjalne operatory nameof typeof etc
