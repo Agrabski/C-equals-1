@@ -134,14 +134,20 @@ functionCall
 
 literalFunction
 	: 'typeof' '(' typeSpecifier ')'
-	;
+	...
 	\end{lstlisting}
 \end{minipage}
 
 Pomimo tego, że operatory takie jak \lstinline{nameof} przypominają normalną funkcję, wymagają specjalnej obsługi przez frontend języka a w niektórych wypadkach wręcz przez gramatykę.
 Listing \ref{lst:function_call_grammar} zawiera fragment składni C-=-1 powiązany z wywołaniem funkcji.
 Przy rozpoznawaniu reguły \lstinline{functionCall}, parser w pierwszej kolejności spróbuje dopasować regułę \lstinline{literalFunction}, przed składnią normalnego wywołania.
-%todo: nameof, typeof
+Gdyby reguły były odwrócone, odniesienie do operatorów literałowych prawie zawsze byłyby rozpoznawane jako wywołanie normalnej funkcji.
+
+Składnia z listingu \ref{lst:function_call_grammar} pokazuje też, czemu operatory literałowe wymagają specjalnej obsługi przez gramatykę.
+Na przykład operator \lstinline{typeof}, który zwraca typ identyfikowany przez przekazaną mu nazwę, nie może być traktowany jak normalna funkcja.
+W C-=-1 nazwa typu może być sama w sobie niepoprawnym identyfikatorem, na przykład w wypadku instancji generyków.
+Nazwa typu \lstinline{List<usize>} nie jest ani poprawnym identyfikatorem, ani nawet poprawnym wyrażeniem.
+Tak więc, aby wyrażenie \lstinline{typeof(List<usize>)} było poprawne, ten operator musi być specjalnie traktowany przez składnię.
 
 \subsection{Integracja z back-endem}
 \label{backend_integration}

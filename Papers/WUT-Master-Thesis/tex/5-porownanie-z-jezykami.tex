@@ -310,6 +310,12 @@ To jest przykład rozrostu kodu, któremu można zapobiec w C-=-1.
 
 \end{lstlisting}
 
+Ponieważ model semantyczny, na którym operuje \emph{interfejs backendu} C-=-1, umożliwia identyfikację funkcji jako instancję generyka, można wykonać powiązane z tym optymalizację.
+Aby zredukować rozrost kodu, zademonstrowany na przykładzie z listingu \ref{lst:comparison:bloat_cpp_example:cpp}, możemy zastosować kasowanie typów.
+Jest to technika używana do optymalizacji kodu C++ \cite{becker2007:type_erasure} oraz przez kompilator Javy \cite{nino2007:cost_type_erasure_java}.
+%todo:finish
+%todo: talk about errors in java type erasure
+
 \begin{lstlisting}[
   numbers=left,
   firstnumber=0,

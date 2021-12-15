@@ -39,15 +39,14 @@ W ramach opcji \ref{option:own_std_lib} programista może postanowić zaimplemen
 To podejście, z oczywistych powodów w większości przypadków jest nieakceptowalne.
 Nakład pracy, wymagana wiedza oraz dodatkowe możliwości popełnienia błędu niemalże gwarantują, że żaden zespół nie podejmie takiej decyzji.
 
-Analogiczny problem powstał z wprowadzeniem nie-nullowalnych typów referencyjnych do języka C\# w wersji 8 \cite{wagner_2021}.
-Zespół Microsoft podjął decyzję aby traktować biblioteki nie wspierające tej analizy w sposób pesymistyczny.
+Analogiczny problem powstał z wprowadzeniem nie-nullowalnych typów referencyjnych do języka C\# w wersji 8 \cite{wagner_2021 strauss2019new_cs_new_features}.
+Zespół Microsoft podjął decyzję, aby traktować biblioteki niewspierające tej analizy w sposób pesymistyczny.
 Wszystkie referencje pochodzące z takiego pliku dll, są uznawane jako potencjalnie przyjmujące wartość null.
 
 Warto zauważyć, że przypadek występujący w C\# jest jednym z prostszych.
 Brakująca analiza dotyczy wyłącznie danych 'wypływających' z biblioteki.
 Brak odpowiednich adnotacji nie wpływa natomiast na dane 'wpływające' do niej.
-Dla porównania, adnotacja \lstinline{const} wymaga analizy danych 'wpływających' do biblioteki (w języku C++ wartość typu \lstinline{int const*} jest nieużywalna jako parametr funkcji przyjmującej typ \lstinline{int*}).
-%todo: cite C#8 nullable reference types
+Dla porównania adnotacja \lstinline{const} wymaga analizy danych 'wpływających' do biblioteki (w języku C++ wartość typu \lstinline{int const*} jest nieużywalna jako parametr funkcji przyjmującej typ \lstinline{int*}).
 
 \subsection{Adnotacje a generyki}
 \label{Generic_adnotations}

@@ -56,3 +56,4 @@ parametryzowanego
 Serializowany
 inicjalizuje
 literałowe
+literałowych

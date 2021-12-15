@@ -3,3 +3,4 @@
 {"rule":"KONCEPT","sentence":"^\\QKoncepty.\\E$"}
 {"rule":"KONCEPT","sentence":"^\\QKoncepty zostały wprowadzone w C++20 jako sposób na lepsze dokumentowanie szablonów oraz czytelniejsze komunikaty o błędzie w wypadku niepoprawnego użycia.\\E$"}
 {"rule":"BRAK_PRZECINKA_KTORY","sentence":"^\\QZamiast tego, funkcje których wykonanie może się nie powieść, zwracają strukturę informującą o błędzie.\\E$"}
+{"rule":"ZOSTALO_ZROBIONE","sentence":"^\\QGdyby reguły były odwrócone, odniesienie do operatorów literałowych prawie zawsze byłyby rozpoznawane jako wywołanie normalnej funkcji\\E$"}
