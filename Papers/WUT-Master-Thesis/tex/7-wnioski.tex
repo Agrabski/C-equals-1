@@ -18,7 +18,7 @@ Oryginalny projekt implementacji zakładał więc, że kompilator będzie zawier
 Po wykonaniu transformacji na kodzie użytkownika kompilator miał przejąć kontrolę i dokonać kompilacji do kodu maszynowego.
 
 Jednak w wyniku zmian opisanych w rozdziale \ref{Backend_Interface}, kompilacja do kodu maszynowego została zaimplementowana w interpretowanym C-=-1.
-Oznacza to, że kompilator składa się wyłącznie z frontendu oraz środowiska uruchomieniowego które, udostępnia intefejs biblioteki llvm.
+Oznacza to, że kompilator składa się wyłącznie z frontendu oraz środowiska uruchomieniowego które, udostępnia interfejs biblioteki llvm.
 Z tego powodu, w ogólnym przypadku, C-=-1 można zaklasyfikować jako silnie typowany język interpretowany.
 
 Należy jednak pamiętać, że ten język zawiera w sobie rozróżnienie między kodem wykonywalnym w czasie uruchomienia a kompilacji.
@@ -34,7 +34,7 @@ W rozdziale \ref{Language_extensibility} opisano przykłady składni niewspieran
 
 Wykorzystując go, programista może zawęzić zbiór programów akceptowanych przez kompilator, przy użyciu analizy statycznej.
 W rozdziałach \ref{no_discard} oraz \ref{const} przedstawiono przykłady adnotacji istniejących w C++ jako część języka, które można dodać do C-=-1.
-Po dodaniu mechanizmu wyjątków, trywialną będzie też implementacja atrybutu \lstinline{noexcept}, oznaczającego funkcje która nigdy nie rzuca.
+Po dodaniu wyjątków trywialną będzie też implementacja atrybutu \lstinline{noexcept}, oznaczającego funkcje, która nigdy nie rzuca.
 
 \subsection{Możliwa krytyka}
 
@@ -48,6 +48,9 @@ Chwilowo nie ma alternatywnej implementacji, która zachowuje silne typowanie w 
 Inny problem dotyczy samej konstrukcji języka.
 Zaproponowane w tej pracy mechanizmy metaprogramistyczne, mogą prowadzić do zwiększenia poziomu złożoności tworzonego kodu.
 Ponieważ atrybuty w C-=-1 mogą nadpisywać kod użytkownika, nadużycie tego mechanizmu może prowadzić do trudno przewidywalnego zachowania.
-Zasadność tej krytyki powinna być tematem przyszłych badań.
+Ten problem staje się jeszcze poważniejszy, jeśli dany fragment programu jest modyfikowany przez więcej niż jeden atrybut.
+W takiej sytuacji kolejność modyfikacji będzie wpływać na wynik kompilacji.
+Jest to jeden z powodów, przez które generatory kodu w C\# nie mogą analizować wygenerowanego kodu \cite{roslyn:source_generators}.
+Zasadność tej krytyki powinna być tematem przyszłych badań, używając bardziej kompletnej implementacji kompilatora.
 
 %todo: opisać problem z systemem typów ad-hoc

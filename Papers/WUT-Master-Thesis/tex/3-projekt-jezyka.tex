@@ -17,8 +17,42 @@ C-=-1 zawiera też dedukcję typów inicjalizowanych zmiennych.
 Na przykład \lstinline{let x = 0;} nie trzeba precyzować typu zmiennej \lstinline{x} ponieważ jest ona inicjalizowana w spób umożliwiający dedukcję typu.
 
 W C-=-1 nie można w pełni kwalifikować nazw.
-Wszystkie elementy programu wykorzystywane w danym pliku, a pochodzące z innej przestrzeni nazw, muszą zostać jawnie zaimportowane na początku.
-%todo: finish
+Wszystkie elementy programu wykorzystywane w danym pliku, a pochodzące z innej przestrzeni nazw, muszą zostać jawnie zaimportowane na początku pliku.
+Pakiet jest domyślnie traktowany jako przestrzeń nazw.
+Nie ma też typów traktowanych na równi ze słowami kluczowymi, takich jak \lstinline{int} z C++.
+W C-=-1 typy prymitywne są traktowane tak jak wszystkie inne.
+
+\begin{lstlisting}[
+	numbers=left,
+	firstnumber=0,
+	caption={Przykład importu w języku C-=-1},
+	aboveskip=0pt,
+	label={lst:cm1_import_example}
+	]
+import {usize} from {cm1mLang}
+
+public fn indexof<typename T>(
+	collection: T[]*,
+	element: T*) -> usize
+{
+	for(i in enumerate(0, collection.length()))
+		if(collection[i] == *element)
+			return i;
+	return -1;
+}
+\end{lstlisting}
+
+Listing \ref{lst:cm1_import_example} zawiera przykład pliku źródłowego C-=-1, zawierającego importowany symbol.
+W linii zerowej znajduje się deklaracja, importująca typ \lstinline{usize} z pakietu \lstinline{cm1mLang}, który zawiera typy i funkcje wbudowane.
+W pozostałej części pliku można używać tego symbolu bez dalszej kwalifikacji.
+Używanie symboli z tej samej przestrzeni nazw, nie wymaga importu.
+Na przykład, funkcja \lstinline{enumerate} z listingu \ref{lst:cm1_import_example}, nie musi być importowana, ponieważ została zdefiniowana wewnątrz tego samego pakietu i przestrzeni nazw.
+
+C-=-1 umożliwia też przypisywanie aliasu importowanym symbolom.
+Można tego użyć na przykład w sytuacji konfliktu nazw.
+W przypadku przykładu z listingu \ref{lst:cm1_import_example}, aby przypisać typowi \lstinline{usize} alias \lstinline{int}, wystarczy zamienić linię zerową na\\ \lstinline|import {usize: int} from {cm1mLang}|.
+Przypisana w ten sposób nazwa, ma wpływ wyłącznie na plik źródłowy, w którym znajduje się deklaracja \lstinline{import}.
+W C-=-1, w przeciwieństwie do C++, pliki źródłowe są niezależne.
 
 \subsection{Elementy języka}
 \label{elementy_jezyka}
@@ -144,10 +178,10 @@ Te funkcje zostały opisane w rozdziale \ref{Attributes_mechanism_cm1}.
 \end{minipage}
 
 W kontekście interpretowanym kod użytkownika może operować na instancjach atrybutów.
-Mogą więc istnieć zmienne których typem jest dany atrybut.
-W celu ułatwienia implementacji kompilatora, dodano do języka obowiązek oznaczania atrybutów słowem kluczowym \lstinline{_att_} w kontekstach, w których oczekiwany jest typ.
+Mogą więc istnieć zmienne, których typem jest dany atrybut.
+W celu ułatwienia implementacji kompilatora dodano do języka obowiązek oznaczania atrybutów słowem kluczowym \lstinline{_att_} w kontekstach, w których oczekiwany jest typ.
 Listing \ref{lst:attribute_limitation_example} zawiera przykład tego ograniczenia.
-W linii czwartej, deklarując parametr typu \lstinline{MyAttribute}, programista musiał dodać słowo kluczowe \lstinline{_att_}
+W linii czwartej, deklarując parametr typu \lstinline{MyAttribute}, programista musiał dodać słowo kluczowe \lstinline{_att_}.
 
 \begin{lstlisting}[
 	numbers=left,
