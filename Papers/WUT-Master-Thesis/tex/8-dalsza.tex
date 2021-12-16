@@ -5,6 +5,7 @@ Pozostawia jednak też kilka otwartych pytań.
 Odpowiedź na nie jest kluczowa dla dalszego rozwoju tej idei i stanowi barierę przed praktyczną jej aplikacją.
 
 \subsection{Obsługa rozszerzeń języka}
+\label{further:language_extension}
 Pierwszy poważny problem jest powiązany z możliwością rozszerzania języka, opisaną w rozdziale \ref{Language_extensibility}.
 Programista, tworzący własne adnotacje zapewniające statyczną analizę, nie ma obecnie możliwości adnotowania kodu bibliotecznego.
 Problem, który z tego wynika można zilustrować na przykładzie atrybutu \lstinline{const}.
@@ -39,9 +40,9 @@ W ramach opcji \ref{option:own_std_lib} programista może postanowić zaimplemen
 To podejście, z oczywistych powodów w większości przypadków jest nieakceptowalne.
 Nakład pracy, wymagana wiedza oraz dodatkowe możliwości popełnienia błędu niemalże gwarantują, że żaden zespół nie podejmie takiej decyzji.
 
-Analogiczny problem powstał z wprowadzeniem nie-nullowalnych typów referencyjnych do języka C\# w wersji 8 \cite{wagner_2021 strauss2019new_cs_new_features}.
+Analogiczny problem powstał z wprowadzeniem nie-nullowalnych typów referencyjnych do języka C\# w wersji 8 \cite{wagner_2021, strauss2019new_cs_new_features}.
 Zespół Microsoft podjął decyzję, aby traktować biblioteki niewspierające tej analizy w sposób pesymistyczny.
-Wszystkie referencje pochodzące z takiego pliku dll, są uznawane jako potencjalnie przyjmujące wartość null.
+Wszystkie referencje pochodzące z takiego pliku dll, są uznawane za potencjalnie przyjmujące wartość null.
 
 Warto zauważyć, że przypadek występujący w C\# jest jednym z prostszych.
 Brakująca analiza dotyczy wyłącznie danych 'wypływających' z biblioteki.
@@ -94,8 +95,42 @@ Oznacza to że programista nie musi być świadomy transformacji, które wykonuj
 \label{further:adnotated_type_system}
 
 wychodzi na to że koncepcja adnotacji jest bardzo mocno powiązana z systemem typów. Może trzeba przemyśleć w ogóle system typów języka. Odnośnik do teorii typów/kategorii
+
 \subsubsection{Równoważność atrybutów przy wybieraniu przeciążenia}
 \label{further:adnotated_type_system:attribute_equivalence}
+
+Zmiany w języku zaproponowane w rozdziale \ref{further:language_extension} wymagają dobrego zdefiniowania, w jaki sposób porównywać adnotacje aplikowane do parametrów.
+Atrybuty w C-=-1 mogą być konstruowane z parametrami.
+Przykład z listingu \ref{lst:further:attribute_comparison} przedstawia ten problem.
+Atrybut \lstinline{GreaterThan} zapewnia, że zmienna, do której został przyłączony, jest większa od zadanej stałej.
+Funkcja \lstinline{externalFunction} oczekuje natomiast parametru liczbowego o wartości większej niż pięć.
+Jednak w funkcji \lstinline{function} przekazywana mu jest wartość większa niż siedem.
+W wypadku tego wywołania inwariant \lstinline{GreaterThan} jest oczywiście zachowany, ale 
+
+\begin{lstlisting}[
+	numbers=left,
+	firstnumber=0,
+	caption={Przykład atrybutu w C-=-1},
+	aboveskip=0pt,
+	label={lst:further:attribute_comparison}
+	]
+att<variable> GreaterThan {
+	public fn construct(limit: usize)
+	...
+}
+public fn greaterThan<limit: usize>(value: usize) -> 
+	[GreaterThan(limit)] usize {
+	assert(value > limit);
+	return value;
+}
+public fn getParameter() -> usize;
+public fn externalFunction([GreaterThan(5)]parameter: usize);
+
+public fn function() {
+	let parameter = getParameter();
+	externalFunction(greaterThan<7>(parameter));
+}
+\end{lstlisting}
 
 \subsection{Reprezentacja pośrednia generyków}
 \label{further:generic_intermidiate_representation}
