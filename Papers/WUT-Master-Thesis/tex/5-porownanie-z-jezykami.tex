@@ -278,10 +278,9 @@ Tak więc dla danego zbioru typów \(A = \{t_1, t_2, ... t_n\}\), przeciwdziedzi
 W wypadku kodu z listingu \ref{lst:comparison:bloat_cpp_example:cpp}, obydwie instancje szablonu \lstinline{foo} powstały na podstawie typów o tych samych rozmiarach, więc powinna istnieć tylko jedna wersja tej funkcji.
 
 Listing \ref{lst:comparison:bloat_cpp_example:assembly} zawiera kod w assemblerze x86-64 wygenerowany przez narzędzie Clang dla źródła z listingu \ref{lst:comparison:bloat_cpp_example:cpp}.
-W liniach zerowej oraz dwudziestej drugiej znajdują się etykiety powiązane z instancjami generyka \lstinline{foo}.
+W liniach zerowej oraz dziesiątej znajdują się etykiety powiązane z instancjami generyka \lstinline{foo}.
 Pomimo tego, że kod obydwu procedur jest identyczny, zgodnie z rozważaniami z poprzedniego akapitu, kompilator wygenerował obydwie wersje.
 To jest przykład rozrostu kodu, któremu można zapobiec w C-=-1.
-%todo: finish
 
 \begin{lstlisting}[
   numbers=left,
@@ -297,7 +296,7 @@ To jest przykład rozrostu kodu, któremu można zapobiec w C-=-1.
   template<typename T>
   size_t foo(T const* v) {
       if((size_t)v > 500)
-          return foo(v - 1);
+          return bar(foo(v - 1));
       return  bar((size_t)v);
   }
   int main() {
@@ -305,16 +304,25 @@ To jest przykład rozrostu kodu, któremu można zapobiec w C-=-1.
       float y = 5;
       std::cout<< foo(&n) + foo(&y);
   }
-  
 
 
 \end{lstlisting}
 
+Aby zredukować rozrost kodu, zademonstrowany na przykładzie z listingu \ref{lst:comparison:bloat_cpp_example:cpp}, możemy zastosować tak zwane kasowanie typów.
+Jest to technika używana przez programistów do optymalizacji kodu C++ \cite{becker2007:type_erasure} oraz przez kompilator Javy do stworzenia fikcji generyków \cite{nino2007:cost_type_erasure_java}.
+Te dwa języki tworzą więc spektrum, pomiędzy językami, w których instancje generyków są niezależnymi od siebie bytami a tymi, w których generyki stanowią jedynie cukier składniowy.
+C\# oraz inne języki używające Common Language Runtime jako środowisko uruchomieniowe, znajduje się pośrodku tej skali.
+Generyki tego języka są bezpośrednio reprezentowane w Common Intermidiate Language.
+W trakcie JIT, środowisko uruchomieniowe dynamicznie podejmuje decyzję o emisji nowej instancji generyka bądź użyciu już istniejącej przez kasowanie typów \cite{kennedy2001:design_clr_generics}.
+W ten sposób C\# omija problemy wynikające z jawnego kasowania typów w Javie oraz rozrostu kodu z C++.
+To rozwiązanie, w przeciwieństwie do C++ wymaga oczywiście środowiska uruchomieniowego.
+
 Ponieważ model semantyczny, na którym operuje \emph{interfejs backendu} C-=-1, umożliwia identyfikację funkcji jako instancję generyka, można wykonać powiązane z tym optymalizację.
-Aby zredukować rozrost kodu, zademonstrowany na przykładzie z listingu \ref{lst:comparison:bloat_cpp_example:cpp}, możemy zastosować kasowanie typów.
-Jest to technika używana do optymalizacji kodu C++ \cite{becker2007:type_erasure} oraz przez kompilator Javy \cite{nino2007:cost_type_erasure_java}.
-%todo:finish
-%todo: talk about errors in java type erasure
+Nawet w obecnej, okrojonej wersji kompilatora, możliwe jest porównanie instancji funkcji generycznej i stwierdzenie czy istnieją między nimi różnice.
+Dzięki temu dostatecznie zaawansowana implementacja \emph{interfejsu backendu} jest w stanie dokonywać kasowania typu, w sposób całkowicie ukryty przed programistą.
+W ten sposób zachowana zostaje moc szablonów C++, unikając jednocześnie problemów Javy.
+Ta optymalizacja nie została zaimplementowana z powodu jej dużej złożoności technicznej w porównaniu do wartości badawczej w kontekście tej pracy.
+Jej wykonanie zostałoby znacząco ułatwione po wprowadzeniu zmian w modelu semantycznym, opisanym w rozdziale \ref{further:generic_intermidiate_representation}.
 
 \begin{lstlisting}[
   numbers=left,
@@ -324,50 +332,26 @@ Jest to technika używana do optymalizacji kodu C++ \cite{becker2007:type_erasur
   breaklines=true,
   label={lst:comparison:bloat_cpp_example:assembly}
   ]
-  unsigned long foo<int>(int const*):  # @unsigned long foo<int>(int const*)
-  push    rbp
-  mov     rbp, rsp
-  sub     rsp, 16
-  mov     qword ptr [rbp - 16], rdi
-  mov     rax, qword ptr [rbp - 16]
-  cmp     rax, 500
-  jbe     .LBB2_2
-  mov     rdi, qword ptr [rbp - 16]
+  unsigned long foo<int>(int const*)  # @unsigned long foo<int>(int const*)
+  cmp     rdi, 500
+  jbe     .LBB1_2
+  push    rax
   add     rdi, -4
   call    unsigned long foo<int>(int const*)
-  mov     qword ptr [rbp - 8], rax
-  jmp     .LBB2_3
-.LBB2_2:
-  mov     rdi, qword ptr [rbp - 16]
-  call    bar(unsigned long)
-  mov     qword ptr [rbp - 8], rax
-.LBB2_3:
-  mov     rax, qword ptr [rbp - 8]
-  add     rsp, 16
-  pop     rbp
-  ret
-unsigned long foo<float>(float const*):# @unsigned long foo<float>(float const*)
-  push    rbp
-  mov     rbp, rsp
-  sub     rsp, 16
-  mov     qword ptr [rbp - 16], rdi
-  mov     rax, qword ptr [rbp - 16]
-  cmp     rax, 500
-  jbe     .LBB3_2
-  mov     rdi, qword ptr [rbp - 16]
+  mov     rdi, rax
+  add     rsp, 8
+.LBB1_2:
+  jmp     bar(unsigned long)          # TAILCALL
+unsigned long foo<float>(float const*)# @unsigned long foo<float>(float const*)
+  cmp     rdi, 500
+  jbe     .LBB2_2
+  push    rax
   add     rdi, -4
   call    unsigned long foo<float>(float const*)
-  mov     qword ptr [rbp - 8], rax
-  jmp     .LBB3_3
-.LBB3_2:
-  mov     rdi, qword ptr [rbp - 16]
-  call    bar(unsigned long)
-  mov     qword ptr [rbp - 8], rax
-.LBB3_3:
-  mov     rax, qword ptr [rbp - 8]
-  add     rsp, 16
-  pop     rbp
-  ret
+  mov     rdi, rax
+  add     rsp, 8
+.LBB2_2:
+  jmp     bar(unsigned long)          # TAILCALL
 \end{lstlisting}
 
 
