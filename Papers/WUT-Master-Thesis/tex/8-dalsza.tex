@@ -105,7 +105,15 @@ Przykład z listingu \ref{lst:further:attribute_comparison} przedstawia ten prob
 Atrybut \lstinline{GreaterThan} zapewnia, że zmienna, do której został przyłączony, jest większa od zadanej stałej.
 Funkcja \lstinline{externalFunction} oczekuje natomiast parametru liczbowego o wartości większej niż pięć.
 Jednak w funkcji \lstinline{function} przekazywana mu jest wartość większa niż siedem.
-W wypadku tego wywołania inwariant \lstinline{GreaterThan} jest oczywiście zachowany, ale 
+W wypadku tego wywołania inwariant \lstinline{GreaterThan} jest oczywiście zachowany, ale nie każdy sposób porównywania adnotacji doprowadzi kompilator do takiego wniosku.
+
+Najprostszy sposób porównywania instancji atrybutów sprawdzanie ich typów.
+Według tego algorytmu wszystkie wartości adnotowane jako \lstinline{GreaterThan} byłyby akceptowalnym argumentem wywołania funkcji \lstinline{externalFunction} z listingu \ref{lst:further:attribute_comparison}.
+To podejście sprawia, że parametryzowane adnotacje zmiennych tracą jakikolwiek sens.
+Niewykluczone, że możliwość definiowania takich atrybutów w praktycznym zastosowaniu jest zbędne.
+Zasadność takiej konstrukcji powinna być przedmiotem przyszłych badań.
+
+\begin{minipage}{\textwidth}
 
 \begin{lstlisting}[
 	numbers=left,
@@ -115,6 +123,7 @@ W wypadku tego wywołania inwariant \lstinline{GreaterThan} jest oczywiście zac
 	label={lst:further:attribute_comparison}
 	]
 att<variable> GreaterThan {
+	private _limit: usize;
 	public fn construct(limit: usize)
 	...
 }
@@ -131,7 +140,75 @@ public fn function() {
 	externalFunction(greaterThan<7>(parameter));
 }
 \end{lstlisting}
+\end{minipage}
+
+Alternatywnym podejściem do problemu porównywania atrybutów jest rozszerzenie zbioru ich metod o \lstinline{satisfiesInvariant(value: valueDescriptor*) -> bool}.
+Ta funkcja byłaby wywoływana na atrybucie powiązanym z parametrem wywoływanej procedury.
+Ta metoda ma za zadanie zweryfikować czy dana wartość spełnia wymagania narzucone przez daną adnotację.
+Takie rozwiązanie daje duże możliwości przy definiowaniu zasad, według których działa dany inwariant.
+Może to jednak prowadzić do nieprzewidywalnego wyboru przeciążenia funkcji oraz do sytuacji, w których tego wyboru nie da się dokonać jednoznacznie.
+Zapewnienie programiście dobrej diagnostyki, zawierającej informacje, dlaczego dane wywołanie jest niepoprawne.
+
+Listing \ref{lst:further:semantic_model_extension} zawiera deklaracje typów, o które należy rozszerzyć model semantyczny C-=-1, aby dodać do atrybutów metodę \lstinline{satisfiesInvariant}.
+Typ \lstinline{valueDescriptor} opisuje wartość wyrażenia na etapie kompilacji.
+Zawiera informacje o tym, czy jest to stała, na podstawie jakiego wyrażenia powstała oraz jakie atrybuty są z nią powiązane.
+Instancje tego typu będą tworzone przez kompilator, w celu wywołania metody \lstinline{satisfiesInvariant}, w trakcie wyboru przeciążenia funkcji.
+Klasa \lstinline{attributeInstance} zawiera natomiast informacje o instancji atrybutu.
+Składa się z referencji do typu atrybutu oraz wskazanie na obiekt będący jego instancją.
+Adnotacje mogą użyć \lstinline{attributeInstance} aby łatwiej identyfikować, które atrybuty powiązane z wartością analizować.
+
+\begin{minipage}{\textwidth}
+	
+\begin{lstlisting}[
+	numbers=left,
+	firstnumber=0,
+	caption={Proponowane rozszerzenie modelu semantycznego C-=-1},
+	aboveskip=0pt,
+	label={lst:further:semantic_model_extension}
+	]
+public class attributeInstance {
+	public attribute: attributeDescriptor;
+	public instance: void*;
+}
+public class valueDescriptor {
+	public type: typeReference;
+	public attributes: attributeInstance[];
+	public isConstant: bool;
+	public constantValue: void*;
+	public sourceExpression: IExpression*;
+}
+\end{lstlisting}
+	
+\end{minipage}
+
+Ten aspekt języka jest ciekawym, ale także trudnym problemem do rozwiązania.
+Należy znaleźć balans, pomiędzy zapewnieniem użytecznego mechanizmu do dostosowywania algorytmu wyboru przeciążeń a zdolnością programisty do zrozumienia tworzonego kodu oraz generowanych przez kompilator diagnostyk.
 
 \subsection{Reprezentacja pośrednia generyków}
 \label{further:generic_intermidiate_representation}
+
+W obecnej specyfikacji języka programista ma bardzo ograniczony wgląd w strukturę typów i funkcji generycznych.
+Wynika to z konfliktu pomiędzy precyzją reprezentacji pośredniej C-=-1 a niepewnością istniejącą w szablonach.
+Listing \ref{lst:further:generic_imprecision} zawiera przykład demonstrujący ten problem.
+Kod tego generyka jest poprawny, jednak instrukcja w linii pierwszej nie zawiera dostatecznie dużo informacji, aby określić która metoda zostanie wywołana.
+Kompilator wie jedynie, że wywoływana metoda nazywa się \lstinline{foo}.
+W normalnej reprezentacji pośredniej C-=-1 taka sytuacja jest niedozwolona.
+\begin{lstlisting}[
+	numbers=left,
+	firstnumber=0,
+	caption={Przykład niedoprecyzowania generyka w C-=-1},
+	aboveskip=0pt,
+	label={lst:further:generic_imprecision}
+	]
+public fn genericFunction<T>(value: T*) {
+	value.foo();
+}
+
+\end{lstlisting}
+
+W celu ograniczenia zakresu pracy, w obecnej definicji języka, programista ma dostęp jedynie do nazwy generyka oraz jego listy parametrów.
+Implementacja kompilatora trzyma szablony jako metadane oraz drzewo AST, które jest modyfikowane przy tworzeniu instancji, a następnie analizowane jak normalny plik źródłowy.
+
+Zapewnienie programiście możliwości analizy kodu generyków wymaga rozszerzenia specyfikacji języka o model kodu generycznego.
+
 %todo: generics are fucking stupid right now. I mean storing AST of its code? fucking cringe. 
