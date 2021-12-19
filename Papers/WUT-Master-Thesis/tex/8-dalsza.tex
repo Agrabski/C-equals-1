@@ -94,7 +94,14 @@ Oznacza to że programista nie musi być świadomy transformacji, które wykonuj
 \subsection{System typów a atrybuty}
 \label{further:adnotated_type_system}
 
-wychodzi na to że koncepcja adnotacji jest bardzo mocno powiązana z systemem typów. Może trzeba przemyśleć w ogóle system typów języka. Odnośnik do teorii typów/kategorii
+Wyzwania opisane w rozdziałach \ref{Generic_adnotations}, \ref{Generic_adnotations} oraz \ref{const} sugerują, że atrybuty jest silnie powiązane z systemem typów.
+Podstawowym celem adnotacji aplikowanych do zmiennych, jest wymuszenie zachowania danych inwariantów.
+W paradygmacie obiektowym ten cel jest zwykle osiągany za pomocą klasy \cite{oop_paradignm}.
+W niektórych językach wspierających ten styl, istnieją jednak też modyfikatory typów takie jak \lstinline{const} z C++.
+
+Adnotacje takie jak \lstinline{const} czy \lstinline{viotile} z C++ bądź \lstinline{mut} z Rust \cite{klabnik2019rust} są częścią systemu typów.
+Te modyfikatory niosą ze sobą pewne informacje semantyczne bądź wymuszają pewne inwarianty.
+%wychodzi na to że koncepcja adnotacji jest bardzo mocno powiązana z systemem typów. Może trzeba przemyśleć w ogóle system typów języka. Odnośnik do teorii typów/kategorii
 
 \subsubsection{Równoważność atrybutów przy wybieraniu przeciążenia}
 \label{further:adnotated_type_system:attribute_equivalence}
@@ -212,8 +219,14 @@ Implementacja kompilatora trzyma szablony jako metadane oraz drzewo AST, które 
 
 Zapewnienie programiście możliwości analizy kodu generyków wymaga rozszerzenia specyfikacji języka o model kodu generycznego.
 Opis szablonów wymaga mniej precyzyjnych struktur danych.
-Na przykład powinien powstać odpowiednik typu \lstinline{functionCallExpression}, \lstinline{genericFunctionCallExpression}, który zamiast wskazywać na konkretną funkcję, przechowuje jedynie jej nazwę.
+Na przykład powinien powstać odpowiednik typu \\\lstinline{functionCallExpression}, \lstinline{genericFunctionCallExpression}, który zamiast wskazywać na konkretną funkcję, przechowuje jedynie jej nazwę.
 W przykładzie z listingu \ref{lst:further:generic_imprecision} zostałyby wykorzystane obydwa typy wyrażeń.
 \lstinline{genericFunctionCallExpression} w linii pierwszej i \lstinline{functionCallExpression} w linii drugiej.
+
+Obecnie, ponieważ w modelu semantycznym istnieje bardzo ograniczona ilość informacji o generykach, nie można przyłączyć atrybutu do szablonu.
+Wszystkie adnotacje są uznawane za dotyczące konkretnej instancji.
+Rozszerzenie modelu o reprezentację kodu generyka, wymaga dodania możliwości adnotowania samych szablonów.
+Wymaga to dodania dwóch nowych celów dla atrybutów: \lstinline{genericFunction} oraz \lstinline{genericClass}.
+Ponadto, należy zaproponować składnię umożliwiającą rozróżnienie adnotacji aplikowanej do generyka a do jego instancji.
 %todo: how to recognize wheter the attribute is attached to the generic itself or its instances?
 %todo: generics are fucking stupid right now. I mean storing AST of its code? fucking cringe. 

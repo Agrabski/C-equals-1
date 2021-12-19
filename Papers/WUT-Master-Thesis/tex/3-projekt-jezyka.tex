@@ -9,12 +9,12 @@ Przy projektowaniu C-=-1 skorzystano jednak z doświadczeń wyciągniętych z C+
 \subsection{Składnia}
 
 Składnia języka C-=-1 została opisana używając języka definicji gramatyki narzędzia ANTLR \cite{antlr}, wzorowanego na EBNF \cite{ebnf}.
-Plik zawierający ten opis, znajduje się w repozytorium projektu, pod ścieżką \lstinline{Grammar\Revision0\CMinusEqualsMinus1Revision0.g4}.
+Plik zawierający ten opis, znajduje się w repozytorium projektu, pod ścieżką \lstinline{Grammar\Revision0\CMinusEqualsMinus1Revision0.g4}, oraz w załączniku drugim.
 
 Składnia C-=-1 czerpie inspiracje z języka Rust.
 Typy zmiennych, czy zwracane z funkcji są precyzowane używając notacji postfiksowej, na przykład \lstinline{let x : int = 0;} zamiast \lstinline{int x = 0;}.
 C-=-1 zawiera też dedukcję typów inicjalizowanych zmiennych.
-Na przykład \lstinline{let x = 0;} nie trzeba precyzować typu zmiennej \lstinline{x} ponieważ jest ona inicjalizowana w spób umożliwiający dedukcję typu.
+Na przykład \lstinline{let x = 0;} nie trzeba precyzować typu zmiennej \lstinline{x} ponieważ jest ona inicjalizowana w sposób umożliwiający dedukcję typu.
 
 W C-=-1 nie można w pełni kwalifikować nazw.
 Wszystkie elementy programu wykorzystywane w danym pliku, a pochodzące z innej przestrzeni nazw, muszą zostać jawnie zaimportowane na początku pliku.

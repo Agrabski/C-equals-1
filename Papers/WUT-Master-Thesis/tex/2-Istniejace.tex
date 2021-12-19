@@ -43,7 +43,7 @@ Unika to problemu tworzenia dodatkowego dialektu języka, jaki występuje w C++.
 \subsubsection{Generatory kodu}
 
 Kompilator Roslyn w języku C\#9 wprowadził również, możliwość pisania generatorów kodu \cite{csharp:source_generators,roslyn}.
-Jest to bardzo podobne rozwiązanie do makr w języku Rust \cite{rust}. Generatory kodu to specjalne klasy, których kod jest wykonywany w trakcie kompilacji. 
+Jest to bardzo podobne rozwiązanie do makr w języku Rust \cite{rust, klabnik2019rust}. Generatory kodu to specjalne klasy, których kod jest wykonywany w trakcie kompilacji. 
 Mechanizm C\# jest jednak bardziej zaawansowany.
 Umożliwia generowanie kodu, używając wszystkich elementów języka, zamiast zapewniać prosty szablon.
 Te generatory, tak jak w Rust, nie mają jednak dostępu do informacji zbieranych przez kompilator, poza drzewem składniowym oraz nie mogą modyfikować istniejącego kodu.
@@ -53,7 +53,7 @@ Stanowią one jednak ciekawą zmianę w kierunku rozwoju języka.
 Generatory kodu są pierwszym przejawem statycznego metaprogramowania w C\#
 
 \subsection {Rust}
-Ponieważ Rust \cite{rust} jest stosunkowo młody, jego projektanci mogli czerpać z doświadczeń innych języków. Wyraźnie widać to w jego składni, zintegrowanym systemie zarządzania zależnościami oraz bardzo przyjaznym kompilatorze.\par
+Ponieważ Rust \cite{rust, klabnik2019rust} jest stosunkowo młody, jego projektanci mogli czerpać z doświadczeń innych języków. Wyraźnie widać to w jego składni, zintegrowanym systemie zarządzania zależnościami oraz bardzo przyjaznym kompilatorze.\par
 Z tego powodu, nie zawiera on też tradycyjnego preprocesora, takiego jak w C/C++ czy C\#. Makra w Rust są tak naprawdę funkcjami operującymi na drzewie składniowym programu. Jest to zdecydowany postęp względem prostego zastępowania tekstu jak w C/C++, lecz ma też swoje wady.\par
 Makra w języku Rust nadal operują na, co prawda strukturyzowanym, ale nadal, tekście. Oznacza to, że nie mają one dostępu do systemu typów ani żadnych innych informacji zgromadzonych przez kompilator.\par
 \subsection{C++20}
