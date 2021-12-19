@@ -200,8 +200,9 @@ W normalnej reprezentacji pośredniej C-=-1 taka sytuacja jest niedozwolona.
 	aboveskip=0pt,
 	label={lst:further:generic_imprecision}
 	]
-public fn genericFunction<T>(value: T*) {
+public fn genericFunction<T>(value: T*, text: string) -> usize {
 	value.foo();
+	return text.length();
 }
 
 \end{lstlisting}
@@ -210,5 +211,9 @@ W celu ograniczenia zakresu pracy, w obecnej definicji języka, programista ma d
 Implementacja kompilatora trzyma szablony jako metadane oraz drzewo AST, które jest modyfikowane przy tworzeniu instancji, a następnie analizowane jak normalny plik źródłowy.
 
 Zapewnienie programiście możliwości analizy kodu generyków wymaga rozszerzenia specyfikacji języka o model kodu generycznego.
-
+Opis szablonów wymaga mniej precyzyjnych struktur danych.
+Na przykład powinien powstać odpowiednik typu \lstinline{functionCallExpression}, \lstinline{genericFunctionCallExpression}, który zamiast wskazywać na konkretną funkcję, przechowuje jedynie jej nazwę.
+W przykładzie z listingu \ref{lst:further:generic_imprecision} zostałyby wykorzystane obydwa typy wyrażeń.
+\lstinline{genericFunctionCallExpression} w linii pierwszej i \lstinline{functionCallExpression} w linii drugiej.
+%todo: how to recognize wheter the attribute is attached to the generic itself or its instances?
 %todo: generics are fucking stupid right now. I mean storing AST of its code? fucking cringe. 
