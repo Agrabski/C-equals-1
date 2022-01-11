@@ -128,9 +128,7 @@ W każdej z nich frontend zachowuje się inaczej.
 
 
 \subsubsection{Zarządzanie zależnościami}
-
-\subsubsection{Import symboli zewnętrznych}
-
+%todo
 \subsubsection{Reprezentacja pośrednia}
 \label{implementation:intermidiate_representation}
 Reprezentacja pośrednia jest istotnym elementem języka, na którym opiera się metaprogramowanie w C-=-1.
@@ -155,7 +153,14 @@ W kontekście projektu języka stanowią one źródło ciekawych wyzwań, opisan
 W C-=-1 szablony działają na zasadach analogicznych do C++.
 Szablon funkcji, na przykład, nie jest funkcją, a wzorcem, według którego procedura może dopiero powstać po pełnej specjalizacji.
 
+Kompilator C-=-1 przechowuje generyki jako fragmenty drzewa rozkładu, ponieważ w obecnym projekcie reprezentacji pośredniej, nie ma potrzebnych struktur danych.
+Frontend analizuje nagłówek szablonu, oraz jego parametry i uzupełnia go na żądanie.
+Przy odniesieniu do generyka, kompilator najpierw przegląda istniejące instancje szablonów.
+Jeśli ta kombinacja parametrów jeszcze nie była używana, kopiuje drzewo rozkładu, zastępuje odniesienia do parametrów generycznych konkretnymi typami i przetwarza je jak zwykły plik źródłowy.
 
+Strategia tworzenia instancji generyków, przyjęta w zaproponowanym kompilatorze wymaga starannego zarządzania kontekstem.
+
+%todo: finish (how is context preserved)
 
 \subsection{Interpreter}
 \label{interpreter}
@@ -237,8 +242,6 @@ Ten typ jako zależność przyjmuje w konstruktorze funkcję znajdującą warto�
 \lstinline{ExpressionEvaluator} jest też używany przy tworzeniu instancji atrybutów do wyliczania wartości parametrów, co zostało opisane w rozdziale \ref{implementation:interpreter:attribute_attachment}.
 
 %todo: more?
-\subsubsection{Funkcje specjalne}
-\label{implementation:interpreter:special_functions}
 
 \subsubsection{Przyłączanie atrybutów}
 \label{implementation:interpreter:attribute_attachment}
@@ -347,6 +350,7 @@ Na koniec, w linii dziewiętnastej dochodzi do konwersji z natywnego \lstinline{
 
 Serializator jest komponentem kompilatora, zapisującym i wczytującym reprezentację obiektów do i z tekstu.
 
+%todo: finish
 
 \subsection{Backend Interface}
 \label{Backend_Interface}
@@ -384,7 +388,7 @@ Ten obiekt przechowuje mapowanie typów i funkcji reprezentacji pośredniej C-=-
 %todo: finish
 \subsubsection{Funkcje eksponowane przez kompilator}
 
-Używając mechanizmów, opisanych w rozdziałach \ref{implementation:interpreter:special_functions} oraz \ref{implementation:interpreter:cpp_object_references}, udostępniono interfejsowi backendu narzędzie do budowy LLVMIR zdefiniowane w LLVM.
+Używając mechanizmów, opisanych w rozdziałach \ref{implementation:interpreter:basic_library} oraz \ref{implementation:interpreter:cpp_object_references}, udostępniono interfejsowi backendu narzędzie do budowy LLVMIR zdefiniowane w LLVM.
 W ramach biblioteki backendu istnieje cała gama funkcji oraz typów używanych do generowania reprezentacji pośredniej, co zostało opisane w rozdziale \ref{implementation:backend}.
 W języku C-=-1 dostępny jest minimalny ich podzbiór, konieczny do implementacji podstawowego kompilatora.
 
@@ -414,6 +418,21 @@ Ten zestaw narzędzi jest bardzo przydatny, ponieważ dzięki niemu programista 
 
 \subsection{Biblioteka standardowa}
 
+W celu przetestowania możliwości języka, w ramach pracy napisano minimalną bibliotekę standardową.
+Zawiera głównie kolekcje, atrybuty oraz funkcje i typy potrzebne do dynamicznego zarządzania pamięcią.
+Tworzenie tej biblioteki wymusiło rozwój języka oraz stanowiło test kompilatora.
+
+Biblioteka standardowa C-=-1 zawiera dwa szablony kolekcji: \lstinline{List} oraz \lstinline{Dictionary}.
+Pierwszy z nich jest prostą listą jednokierunkową, umożliwiającą dodawanie, zliczanie oraz uzyskiwanie dostępu do elementu po indeksie.
+Słownik został zaimplementowany używając tej kolekcji, zamiast drzewa.
+Ta decyzja sprawia, że to mapowanie jest znacznie wolniejsze niż podobne typy z bibliotek standardowych innych języków.
+Znalezienie elementu po kluczu ma liniową złożoność obliczeniową, w porównaniu z logarytmiczną złożonością \lstinline{std::map} z C++ czy stałą złożonością \lstinline{System.Collections.Generic.Dictionary} z C\#.
+Przy tworzeniu kolekcji dla biblioteki standardowej C-=-1, kładziono nacisk na nakład pracy programisty ponad wydajność.
+
+Zarządzanie pamięcią w bibliotece standardowej zostało zbudowane na bazie funkcji języka C \cite{cLangStandard}.
+Mechanizmy automatycznego zarządzania zasobami, opisane w rozdziale \ref{memory_management}, używają procedur \lstinline{malloc} oraz \lstinline{free}, zaimportowanych używając technik z rozdziału \ref{external_symbols}.
+%todo: finish
+
 \subsection{Przyszła praca}
 
 Zaproponowana implementacja kompilatora oraz bibliotek C-=-1, jest bardzo prosta i niekompletna.
@@ -421,8 +440,3 @@ Istnieje w niej wiele braków, które należy uzupełnić w ramach przyszłej pr
 
 Najważniejszym problemem jest brak funkcji do generowania kodu w bibliotece podstawowej.
 Wiele z najciekawszych zastosowań C-=-1 polega właśnie na tej funkcjonalności i jej brak stanowi znaczącą przeszkodę przy analizie możliwości języka.
-
-\subsection{Wyzwania}
-Generyki są zależne od kontekstu
-Specjalne operatory nameof typeof etc
-odchudzenie kompilatora przez trzymanie metadanych o funkcjach jako runtime value i funkcje do dostępu do tego jako klucz-wartość

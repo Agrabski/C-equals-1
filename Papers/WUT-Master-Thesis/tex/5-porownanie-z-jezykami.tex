@@ -289,23 +289,21 @@ To jest przykład rozrostu kodu, któremu można zapobiec w C-=-1.
   aboveskip=0pt,
   label={lst:comparison:bloat_cpp_example:cpp}
   ]
-  #include<vector>
-  #include<iostream>
+#include<vector>
+#include<iostream>
   
-  extern size_t bar(size_t v);
-  template<typename T>
-  size_t foo(T const* v) {
-      if((size_t)v > 500)
-          return bar(foo(v - 1));
-      return  bar((size_t)v);
-  }
-  int main() {
-      int n = 3;
-      float y = 5;
-      std::cout<< foo(&n) + foo(&y);
-  }
-
-
+extern size_t bar(size_t v);
+template<typename T>
+size_t foo(T const* v) {
+    if((size_t)v > 500)
+        return bar(foo(v - 1));
+    return  bar((size_t)v);
+}
+int main() {
+    int n = 3;
+    float y = 5;
+    std::cout<< foo(&n) + foo(&y);
+}
 \end{lstlisting}
 
 Aby zredukować rozrost kodu, zademonstrowany na przykładzie z listingu \ref{lst:comparison:bloat_cpp_example:cpp}, możemy zastosować tak zwane kasowanie typów.
@@ -332,7 +330,7 @@ Jej wykonanie zostałoby znacząco ułatwione po wprowadzeniu zmian w modelu sem
   breaklines=true,
   label={lst:comparison:bloat_cpp_example:assembly}
   ]
-  unsigned long foo<int>(int const*)  # @unsigned long foo<int>(int const*)
+  unsigned long foo<int>(int const*):
   cmp     rdi, 500
   jbe     .LBB1_2
   push    rax
@@ -342,7 +340,7 @@ Jej wykonanie zostałoby znacząco ułatwione po wprowadzeniu zmian w modelu sem
   add     rsp, 8
 .LBB1_2:
   jmp     bar(unsigned long)          # TAILCALL
-unsigned long foo<float>(float const*)# @unsigned long foo<float>(float const*)
+unsigned long foo<float>(float const*):
   cmp     rdi, 500
   jbe     .LBB2_2
   push    rax
@@ -360,6 +358,7 @@ unsigned long foo<float>(float const*)# @unsigned long foo<float>(float const*)
 Jedną z konsekwencji zaproponowanych mechanizmów języka C-=-1 jest możliwość rozszerzania języka bez modyfikacji kompilatora.
 Oznacza to, że pewne elementy składni, obecne w innych językach, stają się zbędne w C-=-1.
 \subsubsection{Symbole zewnętrzne}
+\label{external_symbols}
 Większość języków programowania zawiera mechanizm umożliwiający import symboli zewnętrznych.
 Mogą one pochodzić z kodu napisanego w innym języku lub z już skompilowanej biblioteki.
 

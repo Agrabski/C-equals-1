@@ -301,6 +301,7 @@ Reprezentacja semantyczna zawiera komplet informacji potrzebnych do zrozumienia 
 Operacje takie jak wybieranie przeciążenia, po jego skonstruowaniu, są zbędne.
 
 \subsection{Zarządzanie pamięcią}
+\label{memory_management}
 Zarządzanie pamięcią w C-=-1 jest oparte na C++11. W 2011 do biblioteki standardowej zostały wprowadzone nowe typy 'inteligentnych wskaźników': \lstinline{unique_ptr}, \lstinline{shared_ptr} oraz \lstinline{weak_ptr}\cite{ISO:2012:III}.
 Miały one na celu wprowadzenie do języka mechanizmów umożliwiających tanie i automatyczne zarządzanie pamięcią oraz semantyczne podkreślenie relacji między obiektami.
 Korzystając z doświadczeń C++, gdzie te wskazania stały się zalecanym sposobem zarządzania pamięcią\cite{cpp:core_guidelines}, inteligentne wskazania są integralną częścią C-=-1.

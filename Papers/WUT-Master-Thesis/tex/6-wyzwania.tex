@@ -108,7 +108,18 @@ Operator \lstinline{new} w C-=-1, tak jak w C++ służy do dynamicznej alokacji 
 To czy funkcja jest wykonywalna w czasie kompilacji albo uruchomienia można ustalić bardzo późno w trakcie budowy modelu semantycznego.
 
 Na pytanie 'czy ta funkcja może być użyta w tym kontekście', kompilator jest w stanie odpowiedzieć, dopiero kiedy wykonały się na niej funkcje \lstinline{attach} wszystkich powiązanych z nią atrybutów.
+Listing \ref{lst:new_cm} zawiera kod z biblioteki standardowej C-=-1 alokujący pamięć na stercie.
+Operator \lstinline{new unique} występuje w niej w dwóch wersjach: czasu uruchomienia oraz czasu kompilacji.
 %todo: example?
+
+\lstinputlisting[
+	numbers=left,
+	firstnumber=0,
+	caption={Plik \lstinline{new.cm} z biblioteki standardowej C-=-1},
+	aboveskip=0pt,
+	tabsize=2,
+	label={lst:new_cm}
+	]{D:/Programming/C-equals-1/Libraries/std/src/new.cm}
 
 \subsection{Wyrażenia literałowe}
 

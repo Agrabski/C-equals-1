@@ -58,3 +58,4 @@ inicjalizuje
 literałowe
 literałowych
 parametryzowane
+urchomieniowe

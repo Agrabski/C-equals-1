@@ -49,10 +49,6 @@ Brakująca analiza dotyczy wyłącznie danych 'wypływających' z biblioteki.
 Brak odpowiednich adnotacji nie wpływa natomiast na dane 'wpływające' do niej.
 Dla porównania adnotacja \lstinline{const} wymaga analizy danych 'wpływających' do biblioteki (w języku C++ wartość typu \lstinline{int const*} jest nieużywalna jako parametr funkcji przyjmującej typ \lstinline{int*}).
 
-\subsection{Adnotacje a generyki}
-\label{Generic_adnotations}
-trzeba dorzucić możliwość aplikacji atrybutu const do parametrów generyka, np list< [const] usize>
-
 \subsection{Modyfikowanie kodu}
 
 Jednym z celów tej pracy było zbadanie, jak umożliwienie modyfikowania kodu w trakcie kompilacji, wpływa na tworzone oprogramowanie.
@@ -85,23 +81,65 @@ W tym celu można zastosować koncepcję 'czystej' funkcji z funkcyjnych język�
 Dzięki temu, kompilator będzie w stanie ustalić, które wyrażenia może ewaluować jako część optymalizacji a które muszą pozostać w skompilowanym programie.
 
 Takie rozwiązanie omija problem powstały z wprowadzeniem słowa kluczowego \lstinline{constexpr} w C++\cite{Klimiankou:contexpr_great_good_wrong_idea}.
-Czystość funkcji niesie za sobą dużo więcej konsekwencji niż to że funkcja może być częścią procesu optymalizacji.
-Oznacza to że programista nie musi być świadomy transformacji, które wykonuje kompilator.
+Czystość funkcji niesie za sobą dużo więcej konsekwencji niż to, że funkcja może być częścią procesu optymalizacji.
+Oznacza to, że programista nie musi być świadomy transformacji, które wykonuje kompilator.
 
 \subsection{Integracja ze środowiskiem programistycznym}
 \label{IDE_integration}
 
+Language Server Protocol (LSP) to protokół umożliwiający rozwój narzędzi wspomagających programistę, niezależnie od zintegrowanego środowiska programistycznego \cite{bunder2019decoupling_lsp}.
+Serwery Języka ma zapewniać usługi takie jak podświetlanie składni, uzupełnianie kodu, refaktoring czy wspomaganie nawigacji.
+
+W wypadku większości języków programowania implementacja takiego serwera wymaga stworzenia dedykowanego oprogramowania.
+Ponieważ kompilator C-=-1 stanowi środowisko urchomieniowe dla tego języka, z wbudowanymi narzędziami do analizy kodu źródłowego, można go wykorzystać w tym celu.
+Takie zastosowanie wymaga pewnych zmian w kompilatorze, ale sam język jest do tego dobrze przystosowany.
+
 \subsection{System typów a atrybuty}
 \label{further:adnotated_type_system}
 
-Wyzwania opisane w rozdziałach \ref{Generic_adnotations}, \ref{Generic_adnotations} oraz \ref{const} sugerują, że atrybuty jest silnie powiązane z systemem typów.
+Wyzwania opisane w rozdziale \ref{const} sugerują, że atrybuty jest silnie powiązane z systemem typów.
 Podstawowym celem adnotacji aplikowanych do zmiennych, jest wymuszenie zachowania danych inwariantów.
 W paradygmacie obiektowym ten cel jest zwykle osiągany za pomocą klasy \cite{oop_paradignm}.
-W niektórych językach wspierających ten styl, istnieją jednak też modyfikatory typów takie jak \lstinline{const} z C++.
+W niektórych językach wspierających ten styl istnieją jednak też modyfikatory typów takie jak \lstinline{const} czy \lstinline{viotile} z C++ bądź \lstinline{mut} z Rust \cite{klabnik2019rust}.
+Te Adnotacje są częścią systemu typów i niosą ze sobą pewne informacje semantyczne bądź wymuszają pewne inwarianty, których nie da się wyrazić za pomocą systemu typów.
 
-Adnotacje takie jak \lstinline{const} czy \lstinline{viotile} z C++ bądź \lstinline{mut} z Rust \cite{klabnik2019rust} są częścią systemu typów.
-Te modyfikatory niosą ze sobą pewne informacje semantyczne bądź wymuszają pewne inwarianty.
-%wychodzi na to że koncepcja adnotacji jest bardzo mocno powiązana z systemem typów. Może trzeba przemyśleć w ogóle system typów języka. Odnośnik do teorii typów/kategorii
+Atrybuty z C-=-1, aplikowane do zmiennych i wartości, stanowią odpowiednik tych modyfikatorów, pisany przez użytkownika.
+Przenoszą informacje semantyczne i wymuszają inwarianty.
+Powinny więc stanowić rozszerzenie systemu typów, tak samo, jak modyfikatory \lstinline{const} czy \lstinline{viotile}.
+
+Takie rozszerzenie języka, wymaga poważnego przeprojektowania modelu semantycznego programu oraz samej składni.
+W szczególności należy rozwiązać problem przedstawiony w rozdziale \ref{const} oraz w listingu \ref{lst:const_problem_example}.
+Obecnie, wskazania są reprezentowane jako para typ-licznik poziomu referencji.
+Listing \ref{lst:further:type_reference_semantic_model} zawiera typ używany do reprezentacji wskazania w kompilatorze C-=-1.
+Model semantyczny dostępny programiście C-=-1 zawiera bardzo podobną strukturę danych.
+
+\begin{lstlisting}[
+	numbers=left,
+	firstnumber=0,
+	caption={Obiekt reprezentujący odniesienie do typu w kompilatorze C-=-1},
+	aboveskip=0pt,
+	tabsize=2,
+	label={lst:further:type_reference_semantic_model}
+	]
+struct TypeReference
+{
+	Type* type = nullptr;
+	size_t referenceCount = 0;
+	std::string typeName() const;
+	bool isVoidType() const noexcept;
+	TypeReference reference() const noexcept;
+	TypeReference dereference() const noexcept;
+	TypeReference baseType() const noexcept;
+	TypeReference() = default;
+	TypeReference(Type* t) noexcept;
+	TypeReference(Type* t, size_t refCount) noexcept;
+};
+\end{lstlisting}
+
+Prosta reprezentacja wskazań, taka jak w listingu \ref{lst:further:type_reference_semantic_model} uniemożliwia skuteczne wprowadzenie modyfikatorów typów takich jak \lstinline{const} z C++.
+W tym podejściu typ \lstinline{int*} jest traktowany jako specjalny przypadek typu \lstinline{int}.
+Z kolei \lstinline{int**} oraz \lstinline{int*} są postrzegane jako niemalże ten sam typ.
+Aby umożliwić tworzenie modyfikatorów takich jak \lstinline{const}, typy \lstinline{int}, \lstinline{int*} oraz \lstinline{int**} powinny być traktowane na równi w modelu semantycznym.
 
 \subsubsection{Równoważność atrybutów przy wybieraniu przeciążenia}
 \label{further:adnotated_type_system:attribute_equivalence}
@@ -119,8 +157,6 @@ Według tego algorytmu wszystkie wartości adnotowane jako \lstinline{GreaterTha
 To podejście sprawia, że parametryzowane adnotacje zmiennych tracą jakikolwiek sens.
 Niewykluczone, że możliwość definiowania takich atrybutów w praktycznym zastosowaniu jest zbędne.
 Zasadność takiej konstrukcji powinna być przedmiotem przyszłych badań.
-
-\begin{minipage}{\textwidth}
 
 \begin{lstlisting}[
 	numbers=left,
@@ -147,7 +183,6 @@ public fn function() {
 	externalFunction(greaterThan<7>(parameter));
 }
 \end{lstlisting}
-\end{minipage}
 
 Alternatywnym podejściem do problemu porównywania atrybutów jest rozszerzenie zbioru ich metod o \lstinline{satisfiesInvariant(value: valueDescriptor*) -> bool}.
 Ta funkcja byłaby wywoływana na atrybucie powiązanym z parametrem wywoływanej procedury.
@@ -228,5 +263,3 @@ Wszystkie adnotacje są uznawane za dotyczące konkretnej instancji.
 Rozszerzenie modelu o reprezentację kodu generyka, wymaga dodania możliwości adnotowania samych szablonów.
 Wymaga to dodania dwóch nowych celów dla atrybutów: \lstinline{genericFunction} oraz \lstinline{genericClass}.
 Ponadto, należy zaproponować składnię umożliwiającą rozróżnienie adnotacji aplikowanej do generyka a do jego instancji.
-%todo: how to recognize wheter the attribute is attached to the generic itself or its instances?
-%todo: generics are fucking stupid right now. I mean storing AST of its code? fucking cringe. 
