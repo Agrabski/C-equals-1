@@ -128,6 +128,11 @@ W każdej z nich frontend zachowuje się inaczej.
 
 
 \subsubsection{Zarządzanie zależnościami}
+
+Pomimo tego, że możliwość specyfikowania zależności pomiędzy pakietami jest częścią języka C-=-1, zarządzanie zależnościami zostało zaimplementowane w minimalnym stopniu.
+W idealnej sytuacji kompilator operowałbym na zserializowanych, do formatu omówionego w rozdziale \ref{serializer}, bibliotekach, które mógłby pobierać ze specjalnego serwisu.
+
+
 %todo
 \subsubsection{Reprezentacja pośrednia}
 \label{implementation:intermidiate_representation}
@@ -159,6 +164,7 @@ Przy odniesieniu do generyka, kompilator najpierw przegląda istniejące instanc
 Jeśli ta kombinacja parametrów jeszcze nie była używana, kopiuje drzewo rozkładu, zastępuje odniesienia do parametrów generycznych konkretnymi typami i przetwarza je jak zwykły plik źródłowy.
 
 Strategia tworzenia instancji generyków, przyjęta w zaproponowanym kompilatorze wymaga starannego zarządzania kontekstem.
+W C-=-1 obiekty pochodzące z innych przestrzeni nazw muszą być jawnie importowane w każdym pliku, który ich używa.
 
 %todo: finish (how is context preserved)
 
@@ -230,8 +236,8 @@ W trakcie wykonywania kodu funkcja \lstinline{execute} z listingu \ref{interpret
 Już na wczesnym etapie projektu, zapewnienie użytkownikowi, chociaż tak podstawowej diagnostyki, jak stos wywołań, okazało się konieczne.
 W tym celu, poza obsługą podstawowych wyjątków C++, dodano także obsługę przerwań związanych z błędem dostępu do pamięci, przy użyciu strukturyzowanej obsługi wyjątków, specyficznej dla platformy Windows \cite{structured_exception_handling, structured_exception_handling:microsoft}.
 Procedura wykonania funkcji jest otoczona blokiem \lstinline{try}, obsługującym wyjątki C++ oraz blokiem \lstinline{__try} obsługującym przerwania systemu operacyjnego.
-W razie błędu istnieją dwa scenariusze obsługi: jeśli został rzucony \lstinline{cMCompiler::dataStructures::RuntimeException}, nazwa obecnej funkcji i obecnie wykonywana instrukcja są dodawane do \lstinline{stacktrace} wyjątku.
-W przeciwnym wypadku rzucany jest \lstinline{cMCompiler::dataStructures::RuntimeException} z komunikatem odzwierciedlającym źródło błędu.
+W razie błędu istnieją dwa scenariusze obsługi: jeśli został rzucony \\\lstinline{cMCompiler::dataStructures::RuntimeException}, nazwa obecnej funkcji i obecnie wykonywana instrukcja są dodawane do \lstinline{stacktrace} wyjątku.
+W przeciwnym wypadku rzucany jest \\\lstinline{cMCompiler::dataStructures::RuntimeException} z komunikatem odzwierciedlającym źródło błędu.
 Ten wyjątek jest następnie przechwytywany poza interpreterem i informacje w nim zawarte są wyświetlane użytkownikowi.
 W ten sposób programista C-=-1 wie, w którym rejonie jego programu wystąpił błąd.
 

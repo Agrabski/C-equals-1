@@ -43,7 +43,7 @@ Instancje generyków są umieszczane w specjalnym pakiecie, istniejącym tylko n
 Tworzy to pewne niespójności w modelu semantycznym, ponieważ ta biblioteka nie jest poprawnie zdefiniowana.
 Nie zależy od żadnego innego pakietu, a wszystkie inne pakiety zależą od niej.
 Te wyjątki do normalnej konstrukcji modelu semantycznego zostały przyjęte, aby przyśpieszyć implementację.
-Rozwiązanie niezawierające takiego problemu zostało przedstawione na rysunku \ref{generic_location:new}.
+Rozwiązanie niezawierające takiego problemu zostało przedstawione na rysunku \ref{generic_packages_dependencies:option:new}.
 Dla każdego pakietu zawierającego generyki generowany jest nowy pakiet, przechowujący wyłącznie ich instancje.
 Ta nowa biblioteka, zależy od biblioteki deklarującej szablon oraz wszystkich pakietów, od których zależy instancja.
 W ten sposób skonstruowany model semantyczny jest spójny i jasny dla programisty.
@@ -52,10 +52,10 @@ W ten sposób skonstruowany model semantyczny jest spójny i jasny dla programis
 
 \begin{figure}
 	\caption{Diagram przykładowej relacji pomiędzy pakietami zawierającymi typ generyczny}
-	\label{generic_packages_dependencies}
 	\begin{center}
-		\includegraphics[width=\textwidth]{img/generic_misplaced.png}
+		\includegraphics[height=8cm]{img/generic_misplaced.png}
 	\end{center}
+	\label{generic_packages_dependencies}
 \end{figure}
 
 \begin{figure}
@@ -76,15 +76,16 @@ W ten sposób skonstruowany model semantyczny jest spójny i jasny dla programis
 
 \subsection{Funkcje generyczne z ograniczeniami}
 \label{challenges:generic_function_limitations}
-Funkcje mogą być wykluczane z użycia w trakcie uruchomienia lub kompilacji. Jeśli generyk takiej funkcji zostanie stworzony z typem dalej ograniczającym wykonywalność tej funkcji, ona może być wykonywalna nigdy.
+Funkcje mogą być wykluczane z użycia w trakcie uruchomienia lub kompilacji. Jeśli generyk takiej funkcji zostanie stworzony z typem dalej ograniczającym wykonywalność tej funkcji.
+Może dojść do przypadku, w którym ta instancja szablonu nie będzie wykonywalna w żadnym kontekście.
 
 Na wczesnych etapach implementacji, instancje takich generyków były szczególnie problematyczne, ze względu na to jak rozwiązywanie przeciążeń jest zaimplementowane w C-=-1 (rozdział \ref{Function_overload_resolution}).
-W związku z tym, w wypadku użycia funkcji generycznej, kompilator powołuje instancje wszystkich wersji tego szablonu, ze zgodną ilością parametrów.
+W związku z tym, w wypadku użycia funkcji generycznej, kompilator powołuje instancje wszystkich wersji tego szablonu, ze zgodną liczbą parametrów.
 Niektóre z nich, mogą być niepoprawne w danym kontekście. 
 
 Na przykład operator \lstinline{new unique} został zdefiniowany w dwóch wersjach: na czas uruchomienia oraz kompilacji.
-W czasie uruchomienia, odwołuje się on do funckji \lstinline{unsafe_new} która alokuje zadaną ilość bajtów na stercie.
-W czasie kompilacji wywołuje funkcję generyczną \lstinline{compiletime_heap_allocate} która zwraca referencję na instancję zadanego typu.
+W czasie uruchomienia odwołuje się on do funkcji \lstinline{unsafe_new} która alokuje zadaną ilość bajtów na stercie.
+W czasie kompilacji wywołuje funkcję generyczną \lstinline{compiletime_heap_allocate}, która zwraca referencję na instancję zadanego typu.
 Szczegóły zostały opisane w rozdziale \ref{operator_new}.
 
 Sygnatury tych operatorów niczym się nie różnią.

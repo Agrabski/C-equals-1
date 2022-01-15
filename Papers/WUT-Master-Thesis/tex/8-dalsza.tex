@@ -70,13 +70,13 @@ Z tego powodu, większość funkcji można wykonać zarówno w czasie kompilacji
 
 Wśród nich są też procedury, mające efekty uboczne, na przykład interakcja z systemem plików czy nawet modyfikacja zmiennej globalnej.
 Programista musi wiedzieć w którym etapie życia programu, kompilacji czy uruchomienia, te funkcje zostaną wykonane.
-Jednak Z punktu widzenia modelu semantycznego one w żaden sposób się nie wyróżniają.
+Jednak z punktu widzenia modelu semantycznego one w żaden sposób się nie wyróżniają.
 
 Ewaluacja wyrażeń, zawierających taki kod, w czasie kompilacji, prowadziłaby do błędnego zachowania programu.
 W czasie kompilacji dochodziłoby do zbędnych operacji na plikach, bądź nawet błędów kompilacji.
 Natomiast w czasie uruchomienia, program pomijałby pewne operacje, operując na przykład na plikach dostępnych w czasie kompilowania.
 
-Aby poprawnie zrealizować tę funkcjonalność, koniecznym jest wprowadzenie do języka wyróżnienia funkcji, które wpływają na, bądź zależą od globalnego stanu.
+Aby poprawnie zrealizować tą funkcjonalność, koniecznym jest wprowadzenie do języka wyróżnienia funkcji, które wpływają na, bądź zależą od globalnego stanu.
 W tym celu można zastosować koncepcję 'czystej' funkcji z funkcyjnych języków programowania \cite{McLoughlin1989ImperativeEF}.
 Dzięki temu, kompilator będzie w stanie ustalić, które wyrażenia może ewaluować jako część optymalizacji a które muszą pozostać w skompilowanym programie.
 
@@ -87,8 +87,8 @@ Oznacza to, że programista nie musi być świadomy transformacji, które wykonu
 \subsection{Integracja ze środowiskiem programistycznym}
 \label{IDE_integration}
 
-Language Server Protocol (LSP) to protokół umożliwiający rozwój narzędzi wspomagających programistę, niezależnie od zintegrowanego środowiska programistycznego \cite{bunder2019decoupling_lsp}.
-Serwery Języka ma zapewniać usługi takie jak podświetlanie składni, uzupełnianie kodu, refaktoring czy wspomaganie nawigacji.
+Language Server Protocol (LSP) \cite{bunder2019decoupling_lsp} to protokół umożliwiający rozwój narzędzi wspomagających programistę, niezależnie od zintegrowanego środowiska programistycznego.
+Serwer Języka ma zapewniać usługi takie jak podświetlanie składni, uzupełnianie kodu, refaktoring czy wspomaganie nawigacji.
 
 W wypadku większości języków programowania implementacja takiego serwera wymaga stworzenia dedykowanego oprogramowania.
 Ponieważ kompilator C-=-1 stanowi środowisko urchomieniowe dla tego języka, z wbudowanymi narzędziami do analizy kodu źródłowego, można go wykorzystać w tym celu.
@@ -97,16 +97,15 @@ Takie zastosowanie wymaga pewnych zmian w kompilatorze, ale sam język jest do t
 \subsection{System typów a atrybuty}
 \label{further:adnotated_type_system}
 
-Wyzwania opisane w rozdziale \ref{const} sugerują, że atrybuty jest silnie powiązane z systemem typów.
+Wyzwania opisane w rozdziale \ref{const} sugerują, że atrybuty są silnie powiązane z systemem typów.
 Podstawowym celem adnotacji aplikowanych do zmiennych, jest wymuszenie zachowania danych inwariantów.
 W paradygmacie obiektowym ten cel jest zwykle osiągany za pomocą klasy \cite{oop_paradignm}.
 W niektórych językach wspierających ten styl istnieją jednak też modyfikatory typów takie jak \lstinline{const} czy \lstinline{viotile} z C++ bądź \lstinline{mut} z Rust \cite{klabnik2019rust}.
-Te Adnotacje są częścią systemu typów i niosą ze sobą pewne informacje semantyczne bądź wymuszają pewne inwarianty, których nie da się wyrazić za pomocą systemu typów.
+Te adnotacje są częścią systemu typów i niosą ze sobą pewne informacje semantyczne bądź wymuszają pewne inwarianty, których nie da się wyrazić za pomocą systemu typów.
 
 Atrybuty z C-=-1, aplikowane do zmiennych i wartości, stanowią odpowiednik tych modyfikatorów, pisany przez użytkownika.
 Przenoszą informacje semantyczne i wymuszają inwarianty.
 Powinny więc stanowić rozszerzenie systemu typów, tak samo, jak modyfikatory \lstinline{const} czy \lstinline{viotile}.
-
 Takie rozszerzenie języka, wymaga poważnego przeprojektowania modelu semantycznego programu oraz samej składni.
 W szczególności należy rozwiązać problem przedstawiony w rozdziale \ref{const} oraz w listingu \ref{lst:const_problem_example}.
 Obecnie, wskazania są reprezentowane jako para typ-licznik poziomu referencji.

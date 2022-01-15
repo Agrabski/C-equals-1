@@ -139,10 +139,10 @@ fn main() -> usize
 \subsubsection{Atrybut const}
 \label{const}
 %todo: remake to make it less confusing
-Ciekawym przykładem analizatora, jest atrybut \lstinline{const}.
+Ciekawym przykładem adnotacji, umożliwiającej analizę statyczną, jest atrybut \lstinline{const}.
 Odpowiada on modyfikatorowi \lstinline{const} z języka C++.
 Zaaplikowanie go do typu oznacza, że jego instancja jest stała.
-Każda próba modyfikacji, po zainicjalizowaniu, jest błędem.
+Każda próba modyfikacji, po inicjalizacji, jest błędem.
 
 W obecnym stanie kompilatora oraz języka, możliwa jest implementacja tylko części tej analizy.
 Zaimplementowanie modyfikatora \lstinline{const} w pełni, przy użyciu atrybutu, wymaga od C-=-1 następujących właściwości:
@@ -153,12 +153,12 @@ Zaimplementowanie modyfikatora \lstinline{const} w pełni, przy użyciu atrybutu
 \end{enumerate}
 
 Właściwość \ref{prop:Attribute_function_overloading} jest częściowo zaplanowaną, ale niezrealizowaną częścią języka (rozdział \ref{Attributes_definition}).
-Atrybuty powiązane z parametrami funkcji mają być traktowane jako wymagania na wartościach przekazywanych przy jej wywołaniu. %todo: think more
+Atrybuty powiązane z parametrami funkcji mają być traktowane jako wymagania.
+Wartość użyta jako argument musi zawierać wszystkie adnotacje parametru, któremu odpowiada. %todo: think more
 Przykładowo, deklaracja \lstinline{fn positive_parameter_fun([positive()] usize paramter)} wymusza na wołającym funckję \lstinline{positive_parameter_fun}, aby przekazywana jej wartość była adnotowana atrybutem \lstinline{positive}.
 Otwartym pytaniem pozostaje też, w jaki sposób traktować atrybuty przyjmujące parametr w kontekście wyboru przeciążenia funkcji.
 Ten problem został dokładniej opisany w rozdziale \ref{further:adnotated_type_system:attribute_equivalence}
 Zapewnienie tej właściwości wymaga ponadto dalszego rozszerzenia systemu atrybutów, tak aby można było aplikować adnotacje do wartości zwracanych z funkcji.
-
 Ta potrzeba wywodzi się z tego, że dokładne znaczenie danej operacji w jest zależne od modyfikatorów zaaplikowanych do używanych wartości.
 Listing \ref{lst:cpp_const_example} zawiera przykład użycia modyfikatora \lstinline{const} w C++.
 Przeciążenie metody \lstinline{member} jest wybierane, biorąc pod uwagę czy parametr \lstinline{this} jest \lstinline{const}.
@@ -242,7 +242,7 @@ Ten aspekt języka, daje programiście szereg nowych możliwości.
 
 \subsubsection{Atrybut Flags}
 
-Jednym z najprostszych przykładów użycia możliwości generowania kodu, jest zadeklarowanie typu enumeracyjnego jako zbiór flag.
+Jednym z najprostszych przykładów użycia możliwości generowania kodu, jest zadeklarowanie typu enumeracyjnego jako zbioru flag.
 Aby to osiągnąć, wszystkie wartości enumeratora muszą być kolejnymi potęgami liczby 2, tak aby binarna alternatywa dowolnych dwóch opcji była unikatowo identyfikowalna.%todo: wording
 
 W większości języków programowania nie ma możliwości automatycznego przypisywania wartości enumeratora w ten sposób.
@@ -267,7 +267,7 @@ Listing \ref{lst:comparison:bloat_cpp_example:cpp} zawiera przykład programu, w
 Przykład został przygotowany przy użyciu narzędzia Compiler Explorer \cite{godbolt}.
 
 Szablon zdefiniowany w linii piątej, listingu \ref{lst:comparison:bloat_cpp_example:cpp} jest prostym przykładem generyka, którego kod jest całkowicie niezależny od typów użytych do stworzenia jego instancji.
-Funkcja \lstinline{foo} przyjmuje będący wskazaniem na typ \lstinline{T} i używa go wyłącznie po konwersji do liczby całkowitej lub odejmując od niego rozmiar \lstinline{T}.
+Funkcja \lstinline{foo} przyjmuje parametr \lstinline{v} będący wskazaniem na typ \lstinline{T} i używa go wyłącznie po konwersji do liczby całkowitej lub odejmując od niego rozmiar \lstinline{T}.
 Szablon procedury \lstinline{foo} można zaprezentować matematycznie, jako funkcję mapującą typ \(t\) na funkcję \(x -> size\_t\) czyli \( foo = t -> (x: t -> size\_t)\). Alternatywnie: \(foo : T_y -> F\), gdzie \(T_y\) to zbiór wszystkich typów, a \(F\) to zbiór wszystkich funkcji jednoargumentowych zwracających typ \(size\_t\).
 Każdą z instancji \lstinline{foo}, da się natomiast sprowadzić do formy:\\
 \(foo(t) = y(x: size\_t) -> size\_t = \begin{cases}
@@ -307,9 +307,9 @@ int main() {
 \end{lstlisting}
 
 Aby zredukować rozrost kodu, zademonstrowany na przykładzie z listingu \ref{lst:comparison:bloat_cpp_example:cpp}, możemy zastosować tak zwane kasowanie typów.
-Jest to technika używana przez programistów do optymalizacji kodu C++ \cite{becker2007:type_erasure} oraz przez kompilator Javy do stworzenia fikcji generyków \cite{nino2007:cost_type_erasure_java}.
-Te dwa języki tworzą więc spektrum, pomiędzy językami, w których instancje generyków są niezależnymi od siebie bytami a tymi, w których generyki stanowią jedynie cukier składniowy.
-C\# oraz inne języki używające Common Language Runtime jako środowisko uruchomieniowe, znajduje się pośrodku tej skali.
+Jest to technika używana przez programistów do optymalizacji kodu C++ \cite{becker2007:type_erasure} oraz przez kompilator Javy \cite{nino2007:cost_type_erasure_java}.
+Te dwa języki tworzą więc spektrum, pomiędzy językami, w których instancje generyków są niezależnymi od siebie bytami a tymi, w których generyki stanowią jedynie ''cukier składniowy''.
+C\# oraz inne języki używające Common Language Runtime \cite{ecma:cli} jako środowisko uruchomieniowe, znajduje się pośrodku tej skali.
 Generyki tego języka są bezpośrednio reprezentowane w Common Intermidiate Language.
 W trakcie JIT, środowisko uruchomieniowe dynamicznie podejmuje decyzję o emisji nowej instancji generyka bądź użyciu już istniejącej przez kasowanie typów \cite{kennedy2001:design_clr_generics}.
 W ten sposób C\# omija problemy wynikające z jawnego kasowania typów w Javie oraz rozrostu kodu z C++.
@@ -366,7 +366,7 @@ W wypadku C/C++ wymaga to użycia słowa \lstinline{external}, do zdefiniowania 
 W C-=-1 nie ma słowa kluczowego \lstinline{extern}.
 Deklaracja symbolu zewnętrznego wymaga stworzenia atrybutu, który zostanie potem obsłużony w interfejsie backendu.
 
-Listing \ref{lst:extern_cm1} przedstawia przykładową atrybut oznaczającą funkcję jako symbol zewnętrzny.
+Listing \ref{lst:extern_cm1} przedstawia przykład atrybut oznaczającego funkcję jako symbol zewnętrzny.
 Interfejs \lstinline{ISymbolNameOverride} ma zwiększyć separację między interfejsem backendu a kodem kontrolującym nazwę symbolu.
 Dzięki temu, w przyszłości będzie go można zaimplementować na inne sposoby, umożliwiając import symboli wymagających specjalnej obsługi.
 
