@@ -102,26 +102,62 @@ Takie rozwiązanie mogłoby jednak prowadzić do zaśmiecania modelu semantyczne
 %todo: formalize?
 \subsection{Operator new}
 \label{operator_new}
-Operator \lstinline{new} w C-=-1, tak jak w C++ służy do dynamicznej alokacji pamięci na stercie.
+Operator \lstinline{new} w C-=-1, tak jak w C++ służy do dynamicznej alokacji pamięci na stercie, a programista może nadpisać jego zachowanie dla danego typu.
+W języku C++ ta funkcja ma za zadanie przydzielenie pamięci oraz wywołanie konstruktora.
+Oznacza to, że generyczny operator \lstinline{new} może przyjmować różne listy parametrów, w zależności od alokowanego typu.
+W C++ można to osiągnąć za pomocą szablonów wariadycznych \cite{gregor2007variadic}, które mają zmienną ilość parametrów generycznych.
+Dzięki temu operator \lstinline{new} może przyjąć dowolną listę parametrów, zalokować pamięć na obiekt i przekazać argumenty do konstruktora obiektu.
+Operator \lstinline{new} zachowuje się jak zwykła funkcja.
+
+W C-=-1 nie istnieje koncepcja funkcji o zmiennej liście parametrów.
+Dlatego operator \lstinline{new}, w tym języku, nie wywołuje konstruktora, a jedynie alokuje pamięć.
+Oznacza to, że w porównaniu z C++, operator \lstinline{new} jest wyjątkowym semantycznie bytem.
+Po jego wywołaniu język sam wywołuje konstruktor odpowiedniego obiektu.
+
+Listing \ref{lst:new_cm} zawiera fragment biblioteki standardowej C-=-1, w której zdefiniowano generyczny operator \lstinline{new}.
+Sygnatura tej funkcji nie może zawierać żadnych parametrów oraz musi zwracać typ spełniający pojęcie \lstinline{owning_pointer} (musi zawierać metodę \lstinline{get}, zwracającą wskazanie na przechowywany obiekt).
+Przykładem takiego typu, z biblioteki standardowej, jest szablon \lstinline{@unique}.
+
+Obecnie funkcja obsługująca operator \lstinline{new} jest wybierana w uproszczony sposób.
+Kompilator znajduje w pakiecie o nazwie \lstinline{std} generyk \lstinline{operator_new} i powołuje jego instancję.
+Jest to rozwiązanie tymczasowe, mające przyśpieszyć pracę nad wersją języka, na której można zacząć przeprowadzać testy.
+W przyszłości należy udokumentować algorytm wyboru przeciążenia operatora \lstinline{new} oraz zastosować jego poprawną wersję.
+Procedura wyboru operatora powinna w pierwszej kolejności przeglądać obecnie kompilowany pakiet, aby programista mógł go nadpisać lokalnie.
 
 \subsection{Wybór przeciążenia funkcji}
 \label{Function_overload_resolution}
-To czy funkcja jest wykonywalna w czasie kompilacji albo uruchomienia można ustalić bardzo późno w trakcie budowy modelu semantycznego.
 
-Na pytanie 'czy ta funkcja może być użyta w tym kontekście', kompilator jest w stanie odpowiedzieć, dopiero kiedy wykonały się na niej funkcje \lstinline{attach} wszystkich powiązanych z nią atrybutów.
+Na pytanie ''czy ta funkcja może być użyta w tym kontekście'', kompilator jest w stanie odpowiedzieć, dopiero kiedy wykonały się na niej funkcje \lstinline{attach} wszystkich powiązanych z nią atrybutów.
 Listing \ref{lst:new_cm} zawiera kod z biblioteki standardowej C-=-1 alokujący pamięć na stercie.
 Operator \lstinline{new unique} występuje w niej w dwóch wersjach: czasu uruchomienia oraz czasu kompilacji.
+Sygnatury funkcji z linii dziesiątej oraz siedemnastej są identyczne, poza zaaplikowanymi atrybutami, kontrolującymi, w których kontekstach można ich użyć.
+
+Programista musi ręcznie określać, kiedy dana funkcja może zostać wywołana, aby ułatwić budowanie modelu semantycznego.
+Automatyczne generowanie tej informacji jest trudnym procesem.
+Aby funkcja mogła zostać użyta w danym kontekście, musi składać się wyłącznie z operacji, które można w nim wykonać.
+W szczególności, wszystkie  wywoływane procedury, muszą być kompatybilne z warunkami wywołania.
+Na przykład, funkcja wykonywana w czasie kompilacji może wywoływać wyłącznie funkcje wykonywalne w czasie kompilacji.
+Kompilator, próbując zdobyć taką informację, musiałby przeanalizować cały tekst programu, na etapie zbierania nagłówków (faza \lstinline{create} opisana w rozdziale \ref{implementation:source_processing_phases}), zanim rozpocznie budowanie reprezentacji pośredniej.
+Ze względu na wymagany nakład pracy, taka analiza nie została zaimplementowana.
+
+Ręczne określanie funkcji jako wykonywalnych w czasie kompilacji jest podejściem używanym też przez język C++ \cite{ISO:2012:III}.
+W pracy zatytułowanej ''General constant expressions for system programming languages'' \cite{dos2010general_constant_expressions}, autorzy argumentują, że kompilatory powinny jedynie weryfikować te metadane, a nie je generować.
+Takie podejście ułatwia implementację kompilatora oraz użycie takiej funkcji.
+Programista, patrząc wyłącznie na nagłówek funkcji, może określić w jakich kontekstach może jej użyć.
 %todo: example?
 
-\lstinputlisting[
-	numbers=left,
-	firstnumber=0,
-	caption={Plik \lstinline{new.cm} z biblioteki standardowej C-=-1},
-	aboveskip=0pt,
-	tabsize=2,
-	label={lst:new_cm}
-	]{D:/Programming/C-equals-1/Libraries/std/src/new.cm}
-
+\begin{minipage}{\textwidth}
+	
+	\lstinputlisting[
+		numbers=left,
+		firstnumber=0,
+		caption={Plik \lstinline{new.cm} z biblioteki standardowej C-=-1},
+		aboveskip=0pt,
+		tabsize=2,
+		label={lst:new_cm}
+		]{../../Libraries/std/src/new.cm}
+		
+\end{minipage}
 \subsection{Wyrażenia literałowe}
 
 Wyrażenie literałowe przedstawia stałą wartość.

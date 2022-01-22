@@ -39,7 +39,7 @@ Kompilator C-=-1 składa się z następujących części:
   \item Backend
 \end{enumerate}
 Część z nich nazywa się tak samo, jak w klasycznej architekturze. Jest to zabieg celowy, ponieważ pełnią one te same funkcje. 
-Dodatkowe komponenty kompilatora, które zostały wydzielone to: \emph{Interpreter}, \emph{Serializator} oraz \emph{Back end Interface}. % todo: italic
+Dodatkowe komponenty kompilatora, które zostały wydzielone to: \emph{Interpreter}, \emph{Serializator} oraz \emph{Backend Interface}. 
 Nazwa Optimiser została wybrana, ponieważ wyrażenie 'middle-end' rzadko występuje w literaturze, a wybrany termin lepiej opisuje ten komponent.
 
 Ponieważ istotnym elementem języka C-=-1 jest możliwość wykonywania kodu w czasie kompilacji, jednym z wydzielonych komponentów jest Interpreter.
@@ -131,9 +131,11 @@ W każdej z nich frontend zachowuje się inaczej.
 
 Pomimo tego, że możliwość specyfikowania zależności pomiędzy pakietami jest częścią języka C-=-1, zarządzanie zależnościami zostało zaimplementowane w minimalnym stopniu.
 W idealnej sytuacji kompilator operowałbym na zserializowanych, do formatu omówionego w rozdziale \ref{serializer}, bibliotekach, które mógłby pobierać ze specjalnego serwisu.
+Format pliku manifestu pakietu, opisany w rozdziale \ref{struktura_paczki}, zawiera wszystkie informacje potrzebne do zbudowania drzewa zależności.
+Biblioteki są identyfikowane przez nazwę, wersję oraz globalnie unikatowy identyfikator (ang: GUID) \cite{leach2005universally}.
+Plik manifestu zawiera też listę zależności, potrzebnych, aby skompilować dany pakiet.
+Obecnie, kompilator C-=-1 jest w stanie kompilować kod źródłowy, używając pakietów dostępnych lokalnie.
 
-
-%todo
 \subsubsection{Reprezentacja pośrednia}
 \label{implementation:intermidiate_representation}
 Reprezentacja pośrednia jest istotnym elementem języka, na którym opiera się metaprogramowanie w C-=-1.
@@ -159,14 +161,16 @@ W C-=-1 szablony działają na zasadach analogicznych do C++.
 Szablon funkcji, na przykład, nie jest funkcją, a wzorcem, według którego procedura może dopiero powstać po pełnej specjalizacji.
 
 Kompilator C-=-1 przechowuje generyki jako fragmenty drzewa rozkładu, ponieważ w obecnym projekcie reprezentacji pośredniej, nie ma potrzebnych struktur danych.
-Frontend analizuje nagłówek szablonu, oraz jego parametry i uzupełnia go na żądanie.
+Frontend analizuje nagłówek szablonu oraz jego parametry i uzupełnia go na żądanie.
 Przy odniesieniu do generyka, kompilator najpierw przegląda istniejące instancje szablonów.
 Jeśli ta kombinacja parametrów jeszcze nie była używana, kopiuje drzewo rozkładu, zastępuje odniesienia do parametrów generycznych konkretnymi typami i przetwarza je jak zwykły plik źródłowy.
 
 Strategia tworzenia instancji generyków, przyjęta w zaproponowanym kompilatorze wymaga starannego zarządzania kontekstem.
 W C-=-1 obiekty pochodzące z innych przestrzeni nazw muszą być jawnie importowane w każdym pliku, który ich używa.
-
-%todo: finish (how is context preserved)
+Po uzupełnienia drzewa rozkładu szablonu o wartości parametrów generycznych mogą się w nim znaleźć nazwy, które nie istniały w oryginalnym kontekście.
+Z tego powodu, reprezentacja generyków strukturach danych kompilatora, przechowuje listę importów z pliku źródłowego, gdzie zadeklarowano szablon.
+Przy jego uzupełnianiu, oryginalny kontekst, oraz kontekst, z którego dochodzi do wypełnienia, są łączone.
+W ten sposób, w trakcie kompilacji instancji szablonu, ma dostęp do wszystkich potrzebnych nazw.
 
 \subsection{Interpreter}
 \label{interpreter}
@@ -355,6 +359,7 @@ Na koniec, w linii dziewiętnastej dochodzi do konwersji z natywnego \lstinline{
 \label{serializer}
 
 Serializator jest komponentem kompilatora, zapisującym i wczytującym reprezentację obiektów do i z tekstu.
+Przy implementacji użyto biblioteki Json Nielsa Lohmanna \cite{lohmann}.
 
 %todo: finish
 
