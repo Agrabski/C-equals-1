@@ -143,8 +143,7 @@ Ze względu na wymagany nakład pracy, taka analiza nie została zaimplementowan
 Ręczne określanie funkcji jako wykonywalnych w czasie kompilacji jest podejściem używanym też przez język C++ \cite{ISO:2012:III}.
 W pracy zatytułowanej ''General constant expressions for system programming languages'' \cite{dos2010general_constant_expressions}, autorzy argumentują, że kompilatory powinny jedynie weryfikować te metadane, a nie je generować.
 Takie podejście ułatwia implementację kompilatora oraz użycie takiej funkcji.
-Programista, patrząc wyłącznie na nagłówek funkcji, może określić w jakich kontekstach może jej użyć.
-%todo: example?
+Programista, patrząc wyłącznie na nagłówek funkcji, może określić, w jakich kontekstach może jej użyć.
 
 \begin{minipage}{\textwidth}
 	
@@ -165,7 +164,14 @@ Na przykład w języku C++ \lstinline{int a = 4;} deklaruje i inicjalizuje zmien
 Wyrażenia literałowe mogą reprezentować stałe różnych typów wbudowanych.
 Ich obsługa przez frontend kompilatora jest prosta, z wyjątkiem operatorów takich jak \lstinline{nameof} czy \lstinline{typeof} znanych ze współczesnych języków programowania.
 Składnia ich użycia jest identyczna do wywołania normalnej funkcji.
-Na przykład aby do zmiennej \lstinline{x} przypisać nazwę funkcji \lstinline{foo} piszemy: \lstinline{let x = nameof(foo);}.
+Na przykład, aby do zmiennej \lstinline{x} przypisać nazwę funkcji \lstinline{foo}, piszemy: \lstinline{let x = nameof(foo);}.
+
+
+Pomimo tego, że operatory takie jak \lstinline{nameof} przypominają normalną funkcję, wymagają specjalnej obsługi przez frontend języka a w niektórych wypadkach wręcz przez gramatykę.
+Listing \ref{lst:function_call_grammar} zawiera fragment składni C-=-1 powiązany z wywołaniem funkcji.
+Przy rozpoznawaniu reguły \lstinline{functionCall}, parser w pierwszej kolejności spróbuje dopasować regułę \lstinline{literalFunction}, przed składnią normalnego wywołania.
+Gdyby reguły były odwrócone, odniesienie do operatorów literałowych prawie zawsze byłyby rozpoznawane jako wywołanie normalnej funkcji.
+
 \begin{minipage}{\linewidth}
 	\begin{lstlisting}[
 		numbers=left,
@@ -186,10 +192,6 @@ literalFunction
 	\end{lstlisting}
 \end{minipage}
 
-Pomimo tego, że operatory takie jak \lstinline{nameof} przypominają normalną funkcję, wymagają specjalnej obsługi przez frontend języka a w niektórych wypadkach wręcz przez gramatykę.
-Listing \ref{lst:function_call_grammar} zawiera fragment składni C-=-1 powiązany z wywołaniem funkcji.
-Przy rozpoznawaniu reguły \lstinline{functionCall}, parser w pierwszej kolejności spróbuje dopasować regułę \lstinline{literalFunction}, przed składnią normalnego wywołania.
-Gdyby reguły były odwrócone, odniesienie do operatorów literałowych prawie zawsze byłyby rozpoznawane jako wywołanie normalnej funkcji.
 
 Składnia z listingu \ref{lst:function_call_grammar} pokazuje też, czemu operatory literałowe wymagają specjalnej obsługi przez gramatykę.
 Na przykład operator \lstinline{typeof}, który zwraca typ identyfikowany przez przekazaną mu nazwę, nie może być traktowany jak normalna funkcja.

@@ -360,8 +360,12 @@ Na koniec, w linii dziewiętnastej dochodzi do konwersji z natywnego \lstinline{
 
 Serializator jest komponentem kompilatora, zapisującym i wczytującym reprezentację obiektów do i z tekstu.
 Przy implementacji użyto biblioteki Json Nielsa Lohmanna \cite{lohmann}.
+Każdy typ, który może być serializowany, ma metodę konwertującą obiekt na słownik klucz-wartość z tego pakietu.
 
-%todo: finish
+Obiekty reprezentujące referencję (opisane w rozdziale \ref{implementation:interpreter:object_representation}) wewnątrz C-=-1 są traktowane wyjątkowo.
+Serializacja odniesień do innych obiektów jest znanym problemem, rozwiązywanym za pomocą technik określanych jako szwindlowanie wskazań (ang: pointer swizzling) \cite{kemper1995swizzling}.
+W trakcie generowania pliku JSON każdemu obiektowi jest przypisywany unikatowy identyfikator.
+Referencje są serializowane do wartości tych identyfikatorów.
 
 \subsection{Backend Interface}
 \label{Backend_Interface}
@@ -402,6 +406,9 @@ Ten obiekt przechowuje mapowanie typów i funkcji reprezentacji pośredniej C-=-
 Używając mechanizmów, opisanych w rozdziałach \ref{implementation:interpreter:basic_library} oraz \ref{implementation:interpreter:cpp_object_references}, udostępniono interfejsowi backendu narzędzie do budowy LLVMIR zdefiniowane w LLVM.
 W ramach biblioteki backendu istnieje cała gama funkcji oraz typów używanych do generowania reprezentacji pośredniej, co zostało opisane w rozdziale \ref{implementation:backend}.
 W języku C-=-1 dostępny jest minimalny ich podzbiór, konieczny do implementacji podstawowego kompilatora.
+
+
+%todo: finish
 
 \subsection{Backend}
 \label{implementation:backend}
