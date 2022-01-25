@@ -250,12 +250,89 @@ W C++ nie istnieje też żaden analizator który wykrywałby błędną definicj�
 Przydzielenie wartości oraz weryfikacja czy są one poprawne, jest opdowiedzialnością programisty.
 
 W C\# istnieje atrybut \lstinline{Flags}.
-Służy on do walidowania wartości enumeratora i generuje ostrzerzenia w wypadku wykrycia błędu, ale nie przypisuje ich sam.
+Służy on do sprawdzania poprawności wartości enumeratora i generuje ostrzeżenia w wypadku wykrycia błędu, ale nie przypisuje ich sam.
 Programista nadal musi samodzielnie je ustalić.
+W C-=-1, w obecnej wersji, nie istnieje pojęcie typu wyliczeniowego.
+Ich dodanie jest jednak w planach.
 
+\begin{minipage}{\textwidth}
+\begin{lstlisting}[
+  numbers=left,
+  firstnumber=0,
+  caption={Hipotetyczna implementacja atrybutu \lstinline{flags} dla C-=-1},
+  aboveskip=0pt,
+  label={lst:enum_flags_attribute}
+  ]
+public att<enumValue> NoneFlag {}
+
+public att<enum> Flags {
+    public fn attach(e: enumDescriptor) {
+      let index = 0;
+      for(label in e.labels)
+        if(label.hasAttribute<_att_ NoneFlag>())
+          label.value = 0;
+        else
+          label.value = power(2, index++);
+    }
+}
+[Flags()]
+enum Sample {
+  [NoneFlag()]
+  None,
+  A,
+  B,
+  C = A | B
+}
+\end{lstlisting}
+\end{minipage}
+
+Listing \ref{lst:enum_flags_attribute} zawiera hipotetyczną implementację atrybutu \lstinline{flags}, automatycznie przypisującego poprawne wartości elementom typu wyliczeniowego.
+Każdemu z nich odpowiada kolejna potęga dwójki, poza oznaczonymi adnotacją \lstinline{NoneFlag}: te mają wartość zero.
+Ta implementacja ma za zadanie zademonstrowanie możliwości generowania kodu, bardziej praktyczna wersja powinna brać pod uwagę też możliwość ręcznego ustalania wartości elementów na kombinacje innych etykiet.
+Przykład takiej sytuacji jest w linii osiemnastej listingu \ref{lst:enum_flags_attribute}.
+
+Dodanie typów wyliczeniowych do języka wymaga też rozszerzenia modelu semantycznego.
+Kod z listingu \ref{lst:enum_flags_attribute} korzysta z części tych dodatków.
+Cele dla atrybutów (opisane w rozdziale \ref{Attributes_definition}) \lstinline{enum} i \lstinline{enumValue} są powiązane odpowiednio z typem wyliczeniowym oraz jego pojedynczą wartością.
+Ponadto, należy dodać typy \lstinline{enumDescriptor} oraz \lstinline{enumValueDescriptor}.
 %todo: cm1
 
-\subsection{Testowanie kodu}
+\subsubsection{Testowanie kodu}
+
+Dzięki możliwościom generowania kodu w C-=-1, można w nim łatwo skonstruować framework do pisania testów jednostkowych.
+Przykładami takiego oprogramowania, istniejącego dla innych języków programowania są biblioteki Nunit dla C\#, Gtest dla C++ czy Jasmine dla javascript.
+Testy jednostkowe są typowo pisane jako zbiór funkcji, z których każda przedstawia pewne założenie, które testowane oprogramowanie musi spełniać.
+
+\begin{minipage}{\textwidth}
+  \begin{lstlisting}[
+    numbers=left,
+    firstnumber=0,
+    caption={Przykład testów jednostkowych w C-=-1},
+    aboveskip=0pt,
+    label={lst:cm1_tests}
+    ]
+[Test()]
+fn test1() {
+  assert_equal(1 + 1, 2)
+}
+[Test(1, 1, 2)]
+[Test(2, 2, 4)]
+fn test2(arg1: usize, arg2: usize, result: usize) {
+  assert_equal(arg1 + arg2, result);
+}
+
+[TestMain()]
+fn main() {
+}
+  \end{lstlisting}
+\end{minipage}
+
+Listing \ref{lst:cm1_tests} zawiera przykładowe użycie frameworku do testów jednostkowych, który można skonstruować w C-=-1.
+Atrybut \lstinline{Test} oznacza funkcję jako test jednostkowy.
+Jego konstruktor może przyjmować szeroką gamę list argumentów.
+Wartości przekazywane przy konstruowaniu atrybutu, będą wykorzystane przy wywołaniu funkcji testowej.
+Atrybut \lstinline{TestMain}, przyłączony do procedury stanowiącej punkt wejścia programu, zamieni jej ciało na sekwencje wywołań wszystkich metod testowych.
+
 
 \subsection{Kompilacja szablonów}
 \label{comparison:template_type_erasure}
@@ -282,29 +359,32 @@ W liniach zerowej oraz dziesiątej znajdują się etykiety powiązane z instancj
 Pomimo tego, że kod obydwu procedur jest identyczny, zgodnie z rozważaniami z poprzedniego akapitu, kompilator wygenerował obydwie wersje.
 To jest przykład rozrostu kodu, któremu można zapobiec w C-=-1.
 
-\begin{lstlisting}[
-  numbers=left,
-  firstnumber=0,
-  caption={Przykładowy kod w C++ powodujący rozrost pliku wynikowego},
-  aboveskip=0pt,
-  label={lst:comparison:bloat_cpp_example:cpp}
-  ]
-#include<vector>
-#include<iostream>
+\begin{minipage}{\textwidth}
   
-extern size_t bar(size_t v);
-template<typename T>
-size_t foo(T const* v) {
-    if((size_t)v > 500)
-        return bar(foo(v - 1));
-    return  bar((size_t)v);
-}
-int main() {
-    int n = 3;
-    float y = 5;
-    std::cout<< foo(&n) + foo(&y);
-}
-\end{lstlisting}
+  \begin{lstlisting}[
+    numbers=left,
+    firstnumber=0,
+    caption={Przykładowy kod w C++ powodujący rozrost pliku wynikowego},
+    aboveskip=0pt,
+    label={lst:comparison:bloat_cpp_example:cpp}
+    ]
+  #include<vector>
+  #include<iostream>
+    
+  extern size_t bar(size_t v);
+  template<typename T>
+  size_t foo(T const* v) {
+      if((size_t)v > 500)
+          return bar(foo(v - 1));
+      return  bar((size_t)v);
+  }
+  int main() {
+      int n = 3;
+      float y = 5;
+      std::cout<< foo(&n) + foo(&y);
+  }
+  \end{lstlisting}
+\end{minipage}
 
 Aby zredukować rozrost kodu, zademonstrowany na przykładzie z listingu \ref{lst:comparison:bloat_cpp_example:cpp}, możemy zastosować tak zwane kasowanie typów.
 Jest to technika używana przez programistów do optymalizacji kodu C++ \cite{becker2007:type_erasure} oraz przez kompilator Javy \cite{nino2007:cost_type_erasure_java}.
@@ -322,37 +402,40 @@ W ten sposób zachowana zostaje moc szablonów C++, unikając jednocześnie prob
 Ta optymalizacja nie została zaimplementowana z powodu jej dużej złożoności technicznej w porównaniu do wartości badawczej w kontekście tej pracy.
 Jej wykonanie zostałoby znacząco ułatwione po wprowadzeniu zmian w modelu semantycznym, opisanym w rozdziale \ref{further:generic_intermidiate_representation}.
 
-\begin{lstlisting}[
-  numbers=left,
-  firstnumber=0,
-  caption={Fragment assemblera x86-64 generowanego dla przykładu z listingu \ref{lst:comparison:bloat_cpp_example:cpp} przez kompilator Clang w wersji 13.0.0, z maksymalnym poziomem optymalizacji},
-  aboveskip=0pt,
-  breaklines=true,
-  label={lst:comparison:bloat_cpp_example:assembly}
-  ]
-  unsigned long foo<int>(int const*):
-  cmp     rdi, 500
-  jbe     .LBB1_2
-  push    rax
-  add     rdi, -4
-  call    unsigned long foo<int>(int const*)
-  mov     rdi, rax
-  add     rsp, 8
-.LBB1_2:
-  jmp     bar(unsigned long)          # TAILCALL
-unsigned long foo<float>(float const*):
-  cmp     rdi, 500
-  jbe     .LBB2_2
-  push    rax
-  add     rdi, -4
-  call    unsigned long foo<float>(float const*)
-  mov     rdi, rax
-  add     rsp, 8
-.LBB2_2:
-  jmp     bar(unsigned long)          # TAILCALL
-\end{lstlisting}
-
-
+\begin{minipage}{\textwidth}
+  
+  \begin{lstlisting}[
+    numbers=left,
+    firstnumber=0,
+    caption={Fragment assemblera x86-64 generowanego dla przykładu z listingu \ref{lst:comparison:bloat_cpp_example:cpp} przez kompilator Clang w wersji 13.0.0, z maksymalnym poziomem optymalizacji},
+    aboveskip=0pt,
+    breaklines=true,
+    label={lst:comparison:bloat_cpp_example:assembly}
+    ]
+    unsigned long foo<int>(int const*):
+    cmp     rdi, 500
+    jbe     .LBB1_2
+    push    rax
+    add     rdi, -4
+    call    unsigned long foo<int>(int const*)
+    mov     rdi, rax
+    add     rsp, 8
+  .LBB1_2:
+    jmp     bar(unsigned long)          # TAILCALL
+  unsigned long foo<float>(float const*):
+    cmp     rdi, 500
+    jbe     .LBB2_2
+    push    rax
+    add     rdi, -4
+    call    unsigned long foo<float>(float const*)
+    mov     rdi, rax
+    add     rsp, 8
+  .LBB2_2:
+    jmp     bar(unsigned long)          # TAILCALL
+  \end{lstlisting}
+  
+  
+\end{minipage}
 \subsection{Rozszerzalność języka}
 \label{Language_extensibility}
 Jedną z konsekwencji zaproponowanych mechanizmów języka C-=-1 jest możliwość rozszerzania języka bez modyfikacji kompilatora.
@@ -365,37 +448,6 @@ Mogą one pochodzić z kodu napisanego w innym języku lub z już skompilowanej 
 W wypadku C/C++ wymaga to użycia słowa \lstinline{external}, do zdefiniowania symbolu zewnętrznego oraz przekazania odpowiedniego argumentu do linkera.
 W C-=-1 nie ma słowa kluczowego \lstinline{extern}.
 Deklaracja symbolu zewnętrznego wymaga stworzenia atrybutu, który zostanie potem obsłużony w interfejsie backendu.
-
-Listing \ref{lst:extern_cm1} przedstawia przykład atrybut oznaczającego funkcję jako symbol zewnętrzny.
-Interfejs \lstinline{ISymbolNameOverride} ma zwiększyć separację między interfejsem backendu a kodem kontrolującym nazwę symbolu.
-Dzięki temu, w przyszłości będzie go można zaimplementować na inne sposoby, umożliwiając import symboli wymagających specjalnej obsługi.
-
-Atrybut \lstinline{MarkAsExternal} ma natomiast dwie role.
-Po pierwsze, przechowuje nazwę symbolu, który jest importowany.
-W ten sposób użytkownik nie jest przywiązany do nazwy symbolu zadeklarowanej w skompilowanym pliku bibliotecznym.
-Umożliwia to też importowanie funkcji z C++, których nazwy zostały zmieszane i zawierają znaki nieakceptowalne w identyfikatorach.
-Po drugie, \lstinline{MarkAsExternal} wywołuje procedurę \lstinline{ignoreBody}.
-Ta funkcja informuje kompilator, że powinien zignorować ciało podprogramu i analizować wyłącznie nagłówek.
-To wywołanie jest konieczne, ponieważ kompilator zapewnia poprawność programu, analizując zawartość funkcji.
-Dlatego, jeśli funkcja zwracająca jakąś wartość, nie zawiera instrukcji \lstinline{return}, program zostanie odrzucony.
-W wypadku podprogramów importowanych z zewnątrz, ich ciało jest zbędne.
-
-Listing \ref{lst:selected_backend_interface} zawiera wybrane funkcje z domyślnego interfejsu backendu, powiązane z symbolami zewnętrznymi.
-Funkcja \lstinline{getFunctionName} ma za zadanie wygenerować nazwę symbolu, kompatybilną z C.
-Linie od drugiej do czwartej obsługują atrybuty implementujące \lstinline{ISymbolNameOverride}.
-Sprawdzają one, czy z daną funkcją powiązany jest atrybut nadpisujący nazwę symbolu i zwraca wygenerowaną przez niego wartość.
-
-Funkcja \lstinline{buildFunction} ma stworzyć reprezentację pośrednią LLVM funkcji przekazanej jako parametr.
-Linie od dwudziestej dziewiątej do trzydziestej trzeciej zawierają kod obsługujący symbole zewnętrzne.
-Te instrukcje sprawdzają, czy z funkcją powiązany jest atrybut implementujący \lstinline{ISymbolNameOverride}.
-Jeśli tak, ciało procedury jest ignorowane.
-W przeciwnym wypadku interfejs backendu buduje funkcję normalnie.
-W LLVM, procedury niezawierające ciała, są uznawane za symbole zewnętrzne.
-
-Zaprezentowana implementacja jest bardzo prosta, zmienia jedynie nazwę generowanego symbolu i ignoruje ciało budowanej funkcji.
-Mogą jednak istnieć scenariusze, w których użycie symbolu zewnętrznego wymaga bardziej złożonej obsługi.
-Przykładowo, jeśli wywołanie funkcji zdefiniowanej w innym języku wymaga konwersji (ang. marshalling) przekazywanych parametrów, bądź zwracanej wartości.
-Po niewielkich modyfikacjach zaproponowanego interfejsu obsługa takich przypadków byłaby możliwa.
 
 \begin{minipage}{\linewidth}
   
@@ -431,6 +483,39 @@ public att<function> MarkAsExternal : ISymbolNameOverride
 }
 \end{lstlisting}
 \end{minipage}
+
+
+Listing \ref{lst:extern_cm1} przedstawia przykład atrybut oznaczającego funkcję jako symbol zewnętrzny.
+Interfejs \lstinline{ISymbolNameOverride} ma zwiększyć separację między interfejsem backendu a kodem kontrolującym nazwę symbolu.
+Dzięki temu, w przyszłości będzie go można zaimplementować na inne sposoby, umożliwiając import symboli wymagających specjalnej obsługi.
+
+Atrybut \lstinline{MarkAsExternal} ma natomiast dwie role.
+Po pierwsze, przechowuje nazwę symbolu, który jest importowany.
+W ten sposób użytkownik nie jest przywiązany do nazwy symbolu zadeklarowanej w skompilowanym pliku bibliotecznym.
+Umożliwia to też importowanie funkcji z C++, których nazwy zostały zmieszane i zawierają znaki nieakceptowalne w identyfikatorach.
+Po drugie, \lstinline{MarkAsExternal} wywołuje procedurę \lstinline{ignoreBody}.
+Ta funkcja informuje kompilator, że powinien zignorować ciało podprogramu i analizować wyłącznie nagłówek.
+To wywołanie jest konieczne, ponieważ kompilator zapewnia poprawność programu, analizując zawartość funkcji.
+Dlatego, jeśli funkcja zwracająca jakąś wartość, nie zawiera instrukcji \lstinline{return}, program zostanie odrzucony.
+W wypadku podprogramów importowanych z zewnątrz, ich ciało jest zbędne.
+
+Listing \ref{lst:selected_backend_interface} zawiera wybrane funkcje z domyślnego interfejsu backendu, powiązane z symbolami zewnętrznymi.
+Funkcja \lstinline{getFunctionName} ma za zadanie wygenerować nazwę symbolu, kompatybilną z C.
+Linie od drugiej do czwartej obsługują atrybuty implementujące \lstinline{ISymbolNameOverride}.
+Sprawdzają one, czy z daną funkcją powiązany jest atrybut nadpisujący nazwę symbolu i zwraca wygenerowaną przez niego wartość.
+
+Funkcja \lstinline{buildFunction} ma stworzyć reprezentację pośrednią LLVM funkcji przekazanej jako parametr.
+Linie od dwudziestej dziewiątej do trzydziestej trzeciej zawierają kod obsługujący symbole zewnętrzne.
+Te instrukcje sprawdzają, czy z funkcją powiązany jest atrybut implementujący \lstinline{ISymbolNameOverride}.
+Jeśli tak, ciało procedury jest ignorowane.
+W przeciwnym wypadku interfejs backendu buduje funkcję normalnie.
+W LLVM, procedury niezawierające ciała, są uznawane za symbole zewnętrzne.
+
+Zaprezentowana implementacja jest bardzo prosta, zmienia jedynie nazwę generowanego symbolu i ignoruje ciało budowanej funkcji.
+Mogą jednak istnieć scenariusze, w których użycie symbolu zewnętrznego wymaga bardziej złożonej obsługi.
+Przykładowo, jeśli wywołanie funkcji zdefiniowanej w innym języku wymaga konwersji (ang. marshalling) przekazywanych parametrów, bądź zwracanej wartości.
+Po niewielkich modyfikacjach zaproponowanego interfejsu obsługa takich przypadków byłaby możliwa.
+
 
 \begin{minipage}{\linewidth}
   

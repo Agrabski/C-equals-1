@@ -220,18 +220,20 @@ Znajduje się na niej zarówno reprezentacja pośrednia programu, jak i dane alo
 W obecnej implementacji sterta jest niezarządzana i wymaga, aby programista ręcznie zwolnił pamięć.
 To niedociągnięcie wynika z braku czasu i powinno zostać uzupełnione w przyszłej wersji kompilatora.
 Dodanie odśmiecania pamięci może też pomóc w odnajdywaniu wycieków pamięci: jeśli ten sam kod jest wykonywany w czasie uruchomienia i kompilacji oraz, w czasie kompilacji wyciekła z niego pamięć, to ten sam efekt prawdopodobnie występuje w trakcie uruchomienia.
-
-\begin{lstlisting}[
-  caption=Nagłówek głównej funkcji interpretera,
-  label=interpreter_header
-]
-std::unique_ptr<IRuntimeValue> execute
-(
-  gsl::not_null<Function*> functionDefinition,
-  std::vector<std::unique_ptr<IRuntimeValue>>&& arguments
-);
-\end{lstlisting}
-
+\begin{minipage}{\textwidth}
+  
+  \begin{lstlisting}[
+    caption=Nagłówek głównej funkcji interpretera,
+    label=interpreter_header
+  ]
+  std::unique_ptr<IRuntimeValue> execute
+  (
+    gsl::not_null<Function*> functionDefinition,
+    std::vector<std::unique_ptr<IRuntimeValue>>&& arguments
+  );
+  \end{lstlisting}
+  
+\end{minipage}
 Listing \ref{interpreter_header} zawiera nagłówek głównej funkcji interpretera.
 To ona jest odpowiedzialna za wykonywanie kodu w kompilatorze C-=-1, niezależnie od kontekstu.
 Ta funkcja przyjmuje dwa parametry: \lstinline{functionDefinition} będący wskazaniem na model semantyczny wykonywanej procedury oraz \lstinline{arguments} zawierający wektor wartości argumentów.
@@ -277,7 +279,7 @@ Hierarchia dziedziczenia klas używanych do reprezentowania obiektów C-=-1 zost
 Niektóre referencje do obiektów C++ muszą jednak też zarządzać pamięcią.
 Do przykładów należą: strumienie powiązane z otwartymi plikami czy kontekst LLVM.
 Takie obiekty są zarządzane przez \lstinline{GenericOwningRuntimeWrapper}
-Różnica między nim a \lstinline{GenericRuntimeWrapper} to typ używanego wskazania.
+Różnica między nim a \\\lstinline{GenericRuntimeWrapper} to typ używanego wskazania.
 \lstinline{GenericOwningRuntimeWrapper} zamiast zwykłego wskazania, używa \lstinline{shared_ptr}.
 W ten sposób, ten wrapper nie tylko przechowuje referencję na obiekt, ale zarządza też jego czasem życia.
 %todo: finish

@@ -157,32 +157,35 @@ To podejście sprawia, że parametryzowane adnotacje zmiennych tracą jakikolwie
 Niewykluczone, że możliwość definiowania takich atrybutów w praktycznym zastosowaniu jest zbędne.
 Zasadność takiej konstrukcji powinna być przedmiotem przyszłych badań.
 
-\begin{lstlisting}[
-	numbers=left,
-	firstnumber=0,
-	caption={Przykład atrybutu w C-=-1},
-	aboveskip=0pt,
-	label={lst:further:attribute_comparison}
-	]
-att<variable> GreaterThan {
-	private _limit: usize;
-	public fn construct(limit: usize)
-	...
-}
-public fn greaterThan<limit: usize>(value: usize) -> 
-	[GreaterThan(limit)] usize {
-	assert(value > limit);
-	return value;
-}
-public fn getParameter() -> usize;
-public fn externalFunction([GreaterThan(5)]parameter: usize);
-
-public fn function() {
-	let parameter = getParameter();
-	externalFunction(greaterThan<7>(parameter));
-}
-\end{lstlisting}
-
+\begin{minipage}{\textwidth}
+	
+	\begin{lstlisting}[
+		numbers=left,
+		firstnumber=0,
+		caption={Przykład atrybutu w C-=-1},
+		aboveskip=0pt,
+		label={lst:further:attribute_comparison}
+		]
+	att<variable> GreaterThan {
+		private _limit: usize;
+		public fn construct(limit: usize)
+		...
+	}
+	public fn greaterThan<limit: usize>(value: usize) -> 
+		[GreaterThan(limit)] usize {
+		assert(value > limit);
+		return value;
+	}
+	public fn getParameter() -> usize;
+	public fn externalFunction([GreaterThan(5)]parameter: usize);
+	
+	public fn function() {
+		let parameter = getParameter();
+		externalFunction(greaterThan<7>(parameter));
+	}
+	\end{lstlisting}
+	
+\end{minipage}
 Alternatywnym podejściem do problemu porównywania atrybutów jest rozszerzenie zbioru ich metod o \lstinline{satisfiesInvariant(value: valueDescriptor*) -> bool}.
 Ta funkcja byłaby wywoływana na atrybucie powiązanym z parametrem wywoływanej procedury.
 Ta metoda ma za zadanie zweryfikować czy dana wartość spełnia wymagania narzucone przez daną adnotację.
