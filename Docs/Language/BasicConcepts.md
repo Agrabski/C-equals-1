@@ -7,6 +7,11 @@ In C-=-1 every element of the language except for namespaces is subject to acces
 C-=-1 is designed to be executable as a standalone, binary file, as well as an interpreted language.
 Some operations, like memory allocation, may be performed differently depending on whether the program is in binary form or is interpreted.
 
+## Indentations
+
+Programs should be indented using the `tab` (`\t`, or unicode `0x09` character).
+Programs indented using any number of spaces are mallformed, their behaviour is undefined.
+
 ## Assembly
 
 ## Namespace
