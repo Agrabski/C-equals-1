@@ -163,7 +163,6 @@ Ta potrzeba wywodzi się z tego, że dokładne znaczenie danej operacji w jest z
 Listing \ref{lst:cpp_const_example} zawiera przykład użycia modyfikatora \lstinline{const} w C++.
 Przeciążenie metody \lstinline{member} jest wybierane, biorąc pod uwagę czy parametr \lstinline{this} jest \lstinline{const}.
 Tak więc w linii dziewiątej, wybierane jest przeciążenie nie-\lstinline{const} z linii trzeciej a w linii dziesiątej, przeciążenie \lstinline{const} z linii czwartej.
-%todo: wording. example
 
 \begin{minipage}{\linewidth}
   \begin{lstlisting}[
@@ -218,12 +217,12 @@ fn main() -> usize
 
 
 Właściwość \ref{prop:Reference_adnotations} jest blisko powiązana z właściowścią \ref{prop:Generic_adnotations}.
-Rozróżnienie pomiędzy aplikacją atrybutu do wskazania a wskazywanej wartości, jest konieczne aby zapewnić nienaruszenie niezmienników dotyczących wartości.
+Rozróżnienie pomiędzy aplikacją atrybutu do wskazania a wskazywanej wartości, jest konieczne, aby zapewnić nienaruszenie niezmienników dotyczących wartości.
 Listing \ref{lst:const_problem_example} przedstawia ten problem.
 W linii piątej, do zmiennej \lstinline{pointer} przypisywany jest adres zmiennej \lstinline{x}.
 Pomimo zaaplikowania atrybutu \lstinline{const} do nowej zmiennej, analizator generuje błąd.
 Adnotacja została tutaj zaaplikowana do wartości wskazania, nie do wskazywanej wartości.
-W C-=-1 istnieją sposoby na obejście tego ograniczenia, jednak lepsze rozwiązanie powinno powstać w wyniku prac opisanych w rozdziale \ref{further:adnotated_type_system}.%todo: example?
+W C-=-1 istnieją sposoby na obejście tego ograniczenia, jednak lepsze rozwiązanie powinno powstać w wyniku prac opisanych w rozdziale \ref{further:adnotated_type_system}.
 
 Wszystkie te właściwości wskazują na silne powiązanie pomiędzy systemem adnotacji a typów.
 Sposób na połączenie tych aspektów C-=-1 powinno zostać bardziej dogłębnie zbadane w przyszłej pracy.
@@ -243,7 +242,7 @@ Ten aspekt języka, daje programiście szereg nowych możliwości.
 \subsubsection{Atrybut Flags}
 
 Jednym z najprostszych przykładów użycia możliwości generowania kodu, jest zadeklarowanie typu enumeracyjnego jako zbioru flag.
-Aby to osiągnąć, wszystkie wartości enumeratora muszą być kolejnymi potęgami liczby 2, tak aby binarna alternatywa dowolnych dwóch opcji była unikatowo identyfikowalna.%todo: wording
+Aby to osiągnąć, wszystkie wartości enumeratora muszą być kolejnymi potęgami liczby 2, tak aby binarna alternatywa dowolnych dwóch opcji była unikatowo identyfikowalna.
 
 W większości języków programowania nie ma możliwości automatycznego przypisywania wartości enumeratora w ten sposób.
 W C++ nie istnieje też żaden analizator który wykrywałby błędną definicję takiej flagi.
@@ -295,7 +294,6 @@ Dodanie typów wyliczeniowych do języka wymaga też rozszerzenia modelu semanty
 Kod z listingu \ref{lst:enum_flags_attribute} korzysta z części tych dodatków.
 Cele dla atrybutów (opisane w rozdziale \ref{Attributes_definition}) \lstinline{enum} i \lstinline{enumValue} są powiązane odpowiednio z typem wyliczeniowym oraz jego pojedynczą wartością.
 Ponadto, należy dodać typy \lstinline{enumDescriptor} oraz \lstinline{enumValueDescriptor}.
-%todo: cm1
 
 \subsubsection{Testowanie kodu}
 
@@ -336,8 +334,6 @@ Atrybut \lstinline{TestMain}, przyłączony do procedury stanowiącej punkt wej�
 
 \subsection{Kompilacja szablonów}
 \label{comparison:template_type_erasure}
-%todo: o tym że da się dorobić type erasue
-%todo: cite in implementation chapter
 Jedną z ciekawych możliwości, wynikającej z istnienia modelu semantycznego w C-=-1, zawierającego w sobie funkcje generyczne, jest ich bardziej efektywna kompilacja.
 W C++ szablony są częstym źródłem rozrostu generowanego kodu maszynowego.
 Listing \ref{lst:comparison:bloat_cpp_example:cpp} zawiera przykład programu, w którym występuje ten problem natomiast w listingu \ref{lst:comparison:bloat_cpp_example:assembly} znajduje się kod assemblera x86-64 generowany przez kompilator Clang \cite{lattner2008llvm}.

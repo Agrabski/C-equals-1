@@ -48,8 +48,6 @@ Dla każdego pakietu zawierającego generyki generowany jest nowy pakiet, przech
 Ta nowa biblioteka, zależy od biblioteki deklarującej szablon oraz wszystkich pakietów, od których zależy instancja.
 W ten sposób skonstruowany model semantyczny jest spójny i jasny dla programisty.
 
-%todo: consistency formal proof?
-
 \begin{figure}
 	\caption{Diagram przykładowej relacji pomiędzy pakietami zawierającymi typ generyczny}
 	\begin{center}
@@ -89,7 +87,7 @@ W czasie kompilacji wywołuje funkcję generyczną \lstinline{compiletime_heap_a
 Szczegóły zostały opisane w rozdziale \ref{operator_new}.
 
 Sygnatury tych operatorów niczym się nie różnią.
-Język rozpoznaje je jako oddzielne, rozróżnialne byty wyłącznie dlatego, że atrybuty którymi został adnotowane zmieniają ich dostępność w czasie kompilacji i uruchomienia.
+Język rozpoznaje je jako oddzielne, rozróżnialne byty wyłącznie dlatego, że atrybuty, którymi zostały adnotowane zmieniają ich dostępność w czasie kompilacji i uruchomienia.
 
 Na wczesnych etapach implementacji, instancje funkcji generycznych były tworzone, przy założeniu, że ich kod będzie poprawny semantycznie.
 Takie samo założenie obowiązuje przy tworzeniu zwykłych funkcji, ponieważ ze względu na ograniczenia czasowe, raportowanie o błędach kompilacji nie jest częścią pracy.
@@ -99,7 +97,7 @@ Przy próbie dynamicznej alokacji typu, który nie mógł istnieć w czasie uruc
 Naprawa tego problemu wymagała weryfikacji czy dana funkcja jest wykonywalna, w jakimkolwiek kontekście, po wykonaniu kodu powiązanych atrybutów.
 Alternatywnym podejściem jest ignorowanie traktowanie błędów w instancji generyka, jako sygnał do odrzucenia tej specjalizacji, tak jak zostało to rozwiązane w C++ \cite{cppTemplatesCompleteGuide}.
 Takie rozwiązanie mogłoby jednak prowadzić do zaśmiecania modelu semantycznego funkcjami, które nie mogą zostać użyte w żadnym kontekście i nie zawierały akurat żadnych błędów.
-%todo: formalize?
+
 \subsection{Operator new}
 \label{operator_new}
 Operator \lstinline{new} w C-=-1, tak jak w C++ służy do dynamicznej alokacji pamięci na stercie, a programista może nadpisać jego zachowanie dla danego typu.
