@@ -402,7 +402,21 @@ Traktowanie wszystkich pakietów, z których składa się program, jako jedną c
 
 Centralnym elementem zaproponowanej implementacji \emph{interfejsu backendu} jest typ \lstinline{PackageRegistry}.
 Ten obiekt przechowuje mapowanie typów i funkcji reprezentacji pośredniej C-=-1 na typy oraz funkcje LLVMIR.
-%todo: finish
+
+\emph{Interfejs backendu} generuje reprezentację pośrednią llvm, na podstawie każdej wykonywalnej w czasie uruchomienia funkcji we wszystkich pakietach.
+Budowanie llvmir jest rekursywne: tworząc kod dla procedury \lstinline{A},zawierającej wywołanie lstinline{B}, przetłumaczy obydwie funkcje.
+Jeśli później napotka \lstinline{B}, to użyje istniejącej już definicji.
+
+Niektóre elementy programu są wyjątkowo traktowane w trakcie generowania LLVMIR.
+Typy takie jak \lstinline{array<T>} oraz \lstinline{string} są przez język uznawane jako elementy wbudowane i muszą zostać przetłumaczone na prostsze konstrukty.
+Tablice są kompilowane do struktury zawierającej wskazanie na pierwszy element oraz liczby elementów.
+Natomiast \lstinline{string} jest reprezentowany w C-=-1 analogicznie do języka C: wskazanie na ciąg znaków, zakończony bajtem \lstinline{0x00}.
+\emph{Interfejs backendu} uwzględnia też bardziej typowe elementy wbudowane takie jak typy liczbowe oraz proste operacje arytmetyczne.
+
+Zaimplementowany moduł zawiera też obsługę generowania nagłówków dla innych języków programowania.
+W trakcie generowania kodu funkcji, \emph{interfejs backendu} sprawdza czy została opatrzona atrybutem implementującym interfejs \lstinline{IBindingsGenerator} i wywołuje jego metodę \lstinline{generate}.
+Generowanie plików nagłówkowych dla innych języków zostało dokładniej opisane w rozdziale \ref{comparison:exporting_to_other_languages}.
+
 \subsubsection{Funkcje eksponowane przez kompilator}
 
 Używając mechanizmów, opisanych w rozdziałach \ref{implementation:interpreter:basic_library} oraz \ref{implementation:interpreter:cpp_object_references}, udostępniono interfejsowi backendu narzędzie do budowy LLVMIR zdefiniowane w LLVM.
@@ -451,7 +465,6 @@ Przy tworzeniu kolekcji dla biblioteki standardowej C-=-1, kładziono nacisk na 
 
 Zarządzanie pamięcią w bibliotece standardowej zostało zbudowane na bazie funkcji języka C \cite{cLangStandard}.
 Mechanizmy automatycznego zarządzania zasobami, opisane w rozdziale \ref{memory_management}, używają procedur \lstinline{malloc} oraz \lstinline{free}, zaimportowanych używając technik z rozdziału \ref{external_symbols}.
-%todo: finish
 
 \subsection{Przyszła praca}
 

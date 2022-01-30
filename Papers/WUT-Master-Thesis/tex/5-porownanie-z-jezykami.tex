@@ -507,12 +507,6 @@ Jeśli tak, ciało procedury jest ignorowane.
 W przeciwnym wypadku interfejs backendu buduje funkcję normalnie.
 W LLVM, procedury niezawierające ciała, są uznawane za symbole zewnętrzne.
 
-Zaprezentowana implementacja jest bardzo prosta, zmienia jedynie nazwę generowanego symbolu i ignoruje ciało budowanej funkcji.
-Mogą jednak istnieć scenariusze, w których użycie symbolu zewnętrznego wymaga bardziej złożonej obsługi.
-Przykładowo, jeśli wywołanie funkcji zdefiniowanej w innym języku wymaga konwersji (ang. marshalling) przekazywanych parametrów, bądź zwracanej wartości.
-Po niewielkich modyfikacjach zaproponowanego interfejsu obsługa takich przypadków byłaby możliwa.
-
-
 \begin{minipage}{\linewidth}
   
   \begin{lstlisting}[
@@ -561,3 +555,33 @@ private fn buildFunction(
 \end{lstlisting}
 \end{minipage}
 
+Zaprezentowana implementacja jest bardzo prosta, zmienia jedynie nazwę generowanego symbolu i ignoruje ciało budowanej funkcji.
+Mogą jednak istnieć scenariusze, w których użycie symbolu zewnętrznego wymaga bardziej złożonej obsługi.
+Przykładowo, jeśli wywołanie funkcji zdefiniowanej w innym języku wymaga konwersji (ang. marshalling) przekazywanych parametrów, bądź zwracanej wartości.
+Po niewielkich modyfikacjach zaproponowanego interfejsu obsługa takich przypadków byłaby możliwa.
+
+\subsection{Użycie skompilowanego kodu w innych językach programowania}
+\label{comparison:exporting_to_other_languages}
+
+Użycie funkcji z jednego języka programowania, w innym języku zwykle wymaga zadeklarowania jej jako symbolu zewnętrznego.
+W rozdziale \ref{external_symbols} zaprezentowano jak automatycznie zaimportować taką procedurę do C-=-1.
+Ponieważ C-=-1 umożliwia wykonywanie dowolnego kodu w trakcie kompilacji, możliwym jest automatyczne eksportowanie zawartości skompilowanego pliku do innych języków programowania.
+
+W zestawie bibliotek zaimplementowanych w ramach tej pracy, znajduje się pakiet \lstinline{bindingsGenerator}.
+Zawiera interfejs \lstinline{IBindingsGenerator} którego metody są wywoływane przez \emph{interfejs backendu} (opisany w rozdziale \ref{Backend_Interface}) w trakcie kompilacji do LLVMIR.
+Interfejs \lstinline{IBindingsGenerator} jest implementowany przez atrybuty, dołączane do funkcji, mające generować pliki nagłówkowe dla innych jęzków.
+
+Pakiet \lstinline{CBindings} zawiera atrybut generujący pliki nagłówkowe dla języka C (plik \path{\Libraries\cBindings\src\cBindingsAttribute.cm} w repozytorium z kodem źródłowym).
+Udostępnienie funkcjie C-=-1 do użycia w C wymaga osiągnięcia trzech celów.
+Po pierwsze, nazwa wygenerowanego symbolu musi być poprawnym identyfikatorem w języku konsumującym bibliotekę.
+LLVM nie ma takich wymagań, więc \emph{interface backendu} może generować symbole zawierające niedozwolone znaki.
+Atrybuty implementujące \lstinline{IBindingsGenerator}, mogą ją więc nadpisać.
+Po drugie koniecznym jest wygenerowanie definicji typów, w języku C, odpowiadającym typom w C-=-1, używanymi w nagłówku funkcji.
+Tyczy się to wyłącznie klas i struktur definiowanych przez użytkownika, typy wbudowane C-=-1 muszą zostać przetłumaczone na ich odpowiedniki C.
+Po trzecie wygenerowane pliki C muszą zostać umieszczone w folderze wyjściowym kompilatora, razem z wygenerowaną biblioteką.
+
+W ramach przeprowadzonych prac badawczych, wyeksportowano funkcję \lstinline{enumerate} z biblioteki standardowej C-=-1 do C.
+Wygenerowany kod zawierał bardzo długie i nieporęczne nazwy, co jest skutkiem przyjętego algorytmu mieszania nazw \cite{wen2006analysis}.
+Kod napisany w języku C był jednak w stanie wywołać funkcję \lstinline{enumerate} oraz w pełni użyć zwróconej pary iteratorów.
+W przyszłych wersjach tej biblioteki, zostanie użyty inny algorytm generujący nazwę symbolu, tworzący bardziej czytelne nazwy.
+%todo: insert c code using the bindings
