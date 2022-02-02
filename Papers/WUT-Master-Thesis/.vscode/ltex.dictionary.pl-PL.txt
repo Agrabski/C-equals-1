@@ -60,3 +60,4 @@ literałowych
 parametryzowane
 urchomieniowe
 inicjalizacji
+nie-stałe
