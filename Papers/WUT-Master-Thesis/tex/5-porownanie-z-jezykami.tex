@@ -166,14 +166,11 @@ fn main() -> usize
 
 \subsubsection{Atrybut const}
 \label{const}
-%todo: remake to make it less confusing
-Ciekawym przykładem adnotacji, umożliwiającej analizę statyczną, jest atrybut \lstinline{const}.
-Odpowiada on modyfikatorowi \lstinline{const} z języka C++.
-Zaaplikowanie go do typu oznacza, że jego instancja jest stała.
-Każda próba modyfikacji, po inicjalizacji, jest błędem.
-
+Modyfikator \lstinline{const} z języka C/C++ oznacza wartość jako stałą i jest nieodłączną częścią systemu typów.
+Przy wyborze przeciążenia funkcji, wartości typu \lstinline{int *} oraz \lstinline{int const *} są traktowane jako dwa różne typy.
+Napisanie atrybutu, zapewniającego podobne zachowanie, do C-=-1 jest ciekawą aplikacją nowych mechanizmów tego języka.
 W obecnym stanie kompilatora oraz języka, możliwa jest implementacja tylko części tej analizy.
-Zaimplementowanie modyfikatora \lstinline{const} w pełni, przy użyciu atrybutu, wymaga od C-=-1 następujących właściwości:
+Zaimplementowanie modyfikatora \lstinline{const} w pełni, przy użyciu atrybutu, wymaga od C-=-1 następujących, dodatkowych, właściwości:
 \begin{enumerate}
   \item \label{prop:Attribute_function_overloading} Atrybuty są brane pod uwagę w trakcie wyboru przeciążenia funkcji
   \item \label{prop:Generic_adnotations} Istnieje sposób na modyfikowanie zachowania zmiennych, pól i parametrów w generykach, przy tworzeniu ich instancji
@@ -182,7 +179,7 @@ Zaimplementowanie modyfikatora \lstinline{const} w pełni, przy użyciu atrybutu
 
 Właściwość \ref{prop:Attribute_function_overloading} jest częściowo zaplanowaną, ale niezrealizowaną częścią języka (rozdział \ref{Attributes_definition}).
 Atrybuty powiązane z parametrami funkcji mają być traktowane jako wymagania.
-Wartość użyta jako argument musi zawierać wszystkie adnotacje parametru, któremu odpowiada. %todo: think more
+Wartość użyta jako argument musi zawierać wszystkie adnotacje parametru, któremu odpowiada.
 Przykładowo, deklaracja \lstinline{fn positive_parameter_fun([positive()] usize paramter)} wymusza na wołającym funckję \lstinline{positive_parameter_fun}, aby przekazywana jej wartość była adnotowana atrybutem \lstinline{positive}.
 Otwartym pytaniem pozostaje też, w jaki sposób traktować atrybuty przyjmujące parametr w kontekście wyboru przeciążenia funkcji.
 Ten problem został dokładniej opisany w rozdziale \ref{further:adnotated_type_system:attribute_equivalence}
@@ -218,11 +215,11 @@ Tak więc w linii dziewiątej, wybierane jest przeciążenie nie-\lstinline{cons
 Zapewnienie właściwości \ref{prop:Generic_adnotations} jest najtrudniejsze i wymaga dalej idącej pracy teoretycznej.
 Zaaplikowanie systemu atrybutów do implementacji modyfikatora \lstinline{const} oznacza śledzenie wartości, nie koniecznie pól, zmiennych, typów czy funkcji.
 Listing \ref{lst:const_problem_example} zawiera przykład problemu rozwiązywanego przez właściwość \ref{prop:Generic_adnotations}.
-W linii drugiej, deklarowana jest zmienna typu \lstinline{usize} z modyfikatorem \lstinline{const}.
+W linii drugiej deklarowana jest zmienna typu \lstinline{usize} z modyfikatorem \lstinline{const}.
 Następnie, w linii czwartej, wskazanie na nią jest wstawiane do listy.
 W tym miejscu analizator wygeneruje błąd kompilacji, ponieważ tworzymy nie-stałe wskazanie na stałą wartość, co może naruszyć chroniony niezmiennik.
 Rozwiązaniem byłoby zadeklarowanie listy jako zawierającej wskazania na stałe.
-W obecnej formie języka, nie jest to jednak możliwe.
+W obecnej formie języka nie jest to jednak możliwe.
 
 \begin{minipage}{\linewidth}
   
@@ -255,18 +252,16 @@ W C-=-1 istnieją sposoby na obejście tego ograniczenia, jednak lepsze rozwiąz
 Wszystkie te właściwości wskazują na silne powiązanie pomiędzy systemem adnotacji a typów.
 Sposób na połączenie tych aspektów C-=-1 powinno zostać bardziej dogłębnie zbadane w przyszłej pracy.
 Szczegóły tych badań zostały opisane dokładniej w rozdziale \ref{further:adnotated_type_system}.
-
-
 W C/C++ modyfikator \lstinline{const} jest integralną częścią systemu typów.
 Typ \lstinline{int*} jest różny od \lstinline{int const*} i konwersja między nimi istnieje tylko w jedną stronę.
-Wszystkie problemy, wymienione w tym rozdziale nie mają odzwierciedlenia w C/C++, ponieważ ten modyfikator w nich jest częścią systemu typów, a nie rozszerzeniem języka.
+Z tego powodu, wszystkie problemy wymienione w tym rozdziale nie mają odzwierciedlenia w C/C++.
 
 \subsection{Generowanie kodu}
 \label{code_generation}
 
 Model semantyczny programu, w języku C-=-1, jest mutowalną strukturą danych.
 Oznacza to, że kod atrybutów może ją modyfikować w trakcie kompilacji, dodając, usuwając bądź zmieniając kolejność instrukcji i wyrażeń.
-Ten aspekt języka, daje programiście szereg nowych możliwości.
+Ten aspekt języka daje programiście szereg nowych możliwości.
 
 \subsubsection{Atrybut Flags}
 

@@ -122,6 +122,19 @@ Jest to rozwiązanie tymczasowe, mające przyśpieszyć pracę nad wersją języ
 W przyszłości należy udokumentować algorytm wyboru przeciążenia operatora \lstinline{new} oraz zastosować jego poprawną wersję.
 Procedura wyboru operatora powinna w pierwszej kolejności przeglądać obecnie kompilowany pakiet, aby programista mógł go nadpisać lokalnie.
 
+\begin{minipage}{\textwidth}
+	
+	\lstinputlisting[
+		numbers=left,
+		firstnumber=0,
+		caption={Plik \lstinline{new.cm} z biblioteki standardowej C-=-1},
+		aboveskip=0pt,
+		tabsize=2,
+		label={lst:new_cm}
+		]{../../Libraries/std/src/new.cm}
+		
+\end{minipage}
+
 \subsection{Wybór przeciążenia funkcji}
 \label{Function_overload_resolution}
 
@@ -143,18 +156,39 @@ W pracy zatytułowanej ''General constant expressions for system programming lan
 Takie podejście ułatwia implementację kompilatora oraz użycie takiej funkcji.
 Programista, patrząc wyłącznie na nagłówek funkcji, może określić, w jakich kontekstach może jej użyć.
 
-\begin{minipage}{\textwidth}
-	
-	\lstinputlisting[
-		numbers=left,
-		firstnumber=0,
-		caption={Plik \lstinline{new.cm} z biblioteki standardowej C-=-1},
-		aboveskip=0pt,
-		tabsize=2,
-		label={lst:new_cm}
-		]{../../Libraries/std/src/new.cm}
-		
-\end{minipage}
+\begin{lstlisting}[
+	numbers=left,
+	firstnumber=0,
+	caption={Przykład użycia modyfikatora \lstinline{constexpr} w języku C++ w kontekście stałego wyrażenia},
+	aboveskip=0pt,
+	tabsize=2,
+	label={lst:constexpr_template_example}
+	]
+constexpr auto x(){ 
+	return 4;
+}
+template<int n>
+int g() {
+	return n;
+}
+int main() {
+	return g<x()>();
+}
+\end{lstlisting}
+
+Z drugiej strony, w pracy ''Constexpr: A Great Good but Wrong Idea'' \cite{Klimiankou:contexpr_great_good_wrong_idea}, autor sugeruje, że możliwość wykonania procedury w czasie kompilacji powinna być przejrzysta dla programisty.
+To kompilator powinien decydować, kiedy funkcja może zostać wykonana.
+Yauhen Klimiankou w swojej pracy skupia się jednak na modyfikatorze \lstinline{constexpr} jako sugestii optymalizacyjnej.
+Ignoruje drugi istotny aspekt tego słowa kluczowego.
+Funkcje oznaczone jako \lstinline{constexpr} mogą być używane w kontekstach, w których konieczne jest stałe wyrażenie, na przykład przy użyciu szablonu.
+
+Listing \ref{lst:constexpr_template_example} zawiera przykład użycia modyfikatora \lstinline{constexpr} użytego w kontekście wymagającym stałej.
+Funkcja \lstinline{x} może zostać użyta przy wywołaniu szablonu funkcji \lstinline{g}.
+Gdyby modyfikator \lstinline{constexpr} został usunięty, zawierałby błąd czasu kompilacji.
+To słowo kluczowe ma więc znaczenie semantyczne, poza sugestią optymalizacyjną.
+Wykonywanie funkcji w czasie kompilacji, jako sposób optymalizacji, bez użycia modyfikatorów \lstinline{constexpr} czy \lstinline{consteval}, jest dozwolone od C++11 zgodnie z zasadą \emph{as-if} \cite{ISO:2012:III}.
+Słowo kluczowe \lstinline{constexpr} wprowadza natomiast możliwość użycia takiej funkcji w niektórych kontekstach.
+
 \subsection{Wyrażenia literałowe}
 
 Wyrażenie literałowe przedstawia stałą wartość.
