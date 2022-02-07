@@ -57,7 +57,23 @@ Ten mechanizm niesie ze sobą jednak pewne koszta, nieakceptowalne w niektórych
 Statyczne metaprogramowanie jest nowym i dynamicznie rozwijającym się trendem w językach niskiego poziomu, który oferuje wiele korzyści dynamicznego metaprogramowania, przenosząc jego koszt na czas kompilacji.
 Obecnie, tego typu mechanizmy, są jednak znacząco ograniczone, w porównaniu z językami zarządzanymi.
 
-C-=-1 proponuje nowe podejście do konstrukcji kompilatora, umożliwiające wprowadzenie do języka bardzo potężnych mechanizmów metaprogramistycznych, bez dodatkowych kosztów w czasie uruchomienia.
+W ramach tej pracy zaproponowano nowy język programowania C-=-1, zaprojektowany z myślą o statycznym metaprogramowaniu.
+Większość kodu pisanego w tym języku może być wykonywana w trakcie kompilacji.
+Ponadto, struktura programu może być modyfikowana w trakcie kompilacji.
+Dzięki temu język może osiągnąć ekspresywność, porównywalną z językami zarządzanymi, bez konieczności środowiska uruchomieniowego czy dodatkowych informacji w czasie uruchomienia.
+
+Aby przetestować możliwości C-=-1, zaimplementowano podstawowy kompilator w C++, dla małego podzbioru języka.
+Pomimo tych ograniczeń, udało się zaprezentować użyteczność proponowanych mechanizmów statycznego metaprogramowania.
+W C-=-1 implementacja nowych analizatorów kodu oraz rozszerzeń języka jest łatwa.
+Część kompilatora została napisana w C-=-1.
+Przyśpieszyło to rozwój języka i udowodniło jego funkcjonalność.
+
+Przeprowadzone prace wskazały na szereg okazji do dalszej pracy badawczej.
+Zakres pracy konieczny, aby stworzyć w pełni funkcjonalny język programowania, jest bardzo duży.
+Zaproponowane mechanizmy metaprogramistyczne mają duży wpływ na konstrukcję języka programowania.
+Zarówno składnia, jak i system typów muszą zostać zaprojektowane, aby z nimi współpracować.
+W związku z tym wiele decyzji projektowych, podjętych na początku pracy okazało się błędnych.
+
 
 \slowakluczowe Metaprogramowanie, Kompilatory, Interpretery, Języki programowania
 
