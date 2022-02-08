@@ -1,7 +1,7 @@
-\section{Projekt języka}
+\section{Projekt języka C-=-1}
 \label{Language_desig}
 
-Język C-=-1 w przeciwieństwie do większości współczesnych języków programowania jest oparty na udostępnieniu programiście struktur danych tworzonych przez kompilator. Deskryptory typów, funkcji, przestrzeni nazw oraz enumeratorów, razem z reprezentacją pośrednią kodu są udokumentowaną częścią języka (załącznik nr 2).
+Język C-=-1 w przeciwieństwie do większości współczesnych języków programowania jest oparty na udostępnieniu programiście struktur danych tworzonych przez kompilator. Deskryptory typów, funkcji, przestrzeni nazw oraz enumeratorów, razem z reprezentacją pośrednią kodu są udokumentowaną częścią języka.
 Aby umożliwić użytkownikowi wykorzystanie tych struktur danych, C-=-1 musi zapewnić sposób na napisanie kodu wykonywanego w czasie kompilacji, który może nimi manipulować. W tym celu postanowiono rozszerzyć koncepcję atrybutu, aby umożliwić inspekcję i modyfikację reprezentacji pośredniej.
 C-=-1 został zaprojektowany na bazie założeń C++. Obydwa te języki są statycznie typowane, kompilowane oraz nie wymagają specjalnego środowiska uruchomieniowego.
 Przy projektowaniu C-=-1 skorzystano jednak z doświadczeń wyciągniętych z C++ w aspektach takich jak dziedziczenie wielobazowe czy zarządzanie pamięcią. Obydwa zostały opisane odpowiednio w rozdziałach \ref{elementy_jezyka} oraz \ref{struktura_paczki}
@@ -9,7 +9,7 @@ Przy projektowaniu C-=-1 skorzystano jednak z doświadczeń wyciągniętych z C+
 \subsection{Składnia}
 
 Składnia języka C-=-1 została opisana używając języka definicji gramatyki narzędzia ANTLR \cite{antlr}, wzorowanego na EBNF \cite{ebnf}.
-Plik zawierający ten opis, znajduje się w repozytorium projektu, pod ścieżką \lstinline{Grammar\Revision0\CMinusEqualsMinus1Revision0.g4}, oraz w załączniku pierwszym.
+Plik zawierający ten opis, znajduje się w repozytorium projektu, pod ścieżką \lstinline{Grammar\Revision0\CMinusEqualsMinus1Revision0.g4}.
 
 Składnia C-=-1 czerpie inspiracje z języka Rust.
 Typy zmiennych, czy zwracane z funkcji są precyzowane używając notacji postfiksowej, na przykład \lstinline{let x : int = 0;} zamiast \lstinline{int x = 0;}.
@@ -263,7 +263,6 @@ Proces wyboru przeciążenia funkcji w C-=-1, jest złożony i został dokładni
 \subsection{Reprezentacja pośrednia}\label{reprezentacja_posrednia}
 Programista C-=-1 może analizować oraz modyfikować reprezentację pośrednią swojego programu w czasie kompilacji.
 C-=-1 Intermidiate Representation, w skrócie CIR jest nieznacznie uproszczoną wersją języka, reprezentowaną jako struktura danych.
-Użytkownik wchodzi w interakcje z CIR za pomocą zestawu interfejsów opisanych w załączniku 2.
 Wszystkie typy instrukcji oraz wyrażeń mają ze sobą powiązany konkretny typ.
 Wyjątkiem jest \lstinline{ScopeTerminationStatement}, który nie jest powiązany z żadną instrukcją pisaną przez użytkownika.
 Instrukcja zakończenia zakresu jest wstawiana przez kompilator na koniec każdej instrukcji złożonej i jest odpowiedzialna za wywołanie destruktorów zmiennych lokalnych (opisane w rozdziale \ref{classes_definition}).
