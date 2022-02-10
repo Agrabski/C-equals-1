@@ -76,7 +76,22 @@ Przeprowadzone prace wskazały wiele kierunków dalszej pracy badawczej.
 % Streszczenie po angielsku
 %--------------------------------------
 \newpage
-\abstract \kant[1-3]
+\abstract 
+Dynamic metaprogramming, present in many modern, managed programming languages is a powerfull tool, helpful in enhancing programmers productivity and code genericity.
+This tool, however, carries with it certain performance penalties, unacceptable in some circumstances.
+Nowadays, an increacing number of low level programming languages incorporate static metaprogramming features.
+It offers many benefits of dynamic metaprogramming, while transfering its costs from run-time to compile-time.
+Currently, static metaprogramming is severley limited, compared to features found in dynamic languages.
+
+This thesis presents a new native programming language: C-=-1, designed with static metaprogramming in mind.
+Its core idea is to allow almost any code to be executed at compile-time and to modify the program's structure.
+Thus making the C-=-1 as expressive as mannaged languages, without the need for a run-time envoirment.
+
+In order to test C-=-1's capabilities, a basic compiler was implemented in C++, for a small subset of the language.
+Despite those limitations, the utlility of proposed metaprogramming features was demonstrated.
+C-=-1 makes static analysis easier to perform and the ability to integrate with other languages is improved.
+Parts of the compiler were written in C-=-1, thus proving language's utility and boosting it's development.
+Implementation of the compiler and conducted tests, indicated new avenues of research into programming languages and compilers.
 \keywords Metaprogramming, Compilers, Interpreters, Programming languages
 
 %--------------------------------------
