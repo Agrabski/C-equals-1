@@ -1,26 +1,238 @@
-\section{Wyzwania}
+\section{Wyzwania wynikające z założeń języka}
+
+W związku z nietypowym podejściem do problemu, zarówno projekt, jak i implementacja C-=-1 przedstawiła szereg ciekawych wyzwań.
+W szczególności są one powiązane z możliwością wykonywania różnego kodu w zależności od kontekstu uruchomienia oraz publiczną naturą reprezentacji pośredniej.
+
 \subsection{Instancje generyków jako element modelu semantycznego}
-Gdzie wsadzić instancję generyka?
+\label{challenges:generic_instance_placement}
+Jednym z wyzwań powiązanych z udostępnieniem reprezentacji pośredniej programiście, jest wybór lokalizacji w modelu semantycznym, w której będą umieszczane instancje generyków.
+Instancja szablonu może zależeć od typów lub funkcji pochodzących z pakietów, które nie były dostępne w czasie kompilacji generyka.
+
+Rysunek \ref{generic_packages_dependencies} zawiera diagram przedstawiający taki przypadek.
+Pakiety \emph{A} oraz \emph{B} są od siebie niezależne.
+W \emph{A} zdefiniowany został generyk \lstinline{List}, natomiast w \emph{B} jest typ \lstinline{Type}.
+Pakiet \emph{C} zależy od \emph{A} i \emph{B} i używa szablonu \lstinline{List}, specjalizując, go przy użyciu \lstinline{Type}.
+W ten sposób powstaje nowy typ: \lstinline{List<Type>}.
+Umieszczenie tego nowego bytu w modelu semantycznym, nie naruszając jego spójności oraz w sposób zrozumiały dla programisty nie jest proste.
+
+Na podstawie diagramu na rysunku \ref{generic_packages_dependencies} można zaproponować cztery miejsca, w których można umieścić instancję generyka.
+Sytuacja tam przedstawiona jest najogólniejszym przypadkiem tego problemu, mając na uwadze, że dowolna kombinacja tych pakietów może być sobie równa (na przykład \emph{C} może być tym pakietem co \emph{A}), oraz że typów, od których zależy \lstinline{List}, może być więcej i mogą być zdefiniowane w różnych pakietach.
+Miejsca, w których można umieścić instancję szablonu to: \begin{enumerate}
+	\item \label{generic_location:A} Pakiet A.
+	\item \label{generic_location:B} Pakiet B.
+	\item \label{generic_location:C} Pakiet C.
+	\item \label{generic_location:new} Nowy pakiet.
+\end{enumerate}
+
+Pakiety \emph{A} i \emph{B} łatwo odrzucić.
+Jeśli umieścić instancję generyka w pakiecie \emph{B} to w przypadku, w którym pakiet \emph{A} z rysunku \ref{generic_packages_dependencies} zależałby od pakietu \emph{B}, stworzenie \lstinline{List<Type>} doprowadziłoby do zależności cyklicznej między pakietami.
+Ponadto, jeśli generyk \lstinline{List} zależałby od typów z kilku różnych pakietów, to w którym z nich zawrzeć jego instancję, byłoby niejednoznaczne.
+Umieszczanie instancji generyka w pakiecie \emph{A} prowadzi do analogicznych problemów.
+
+Miejsce \ref{generic_location:C} w najprostszym przypadku (takim jak na rysunku \ref{generic_packages_dependencies}) może wydać się najlepsze.
+Pakiet \emph{A} ma w końcu dostęp do wszystkich zależności \lstinline{List<Type>}.
+Taka decyzja tworzy jednak problemy ze spójnością modelu przy bardziej złożonej strukturze zależności.
+Rysunek \ref{generic_packages_dependencies:option:a} zawiera diagram sytuacji, w której występuje ten problem.
+Pakiety \emph{C} oraz \emph{D} zależą od generyka z \emph{A} parametryzowanego typem z \emph{B}.
+Ponieważ \emph{C} i \emph{D} są od siebie niezależne, w obydwu powstały instancje tego szablonu, oznaczone numerami 1 i 2.
+Pakiet \emph{E}, pośrednio zależny od \lstinline{List<Type>}, nie może teraz jednoznacznie wyznaczyć, z której instancji skorzystać.
+Nawet jeśli wprowadzić jakiegoś rodzaju mechanizm na rozwiązywanie takich konfliktów, spójność modelu semantycznego została naruszona i zostało wprowadzone źródło błędów programisty.
+
+Miejsce \ref{generic_location:new} zostało ostatecznie wybrane jako najlepsze rozwiązanie tego problemu.
+Instancje generyków są umieszczane w specjalnym pakiecie, istniejącym tylko na czas kompilacji.
+Tworzy to pewne niespójności w modelu semantycznym, ponieważ ta biblioteka nie jest poprawnie zdefiniowana.
+Nie zależy od żadnego innego pakietu, a wszystkie inne pakiety zależą od niej.
+Te wyjątki do normalnej konstrukcji modelu semantycznego zostały przyjęte, aby przyśpieszyć implementację.
+Rozwiązanie niezawierające takiego problemu zostało przedstawione na rysunku \ref{generic_packages_dependencies:option:new}.
+Dla każdego pakietu zawierającego generyki generowany jest nowy pakiet, przechowujący wyłącznie ich instancje.
+Ta nowa biblioteka, zależy od biblioteki deklarującej szablon oraz wszystkich pakietów, od których zależy instancja.
+W ten sposób skonstruowany model semantyczny jest spójny i jasny dla programisty.
+
+\begin{figure}
+	\caption{Diagram przykładowej relacji pomiędzy pakietami zawierającymi typ generyczny}
+	\begin{center}
+		\includegraphics[height=8cm]{img/generic_misplaced.png}
+	\end{center}
+	\label{generic_packages_dependencies}
+\end{figure}
+
+\begin{figure}
+	\caption{Diagram przykładowej relacji pomiędzy pakietami zawierającymi typ generyczny, przy umieszczaniu instancji w generującym pakiecie}
+	\label{generic_packages_dependencies:option:a}
+	\begin{center}
+		\includegraphics[width=\textwidth]{img/generics_placed_in_a.png}
+	\end{center}
+\end{figure}
+
+\begin{figure}
+	\caption{Diagram przykładowej relacji pomiędzy pakietami zawierającymi typ generyczny, przy umieszczaniu instancji w nowym pakiecie}
+	\label{generic_packages_dependencies:option:new}
+	\begin{center}
+		\includegraphics[width=\textwidth]{img/generics_placed_in_new.png}
+	\end{center}
+\end{figure}
 
 \subsection{Funkcje generyczne z ograniczeniami}
+\label{challenges:generic_function_limitations}
+Funkcje mogą być wykluczane z użycia w trakcie uruchomienia lub kompilacji. Jeśli generyk takiej funkcji zostanie stworzony z typem dalej ograniczającym wykonywalność tej funkcji.
+Może dojść do przypadku, w którym ta instancja szablonu nie będzie wykonywalna w żadnym kontekście.
 
-Funkcje mogą być wykluczane w trakcie uruchomienia lub kompilacji. Jeśli generyk takiej funkcji zostanie stworzony z typem dalej ograniczającym wykonywalność tej funkcji, ona może być wykonywalna nigdy.
+Na wczesnych etapach implementacji, instancje takich generyków były szczególnie problematyczne, ze względu na to jak rozwiązywanie przeciążeń jest zaimplementowane w C-=-1 (rozdział \ref{Function_overload_resolution}).
+W związku z tym, w wypadku użycia funkcji generycznej, kompilator powołuje instancje wszystkich wersji tego szablonu, ze zgodną liczbą parametrów.
+Niektóre z nich, mogą być niepoprawne w danym kontekście. 
+
+Na przykład operator \lstinline{new unique} został zdefiniowany w dwóch wersjach: na czas uruchomienia oraz kompilacji.
+W czasie uruchomienia odwołuje się on do funkcji \lstinline{unsafe_new} która alokuje zadaną ilość bajtów na stercie.
+W czasie kompilacji wywołuje funkcję generyczną \lstinline{compiletime_heap_allocate}, która zwraca referencję na instancję zadanego typu.
+Szczegóły zostały opisane w rozdziale \ref{operator_new}.
+
+Sygnatury tych operatorów niczym się nie różnią.
+Język rozpoznaje je jako oddzielne, rozróżnialne byty wyłącznie dlatego, że atrybuty, którymi zostały adnotowane zmieniają ich dostępność w czasie kompilacji i uruchomienia.
+
+Na wczesnych etapach implementacji, instancje funkcji generycznych były tworzone, przy założeniu, że ich kod będzie poprawny semantycznie.
+Takie samo założenie obowiązuje przy tworzeniu zwykłych funkcji, ponieważ ze względu na ograniczenia czasowe, raportowanie o błędach kompilacji nie jest częścią pracy.
+Kompilator najpierw kompletował reprezentację pośrednią instancji wszystkich wersji generyków pasujących do danego użycia.
+Przy próbie dynamicznej alokacji typu, który nie mógł istnieć w czasie uruchomienia, takiego jak deskryptor funkcji, prowadziło to do odrzucenia poprawnego programu.
+
+Naprawa tego problemu wymagała weryfikacji czy dana funkcja jest wykonywalna, w jakimkolwiek kontekście, po wykonaniu kodu powiązanych atrybutów.
+Alternatywnym podejściem jest ignorowanie traktowanie błędów w instancji generyka, jako sygnał do odrzucenia tej specjalizacji, tak jak zostało to rozwiązane w C++ \cite{cppTemplatesCompleteGuide}.
+Takie rozwiązanie mogłoby jednak prowadzić do zaśmiecania modelu semantycznego funkcjami, które nie mogą zostać użyte w żadnym kontekście i nie zawierały akurat żadnych błędów.
 
 \subsection{Operator new}
+\label{operator_new}
+Operator \lstinline{new} w C-=-1, tak jak w C++ służy do dynamicznej alokacji pamięci na stercie, a programista może nadpisać jego zachowanie dla danego typu.
+W języku C++ ta funkcja ma za zadanie przydzielenie pamięci oraz wywołanie konstruktora.
+Oznacza to, że generyczny operator \lstinline{new} może przyjmować różne listy parametrów, w zależności od alokowanego typu.
+W C++ można to osiągnąć za pomocą szablonów wariadycznych \cite{gregor2007variadic}, które mają zmienną ilość parametrów generycznych.
+Dzięki temu operator \lstinline{new} może przyjąć dowolną listę parametrów, zalokować pamięć na obiekt i przekazać argumenty do konstruktora obiektu.
+Operator \lstinline{new} zachowuje się jak zwykła funkcja.
 
-Operator \mintinline{Cpp}{new} w C-=-1, tak jak w C++ służy do dynamicznej alokacji pamięci na stercie.
+W C-=-1 nie istnieje koncepcja funkcji o zmiennej liście parametrów.
+Dlatego operator \lstinline{new}, w tym języku, nie wywołuje konstruktora, a jedynie alokuje pamięć.
+Oznacza to, że w porównaniu z C++, operator \lstinline{new} jest wyjątkowym semantycznie bytem.
+Po jego wywołaniu język sam wywołuje konstruktor odpowiedniego obiektu.
 
+Listing \ref{lst:new_cm} zawiera fragment biblioteki standardowej C-=-1, w której zdefiniowano generyczny operator \lstinline{new}.
+Sygnatura tej funkcji nie może zawierać żadnych parametrów oraz musi zwracać typ spełniający pojęcie \lstinline{owning_pointer} (musi zawierać metodę \lstinline{get}, zwracającą wskazanie na przechowywany obiekt).
+Przykładem takiego typu, z biblioteki standardowej, jest szablon \lstinline{@unique}.
+
+Obecnie funkcja obsługująca operator \lstinline{new} jest wybierana w uproszczony sposób.
+Kompilator znajduje w pakiecie o nazwie \lstinline{std} generyk \lstinline{operator_new} i powołuje jego instancję.
+Jest to rozwiązanie tymczasowe, mające przyśpieszyć pracę nad wersją języka, na której można zacząć przeprowadzać testy.
+W przyszłości należy udokumentować algorytm wyboru przeciążenia operatora \lstinline{new} oraz zastosować jego poprawną wersję.
+Procedura wyboru operatora powinna w pierwszej kolejności przeglądać obecnie kompilowany pakiet, aby programista mógł go nadpisać lokalnie.
+
+\begin{minipage}{\textwidth}
+	
+	\lstinputlisting[
+		numbers=left,
+		firstnumber=0,
+		caption={Plik \lstinline{new.cm} z biblioteki standardowej C-=-1},
+		aboveskip=0pt,
+		tabsize=2,
+		label={lst:new_cm}
+		]{../../Libraries/std/src/new.cm}
+		
+\end{minipage}
 
 \subsection{Wybór przeciążenia funkcji}
-To czy funkcja jest wykonywalna w czasie kompilacji albo uruchomienia można ustalić bardzo późno w trakcie budowy modelu semantycznego.
+\label{Function_overload_resolution}
+
+Na pytanie ''czy ta funkcja może być użyta w tym kontekście'', kompilator jest w stanie odpowiedzieć, dopiero kiedy wykonały się na niej funkcje \lstinline{attach} wszystkich powiązanych z nią atrybutów.
+Listing \ref{lst:new_cm} zawiera kod z biblioteki standardowej C-=-1 alokujący pamięć na stercie.
+Operator \lstinline{new unique} występuje w niej w dwóch wersjach: czasu uruchomienia oraz czasu kompilacji.
+Sygnatury funkcji z linii dziesiątej oraz siedemnastej są identyczne, poza zaaplikowanymi atrybutami, kontrolującymi, w których kontekstach można ich użyć.
+
+Programista musi ręcznie określać, kiedy dana funkcja może zostać wywołana, aby ułatwić budowanie modelu semantycznego.
+Automatyczne generowanie tej informacji jest trudnym procesem.
+Aby funkcja mogła zostać użyta w danym kontekście, musi składać się wyłącznie z operacji, które można w nim wykonać.
+W szczególności, wszystkie  wywoływane procedury, muszą być kompatybilne z warunkami wywołania.
+Na przykład, funkcja wykonywana w czasie kompilacji może wywoływać wyłącznie funkcje wykonywalne w czasie kompilacji.
+Kompilator, próbując zdobyć taką informację, musiałby przeanalizować cały tekst programu, na etapie zbierania nagłówków (faza \lstinline{create} opisana w rozdziale \ref{implementation:source_processing_phases}), zanim rozpocznie budowanie reprezentacji pośredniej.
+Ze względu na wymagany nakład pracy, taka analiza nie została zaimplementowana.
+
+Ręczne określanie funkcji jako wykonywalnych w czasie kompilacji jest podejściem używanym też przez język C++ \cite{ISO:2012:III}.
+W pracy zatytułowanej ''General constant expressions for system programming languages'' \cite{dos2010general_constant_expressions}, autorzy argumentują, że kompilatory powinny jedynie weryfikować te metadane, a nie je generować.
+Takie podejście ułatwia implementację kompilatora oraz użycie takiej funkcji.
+Programista, patrząc wyłącznie na nagłówek funkcji, może określić, w jakich kontekstach może jej użyć.
+
+\begin{lstlisting}[
+	numbers=left,
+	firstnumber=0,
+	caption={Przykład użycia modyfikatora \lstinline{constexpr} w języku C++ w kontekście stałego wyrażenia},
+	aboveskip=0pt,
+	tabsize=2,
+	label={lst:constexpr_template_example}
+	]
+constexpr auto x(){ 
+	return 4;
+}
+template<int n>
+int g() {
+	return n;
+}
+int main() {
+	return g<x()>();
+}
+\end{lstlisting}
+
+Z drugiej strony, w pracy ''Constexpr: A Great Good but Wrong Idea'' \cite{Klimiankou:contexpr_great_good_wrong_idea}, autor sugeruje, że możliwość wykonania procedury w czasie kompilacji powinna być przejrzysta dla programisty.
+To kompilator powinien decydować, kiedy funkcja może zostać wykonana.
+Yauhen Klimiankou w swojej pracy skupia się jednak na modyfikatorze \lstinline{constexpr} jako sugestii optymalizacyjnej.
+Ignoruje drugi istotny aspekt tego słowa kluczowego.
+Funkcje oznaczone jako \lstinline{constexpr} mogą być używane w kontekstach, w których konieczne jest stałe wyrażenie, na przykład przy użyciu szablonu.
+
+Listing \ref{lst:constexpr_template_example} zawiera przykład użycia modyfikatora \lstinline{constexpr} użytego w kontekście wymagającym stałej.
+Funkcja \lstinline{x} może zostać użyta przy wywołaniu szablonu funkcji \lstinline{g}.
+Gdyby modyfikator \lstinline{constexpr} został usunięty, zawierałby błąd czasu kompilacji.
+To słowo kluczowe ma więc znaczenie semantyczne, poza sugestią optymalizacyjną.
+Wykonywanie funkcji w czasie kompilacji, jako sposób optymalizacji, bez użycia modyfikatorów \lstinline{constexpr} czy \lstinline{consteval}, jest dozwolone od C++11 zgodnie z zasadą \emph{as-if} \cite{ISO:2012:III}.
+Słowo kluczowe \lstinline{constexpr} wprowadza natomiast możliwość użycia takiej funkcji w niektórych kontekstach.
 
 \subsection{Wyrażenia literałowe}
 
 Wyrażenie literałowe przedstawia stałą wartość.
-Na przykład w języku C++ \mintinline{CPP}{int a = 4;} deklaruje i inicjalizuje zmienną a literałem 4.
-Wyrażenia lietrałowe mogą reprezentować stałe różnych typów wbudowanych 
+Na przykład w języku C++ \lstinline{int a = 4;} deklaruje i inicjalizuje zmienną a literałem 4.
+Wyrażenia literałowe mogą reprezentować stałe różnych typów wbudowanych.
+Ich obsługa przez frontend kompilatora jest prosta, z wyjątkiem operatorów takich jak \lstinline{nameof} czy \lstinline{typeof} znanych ze współczesnych języków programowania.
+Składnia ich użycia jest identyczna do wywołania normalnej funkcji.
+Na przykład, aby do zmiennej \lstinline{x} przypisać nazwę funkcji \lstinline{foo}, piszemy: \lstinline{let x = nameof(foo);}.
+
+
+Pomimo tego, że operatory takie jak \lstinline{nameof} przypominają normalną funkcję, wymagają specjalnej obsługi przez frontend języka a w niektórych wypadkach wręcz przez gramatykę.
+Listing \ref{lst:function_call_grammar} zawiera fragment składni C-=-1 powiązany z wywołaniem funkcji.
+Przy rozpoznawaniu reguły \lstinline{functionCall}, parser w pierwszej kolejności spróbuje dopasować regułę \lstinline{literalFunction}, przed składnią normalnego wywołania.
+Gdyby reguły były odwrócone, odniesienie do operatorów literałowych prawie zawsze byłyby rozpoznawane jako wywołanie normalnej funkcji.
+
+\begin{minipage}{\linewidth}
+	\begin{lstlisting}[
+		numbers=left,
+		firstnumber=0,
+		caption={Fragment składni C-=-1 opisujący wywołanie funkcji},
+		aboveskip=0pt,
+		label={lst:function_call_grammar}
+		]
+functionCall
+	: literalFunction
+	| identifier genericUsage? ParamOpen (
+	expression(Comma expression)*
+	)? ParamClose;
+
+literalFunction
+	: 'typeof' '(' typeSpecifier ')'
+	...
+	\end{lstlisting}
+\end{minipage}
+
+
+Składnia z listingu \ref{lst:function_call_grammar} pokazuje też, czemu operatory literałowe wymagają specjalnej obsługi przez gramatykę.
+Na przykład operator \lstinline{typeof}, który zwraca typ identyfikowany przez przekazaną mu nazwę, nie może być traktowany jak normalna funkcja.
+W C-=-1 nazwa typu może być sama w sobie niepoprawnym identyfikatorem, na przykład w wypadku instancji generyków.
+Nazwa typu \lstinline{List<usize>} nie jest ani poprawnym identyfikatorem, ani nawet poprawnym wyrażeniem.
+Tak więc, aby wyrażenie \lstinline{typeof(List<usize>)} było poprawne, ten operator musi być specjalnie traktowany przez składnię.
 
 \subsection{Integracja z back-endem}
+\label{backend_integration}
 Przy pierwszym podejściu do budowy reprezentacji pośredniej, użyto dedykowanych struktur danych. Było to podejście najbardziej naturalne i dające najwięcej bezpieczeństwa dzięki silnemu typowaniu. Wszystkie struktury danych opisane w rozdziale \ref{reprezentacja_posrednia} miały powiązane ze sobą klasy C++.
 
 
@@ -31,59 +243,4 @@ Użytkownik może dokonywać modyfikacji w CIR, co oznacza że może dojść do 
 
 
 Ponieważ w nowym podejściu, z perspektywy C++ niemalże wszystkie obiekty miały ten sam typ, kompilator stracił możliwość statycznej weryfikacji kodu.
-Aby zapewnić poprawność programu, koniecznym stało się dodawanie walidacji argumentów do wszystkich funkcji.
-
-\subsection{Informacje dodatkowe o obiektach}
-Na wczesnej fazie projektu koniecznym okazało się przechowywanie informacji które nie zostały uwzględnione w modelu semantycznym.
-Potrzeba ta powstała przy implementacji operatora \mintinline{Cpp}{sizeof}.
-Ponieważ rozmiar obiektów jest ustalany dopiero przez LLVM, koniecznym stało się zastąpienie kodu funkcji, reprezentacją pośrednią backendu.
-
-Rozwiązanie tego problemu wymaga wzięcia pod uwagę kilku istotnych aspektów.
-Zostały one opisane w rozdziałach \ref{frontend_responsibility}, \ref{compiler_extensibility} oraz \ref{frontend_backend_complexity}.
-Rozdziały \ref{original_solution} i \ref{final_solution}
-
-\subsubsection{Oryginalne rozwiązanie}\label{original_solution}
-
-Naturalnym podejściem do problemu, było zawarcie metadanych o obiekcie, wewnątrz jego definicji.
-W ten sposób frontend miał do nich łatwy dostęp.
-
-\subsubsection{Zakres odpowiedzialności frontendu} \label{frontend_responsibility}
-
-\subsubsection{Rozszerzalność kompilatora}\label{compiler_extensibility}
-
-\subsubsection{Złożoność granicy frontend-backend interface} \label{frontend_backend_complexity}
-
-\subsubsection{Ostateczne rozwiązanie}\label{final_solution}
-Po przeanalizowaniu rozwiązania z rozdziału \ref{original_solution} pod kątem problemów wymienionych w rozdziałach \ref{frontend_responsibility}, \ref{compiler_extensibility} oraz \ref{frontend_backend_complexity}, postanowiono radykalnie zmienić podejście.
-Zamiast definiować metadane obiektów po stronie struktur danych frontendu, postanowiono zdefiniować interfejs umożliwiający zapis i metadanych o elementach modelu semantycznego. 
-Listing \ref{lst:IMetadataHolder} zawiera jego deklarację.
-Metody store i get zdefiniowane na liniach 2 i 3 umożliwiają zapis i odczyt metadanych.
-
-Ten interfejs został zaimplementowany po stronie frontendu.
-Ponieważ w tym kontekście sprawdzanie typów jest opcjonalne, nie wymagało to wprowadzania dodatkowych mechanizmów do języka takich jak \mintinline{Cpp}{std::any}.
-
-W porównaniu z rozwiązaniem z oryginalny rozwiązaniem, to podejście znacząco zmniejsza granice między frontendem a interfejsem backendu.
-Ponadto, podział odpowiedzialności pomiędzy tymi komponentami jest dużo bardziej logiczny.
-Frontend nie wiedzieć o tym jakie informacje są potrzebne przy kompilacji.
-Ponadto, ponieważ metadane które mogą być przechowywane nie są zdefiniowane odgórnie, znacząco zwiększa też rozszerzalność kompilatora.
-
-\begin{lstlisting}[
-    language=Cm1,
-    numbers=left,
-    firstnumber=0,
-    caption={Interfejs obiektu przechowującego metadane},
-    aboveskip=0pt,
-    label={lst:IMetadataHolder}
-]
-class IMetadataHolder
-{
-    public fn store<T>(key: string, value: T);
-    public fn get<T>(key: string) -> T;
-    public fn has(key: string) -> bool;
-}
-
-class functionDescriptor : IMetadataHolder;
-class typeDescriptor : IMetadataHolder;
-class fieldDescriptor : IMetadataHolder;
-class variableDescriptor : IMetadataHolder;
-\end{lstlisting}
+Aby zapewnić poprawność programu, koniecznym stało się dodawanie analizy argumentów do wszystkich funkcji.

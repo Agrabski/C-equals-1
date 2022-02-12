@@ -1,70 +1,642 @@
 \section{Porównanie z innymi językami}
-Ponieważ C-=-1 jest językiem badawczym, nie można go porównywać z językami stosowanymi w przemyśle pod względem wygody użycia. Warto jednak przeanalizować, w jaki sposób zaproponowane mechanizmy wpływają na jego użyteczność.
+\label{comparison}
+
+Ponieważ C-=-1 jest językiem badawczym, nie można go porównywać z językami stosowanymi w przemyśle pod względem wygody użycia.
+Warto jednak przeanalizować, w jaki sposób zaproponowane mechanizmy wpływają na jego użyteczność.
+
+Rozdział \ref{programming_paradigms} zawiera opis użycia języka C-=-1 w różnych paradygmatach programowania i jak zaproponowane mechanizmy mogą w nich pomóc.
+Charakterystyka C-=-1 sprawia, że można go zastosować z nietypowymi technikami programistycznymi
+W rozdziale \ref{code_analysis} przedstawiono natomiast przykłady użycia atrybutów do statycznej analizy kodu.
+Ten mechanizm umożliwia weryfikację poprawności programu, bez użycia dodatkowych narzędzi.
+Rozdział \ref{code_generation} zawiera przykłady zastosowania modyfikacji programu na etapie kompilacji.
+Rozdziały \ref{comparison:template_type_erasure}, \ref{Language_extensibility} oraz \ref{comparison:exporting_to_other_languages} zawierają natomiast dyskusję o interakcji C-=-1 z innymi językami programowania: jak importować symbole zewnętrzne oraz jak wygląda wynik kompilacji.
+
 \subsection{Wsparcie dla paradygmatów programowania}
-Teoretycznie niemalże w każdym języku da się programować w każdym paradygmacie. Jednak w zależności od struktury tego języka, może być to zadanie prostsze lub trudniejsze. 
-\subsubsection{Aspect oriented programming}
-Nieoczekiwanym skutkiem zaproponowanych mechanizmów jest wsparcie dla AOP.
-\subsubsection{Obiektowe}
+\label{programming_paradigms}
+Teoretycznie niemalże w każdym języku da się programować w każdym paradygmacie. Jednak w zależności od jego, może być to zadanie prostsze lub trudniejsze.
+W niektórych wypadkach wymaga to wręcz użycia zewnętrznego narzędzia, poza kompilatorem \cite{aop:cpp}.
+W tym rozdziale zostaną przedstawione paradygmaty programowania wspierane w C-=-1, bez dodatkowych narzędzi i ingerencji w język.
+
+\subsubsection{Aspect Oriented Programming}
+Nieoczekiwanym skutkiem zaproponowanych mechanizmów jest wsparcie dla programowania aspektowego (Aspect Oriented Programming, AOP) \cite{aop}.
+Ta możliwość wynika z możliwości pisania samomodyfikującego kodu.
+
+Programowanie aspektowe rozszerza typowy model programowania obiektowego o aspekty.
+Składniowo, są podobne do klas.
+Poza metodami i polami aspekty mogą deklarować również rady, służące do modyfikowania kodu w tak zwanych punktach cięcia.
+Rada może wykonać dowolne operacje przed, po oraz zamiast wywołania funkcji zdefiniowanej przez punkt cięcia.
+
+C-=-1 teoretycznie umożliwia tworzenie oprogramowania w paradygmacie AOP.
+Jedyna przeszkoda przed praktycznym użyciem programowania aspektowego to niezaimplementowana biblioteka do generacji kodu.
+Listing \ref{lst:aop_in_cm1} przedstawia przykład zastosowania AOP w C-=-1, używając hipotetycznych funkcji do generacji kodu.
+Atrybut \lstinline{LogCalls} ma za zadanie wypisać do konsoli informację o każdym wywołaniu przyłączonej funkcji.
+Metoda \lstinline{onCall} jest wywoływana przy każdym użyciu adnotowanej procedury.
+Wewnątrz niej, atrybut, pełniący funkcję rady z AOP, może podjąć decyzję czy modyfikować to konkretne użycie.
+Zmiana programu, w tym przykładzie, odbywa się przez dodanie dodatkowej instrukcji wywołania, odnoszącej się do funkcji \lstinline{print}.
+
+\begin{minipage}{\linewidth}
+  
+  \begin{lstlisting}[
+    numbers=left,
+    firstnumber=0,
+    caption={Przykład Programowania Aspektowego w C-=-1},
+    aboveskip=0pt,
+    label={lst:aop_in_cm1}
+    ]
+public att<function> LogCalls
+{
+  public fn onCall(f: functionCallExpression)
+  {
+    let statement = f.parentStatment();
+    let function = statement.definingFunction();
+    let args = <IExpression>[];
+    args.push(new unique constantExpression(f.function.name()
+      + " was called"));
+    function.insertBefore(
+      statement,
+      new unique functionCallStatement(
+        new unique functionCallExpression(
+          functionof(print),
+          args
+        )
+      ));
+  }
+}
+\end{lstlisting}
+\end{minipage}
+
+Kod przedstawiony w listingu \ref{lst:aop_in_cm1} używa planowanych dodatków do języka C-=-1 oraz jego biblioteki standardowej i stanowi bardzo podstawowy przykład zastosowania AOP.
+Atrybut jest w nim używany jako rada.
+Model punktu przyłączenia (ang: join-point model) \cite{vidal2019jpiaspectz}, użyty w tym przykładzie, umożliwia obserwowanie jedynie jawnie oznaczonych funkcji i nie zapewnia filtrowania parametrów, ani kontekstu wywołania.
+Na jego podstawie można jednak zbudować bardziej zaawansowaną bibliotekę.
+
+W przyszłej wersji języka zostaną wprowadzone atrybuty aplikowane do całego pakietu.
+Ich wprowadzenie umożliwi stworzenie join-point model, który jest bliższy tego z biblioteki AspectJ \cite{keselev2003aspect}.
+
+
+\subsubsection{Programowanie Obiektowe}
 C-=-1 został zaprojektowany z myślą o wsparciu stylu obiektowego. Użytkownik może deklarować typy, metody oraz interfejsy. W przeciwieństwie do C++ czy C\#, w C-=-1 nie ma jednak koncepcji dziedziczenia między konkretnymi klasami.
 
-Klasy i interfejsy mogą implementować inne interfejsy. To jest jedyny mechanizm dynamicznego polimorfizmu w C-=-1. Ta decyzja została podjęta częściowo w celu uproszczenia języka, a częściowo ponieważ dziedziczenie między konkretnymi klasami jest uważane za złą praktykę.
+Klasy i interfejsy mogą implementować inne interfejsy.
+To jest jedyny mechanizm dynamicznego polimorfizmu w C-=-1.
+Ta decyzja została podjęta częściowo w celu uproszczenia języka, a częściowo, ponieważ dziedziczenie między konkretnymi klasami jest uważane za złą praktykę \cite{gang_of_four:design_patterns}.
 
-\subsection{Walidacja kodu}
-Podstawowym celem C-=-1 było zbadanie możliwości statycznej walidacji kodu, używając zaproponowanych mechanizmów meta-programowania. W kolejnych rozdziałach omówione zostaną ich konkretne zastosowania 
+\subsection{Analiza kodu}
+\label{code_analysis}
+Podstawowym celem C-=-1 było zbadanie możliwości statycznej analizy kodu, używając zaproponowanych mechanizmów metaprogramowania.
+W kolejnych rozdziałach omówione zostaną przykładowe analizatory, które zostały zaimplementowane w ramach biblioteki standardowej bądź których implementacja jest możliwa.
+Ma to zademonstrować praktyczne aplikacje udostępnienia programiście modelu semantycznego tworzonego programu.
+
+
+
 \subsubsection{Atrybut noDiscard}
+\label{no_discard}
+
+Atrybut \lstinline{noDiscard} służy do zapewnienia, że wynik funkcji nie zostanie zignorowany.
+Tego typu adnotacja istnieje w C++ od wersji 17\cite{ISO:cpp17}.
+Ma on na celu wyeliminować błędy takie jak ignorowanie kodu błędu, czy niepoprawne wywołanie funkcji o mylącej nazwie.
+
+W C-=-1, w przeciwieństwie do większości języków niskiego poziomu, stworzenie analizatora, który zapewnia taki niezmiennik, jest trywialne.
+Listing \ref{lst:noDiscardCm1} zawiera kod atrybutu \lstinline{noDiscard} z biblioteki standardowej C-=-1.
+Linia czwarta deklaruje specjalną funkcję \lstinline{onCall} (specjalne funkcje atrybutów zostały opisane w rozdziale \ref{Attributes_mechanism_cm1}), która reaguje na wywołanie funkcji, do której został zaaplikowany.
+
+Wewnątrz tego podprogramu, atrybut sprawdza, czy bezpośrednim rodzicem tego wyrażenia jest wyrażenie, czy instrukcja.
+Jeśli jest nim instrukcja, oznacza to że wynik wywołania jest ignorowany i trzeba zgłosić błąd, używając funkcji \lstinline{raiseError}.
+W przeciwnym wypadku żadne akcje nie są konieczne.
+
+Na Listingu \ref{lst:noDiscardUsageCm1} przedstawiono zastosowanie atrybut \lstinline{noDiscard}.
+Zignorowanie wartości zwracanej przez funkcję oznaczoną tą adnotacją, tak jak w linii piątej, powoduje zgłoszenie błędu o kodzie i komunikacie zgodnym z linią siódmą listingu \ref{lst:noDiscardCm1}.
+Ponadto, kompilator otrzymuje wskazanie do pliku źródłowego na punkt, który wywołał ten błąd.
+Ta informacja może być potem użyta do przekazania programiście dokładniejszej diagnostyki bądź do podkreślenia kodu w zintegrowanym środowisku programistycznym (rozdział \ref{IDE_integration}).
+
+% reference listing
+Przykład, zawarty w listingu \ref{lst:noDiscardCm1}, dobrze ilustruje, że mając dostęp do modelu semantycznego programu, implementacja niektórych typów analizy staje się trywialna.
+W większości języków programowania taka analiza wymaga modyfikacji kompilatora albo zewnętrznego narzędzia.
+
+\begin{minipage}{\linewidth}
+  
+  \begin{lstlisting}[
+    numbers=left,
+    firstnumber=0,
+    caption={Atrybut noDiscard w C-=-1},
+    aboveskip=0pt,
+    label={lst:noDiscardCm1}
+    ]
+public att<function> NoDiscard
+{
+  public fn attach(f: functionDescriptor)
+  {}
+  public fn onCall(call: functionCallExpression*)
+  {
+  if(call._parentStatment != null<IInstruction>())
+    raiseError(
+      &(call._pointerToSource), 
+      "Return value of a no-discard function is not used",
+      123
+    );
+  }
+}
+\end{lstlisting}
+\end{minipage}
+
+
+\begin{minipage}{\linewidth}
+  
+  \begin{lstlisting}[
+    numbers=left,
+    firstnumber=0,
+    caption={Przykład użycia atrybut noDiscard w C-=-1},
+    aboveskip=0pt,
+    label={lst:noDiscardUsageCm1}
+    ]
+[noDiscard()]
+fn noDiscardFunction() -> usize;
+
+fn main() -> usize
+{
+  noDiscardFunction(); // error 123: Return value of
+                       // a no-discard function is not use
+  let x = noDiscardFunction();     // ok
+  let y = x + noDiscardFunction(); // ok
+  return noDiscardFunction();      // ok
+}
+\end{lstlisting}
+\end{minipage}
+
+\subsubsection{Atrybut const}
+\label{const}
+Modyfikator \lstinline{const} z języka C/C++ oznacza wartość jako stałą i jest nieodłączną częścią systemu typów.
+Przy wyborze przeciążenia funkcji, wartości typu \lstinline{int *} oraz \lstinline{int const *} są traktowane jako dwa różne typy.
+Napisanie atrybutu, zapewniającego podobne zachowanie, do C-=-1 jest ciekawą aplikacją nowych mechanizmów tego języka.
+W obecnym stanie kompilatora oraz języka, możliwa jest implementacja tylko części tej analizy.
+Zaimplementowanie modyfikatora \lstinline{const} w pełni, przy użyciu atrybutu, wymaga od C-=-1 następujących, dodatkowych, właściwości:
+\begin{enumerate}
+  \item \label{prop:Attribute_function_overloading} Atrybuty są brane pod uwagę w trakcie wyboru przeciążenia funkcji
+  \item \label{prop:Generic_adnotations} Istnieje sposób na modyfikowanie zachowania zmiennych, pól i parametrów w generykach, przy tworzeniu ich instancji
+  \item \label{prop:Reference_adnotations} Przy aplikowaniu atrybutu do zmiennej typu referencyjnego, istnieje sposób na rozróżnienie między stałym wskazaniem a wskazaniem na stałą.
+\end{enumerate}
+
+Właściwość \ref{prop:Attribute_function_overloading} jest częściowo zaplanowaną, ale niezrealizowaną częścią języka (rozdział \ref{Attributes_definition}).
+Atrybuty powiązane z parametrami funkcji mają być traktowane jako wymagania.
+Wartość użyta jako argument musi zawierać wszystkie adnotacje parametru, któremu odpowiada.
+Przykładowo, deklaracja \lstinline{fn positive_parameter_fun([positive()] usize paramter)} wymusza na wołającym funckję \lstinline{positive_parameter_fun}, aby przekazywana jej wartość była adnotowana atrybutem \lstinline{positive}.
+Otwartym pytaniem pozostaje też, w jaki sposób traktować atrybuty przyjmujące parametr w kontekście wyboru przeciążenia funkcji.
+Ten problem został dokładniej opisany w rozdziale \ref{further:adnotated_type_system:attribute_equivalence}
+Zapewnienie tej właściwości wymaga ponadto dalszego rozszerzenia systemu atrybutów, tak aby można było aplikować adnotacje do wartości zwracanych z funkcji.
+Ta potrzeba wywodzi się z tego, że dokładne znaczenie danej operacji w jest zależne od modyfikatorów zaaplikowanych do używanych wartości.
+Listing \ref{lst:cpp_const_example} zawiera przykład użycia modyfikatora \lstinline{const} w C++.
+Przeciążenie metody \lstinline{member} jest wybierane, biorąc pod uwagę czy parametr \lstinline{this} jest \lstinline{const}.
+Tak więc w linii dziewiątej, wybierane jest przeciążenie nie-\lstinline{const} z linii trzeciej a w linii dziesiątej, przeciążenie \lstinline{const} z linii czwartej.
+
+\begin{minipage}{\linewidth}
+  \begin{lstlisting}[
+    numbers=left,
+    firstnumber=0,
+    caption={Przykład modyfikatora const w C++},
+    aboveskip=0pt,
+    label={lst:cpp_const_example}
+    ]
+  class Foo {
+    int member_;
+  public:
+    int& member();
+    int const& member() const;
+  };
+  int main() {
+    Foo foo;
+    Foo const constFoo;
+    foo.member() = 3;     // ok
+    constFoo.member() = 3;// error
+  }
+  \end{lstlisting}
+\end{minipage}
+
+Zapewnienie właściwości \ref{prop:Generic_adnotations} jest najtrudniejsze i wymaga dalej idącej pracy teoretycznej.
+Zaaplikowanie systemu atrybutów do implementacji modyfikatora \lstinline{const} oznacza śledzenie wartości, nie koniecznie pól, zmiennych, typów czy funkcji.
+Listing \ref{lst:const_problem_example} zawiera przykład problemu rozwiązywanego przez właściwość \ref{prop:Generic_adnotations}.
+W linii drugiej deklarowana jest zmienna typu \lstinline{usize} z modyfikatorem \lstinline{const}.
+Następnie, w linii czwartej, wskazanie na nią jest wstawiane do listy.
+W tym miejscu analizator wygeneruje błąd kompilacji, ponieważ tworzymy nie-stałe wskazanie na stałą wartość, co może naruszyć chroniony niezmiennik.
+Rozwiązaniem byłoby zadeklarowanie listy jako zawierającej wskazania na stałe.
+W obecnej formie języka nie jest to jednak możliwe.
+
+\begin{minipage}{\linewidth}
+  
+  \begin{lstlisting}[
+    numbers=left,
+    firstnumber=0,
+    caption={Śledzenie wartości, używając atrybutu const},
+    aboveskip=0pt,
+    label={lst:const_problem_example}
+    ]
+fn main() -> usize
+{
+  [const()] let x = 3;
+  let list = List<usize*>();
+  list.push(&x);
+  [const()] let pointer = &x;
+}
+\end{lstlisting}
+\end{minipage}
+
+
+Właściwość \ref{prop:Reference_adnotations} jest blisko powiązana z właściowścią \ref{prop:Generic_adnotations}.
+Rozróżnienie pomiędzy aplikacją atrybutu do wskazania a wskazywanej wartości, jest konieczne, aby zapewnić nienaruszenie niezmienników dotyczących wartości.
+Listing \ref{lst:const_problem_example} przedstawia ten problem.
+W linii piątej, do zmiennej \lstinline{pointer} przypisywany jest adres zmiennej \lstinline{x}.
+Pomimo zaaplikowania atrybutu \lstinline{const} do nowej zmiennej, analizator generuje błąd.
+Adnotacja została tutaj zaaplikowana do wartości wskazania, nie do wskazywanej wartości.
+W C-=-1 istnieją sposoby na obejście tego ograniczenia, jednak lepsze rozwiązanie powinno powstać w wyniku prac opisanych w rozdziale \ref{further:adnotated_type_system}.
+
+Wszystkie te właściwości wskazują na silne powiązanie pomiędzy systemem adnotacji a typów.
+Sposób na połączenie tych aspektów C-=-1 powinno zostać bardziej dogłębnie zbadane w przyszłej pracy.
+Szczegóły tych badań zostały opisane dokładniej w rozdziale \ref{further:adnotated_type_system}.
+W C/C++ modyfikator \lstinline{const} jest integralną częścią systemu typów.
+Typ \lstinline{int*} jest różny od \lstinline{int const*} i konwersja między nimi istnieje tylko w jedną stronę.
+Z tego powodu, wszystkie problemy wymienione w tym rozdziale nie mają odzwierciedlenia w C/C++.
 
 \subsection{Generowanie kodu}
+\label{code_generation}
+
+Model semantyczny programu, w języku C-=-1, jest mutowalną strukturą danych.
+Oznacza to, że kod atrybutów może ją modyfikować w trakcie kompilacji, dodając, usuwając bądź zmieniając kolejność instrukcji i wyrażeń.
+Ten aspekt języka daje programiście szereg nowych możliwości.
 
 \subsubsection{Atrybut Flags}
 
-\subsection{Testowanie kodu}
+Jednym z najprostszych przykładów użycia możliwości generowania kodu, jest zadeklarowanie typu enumeracyjnego jako zbioru flag.
+Aby to osiągnąć, wszystkie wartości enumeratora muszą być kolejnymi potęgami liczby 2, tak aby binarna alternatywa dowolnych dwóch opcji była unikatowo identyfikowalna.
 
-\subsection{Rozszerzalność języka}
-Jedną z konsekwencji zaproponowanych mechanizmów jest możliwość rozszerzania języka bez modyfikacji kompilatora.
-Oznacza to że pewne elementy składni, obecne w innych językach, stają się zbędnę w C-=-1.
-\subsubsection{Symbole zewnętrzne}
+W większości języków programowania nie ma możliwości automatycznego przypisywania wartości enumeratora w ten sposób.
+W C++ nie istnieje też żaden analizator który wykrywałby błędną definicję takiej flagi.
+Przydzielenie wartości oraz weryfikacja czy są one poprawne, jest opdowiedzialnością programisty.
+
+W C\# istnieje atrybut \lstinline{Flags}.
+Służy on do sprawdzania poprawności wartości enumeratora i generuje ostrzeżenia w wypadku wykrycia błędu, ale nie przypisuje ich sam.
+Programista nadal musi samodzielnie je ustalić.
+W C-=-1, w obecnej wersji, nie istnieje pojęcie typu wyliczeniowego.
+Ich dodanie jest jednak w planach.
+
+\begin{minipage}{\textwidth}
+\begin{lstlisting}[
+  numbers=left,
+  firstnumber=0,
+  caption={Hipotetyczna implementacja atrybutu \lstinline{flags} dla C-=-1},
+  aboveskip=0pt,
+  label={lst:enum_flags_attribute}
+  ]
+public att<enumValue> NoneFlag {}
+public att<enum> Flags {
+    public fn attach(e: enumDescriptor) {
+      let index = 0;
+      for(label in e.labels)
+        if(label.hasAttribute<_att_ NoneFlag>())
+          label.value = 0;
+        else
+          label.value = power(2, index++);
+    }
+}
+[Flags()] enum Sample {
+  [NoneFlag()] None,
+  A,
+  B,
+  C = A | B
+}
+\end{lstlisting}
+\end{minipage}
+
+Listing \ref{lst:enum_flags_attribute} zawiera hipotetyczną implementację atrybutu \lstinline{flags}, automatycznie przypisującego poprawne wartości elementom typu wyliczeniowego.
+Każdemu z nich odpowiada kolejna potęga dwójki, poza oznaczonymi adnotacją \lstinline{NoneFlag}: te mają wartość zero.
+Ta implementacja ma za zadanie zademonstrowanie możliwości generowania kodu, bardziej praktyczna wersja powinna brać pod uwagę też możliwość ręcznego ustalania wartości elementów na kombinacje innych etykiet.
+Przykład takiej sytuacji jest w linii osiemnastej listingu \ref{lst:enum_flags_attribute}.
+
+Dodanie typów wyliczeniowych do języka wymaga też rozszerzenia modelu semantycznego.
+Kod z listingu \ref{lst:enum_flags_attribute} korzysta z części tych dodatków.
+Cele dla atrybutów (opisane w rozdziale \ref{Attributes_definition}) \lstinline{enum} i \lstinline{enumValue} są powiązane odpowiednio z typem wyliczeniowym oraz jego pojedynczą wartością.
+Ponadto, należy dodać typy \lstinline{enumDescriptor} oraz \lstinline{enumValueDescriptor}.
+
+\subsubsection{Testowanie kodu}
+
+Dzięki możliwościom generowania kodu w C-=-1, można w nim łatwo skonstruować framework do pisania testów jednostkowych.
+Przykładami takiego oprogramowania, istniejącego dla innych języków programowania są biblioteki Nunit dla C\#, Gtest dla C++ czy Jasmine dla javascript.
+Testy jednostkowe są typowo pisane jako zbiór funkcji, z których każda przedstawia pewne założenie, które testowane oprogramowanie musi spełniać.
+
+\begin{minipage}{\textwidth}
+  \begin{lstlisting}[
+    numbers=left,
+    firstnumber=0,
+    caption={Przykład testów jednostkowych w C-=-1},
+    aboveskip=0pt,
+    label={lst:cm1_tests}
+    ]
+[Test()]
+fn test1() {
+  assert_equal(1 + 1, 2)
+}
+[Test(1, 1, 2)]
+[Test(2, 2, 4)]
+fn test2(arg1: usize, arg2: usize, result: usize) {
+  assert_equal(arg1 + arg2, result);
+}
+
+[TestMain()]
+fn main() {
+}
+  \end{lstlisting}
+\end{minipage}
+
+Listing \ref{lst:cm1_tests} zawiera przykładowe użycie frameworku do testów jednostkowych, który można skonstruować w C-=-1.
+Atrybut \lstinline{Test} oznacza funkcję jako test jednostkowy.
+Jego konstruktor może przyjmować szeroką gamę list argumentów.
+Wartości przekazywane przy konstruowaniu atrybutu, będą wykorzystane przy wywołaniu funkcji testowej.
+Atrybut \lstinline{TestMain}, przyłączony do procedury stanowiącej punkt wejścia programu, zamieni jej ciało na sekwencje wywołań wszystkich metod testowych.
+
+
+\subsection{Kompilacja szablonów}
+\label{comparison:template_type_erasure}
+Jedną z ciekawych możliwości, wynikającej z istnienia modelu semantycznego w C-=-1, zawierającego w sobie funkcje generyczne, jest ich bardziej efektywna kompilacja.
+W C++ szablony są częstym źródłem rozrostu generowanego kodu maszynowego.
+Listing \ref{lst:comparison:bloat_cpp_example:cpp} zawiera przykład programu, w którym występuje ten problem natomiast w listingu \ref{lst:comparison:bloat_cpp_example:assembly} znajduje się kod assemblera x86-64 generowany przez kompilator Clang \cite{lattner2008llvm}.
+Przykład został przygotowany przy użyciu narzędzia Compiler Explorer \cite{godbolt}.
+
+Szablon zdefiniowany w linii piątej, listingu \ref{lst:comparison:bloat_cpp_example:cpp} jest prostym przykładem generyka, którego kod jest całkowicie niezależny od typów użytych do stworzenia jego instancji.
+Funkcja \lstinline{foo} przyjmuje parametr \lstinline{v} będący wskazaniem na typ \lstinline{T} i używa go wyłącznie po konwersji do liczby całkowitej lub odejmując od niego rozmiar \lstinline{T}.
+Szablon procedury \lstinline{foo} można zaprezentować matematycznie, jako funkcję mapującą typ \(t\) na funkcję \(x -> size\_t\) czyli \( foo = t -> (x: t -> size\_t)\). Alternatywnie: \(foo : T_y -> F\), gdzie \(T_y\) to zbiór wszystkich typów, a \(F\) to zbiór wszystkich funkcji jednoargumentowych zwracających typ \(size\_t\).
+Każdą z instancji \lstinline{foo}, da się natomiast sprowadzić do formy:\\
+\(foo(t) = y(x: size\_t) -> size\_t = \begin{cases}
+  bar(x), & \text{jeśli} x < 500 \\
+  y(x - sizeof(t)) & \text{w przeciwnym wypadku}
+\end{cases}\)\\
+Tak więc dla danego zbioru typów \(A = \{t_1, t_2, ... t_n\}\), przeciwdziedzina funkcji \(foo\) : \(B = \{ f | f = foo(t) \land t \in A\}\) będzie miała rozmiar \(|B| = |\{y | y = sizeof(t) \land t \in A\}|\).
+W wypadku kodu z listingu \ref{lst:comparison:bloat_cpp_example:cpp}, obydwie instancje szablonu \lstinline{foo} powstały na podstawie typów o tych samych rozmiarach, więc powinna istnieć tylko jedna wersja tej funkcji.
+
+Listing \ref{lst:comparison:bloat_cpp_example:assembly} zawiera kod w assemblerze x86-64 wygenerowany przez narzędzie Clang dla źródła z listingu \ref{lst:comparison:bloat_cpp_example:cpp}.
+W liniach zerowej oraz dziesiątej znajdują się etykiety powiązane z instancjami generyka \lstinline{foo}.
+Pomimo tego, że kod obydwu procedur jest identyczny, zgodnie z rozważaniami z poprzedniego akapitu, kompilator wygenerował obydwie wersje.
+To jest przykład rozrostu kodu, któremu można zapobiec w C-=-1.
+
+Aby zredukować rozrost kodu, zademonstrowany na przykładzie z listingu \ref{lst:comparison:bloat_cpp_example:cpp}, możemy zastosować tak zwane kasowanie typów.
+Jest to technika używana przez programistów do optymalizacji kodu C++ \cite{becker2007:type_erasure} oraz przez kompilator Javy \cite{nino2007:cost_type_erasure_java}.
+Te dwa języki tworzą więc spektrum, pomiędzy językami, w których instancje generyków są niezależnymi od siebie bytami a tymi, w których generyki stanowią jedynie ''cukier składniowy''.
+C\# oraz inne języki używające Common Language Runtime \cite{ecma:cli} jako środowisko uruchomieniowe, znajduje się pośrodku tej skali.
+Generyki tego języka są bezpośrednio reprezentowane w Common Intermidiate Language.
+W trakcie JIT, środowisko uruchomieniowe dynamicznie podejmuje decyzję o emisji nowej instancji generyka bądź użyciu już istniejącej przez kasowanie typów \cite{kennedy2001:design_clr_generics}.
+W ten sposób C\# omija problemy wynikające z jawnego kasowania typów w Javie oraz rozrostu kodu z C++.
+To rozwiązanie, w przeciwieństwie do C++ wymaga oczywiście środowiska uruchomieniowego.
+
+\begin{minipage}{\textwidth}
+  
+  \begin{lstlisting}[
+    numbers=left,
+    firstnumber=0,
+    caption={Przykładowy kod w C++ powodujący rozrost pliku wynikowego},
+    aboveskip=0pt,
+    label={lst:comparison:bloat_cpp_example:cpp}
+    ]
+  #include<vector>
+  #include<iostream>
+    
+  extern size_t bar(size_t v);
+  template<typename T>
+  size_t foo(T const* v) {
+      if((size_t)v > 500)
+          return bar(foo(v - 1));
+      return  bar((size_t)v);
+  }
+  int main() {
+      int n = 3;
+      float y = 5;
+      std::cout<< foo(&n) + foo(&y);
+  }
+  \end{lstlisting}
+\end{minipage}
+
+Ponieważ model semantyczny, na którym operuje \emph{interfejs backendu} C-=-1, umożliwia identyfikację funkcji jako instancję generyka, można wykonać powiązane z tym optymalizację.
+Nawet w obecnej, okrojonej wersji kompilatora, możliwe jest porównanie instancji funkcji generycznej i stwierdzenie czy istnieją między nimi różnice.
+Dzięki temu dostatecznie zaawansowana implementacja \emph{interfejsu backendu} jest w stanie dokonywać kasowania typu, w sposób całkowicie ukryty przed programistą.
+W ten sposób zachowana zostaje moc szablonów C++, unikając jednocześnie problemów Javy.
+Ta optymalizacja nie została zaimplementowana z powodu jej dużej złożoności technicznej w porównaniu do wartości badawczej w kontekście tej pracy.
+Jej wykonanie zostałoby znacząco ułatwione po wprowadzeniu zmian w modelu semantycznym, opisanym w rozdziale \ref{further:generic_intermidiate_representation}.
+
+\begin{minipage}{\textwidth}
+  
+  \begin{lstlisting}[
+    numbers=left,
+    firstnumber=0,
+    caption={Fragment assemblera x86-64 generowanego dla przykładu z listingu \ref{lst:comparison:bloat_cpp_example:cpp} przez kompilator Clang w wersji 13.0.0, z maksymalnym poziomem optymalizacji},
+    aboveskip=0pt,
+    breaklines=true,
+    label={lst:comparison:bloat_cpp_example:assembly}
+    ]
+    unsigned long foo<int>(int const*):
+    cmp     rdi, 500
+    jbe     .LBB1_2
+    push    rax
+    add     rdi, -4
+    call    unsigned long foo<int>(int const*)
+    mov     rdi, rax
+    add     rsp, 8
+  .LBB1_2:
+    jmp     bar(unsigned long)          # TAILCALL
+  unsigned long foo<float>(float const*):
+    cmp     rdi, 500
+    jbe     .LBB2_2
+    push    rax
+    add     rdi, -4
+    call    unsigned long foo<float>(float const*)
+    mov     rdi, rax
+    add     rsp, 8
+  .LBB2_2:
+    jmp     bar(unsigned long)          # TAILCALL
+  \end{lstlisting}
+  
+  
+\end{minipage}
+\subsection{Symbole zewnętrzne}
+\label{Language_extensibility}
+\label{external_symbols}
+Jedną z konsekwencji zaproponowanych mechanizmów języka C-=-1 jest możliwość rozszerzania języka bez modyfikacji kompilatora.
+Oznacza to, że pewne elementy składni, obecne w innych językach, stają się zbędne w C-=-1.
 Większość języków programowania zawiera mechanizm umożliwiający import symboli zewnętrznych.
 Mogą one pochodzić z kodu napisanego w innym języku lub z już skompilowanej biblioteki.
 
-W wypadku C/C++, wymaga to użycia słowa \mintinline{Cpp}{external}, do zdefiniowania symbolu zewnętrznego oraz przekazania odpowiedniego argumentu do linkera.
-W C-=-1 ten sam rezultat można osiągnąć, przypisując funkcji odpowiednie metadane, które potem zostaną odczytane przez interfejs backendu.
-Wbudowana wersja tego programu obsługuje wczytywanie definicji funkcji z plików lib oraz zastępowanie jej ciała kodem LLVM.
-Mechanizm metadanych został dokładniej opisany w rozdziale \ref{final_solution}.
+W wypadku C/C++ wymaga to użycia słowa \lstinline{external}, do zdefiniowania symbolu zewnętrznego oraz przekazania odpowiedniego argumentu do linkera.
+W C-=-1 nie ma słowa kluczowego \lstinline{extern}.
+Deklaracja symbolu zewnętrznego wymaga stworzenia atrybutu, który zostanie potem obsłużony w interfejsie backendu.
 
-Listing \ref{lst:replaceWithLLVMAttribute} przedstawia atrybut \mintinline{Cpp}{replaceWithLLVMIR} z biblioteki standardowej C-=-1. 
-Pobiera on kod LLVMIR z pliku wskazanego przez użytkownika, a następnie ustawia w definicji wybranej funkcji zmienną "llvm-representation".
-Backend interface może potem odczytać tą wartość i wykorzystać ją do wygenerowania kodu dla backendu.
+Listing \ref{lst:extern_cm1} zawiera przykład atrybut oznaczającego funkcję jako symbol zewnętrzny.
+Interfejs \lstinline{ISymbolNameOverride} ma zwiększyć separację między interfejsem backendu a kodem kontrolującym nazwę symbolu.
+Dzięki temu, w przyszłości będzie go można zaimplementować na inne sposoby, umożliwiając import symboli wymagających specjalnej obsługi.
 
-\begin{lstlisting}[
-    language=Cm1,
+\begin{minipage}{\linewidth}
+  
+  \begin{lstlisting}[
     numbers=left,
     firstnumber=0,
-    caption={Atrybut zastępujący ciało funkcji kodem LLVM},
+    caption={Atrybut deklarujący funkcję jako symbol zewnętrzny},
     aboveskip=0pt,
-    label={lst:replaceWithLLVMAttribute}
-]
-public att<function> ReplaceWithLLVMIR
-{
-  private _filename: string;
-  private _nameOftypeToReplace: string;
-  private _nameToReplace: string;
-
-  public fn construct(
-    filename: string,
-    nameOfTypeToReplace: string,
-    nameToReplace: string)
-  {
-    self._filename = filename;
-    self._nameOftypeToReplace = nameOfTypeToReplace;
-    self._nameToReplace = nameToReplace
+    label={lst:extern_cm1}
+    ]
+public interface ISymbolNameOverride {
+  public fn createSymbolName() -> string;
+}
+public att<function> MarkAsExternal : ISymbolNameOverride {
+  private _symbolName : string;
+  public fn construct(symbolName: string) {
+    self._symbolName = symbolName;
   }
+  public fn attach(f: functionDescriptor) {
+    ignoreBody(f);
+  }
+  public fn createSymbolName() -> string {
+    return self._symbolName;
+  }
+}
+\end{lstlisting}
+\end{minipage}
 
-  public fn attach(f: functionDescriptor)
+
+
+Atrybut \lstinline{MarkAsExternal} ma natomiast dwie role.
+Po pierwsze, przechowuje nazwę symbolu, który jest importowany.
+W ten sposób użytkownik nie jest przywiązany do nazwy symbolu zadeklarowanej w skompilowanym pliku bibliotecznym.
+Umożliwia to też importowanie funkcji z C++, których nazwy zostały zmieszane i zawierają znaki nieakceptowalne w identyfikatorach.
+Po drugie, \lstinline{MarkAsExternal} wywołuje procedurę \lstinline{ignoreBody}.
+Ta funkcja informuje kompilator, że powinien zignorować ciało podprogramu i analizować wyłącznie nagłówek.
+To wywołanie jest konieczne, ponieważ kompilator zapewnia poprawność programu, analizując zawartość funkcji.
+Dlatego, jeśli funkcja zwracająca jakąś wartość, nie zawiera instrukcji \lstinline{return}, program zostanie odrzucony.
+W wypadku podprogramów importowanych z zewnątrz, ich ciało jest zbędne.
+
+Listing \ref{lst:selected_backend_interface} zawiera wybrane funkcje z domyślnego interfejsu backendu, powiązane z symbolami zewnętrznymi.
+Funkcja \lstinline{getFunctionName} ma za zadanie wygenerować nazwę symbolu, kompatybilną z C.
+Linie od drugiej do czwartej obsługują atrybuty implementujące \lstinline{ISymbolNameOverride}.
+Sprawdzają one, czy z daną funkcją powiązany jest atrybut nadpisujący nazwę symbolu i zwraca wygenerowaną przez niego wartość.
+
+Funkcja \lstinline{buildFunction} ma stworzyć reprezentację pośrednią LLVM funkcji przekazanej jako parametr.
+Linie od dwudziestej dziewiątej do trzydziestej trzeciej zawierają kod obsługujący symbole zewnętrzne.
+Te instrukcje sprawdzają, czy z funkcją powiązany jest atrybut implementujący \lstinline{ISymbolNameOverride}.
+Jeśli tak, ciało procedury jest ignorowane.
+W przeciwnym wypadku interfejs backendu buduje funkcję normalnie.
+W LLVM, procedury niezawierające ciała, są uznawane za symbole zewnętrzne.
+
+\begin{minipage}{\linewidth}
+  
+  \begin{lstlisting}[
+    numbers=left,
+    firstnumber=0,
+    caption={Wybrane fragmenty interfejsu backendu},
+    aboveskip=0pt,
+    label={lst:selected_backend_interface}
+    ]
+
+private fn getFunctionName(f: functionDescriptor) -> string {
+  let attribute = f.get_attribute<ISymbolNameOverride>();
+  if(attribute != null<ISymbolNameOverride>())
+    return attribute.createSymbolName();
+  let baseName = f.qualifiedName();
+  let params = f.parameters();
+  for(i in enumerate(0, params.length()))
   {
-    let ir = read_all_file(self._filename);
-    ir = ir.replace("$" + self._nameOftypeToReplace, self._nameToReplace);
-    f.store("llvm-representation", ir);
+    baseName = baseName + "__" + (params[i].type().toString());
+  }
+  return baseName
+    .replace(":", "_")
+    [...]
+    .replace("@", "__at__");
+}
+
+private fn buildFunction(
+  f: functionDescriptor,
+  llvmF: llvmFunction,
+  registry: packageRegistry*,
+  mod: llvmModule)
+{
+  let variables = dictionary<variableDescriptor, llvmValue>();
+  let params = f.parameters();
+  for(i in enumerate(0, params.length()))
+    variables.push(params[i], llvmF.getParameter(i));
+  let builder = llvmF.getBuilder();
+  let attribute = f.get_attribute<ISymbolNameOverride>();
+  if(attribute != null<ISymbolNameOverride>())
+  {
+    let code = f.code();
+    build_block(&code, &builder, &variables, registry);
   }
 }
 
 \end{lstlisting}
+\end{minipage}
+
+Zaprezentowana implementacja jest bardzo prosta, zmienia jedynie nazwę generowanego symbolu i ignoruje ciało budowanej funkcji.
+Mogą jednak istnieć scenariusze, w których użycie symbolu zewnętrznego wymaga bardziej złożonej obsługi.
+Przykładowo, jeśli wywołanie funkcji zdefiniowanej w innym języku wymaga konwersji (ang. marshalling) przekazywanych parametrów, bądź zwracanej wartości.
+Po niewielkich modyfikacjach zaproponowanego interfejsu obsługa takich przypadków byłaby możliwa.
+
+\subsection{Użycie skompilowanego kodu w innych językach programowania}
+\label{comparison:exporting_to_other_languages}
+
+Użycie funkcji z jednego języka programowania, w innym języku zwykle wymaga zadeklarowania jej jako symbolu zewnętrznego.
+W rozdziale \ref{external_symbols} zaprezentowano jak automatycznie zaimportować taką procedurę do C-=-1.
+Ponieważ C-=-1 umożliwia wykonywanie dowolnego kodu w trakcie kompilacji, możliwym jest automatyczne eksportowanie zawartości skompilowanego pliku do innych języków programowania.
+
+W zestawie bibliotek zaimplementowanych w ramach tej pracy, znajduje się pakiet \lstinline{bindingsGenerator}.
+Zawiera interfejs \lstinline{IBindingsGenerator} którego metody są wywoływane przez \emph{interfejs backendu} (opisany w rozdziale \ref{Backend_Interface}) w trakcie kompilacji do LLVMIR.
+Interfejs \lstinline{IBindingsGenerator} jest implementowany przez atrybuty, dołączane do funkcji, mające generować pliki nagłówkowe dla innych jęzków.
+
+Pakiet \lstinline{CBindings} zawiera atrybut generujący pliki nagłówkowe dla języka C (plik\\ \path{\Libraries\cBindings\src\cBindingsAttribute.cm}).
+Udostępnienie funkcjie C-=-1 do użycia w C wymaga osiągnięcia trzech celów.
+Po pierwsze, nazwa wygenerowanego symbolu musi być poprawnym identyfikatorem w języku konsumującym bibliotekę.
+LLVM nie ma takich wymagań, więc \emph{interface backendu} może generować symbole zawierające niedozwolone znaki.
+Atrybuty implementujące \lstinline{IBindingsGenerator}, mogą ją więc nadpisać.
+Po drugie koniecznym jest wygenerowanie definicji typów, w języku C, odpowiadającym typom w C-=-1, używanymi w nagłówku funkcji.
+Tyczy się to wyłącznie klas i struktur definiowanych przez użytkownika, typy wbudowane C-=-1 muszą zostać przetłumaczone na ich odpowiedniki C.
+Po trzecie wygenerowane pliki C muszą zostać umieszczone w folderze wyjściowym kompilatora, razem z wygenerowaną biblioteką.
+
+W ramach przeprowadzonych prac badawczych wyeksportowano funkcję \lstinline{enumerate} z biblioteki standardowej C-=-1 do C.
+Wygenerowany kod zawierał bardzo długie i nieporęczne nazwy, co jest skutkiem przyjętego algorytmu mieszania nazw \cite{wen2006analysis}.
+Kod napisany w języku C był jednak w stanie wywołać funkcję \lstinline{enumerate} oraz w pełni użyć zwróconej pary iteratorów.
+W przyszłych wersjach tej biblioteki zostanie użyty inny algorytm generujący nazwę symbolu, tworzący bardziej czytelne nazwy.
+
+Listing \ref{lst:c_interopt} zawiera kod, napisany w C, wywołujący funkcję \lstinline{enumerate} z biblioteki standardowej C-=-1, przy użyciu wygenerowanych nagłówków.
+Ten tworzy obiekt reprezentujący zakres liczb od zera do pięćdziesięciu pięciu (linia 17), a następnie używa jego iteratorów do wypisania wszystkich elementów do konsoli.
+Zdecydowana większość kodu aplikacji składa się z pomieszanych nazw typów.
+W praktycznym użyciu generator powinien zostać zmodyfikowany, aby tworzyć bardziej użyteczne identyfikatory, lub powinno się przypisać tym typom aliasy.
+
+\begin{minipage}{\linewidth}
+  
+  \begin{lstlisting}[
+    numbers=left,
+    firstnumber=0,
+    caption={Przykładowy program napisany w C, używający funkcji \lstinline{enumerate} z biblioteki standardowej C-=-1},
+    aboveskip=0pt,
+    breakatwhitespace=false,
+    breaklines=true,
+    label={lst:c_interopt}
+    ]
+#include <stdio.h>
+#include <stdlib.h>
+#include "__enumerate__usize__usize.h"
+#include "__atHocCollection_integerIterator__comma__integerIterator ___iterate__atHocCollection_integerIterator__comma__integerIterator ___star__.h"
+#include "__enumeration_integerIterator__comma__integerIterator___end__ enumeration_ integerIterator__comma__integerIterator___star__.h"
+#include "__enumeration_integerIterator__comma__integerIterator___begin__ enumeration_ integerIterator__comma__integerIterator___star__.h"
+#include "__integerIterator__get__integerIterator__star__.h"
+#include "__integerIterator__advance__integerIterator__star__.h"
+#include "__operator___not_equals____integerIterator__integerIterator.h"
+struct arr {
+  void *data;
+  int count;
+};
+extern struct arr __new_array_char___usize(int size);
+int main() {
+  struct arr k =  __new_array_char___usize(3);
+  printf("%p\n%i\n", k.data, k.count);
+  __atHocCollection_l_integerIterator_c_integerIterator_r_ collection = __enumerate__usize__usize(0, 55);
+  __enumeration_l_integerIterator_c_integerIterator_r_ enume = __atHocCollection_integerIterator__comma__integerIterator___ iterate__ atHocCollection_integerIterator__comma__integerIterator___star__(&collection);
+  for(__integerIterator current = __enumeration_integerIterator__comma__integerIterator___begin__ enumeration_ integerIterator__comma__integerIterator___star__(&collection); __operator___not_equals____integerIterator__integerIterator( current, __enumeration_integerIterator__comma__integerIterator___end__ enumeration_ integerIterator__comma__integerIterator___star__(&collection)); __integerIterator__advance__integerIterator__star__(&current))
+  {
+    printf("%i\n", __integerIterator__get__integerIterator__star__(&current));
+  }
+  printf("%i\t%i\t%i\t%i\t", collection._from._step, collection._from._value, collection._to._step, collection._to._value);
+}
+\end{lstlisting}
+\end{minipage}

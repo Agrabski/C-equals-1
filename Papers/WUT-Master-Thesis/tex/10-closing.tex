@@ -1,0 +1,37 @@
+\section{Uwagi końcowe}
+
+Prace C-=-1 oraz jego dokumentacją trwały od czternastego grudnia 2019, do trzydziestego stycznia 2022.
+Ten język powstał jako rozwój wcześniejszego projektu Aergia \cite{grabski:aergia}, mającego na celu stworzenie preprocesora dla C++ dodającego statyczne metaprogramowanie.
+Złożoność C++ znacząco utrudniała stworzenie kompletnego modelu programu w tym języku.
+W związku z tym, aby móc skupić się na badaniu nowych technik metaprogramistycznych, postanowiono stworzyć nowy, prostszy język.
+Jako pierwszy krok tego procesu, zmodyfikowano generator parserów ANTLR \cite{grabski2020}, aby ułatwić budowanie kompilatora.
+
+Pomimo ponad dwóch lat pracy nad C-=-1 oraz siedmiu miesięcy przy Aergii (pierwszy kwietnia 2019 do siedemnastego listopada 2019), pozostało jeszcze wiele pracy do wykonania.
+Generacja kodu w zaimplementowanym kompilatorze nie jest możliwa, w języku brakuje części konstruktów oraz wiele możliwości optymalizacji programu nie zostało zbadane.
+Projekt kompilatora C-=-1 zawiera w przybliżeniu siedemdziesiąt dwa tysiące linii kodu, z których około dziesięciorga tysięcy zostało wygenerowanych przez ANTLR.
+
+W ramach tej pracy zaimplementowano nowy język programowania, do przetestowania nowych mechanizmów metaprogramistycznych.
+Atrybuty w C-=-1 stanowią nowy element języka, na równi z klasami i funkcjami, używany do adnotowania elementów programu.
+Te adnotacje mogą następnie analizować i modyfikować powiązane z nimi fragmenty programu.
+Atrybuty zostały dokładniej opisane w rozdziałach \ref{Attributes_definition} i \ref{Attributes_mechanism_cm1}.
+Dla C-=-1 stworzono podstawowy kompilator oraz bibliotekę standardową, opisane w rozdziałach \ref{Language_desig} i \ref{implementation}.
+Używając tych narzędzi, przeprowadzono następnie badania porównawcze z innymi językami programowania.
+
+Pomimo relatywnie niewielkiego, jak na język programowania, nakładu pracy, poniżej dwóch roboczolat, C-=-1 oferuje nowe, ciekawe możliwości.
+Jako język zbudowany wokół metaprogramowania, statyczna analiza kodu, oraz integracja z innymi językami jest dużo łatwiejsza.
+Częścią bibliotek standardowych języka C-=-1 jest pakiet \lstinline{CBindings} umożliwiający generowanie plików nagłówkowych dla języka C.
+Zaimplementowano też atrybut \lstinline{NoDiscard}, stanowiący prosty przykład statycznej analizy kodu.
+Przy większym nakładzie pracy, możliwa byłaby też modyfikacja kodu w trakcie kompilacji, co znacząco zwiększyłoby możliwości języka.
+Nawet w obecnej formie, zaproponowane mechanizmy metaprogramistyczne są użyteczne, co zademonstrowano w rozdziale \ref{comparison}.
+
+Przy implementacji kompilatora przyjęto podejście oparte na użyciu interpretera C-=-1 do wykonania dużej części pracy.
+Oznacza to, że komponent kompilatora został napisany w kompilowanym języku.
+To podejście ma też jednak pewne wady.
+Implementacja kompilatora staje się trudniejsza, przez porzucenie silnego typowania, co zostało dokładniej opisane w rozdziale \ref{diadvantages}.
+Ponadto, czas kompilacji w obecnej wersji narzędzi C-=-1 jest długi, sięgając dziesięciu minut przy kompilowaniu biblioteki standardowej.
+Te problemy wynikają w dużej mierze z braku czasu na dopracowanie języka oraz kompilatora.
+
+C-=-1 wskazuje na użyteczność zaproponowanych mechanizmów metaprogramistycznych.
+Język, pomimo braku dojrzałości, jest zdatny do użytku, a atrybuty oferują funkcjonalność przydatną w rozwiązywaniu praktycznych problemów.
+Pełne zbadanie możliwości C-=-1 wymaga dalszej pracy nad kompilatorem.
+

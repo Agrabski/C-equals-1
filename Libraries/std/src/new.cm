@@ -1,11 +1,10 @@
 import {usize compiletime_heap_allocate null char} from {cm1mLang}
-import {RunTimeOnly mapToExternalSymbol} from {compiler}
+import {RunTimeOnly CompileTimeOnly mapToExternalSymbol} from {compiler}
 
 [RunTimeOnly()]
 public fn new_array<typename T>(size: usize) -> T[]
 {
 	return array_cast<T>(unsafe_new(sizeof<T>() * size), size);
-	
 }
 
 [RunTimeOnly()]
@@ -15,6 +14,7 @@ public fn operator new unique<typename T>() -> @unique<T>
 	return @unique<T>(result);
 }
 
+[CompileTimeOnly()]
 public fn operator new unique<typename T>() -> @unique<T> 
 {
 	let result = compiletime_heap_allocate<T>();
@@ -22,9 +22,7 @@ public fn operator new unique<typename T>() -> @unique<T>
 }
 
 [mapToExternalSymbol("malloc", "")]
-private fn unsafe_new(size: usize) -> char*
-{}
+private fn unsafe_new(size: usize) -> char* {}
 
 [mapToExternalSymbol("free", "")]
-internal fn delete<typename T>(val: T*)
-{}
+internal fn delete<typename T>(val: T*) {}

@@ -1,0 +1,168 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Bachelor's & Master's Thesis Template             %%
+%% Copyleft by Artur M. Brodzki & Piotr Woźniak      %%
+%% Faculty of Electronics and Information Technology %%
+%% Warsaw University of Technology, 2019-2020        %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[
+    left=2.5cm,         % Sadly, generic margin parameter 
+    right=2.5cm,        % doesnt't work, as it is
+    top=2.5cm,          % superseded by more specific
+    bottom=3cm,         % left...bottom parameters.
+    bindingoffset=6mm,  % Optional binding offset.
+    nohyphenation=false % You may turn off hyphenation, if don't like.
+]{eiti/eiti-thesis}
+
+\langpol % Dla języka angielskiego mamy \langeng
+\graphicspath{{img/}}             % Katalog z obrazkami.
+\addbibresource{bibliografia.bib} % Plik .bib z bibliografią
+\usepackage{listings}
+\lstdefinestyle{mystyle}{
+    basicstyle=\ttfamily\footnotesize,
+}
+
+\lstset{style=mystyle}
+\usepackage[draft,nosingleletter]{impnattypo}
+\begin{document}
+
+%--------------------------------------
+% Strona tytułowa
+%--------------------------------------
+\MasterThesis % Dla pracy inżynierskiej mamy \EngineerThesis
+\instytut{Informatyki}
+\kierunek{Informatyka}
+\specjalnosc{Sztuczna inteligencja}
+\title{
+Kompilacja przez interpretację:\\
+statyczne metaprogramowanie w języku C-=-1
+}
+\engtitle{ % Tytuł po angielsku do angielskiego streszczenia
+    Compilation by interpretation:\\
+    static metaprogramming in C-=-1
+}
+\author{Adam Grabski}
+\album{283431}
+\promotor{dr. hab. inż. Ilona Bluemke}
+\date{\the\year}
+\maketitle
+
+%--------------------------------------
+% Streszczenie po polsku
+%--------------------------------------
+\cleardoublepage % Zaczynamy od nieparzystej strony
+\streszczenie 
+Metaprogramowanie dynamiczne, istniejące w językach zarządzanych, jest narzędziem zwiększającym produktywność programisty i generyczność produkowanego kodu.
+Ten mechanizm niesie ze sobą jednak pewne koszta, nieakceptowalne w niektórych scenariuszach.
+Statyczne metaprogramowanie jest nowym i dynamicznie rozwijającym się trendem w językach niskiego poziomu, który oferuje wiele korzyści dynamicznego metaprogramowania, przenosząc jego koszt na czas kompilacji.
+Obecnie, tego typu mechanizmy, są jednak znacząco ograniczone, w porównaniu z językami zarządzanymi.
+
+W ramach tej pracy zaproponowano nowy język programowania C-=-1, zaprojektowany z myślą o statycznym metaprogramowaniu.
+Większość kodu pisanego w tym języku może być wykonywana w trakcie kompilacji.
+Ponadto, struktura programu może być modyfikowana w trakcie kompilacji.
+Dzięki temu język może osiągnąć ekspresywność, porównywalną z językami zarządzanymi, bez konieczności środowiska uruchomieniowego czy dodatkowych informacji w czasie uruchomienia.
+
+Aby przetestować możliwości C-=-1, zaimplementowano podstawowy kompilator w C++, dla małego podzbioru języka.
+Pomimo tych ograniczeń, udało się zaprezentować użyteczność proponowanych mechanizmów statycznego metaprogramowania.
+W C-=-1 implementacja nowych analizatorów kodu oraz rozszerzeń języka jest łatwa.
+Część kompilatora została napisana w C-=-1.
+Przyśpieszyło to rozwój języka i udowodniło jego funkcjonalność.
+Przeprowadzone prace wskazały wiele kierunków dalszej pracy badawczej.
+
+
+\slowakluczowe Metaprogramowanie, Kompilatory, Interpretery, Języki programowania
+
+%--------------------------------------
+% Streszczenie po angielsku
+%--------------------------------------
+\newpage
+\abstract 
+Dynamic metaprogramming, present in many modern, managed programming languages is a powerfull tool, helpful in enhancing programmers productivity and code genericity.
+This tool, however, carries with it certain performance penalties, unacceptable in some circumstances.
+Nowadays, an increacing number of low level programming languages incorporate static metaprogramming features.
+It offers many benefits of dynamic metaprogramming, while transfering its costs from run-time to compile-time.
+Currently, static metaprogramming is severley limited, compared to features found in dynamic languages.
+
+This thesis presents a new native programming language: C-=-1, designed with static metaprogramming in mind.
+Its core idea is to allow almost any code to be executed at compile-time and to modify the program's structure.
+Thus making the C-=-1 as expressive as mannaged languages, without the need for a run-time envoirment.
+
+In order to test C-=-1's capabilities, a basic compiler was implemented in C++, for a small subset of the language.
+Despite those limitations, the utlility of proposed metaprogramming features was demonstrated.
+C-=-1 makes static analysis easier to perform and the ability to integrate with other languages is improved.
+Parts of the compiler were written in C-=-1, thus proving language's utility and boosting it's development.
+Implementation of the compiler and conducted tests, indicated new avenues of research into programming languages and compilers.
+\keywords Metaprogramming, Compilers, Interpreters, Programming languages
+
+%--------------------------------------
+% Oświadczenie o autorstwie
+%--------------------------------------
+\cleardoublepage  % Zaczynamy od nieparzystej strony
+\pagestyle{plain}
+\makeauthorship
+
+%--------------------------------------
+% Spis treści
+%--------------------------------------
+\cleardoublepage % Zaczynamy od nieparzystej strony
+\tableofcontents
+
+%--------------------------------------
+% Rozdziały
+%--------------------------------------
+\cleardoublepage % Zaczynamy od nieparzystej strony
+\pagestyle{headings}
+
+\input{tex/1-wstep}
+\newpage
+\input{tex/2-Istniejace}
+\newpage
+\input{tex/3-projekt-jezyka}
+\newpage
+\input{tex/4-implementacja}
+\newpage
+\input{tex/5-porownanie-z-jezykami}
+\newpage
+\input{tex/6-wyzwania}
+\newpage
+\input{tex/7-wnioski}
+\newpage
+\input{tex/8-dalsza.tex}
+\newpage
+\input{tex/10-closing.tex}
+
+
+%--------------------------------------------
+% Literatura
+%--------------------------------------------
+\cleardoublepage % Zaczynamy od nieparzystej strony
+\printbibliography
+
+%--------------------------------------------
+% Spisy (opcjonalne)
+%--------------------------------------------
+\newpage
+\pagestyle{plain}
+
+% Wykaz symboli i skrótów.
+% Pamiętaj, żeby posortować symbole alfabetycznie
+% we własnym zakresie. Ponieważ mało kto używa takiego wykazu,
+% uznałem, że robienie automatycznie sortowanej listy
+% na poziomie LaTeXa to za duży overkill.
+% Makro \acronymlist generuje właściwy tytuł sekcji,
+% w zależności od języka.
+% Makro \acronym dodaje skrót/symbol do listy,
+% zapewniając podstawowe formatowanie.
+% //AB
+\vspace{0.8cm}
+
+\listoffigurestoc     % Spis rysunków.
+\vspace{1cm}          % vertical space
+
+% Załączniki
+
+% Używając powyższych spisów jako szablonu,
+% możesz tu dodać swój własny wykaz bądź listę,
+% np. spis algorytmów.
+
+\end{document} % Dobranoc.

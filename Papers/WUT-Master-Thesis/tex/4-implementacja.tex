@@ -1,103 +1,472 @@
-\section{Implementacja}
-W celu przeprowadzenia prac badawczych na temat konsekwencji zaproponowanych mechanizmów, koniecznym było zaimplementowanie podstawowego kompilatora. 
+\section{Implementacja kompilatora i biblioteki standardowej C-=-1}
+\label{implementation}
+W celu przeprowadzenia prac badawczych na temat konsekwencji zaproponowanych mechanizmów koniecznym było zaimplementowanie podstawowego kompilatora. 
+W tym rozdziale opisono implementacja kompilatora, która służyła do testów języka, oraz jej nietypowe aspekty, wynikające z projektu C-=-1.
+
 \subsection{Fazy kompilacji}
+\label{Compilation_phases}
 Ze względu na nietypową konstrukcję C-=-1, proces kompilacji musi być dłuższy oraz ostrożniej zaprojektowany niż w typowym statycznie typowanym języku programowania.
-Ponieważ użytkownik ma pisać kod, który będzie modyfikował wewnętrzne struktury danych kompilatora, musi on wiedzieć kiedy które jej elementy są gotowe.
-Kolejność operacji wykonywanych przez kompilator, staje się przez to częścią języka.
+Ponieważ użytkownik ma pisać kod, który będzie modyfikował wewnętrzne struktury danych kompilatora, musi on wiedzieć, kiedy które jej elementy są gotowe.
+Kolejność operacji wykonywanych przez kompilator staje się przez to częścią języka.
+Proces kompilacji składa się z następujących etapów:
 \begin{enumerate}
-    \item Budowa reprezentacji pośredniej atrybutów
-    \item Zebranie definicji funkcji i typów
-    \item Przyłączenie atrybutów
-    \item Budowa reprezentacji pośredniej funkcji i typów
-    \item Wykonanie meta-funkcji atrybutów
-    \item Zastąpienie wyrażeń zawierających statyczną refleksję ich wynikami
-    \item Zapisanie reprezentacji pośredniej paczki
-    \item (opcjonalne) Konwersja do postaci pośredniej LLVM i kompilacja do kodu maszynowego
+  \item Budowa reprezentacji pośredniej atrybutów
+  \item Zebranie definicji funkcji i typów
+  \item\label{compilation_step:attribute_attachment} Przyłączenie atrybutów
+  \item Budowa reprezentacji pośredniej funkcji i typów
+  \item Wykonanie meta-funkcji atrybutów
+  \item Zastąpienie wyrażeń zawierających statyczną refleksję ich wynikami
+  \item Zapisanie reprezentacji pośredniej pakietu
+  \item (opcjonalne) Konwersja do postaci pośredniej LLVM i kompilacja do kodu maszynowego
 \end{enumerate}
 
-Współczesne kompilatory są typowo skonstruowane z trzech części: front-end, middle-end i back-end [9].
-Zadaniem front-endu jest walidacja składni, weryfikacja typów oraz buduje reprezentację pośrednią kodu. Middle-end, operując na tych strukturach danych dokonuje optymalizacji niezależnych od maszyny docelowej.
+Współczesne kompilatory są typowo skonstruowane z trzech części: front-end, middle-end i back-end \cite{intro_to_compiler_design}.
+Zadaniem front-endu jest analiza składni, weryfikacja typów oraz budowa reprezentacji pośredniej kodu. Middle-end, operując niej, dokonuje optymalizacji niezależnych od maszyny docelowej.
 Na koniec back-end optymalizuje kod pod kątem konkretnej architektury procesora i generuje kod maszynowy.
 
 Ze względu na nietypowe wymagania C-=-1, zastosowano nowy podział odpowiedzialności.
-W przeciwieństwie do typowych języków programowania, implementowany kompilator nie może wygenerować reprezentacji pośredniej programu jako jeden krok.
-Punkt 3 procesu kompilacji, może wpływać na wybór rozwiązywanie przeciążeń funkcji.
+W przeciwieństwie do typowych języków programowania implementowany kompilator nie może wygenerować reprezentacji pośredniej programu w jednym kroku.
+Etap \ref{compilation_step:attribute_attachment} procesu kompilacji może wpływać na wybór przeciążenia funkcji.
+Ten aspekt został opisany dokładniej w rozdziale \ref{Attributes_mechanism_cm1}
 
-Kompilator C-=-1 dzieli się na następujące części:
+Kompilator C-=-1 składa się z następujących części:
 \begin{enumerate}
-    \item Frontend
-    \item Interpreter
-    \item Optimiser
-    \item Serialisator
-    \item Backend Interface
-    \item Backend
+  \item Frontend
+  \item Interpreter
+  \item Optimiser
+  \item Serializator
+  \item Backend Interface
+  \item Backend
 \end{enumerate}
-Część z tych komponentów nazywa się tak samo jak w klasycznej architekturze. Jest to zabieg celowy, ponieważ pełnią one te same funkcje. Dodatkowe komponenty kompilatora które zostały wydzielone to: Interpreter, Serialisator oraz Backend Interface. Nazwa Optimiser została wybrana ponieważ wyrażenie „middle-end” rzadko występuje w literaturze a wybrany termin jest bardziej deskryptywny.
+Część z nich nazywa się tak samo, jak w klasycznej architekturze. Jest to zabieg celowy, ponieważ pełnią one te same funkcje. 
+Dodatkowe komponenty kompilatora, które zostały wydzielone to: \emph{Interpreter}, \emph{Serializator} oraz \emph{Backend Interface}. 
+Nazwa Optimiser została wybrana, ponieważ wyrażenie 'middle-end' rzadko występuje w literaturze, a wybrany termin lepiej opisuje ten komponent.
 
-Ponieważ częścią kontraktu pomiędzy programistą a językiem C-=-1 jest kod wykonywany w czasie kompilacji, jednym z wydzielonych komponentów jest Interpreter. Operuje on na CIR omówionej w rozdziale 3.4. Interpreter stanowi najważniejszy komponent kompilatora, ponieważ większość transformacji odbywa się za jego pomocą. Szczegółowe działanie tego komponentu jest opisane w rozdziale 4.3.
+Ponieważ istotnym elementem języka C-=-1 jest możliwość wykonywania kodu w czasie kompilacji, jednym z wydzielonych komponentów jest Interpreter.
+Operuje on na CIR omówionej w rozdziale \ref{reprezentacja_posrednia}.
+Interpreter stanowi najważniejszy komponent kompilatora, ponieważ większość transformacji odbywa się za jego pomocą. 
+Szczegółowe działanie tego komponentu jest opisane w rozdziale \ref{interpreter}.
 
-Optimiser został dodany do struktury kompilatora, aby zapewnić możliwość dalszego rozwoju i dla kompletności projektu. Nie został jednak zaimplementowany.
+\lstinline{Optimiser} został dodany do struktury kompilatora, aby zapewnić możliwość dalszego rozwoju i dla kompletności projektu. Nie został jednak zaimplementowany.
 
-Serializator jest odpowiedzialny za zapisywanie i odczytywanie struktur danych kompilatora z formy tekstowej. Służy to zarządzaniu zależnościami. Zserializowaną w ten sposób paczkę można dystrybuować za pomocą serwisu takiego jak NPM oraz używać w innych projektach. Ponieważ zawartością takiego modułu jest zserializowane, niezależne od platformy CIR, nie istnieje problem binarnej kompatybilności. Kompilacja programu używając paczek C-=-1 jest ekwiwalentna do kompilowania programu C++ używając zależności wyłącznie w formie kodu źródłowego. Cały program jest kompilowany tym samym narzędziem, na tej samej maszynie i z tymi samymi flagami. Serializator jest dokładnie opisany w rozdziale 4.4 a mechanizm zarządzania zależnościami w rozdziale 4.2.1.
+\lstinline{Serializator} jest odpowiedzialny za zapisywanie i odczytywanie struktur danych kompilatora z postaci tekstowej.
+Serializowany w ten sposób pakiet można dystrybuować za pomocą serwisu takiego jak NPM \cite{npm} oraz używać w innych projektach.
+Większość współczesnych języków programowania ma powiązany ze sobą system do zarządzania zależnościami, przechowujący listę publicznie dostępnych pakietów.
+Ponieważ zawartością takiego modułu jest serializowane, niezależne od platformy CIR, nie istnieje problem binarnej kompatybilności.
+Kompilacja programu używając pakietów C-=-1 jest zbliżona do kompilowania programu C++ używając zależności wyłącznie w formie kodu źródłowego.
+Cały program jest kompilowany tym samym narzędziem, na tej samej maszynie i z tą samą konfiguracją.
+Serializator został dokładnie opisany w rozdziale \ref{serializer}.
 
-Kompilator C-=-1 używa LLVM jako back-endu. W związku z tym, koniecznym jest przetłumaczenie CIR na reprezentację pośrednią LLVM (w dalszej części pracy nazywanej LIR). Dlatego do kompilatora dodano element Backend Interface który dokonuje tej konwersji. Obydwa te komponenty są opisane w rozdziałach 4.6 oraz 4.5.
- 
+Kompilator C-=-1 używa LLVM \cite{Lattner:MSThesis02} jako back-endu. W związku z tym, koniecznym jest przetłumaczenie CIR na reprezentację pośrednią LLVM (w dalszej części pracy nazywanej LLVMIR). Dlatego do kompilatora dodano element \lstinline{Backend Interface}, który dokonuje tej konwersji. Obydwa te komponenty są opisane w rozdziałach \ref{Backend_Interface} oraz \ref{implementation:backend}.
+
+Diagram \ref{compilation_process_diagram} przedstawia ogólny proces kompilacji.
+Kod użytkownika jest dzielony na dwie części: atrybuty i funkcje oraz typy.
+Ten podział wynika z konieczności analizy metakodu przed przetworzeniem normalnego kodu programu.
+
+
 \begin{figure}[]
-\includegraphics[scale=0.8]{img/compilation_process.png}
-\caption{diagram procesu kompilacji języka C-=-1}
-\centering
+  \caption{Diagram procesu kompilacji języka C-=-1}
+  \label{compilation_process_diagram}
+  \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{img/compilation_process.png}
+  \centering
 \end{figure}
+
 \subsection{Front-end}
-Front-end kompilatora C-=-1 jest odpowiedzialny za interakcje z tekstem kodu źródłowego. Rysunek 1 przedstawia diagram procesu kompilacji. Front-end gra w nim kluczową rolę w początkowych fazach, przetwarzając zawartość plików źródłowych. Sposób w który źródła są odczytywane oraz analizowane jest opisany w rozdziale 4.2.1.
-Zrealizowanie tego procesu wymagało aby ten komponent kompilatora potrafił funkcjonować w różnych trybach w zależności od obecnie wykonywanego kroku. Ponadto, ponieważ w C-=-1, w przeciwieństwie do C++, kolejność deklaracji nie ma znaczenia, front-end musiał radzić sobie z zależnościami kołowymi. Ogół działania front-endu jest opisany w rozdziale 4.2.2.
+Front-end kompilatora C-=-1 jest odpowiedzialny za analizę tekstu kodu źródłowego. Rysunek \ref{compilation_process_diagram} przedstawia diagram procesu kompilacji.
+Front-end gra w nim kluczową rolę w początkowych fazach, przetwarzając zawartość plików źródłowych.
+Sposób, w który źródła są odczytywane oraz analizowane jest opisany w rozdziale \ref{implementation:parser}.
+
+Zrealizowanie tego procesu wymagało, aby front-end komponent kompilatora potrafił funkcjonować w różnych trybach w zależności od obecnie wykonywanego kroku.
+Ponadto, ponieważ w C-=-1, w przeciwieństwie do C++, kolejność deklaracji nie ma znaczenia, front-end musiał radzić sobie z zależnościami kołowymi.
+Ogół działania front-endu jest opisany w rozdziale \ref{implementation:source_processing_phases}.
+
+Frontend kompilatora jest również odpowiedzialny za tworzenie instancji atrybutów, kiedy przetwarza kod funkcji i typów.
+Dlatego program użytkownika jest dzielony, przed analizą.
+Przetworzenie typów i funkcji wymaga możliwości wykonania kodu atrybutów (kroki i1 oraz i2 na diagramie \ref{compilation_process_diagram}).
+Z tego powodu, kompilator musi analizować kod metaprogramu, przed resztą aplikacji.
+
 \subsubsection{Parser}
-Do parsowania tekstu wejściowego, użyto generatora parserów Rose [10]. Jest to narzędzie bazujące na Antlr, które znacząco ułatwia manipulowanie drzewem składniowym (ang. AST). Te dodatkowe możliwości są wykorzystywane przy przetwarzaniu szablonów (rozdział 4.2.5).
-Kompilator trzyma w pamięci tylko jedno drzewo rozkładu na raz, co oznacza że każdy plik jest wczytywany wielokrotnie. Ta decyzja ma ograniczyć ilość zużywanej w danym momencie pamięci operacyjnej.
-W celu analizy tekstu wejściowego użyto wizytatorów. Jest to typowy wzorzec projektowy w 
+\label{implementation:parser}
+Do analizy tekstu wejściowego, użyto generatora parserów Rose\cite{grabski2020}.
+Jest to narzędzie bazujące na Antlr \cite{antlr}, które znacząco ułatwia manipulowanie drzewem składniowym (ang. Abstract Syntax Tree, AST).
+Te dodatkowe możliwości są wykorzystywane przy przetwarzaniu szablonów (rozdział \ref{implementation:generics}).
+Kompilator trzyma w pamięci tylko jedno drzewo rozbioru na raz, co oznacza, że każdy plik jest wczytywany wielokrotnie.
+Ta decyzja ma ograniczyć ilość zużywanej w danym momencie pamięci operacyjnej.
+
 \subsubsection{Fazy przetwarzania plików źródłowych}
+\label{implementation:source_processing_phases}
+
+Frontend kompilatora C-=-1 operuje w trzech fazach: \lstinline{create}, \lstinline{confirm} oraz \lstinline{finalize}.
+Aby zapewnić, że kolejność deklaracji w programie nie ma znaczenia (w przeciwieństwie do C/C++), fazy są wykonywane dla wszystkich plików.
+Najpierw wszystkie pliki przechodzą przez \lstinline{create}, potem przez \lstinline{confirm} a na koniec przez \lstinline{finalize}.
+
+Faza \lstinline{create} zbiera nazwy bytów wewnątrz kodu aplikacji.
+Tworzy wszystkie przestrzenie nazw, typy, funkcje oraz atrybuty.
+W tym kroku kompilator nie analizuje zawartości tych obiektów.
+Nie bierze pod uwagę pól i metod typów oraz parametrów i typów zwracanych funkcji.
+Jeżeli w kodzie użytkownika istnieje na przykład funkcja mająca cztery przeciążenia, po fazie \lstinline{create} w modelu semantycznym będą istnieć cztery identyczne kopie tej deklaracji.
+
+W fazie \lstinline{confirm} deklaracje są uzupełniane.
+Do deklaracji funkcji dodawane są parametry i typ zwracany.
+Typy są uzupełniane o pola oraz implementowane interfejsy.
+Ponieważ na tym etapie kompilator zna wszystkie nazwy typów występujących w programie, kolejność deklaracji nie ma znaczenia, a deklaracje zapowiadające nie są konieczne.
+
+W fazie \lstinline{finalize}
+analizowane są ciała funkcji oraz metod.
+Ten krok wykonywany jest na końcu, aby upewnić się, że kompilator jest w stanie rozwiązać przeciążenia wszystkich funkcji, do których odwołania mogą się pojawić.
+
+\lstinline{Frontend} kompilatora C-=-1 działa w trzech trybach, w zależności od fazy kompilacji.
+Na diagramie \ref{compilation_process_diagram} oznaczone zostały jako f1, f2 i f3.
+W każdej z nich frontend zachowuje się inaczej.
+\begin{itemize}
+  \item W trybie f1 kompilator przechodzi przez wszystkie fazy i operuje wyłącznie na kodzie atrybutów.
+  Funkcje oraz typy są ignorowane.
+  \item W trybie f2 frontend przechodzi tylko przez fazy \lstinline{create} oraz \lstinline{confirm}, tylko na kodzie typów i funkcji.
+  Przy okazji, korzystając z zebranych już informacji w trybie f1, tworzone są instancje atrybutów.
+  \item W trybie f3 frontend wykonuje wyłącznie krok \lstinline{finalize} na funkcjach oraz metodach
+\end{itemize}
+
 
 \subsubsection{Zarządzanie zależnościami}
 
-\subsubsection{Import symboli zewnętrznych}
+Pomimo tego, że możliwość specyfikowania zależności pomiędzy pakietami jest częścią języka C-=-1, zarządzanie zależnościami zostało zaimplementowane w minimalnym stopniu.
+W idealnej sytuacji kompilator operowałbym na zserializowanych, do formatu omówionego w rozdziale \ref{serializer}, bibliotekach, które mógłby pobierać ze specjalnego serwisu.
+Format pliku manifestu pakietu, opisany w rozdziale \ref{struktura_paczki}, zawiera wszystkie informacje potrzebne do zbudowania drzewa zależności.
+Biblioteki są identyfikowane przez nazwę, wersję oraz globalnie unikatowy identyfikator (ang: GUID) \cite{leach2005universally}.
+Plik manifestu zawiera też listę zależności, potrzebnych, aby skompilować dany pakiet.
+Obecnie, kompilator C-=-1 jest w stanie kompilować kod źródłowy, używając pakietów dostępnych lokalnie.
 
 \subsubsection{Reprezentacja pośrednia}
-Reprezentacja pośrednia jest istotnym elementem języka, na którym opiera się meta-programowanie w C-=-1. W związku z czym, każda jej część jest udokumentowana w załączniku 1. Wewnątrz kompilatora, reprezentacja pośrednia jest przechowywana w ramach struktur danych interpretera (rozdział 4.3.1), aby umożliwić interakcję z interpretowanym kodem.
-Ponieważ użytkownik C-=-1 ma operować na CIR (C-=-1 Intermidiate Representation), jej struktura jest bliska językowi który reprezentuje. Poza dodaniem specjalnych typów instrukcji struktura CIR jest niemal identyczna z C-=-1. Takie podejście ma zarówno wady i zalety. 
-Z jednej strony sprawia ono, że błędy w kompilatorze są łatwiejsze, oraz front-end jest łatwiejszy do implementacji. Przez podobieństwo do kodu źródłowego sprawia, że różnice względem poprawnego rezultatu są dużo bardziej oczywiste od bardziej abstrakcyjnych reprezentacji.
-Taka reprezentacja jest jednak dużo trudniejsza do interpretowania. W przeciwieństwie do języków takich jak CIL (Common Intermediate Language) [11], CIR nie operuje abstrakcyjnej maszynie stosownej. Szczegółowy opis działania interpretera znajduje się w rozdziale 4.3.
-Główne różnice w strukturze między C-=-1 a CIR polegają na bardziej dosłownym wyrażeniu programu. W reprezentacji pośredniej wszystkie odniesienia są w pełni kwalifikowane nazwą paczki i przestrzenią nazw. Finalizatory są wywoływane wprost, używając specjalnej instrukcji. Zamiast rozwiązywania przeciążeń funkcji, CIR odnosi się do konkretnego przeciążenia przez unikatowy identyfikator.
+\label{implementation:intermidiate_representation}
+Reprezentacja pośrednia jest istotnym elementem języka, na którym opiera się metaprogramowanie w C-=-1.
+W związku, z czym każda jej część jest opisana w dokumentacji.
+Wewnątrz kompilatora, reprezentacja pośrednia jest przechowywana w ramach struktur danych interpretera (rozdział \ref{interpreter}), aby umożliwić jego modyfikację z interpretowanego programu.
+
+Ponieważ użytkownik C-=-1 ma operować na CIR (C-=-1 Intermidiate Representation), jej struktura jest bliska językowi, który reprezentuje. 
+Poza dodaniem specjalnych typów instrukcji struktura CIR jest niemal identyczna z C-=-1.
+Takie podejście ma zarówno wady, jak i zalety. 
+Z jednej strony sprawia ono, że błędy w kompilatorze są łatwiejsze do wykrycia, oraz front-end jest łatwiejszy do implementacji.
+Przez podobieństwo reprezentacji pośredniej do kodu źródłowego, różnice względem poprawnego rezultatu są dużo bardziej oczywiste od bardziej abstrakcyjnych reprezentacji.
+CIR jest jednak dużo trudniejsza do interpretowania.
+W przeciwieństwie do języków takich jak CIL (Common Intermediate Language) \cite{ecma:cli}, CIR nie operuje abstrakcyjnej maszynie stosownej.
+Szczegółowy opis działania interpretera znajduje się w rozdziale \ref{interpreter}.
+
+Główne różnice w strukturze między C-=-1 a CIR polegają na bardziej dosłownym wyrażeniu programu. W reprezentacji pośredniej wszystkie odniesienia są w pełni kwalifikowane nazwą pakietu i przestrzenią nazw. Destruktory są wywoływane wprost, używając specjalnej instrukcji. Zamiast rozwiązywania przeciążeń funkcji, CIR odnosi się do konkretnego przeciążenia przez unikatowy identyfikator.
+
 \subsubsection{Szablony}
+\label{implementation:generics}
+Szablony stanowią nietypowy element modelu semantycznego.
+W kontekście projektu języka stanowią one źródło ciekawych wyzwań, opisanych w rozdziałach \ref{challenges:generic_instance_placement} oraz \ref{challenges:generic_function_limitations}.
+W C-=-1 szablony działają na zasadach analogicznych do C++.
+Szablon funkcji, na przykład, nie jest funkcją, a wzorcem, według którego procedura może dopiero powstać po pełnej specjalizacji.
+
+Kompilator C-=-1 przechowuje generyki jako fragmenty drzewa rozkładu, ponieważ w obecnym projekcie reprezentacji pośredniej, nie ma potrzebnych struktur danych.
+Frontend analizuje nagłówek szablonu oraz jego parametry i uzupełnia go na żądanie.
+Przy odniesieniu do generyka, kompilator najpierw przegląda istniejące instancje szablonów.
+Jeśli ta kombinacja parametrów jeszcze nie była używana, kopiuje drzewo rozkładu, zastępuje odniesienia do parametrów generycznych konkretnymi typami i przetwarza je jak zwykły plik źródłowy.
+
+Strategia tworzenia instancji generyków, przyjęta w zaproponowanym kompilatorze wymaga starannego zarządzania kontekstem.
+W C-=-1 obiekty pochodzące z innych przestrzeni nazw muszą być jawnie importowane w każdym pliku, który ich używa.
+Po uzupełnienia drzewa rozkładu szablonu o wartości parametrów generycznych mogą się w nim znaleźć nazwy, które nie istniały w oryginalnym kontekście.
+Z tego powodu, reprezentacja generyków strukturach danych kompilatora, przechowuje listę importów z pliku źródłowego, gdzie zadeklarowano szablon.
+Przy jego uzupełnianiu, oryginalny kontekst, oraz kontekst, z którego dochodzi do wypełnienia, są łączone.
+W ten sposób, w trakcie kompilacji instancji szablonu, ma dostęp do wszystkich potrzebnych nazw.
 
 \subsection{Interpreter}
-Interpreter C-=-1 operuje na reprezentacji pośredniej tego języka (rozdział 4.2.5).
+\label{interpreter}
+
+Interpreter jest ważnym komponentem kompilatora C-=-1.
+Diagram \ref{compilation_process_diagram} pokazuje, że w procesie kompilacji jest używany 3 razy (i1-i3).
+Jest używany do konstrukcji atrybutów (i1), wykonywania operacji metaprogramistycznych (i2) oraz do generowania pliku wykonywalnego (i3).
+
+Interpreter C-=-1 używa generycznych struktur danych opisanych w rozdziale \ref{implementation:interpreter:object_representation} zarówno jako danych, jak i reprezentacji wykonywanego programu.
+Taka decyzja została podjęta, ponieważ częstym przypadkiem użycia tego komponentu jest modyfikacja programu, który niedługo będzie wykonywany.
+Na przykład, jeśli kompilowany pakiet jest częścią większego projektu, kod modyfikowany w kroku i2, może, przy kompilacji następnego pakietu, zostać wykonany.
+Wykonywanie kodu przez interpreter zostało dokładnie opisane w rozdziale \ref{implementation:interpreter:code_execution}.
+
+To podejście ma jednak też swoje wady.
+Ponieważ interpreter działa wyłącznie na generycznych strukturach danych, silne typowanie języka C++ nie jest w stanie wykryć pewnych błędów.
+Ponadto, taka implementacja jest mniej efektywna niż użycie dedykowanych typów.
+
 \subsubsection{Reprezentacja obiektów}
+\label{implementation:interpreter:object_representation}
+
+W kontekście działania interpretera C-=-1 jest bardziej podobny do dynamicznie typowanego języka skryptowego takiego jak Python \cite{van1995python} niż statycznie typowanego, kompilowanego języka jak C\# czy C++.
+Interpreter działa na generycznych strukturach danych, typowych dla języka interpretowanego.
+Rysunek \ref{implementation:data_structures:uml_diagram} przedstawia diagram UML klas używanych przez ten moduł.
+
+\lstinline{ObjectValue}, \lstinline{IntegerValue}, \lstinline{StringValue} oraz \lstinline{ReferenceValue} odpowiadają typowym konstrukcjom występującym w językach obiektowych: obiektowi, liczbie całkowitej, napisowi oraz wskazaniu.
+Natomiast \lstinline{GenericRuntimeWrapper} stanowi referencję do natywnego obiektu C++ i jest opisany w rozdziale \ref{implementation:interpreter:cpp_object_references}.
+
+
+\begin{figure}
+  \caption{Diagram UML struktur danych interpretera C-=-1}
+  \label{implementation:data_structures:uml_diagram}
+  \includegraphics[width=\textwidth]{interpreter_data_structures_uml.png}
+\end{figure}
+
 \subsubsection{Wykonanie kodu}
-\subsubsection{Funkcje specjalne}
+\label{implementation:interpreter:code_execution}
+
+Interpreter C-=-1 jest środowiskiem uruchomieniowym, stanowiącym dużą warstwę abstrakcji od maszyny, na którym działa.
+W tym trybie, z perspektywy programisty, nie istnieje stos, a obiekty nie mają adresów, ani wielkości.
+Ten sposób wykonania kodu można porównać do sposobu, w który człowiek rozumie program.
+Interpreter C-=-1 działa na zmiennych lokalnych, referencjach oraz stercie.
+
+W kompilatorze C-=-1 istnieje globalna sterta obiektów interpretera.
+Znajduje się na niej zarówno reprezentacja pośrednia programu, jak i dane alokowane przez interpretowany kod użytkownika.
+W obecnej implementacji sterta jest niezarządzana i wymaga, aby programista ręcznie zwolnił pamięć.
+To niedociągnięcie wynika z braku czasu i powinno zostać uzupełnione w przyszłej wersji kompilatora.
+Dodanie odśmiecania pamięci może też pomóc w odnajdywaniu wycieków pamięci: jeśli ten sam kod jest wykonywany w czasie uruchomienia i kompilacji oraz, w czasie kompilacji wyciekła z niego pamięć, to ten sam efekt prawdopodobnie występuje w trakcie uruchomienia.
+\begin{minipage}{\textwidth}
+  
+  \begin{lstlisting}[
+    caption=Nagłówek głównej funkcji interpretera,
+    label=interpreter_header
+  ]
+  std::unique_ptr<IRuntimeValue> execute
+  (
+    gsl::not_null<Function*> functionDefinition,
+    std::vector<std::unique_ptr<IRuntimeValue>>&& arguments
+  );
+  \end{lstlisting}
+  
+\end{minipage}
+Listing \ref{interpreter_header} zawiera nagłówek głównej funkcji interpretera.
+To ona jest odpowiedzialna za wykonywanie kodu w kompilatorze C-=-1, niezależnie od kontekstu.
+Ta funkcja przyjmuje dwa parametry: \lstinline{functionDefinition} będący wskazaniem na model semantyczny wykonywanej procedury oraz \lstinline{arguments} zawierający wektor wartości argumentów.
+
+W trakcie wykonywania kodu funkcja \lstinline{execute} z listingu \ref{interpreter_header} zapewnia także obsługę błędów.
+Już na wczesnym etapie projektu, zapewnienie użytkownikowi, chociaż tak podstawowej diagnostyki, jak stos wywołań, okazało się konieczne.
+W tym celu, poza obsługą podstawowych wyjątków C++, dodano także obsługę przerwań związanych z błędem dostępu do pamięci, przy użyciu strukturyzowanej obsługi wyjątków, specyficznej dla platformy Windows \cite{structured_exception_handling, structured_exception_handling:microsoft}.
+Procedura wykonania funkcji jest otoczona blokiem \lstinline{try}, obsługującym wyjątki C++ oraz blokiem \lstinline{__try} obsługującym przerwania systemu operacyjnego.
+W razie błędu istnieją dwa scenariusze obsługi: jeśli został rzucony \\\lstinline{cMCompiler::dataStructures::RuntimeException}, nazwa obecnej funkcji i obecnie wykonywana instrukcja są dodawane do \lstinline{stacktrace} wyjątku.
+W przeciwnym wypadku rzucany jest \\\lstinline{cMCompiler::dataStructures::RuntimeException} z komunikatem odzwierciedlającym źródło błędu.
+Ten wyjątek jest następnie przechwytywany poza interpreterem i informacje w nim zawarte są wyświetlane użytkownikowi.
+W ten sposób programista C-=-1 wie, w którym rejonie jego programu wystąpił błąd.
+
+W interpretacji kodu istotną rolę gra typ \lstinline{cMCompiler::compiler::StatementEvaluator}.
+Poza obsługą błędów funkcja \lstinline{execute} przygotowuje ten typ do wykonania procedury zdefiniowanej przez \lstinline{functionDefinition}, przechowuje wartości zmiennych lokalnych oraz śledzi obecnie wykonywaną instrukcję.
+W celu stworzenia ewaluatora instrukcji najpierw tworzony jest ewaluator wyrażeń: \lstinline{ExpressionEvaluator}.
+Ten typ jako zależność przyjmuje w konstruktorze funkcję znajdującą wartości zmiennych lokalnych.
+\lstinline{ExpressionEvaluator} jest też używany przy tworzeniu instancji atrybutów do wyliczania wartości parametrów, co zostało opisane w rozdziale \ref{implementation:interpreter:attribute_attachment}.
+
+%todo: more?
+
+\subsubsection{Przyłączanie atrybutów}
+\label{implementation:interpreter:attribute_attachment}
+
+Funkcje atrybutów w C-=-1, opisane w rozdziale \ref{design:attributes:special_functions}, w czasie kompilacji, stanowią odpowiednik funkcji \lstinline{main} w czasie uruchomienia.
+Stanowią punkty wejściowe dla kodu wykonującego operacje metaprogramistyczne oraz analizę statyczną.
+W związku z tym, metody oraz konstruktory są wywoływane w 'próżni'.
+
+W szczególności konstruktory atrybutów są wykonywane w nietypowy sposób.
+Tworzenie instancji adnotacji to jedyny przypadek, w którym interpreter C-=-1 ewaluuje wyrażenia poza kontekstem funkcji, bez dostępu do żadnych zmiennych.
+
+
 \subsubsection{Referencje do obiektów C++}
+\label{implementation:interpreter:cpp_object_references}
+
+Umożliwienie C-=-1 modyfikacji modelu semantycznego programu, wymaga udostępnienie referencji do natywnych obiektów języka implementacji kompilatora. %todo: jesus fucking christ, wording
+Programista musi mieć na przykład dostęp do reprezentacji funkcji w modelu semantycznym.
+Dlatego obiekt typu C-=-1 \lstinline{functionDescriptor} w pamięci kompilatora jest reprezentowany jako \lstinline{RuntimeFunctionDescriptor}, a nie jako \lstinline{ObjectValue}.
+Ponieważ elementy modelu semantycznego są zarządzane przez kompilator, obiekty reprezentujące je, posiadają wyłącznie proste wskazanie.
+W ten sam sposób obsłużone są referencje do elementów tworzonego przez \emph{backend interface} modułu, opisanego w rozdziale \ref{Backend_Interface}, przy użyciu typu \lstinline{GenericRuntimeWrapper}.
+Hierarchia dziedziczenia klas używanych do reprezentowania obiektów C-=-1 została przedstawiona na rysunku \ref{implementation:data_structures:uml_diagram}
+
+Niektóre referencje do obiektów C++ muszą jednak też zarządzać pamięcią.
+Do przykładów należą: strumienie powiązane z otwartymi plikami czy kontekst LLVM.
+Takie obiekty są zarządzane przez \lstinline{GenericOwningRuntimeWrapper}
+Różnica między nim a \\\lstinline{GenericRuntimeWrapper} to typ używanego wskazania.
+\lstinline{GenericOwningRuntimeWrapper} zamiast zwykłego wskazania, używa \lstinline{shared_ptr}.
+W ten sposób, ten wrapper nie tylko przechowuje referencję na obiekt, ale zarządza też jego czasem życia.
+
+\subsubsection{Biblioteka podstawowa}
+\label{implementation:interpreter:basic_library}
+
+Biblioteka podstawowa, w kontekście C-=-1, oznacza pakiet zawierający podstawowe funkcje oraz typy prymitywne.
+W każdym języku programowania koniecznym jest specjalne traktowanie pewnego zbioru elementów programu takich jak prymitywne typy liczbowe czy funkcje arytmetyczne na nich.
+W typowym kompilatorze wystarczy, że te obiekty zostaną uwzględnione przy generowaniu kodu.
+Na przykład zamiast wywołania operatora plus dla dwóch liczb całkowitych, zostanie wstawiona instrukcja \lstinline{add}.
+
+Ponieważ kompilator C-=-1 stanowi też jego pełne środowisko uruchomieniowe, musi zawierać wykonywalne definicje wszystkich operacji prymitywnych.
+Ponadto, biblioteka podstawowa zawiera funkcję służące do komunikacji z kompilatorem, takie jak \lstinline{ignoreBody}, \lstinline{excludeAtRuntime}, \lstinline{excludeAtCompiletime}.
+Służą one do modyfikowania metadanych funkcji przez atrybuty, co zostało dokładniej opisane w rozdziale \ref{Attributes_mechanism_cm1}.
+
+Wszystkie funkcje z biblioteki podstawowej wymagają ''marshallingu'' - transformacji danych z jednej reprezetnacji w pamięci na drugą, pomiędzy interpretowanym C-=-1 a środowiskiem uruchomieniowym w C++.
+Ponieważ interpretowany C-=-1 działa na strukturach danych, opisanych w rozdziale \ref{implementation:interpreter:object_representation}, niekompatybilnych z C++, nie można użyć prostego rzutowania (poza przypadkiem z rozdziału \ref{implementation:interpreter:cpp_object_references}).
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[
+  numbers=left,
+  firstnumber=0,
+  caption={Przykład budowania funkcji z biblioteki podstawowej C-=-1},
+  aboveskip=0pt,
+  label={lst:marshalling_cm1}
+  ]
+void completeBuildingType(gsl::not_null<Type*> type) {
+...
+  createCustomFunction(
+    type
+    ->append<Function>("methods")
+    ->setReturnType(TypeReference {
+      getCollectionTypeFor(TypeReference{
+        getFunctionDescriptor(), 0 
+      }),
+      0 
+      }),
+    type,
+    [](
+      map<string, unique_ptr<IRuntimeValue>>&& parameters,
+      map<string, not_null<Type*>>genericParameters)
+    {
+      auto self = dereferenceAs<RuntimeTypeDescriptor>(
+        parameters["self"].get())->value();
+      auto methods = self.type->methods();
+      return convertCollection(methods, TypeReference{
+        getFunctionDescriptor(),
+        0
+      });
+    }
+  )->setAccessibility(Accessibility::Public);
+...
+}
+\end{lstlisting}
+\end{minipage}
+
+Listing \ref{lst:marshalling_cm1} zawiera przykład budowania funkcji będącej częścią biblioteki podstawowej.
+\lstinline{createCustomFunction} oznacza wybraną  funkcję jako zaimplementowaną natywnie w C++.
+W liniach od trzeciej do dziesiątej, do deskryptora typu, dodawana jest metoda o nazwie \lstinline{methods}, zwracająca kolekcję deskryptorów funkcji.
+W liniach od dwunastej do dwudziestej trzeciej tworzony jest obiekt funkcyjny lambda, który będzie służył jako ciało tej funkcji.
+Ta procedura ma dwa argumenty: \lstinline{parameters} oraz \lstinline{genericParameters}.
+
+Pierwszy z parametrów zawiera argumenty wywołania, indeksowane po nazwie parametru.
+Na przykład dla wywołania \lstinline{f(1 + 1)} funkcji \lstinline{int f(int number)}, parametr \lstinline{parameters} pod kluczem \lstinline{number} zawierałby wartość 2.
+W przykładzie z listingu \ref{lst:marshalling_cm1}, ponieważ zastępowane jest ciało metody, dostępna jest zmienna \lstinline{self}, będąca odpowiednikiem \lstinline{this} z C++.
+Drugi parametr zawiera parametry generyczne, używane przy implementacji szablonów.
+
+Linie od szesnastej do dwudziestej drugiej listingu \ref{lst:marshalling_cm1} zawierają kod wykonywany zamiast metody \lstinline{methods}.
+Jego ogólna struktura jest dosyć typowa dla pod-programów w bibliotece podstawowej.
+W liniach szesnastej i siedemnastej dochodzi do konwersji (ang. marshalling)\cite{wiki:Marshalling} ze struktur danych interpretera C-=-1 do natywnego obiektu C++.
+W ten sposób pobierany jest obiekt deskryptora typu na, którym została wykonana ta metoda.
+Zmienna \lstinline{self} ma więc typ \lstinline{TypeReference}, składający się z poziomu referencji oraz odniesienia do typu w modelu semantycznym.
+Następnie, w linii osiemnastej, wywoływana jest metoda \lstinline{methods}, pobierająca wszystkie metody tego typu.
+Na koniec, w linii dziewiętnastej dochodzi do konwersji z natywnego \lstinline{vectora} C++ na kolekcję C-=-1.
+
+
 \subsection{Serializator}
+\label{serializer}
+
+Serializator jest komponentem kompilatora, zapisującym i wczytującym reprezentację obiektów do i z tekstu.
+Przy implementacji użyto biblioteki Json Nielsa Lohmanna \cite{lohmann}.
+Każdy typ, który może być serializowany, ma metodę konwertującą obiekt na słownik klucz-wartość z tego pakietu.
+
+Obiekty reprezentujące referencję (opisane w rozdziale \ref{implementation:interpreter:object_representation}) wewnątrz C-=-1 są traktowane wyjątkowo.
+Serializacja odniesień do innych obiektów jest znanym problemem, rozwiązywanym za pomocą technik określanych jako szwindlowanie wskazań (ang: pointer swizzling) \cite{kemper1995swizzling}.
+W trakcie generowania pliku JSON każdemu obiektowi jest przypisywany unikatowy identyfikator.
+Referencje są serializowane do wartości tych identyfikatorów.
+
 \subsection{Backend Interface}
-Odpowiedzialnością interfejsu back-endu jest przetłumaczenie CIR na LIR. Na tym etapie kompilacji, cała reprezentacja pośrednia C-=-1 jest przechowywana w ramach struktur danych interpretera. Stworzyło to okazję do napisania części kompilatora w języku docelowym.
-To rozwiązanie zapewniło bezpieczeństwo typów w tej części kodu oraz ułatwiło rozwój C-=-1. Tworzenie kompilatora w języku docelowym jest typowym w konstrukcji tego typu narzędzi. Program tak skonstruowany nazywają się „Bootstrapping Compiler” [12]. 
-Implementacja tej części kompilatora w C-=-1 ułatwiła rozwój tego języka. Jedną z głównych zalet narzędzia skonstruowanego w ten sposób jest istnienie dużego projektu w języku docelowym. Wymusza to szybszy rozwój języka oraz umożliwia znajdowanie błędów w kompilatorze.
+\label{Backend_Interface}
+Rolą interfejsu back-endu jest przetłumaczenie CIR na LLVMIR.
+Na tym etapie kompilacji, cała reprezentacja pośrednia C-=-1 jest przechowywana w ramach struktur danych interpretera.
+Stworzyło to okazję do napisania części kompilatora w języku docelowym.
+To rozwiązanie zapewniło bezpieczeństwo typów w tej części kodu oraz ułatwiło rozwój C-=-1.
+Tworzenie kompilatora w języku docelowym jest typowym w konstrukcji tego typu narzędzi.
+Programy tak skonstruowane nazywają się 'Bootstrapping Compiler' \cite{puntambekar:compiler_design}. 
+
+Implementacja tej części kompilatora w C-=-1 ułatwiła rozwój tego języka.
+Jedną z głównych zalet narzędzia skonstruowanego w ten sposób jest istnienie dużego projektu w języku docelowym.
+Wymusza to szybszy rozwój języka oraz umożliwia znajdowanie błędów w kompilatorze.
+
+Razem z plikiem wykonywalnym kompilatora, dystrybuowany jest kod źródłowy pakietu, zawierającej \emph{interfejs backendu}. 
+Przed kompilacją kodu użytkownika, kompilator wczytuje ten moduł.
+Zaletą tego rozwiązania jest możliwość wymiany tego komponentu, bez rekompilacji całego narzędzia.
+Po załadowaniu tego pakiet kompilator szuka w niej funkcji oznaczonej atrybutem \lstinline{compilerEntryPoint}, która służy jako punkt wejścia dla interfejsu. 
+Ma ona za zadanie wygenerowanie LLVMIR dla przekazanej jej listy pakietów (LLVMIR została opisana w rozdziale \ref{implementation:backend}).
+
+Punkt wejścia \emph{interfejsu backendu} jako argumenty przyjmuje kolekcję pakietów do skompilowania oraz obiekt \lstinline{CompilationResult}.
+Wynik kompilacji odpowiada kontekstowi LLVM, śledzi tworzone moduły oraz globalny stan LLVM.
+Poza sygnaturą punktu wejścia, programista ma też obowiązek zapewnić specjalne traktowanie niektórych typów i funkcji z biblioteki podstawowej C-=-1, opisanej w rozdziale \ref{implementation:interpreter:basic_library}
+
+\emph{Interfejs backendu} zaimplementowany w ramach tej pracy jest bardzo prosty oraz niekompletny.
+Nie wykorzystuje żadnych bardziej zaawansowanych mechanizmów LLVM oraz nie generuje metadanych dla debuggera.
+Jego celem było zademonstrowanie możliwości języka C-=-1.
+
+Najważniejszym przyjętym uproszczeniem jest kompilowanie całego programu jako jeden moduł LLVM.
+Zgodnie z zamysłem tej biblioteki, moduł powinien reprezentować jednostkę kompilacji.
+Traktowanie wszystkich pakietów, z których składa się program, jako jedną całość znacząco ułatwia jednak implementację.
+
+Centralnym elementem zaproponowanej implementacji \emph{interfejsu backendu} jest typ \lstinline{PackageRegistry}.
+Ten obiekt przechowuje mapowanie typów i funkcji reprezentacji pośredniej C-=-1 na typy oraz funkcje LLVMIR.
+
+\emph{Interfejs backendu} generuje reprezentację pośrednią llvm, na podstawie każdej wykonywalnej w czasie uruchomienia funkcji we wszystkich pakietach.
+Budowanie llvmir jest rekursywne: tworząc kod dla procedury \lstinline{A},zawierającej wywołanie lstinline{B}, przetłumaczy obydwie funkcje.
+Jeśli później napotka \lstinline{B}, to użyje istniejącej już definicji.
+
+Niektóre elementy programu są wyjątkowo traktowane w trakcie generowania LLVMIR.
+Typy takie jak \lstinline{array<T>} oraz \lstinline{string} są przez język uznawane jako elementy wbudowane i muszą zostać przetłumaczone na prostsze konstrukty.
+Tablice są kompilowane do struktury zawierającej wskazanie na pierwszy element oraz liczby elementów.
+Natomiast \lstinline{string} jest reprezentowany w C-=-1 analogicznie do języka C: wskazanie na ciąg znaków, zakończony bajtem \lstinline{0x00}.
+\emph{Interfejs backendu} uwzględnia też bardziej typowe elementy wbudowane takie jak typy liczbowe oraz proste operacje arytmetyczne.
+
+Zaimplementowany moduł zawiera też obsługę generowania nagłówków dla innych języków programowania.
+W trakcie generowania kodu funkcji, \emph{interfejs backendu} sprawdza czy została opatrzona atrybutem implementującym interfejs \lstinline{IBindingsGenerator} i wywołuje jego metodę \lstinline{generate}.
+Generowanie plików nagłówkowych dla innych języków zostało dokładniej opisane w rozdziale \ref{comparison:exporting_to_other_languages}.
+
 \subsubsection{Funkcje eksponowane przez kompilator}
-Używając mechanizmów, opisanych w rozdziałach 4.3.3 oraz 4.3.4, interfejsowi backendu narzędzie do budowy LIR zdefiniowane w LLVM. Za jego pomocą może generować reprezentacje pośrednią LLVM.
-W ramach biblioteki backendu, istnieje cała gama funkcji oraz typów używanych do emitowania reprezentacji pośredniej. Duża ich część została wyeksponowana interfejsowi backendu.
-\subsubsection{Implementacja interfejsu backendu}
-Razem z plikiem wykonywalnym kompilatora, dystrybuowany jest kod źródłowy paczki, zawierającej interfejs backendu. Przed kompilacją kodu użytkownika, kompilator wczytuje ten moduł. Zaletą tego rozwiązania jest możliwość wymiany tego komponentu, bez rekompilacji całego narzędzia.
-Po załadowaniu tej paczki, kompilator szuka w niej zestawu funkcji createTranslator która służy jako punkt wejścia dla interfejsu. Ma ona za zadanie zainicjować paczkę oraz zwrócić implementacje interfejsu ITranslator. Zostanie ona użyta do generowania LIR dla poszczególnych struktur języka.
+
+Używając mechanizmów, opisanych w rozdziałach \ref{implementation:interpreter:basic_library} oraz \ref{implementation:interpreter:cpp_object_references}, udostępniono interfejsowi backendu narzędzie do budowy LLVMIR zdefiniowane w LLVM.
+W ramach biblioteki backendu istnieje cała gama funkcji oraz typów używanych do generowania reprezentacji pośredniej, co zostało opisane w rozdziale \ref{implementation:backend}.
+W języku C-=-1 dostępny jest minimalny ich podzbiór, konieczny do implementacji podstawowego kompilatora.
+
+
+%todo: finish
 
 \subsection{Backend}
-Do generowania kodu maszynowego została wykorzystana biblioteka LLVM.
+\label{implementation:backend}
+Do generowania kodu maszynowego została wykorzystana biblioteka LLVM \cite{Lattner:MSThesis02}.
+Ten pakiet jest obecnie używany jako \emph{backend} całej rodziny języków C (C, C++, Objective-C) oraz języka Rust.
+Aby obsługiwać tak szeroki zakres języków źródłowych, LLVM definiuje własną reprezentację pośrednią kodu: LLVMIR.
+
+LLVMIR jest formą asemblera dla abstrakcyjnej maszyny stosowej \cite{llvmir}.
+Program, zapisany w tej formie, jest dużo prostszy do automatycznej analizy i optymalizacji, oraz może zostać łatwiej skompilowany do kodu maszynowego dowolnego procesora.
+Natomiast jego semantyczne podobieństwo do C, sprawia, że, stworzenie frontendu dla podobnego języka jest bardzo naturalne.
+
+Maszyna abstrakcyjna LLVMIR operuje na typach, odpowiadającym strukturom z języka C bez nazwanych pól, oraz na funkcjach.
+Funkcje mogą przyjmować nazwane parametry zarówno przez wartość, jak i wskazanie.
+W LLVMIR nie istnieją wyrażenia złożone.
+Wywołanie \lstinline{f(1 + 1)}, zapisane w C, należy wyrazić, najpierw jako deklaracja stałej tymczasowej \lstinline{%0 = add i32 1, 1} a następnie jako wywołanie \lstinline{call void @f(i32 %0)}, używając tej stałej.
+
+W LLVMIR nie ma zmiennych.
+Istnieją wyłącznie stałe, których nie można modyfikować po pierwszym przypisaniu.
+Sposobem na zasymulowanie zachowania zmiennej z języka C, jest użycie instrukcji \lstinline{alloca}.
+Alokuje ona miejsce na stosie, potrzebne dla danego typu i zwraca na nie wskazanie.
+Programista może potem tę lokalizację w pamięci zmieniać oraz wczytywać jej wartość.
+
+LLVM, poza kompilatorami LLVMIR do kodu maszynowego wielu różnych procesorów, zawiera też bibliotekę służącą do budowania LLVMIR.
+Ten zestaw narzędzi jest bardzo przydatny, ponieważ dzięki niemu programista może operować na dobrze zdefiniowanej strukturze danych, zamiast na tekstowej reprezentacji.
+
 \subsection{Biblioteka standardowa}
 
-\subsection{Narzędzia dodatkowe}
+W celu przetestowania możliwości języka, w ramach pracy napisano minimalną bibliotekę standardową.
+Zawiera głównie kolekcje, atrybuty oraz funkcje i typy potrzebne do dynamicznego zarządzania pamięcią.
+Tworzenie tej biblioteki wymusiło rozwój języka oraz stanowiło test kompilatora.
 
-\subsubsection{Tryb interaktywny}
+Biblioteka standardowa C-=-1 zawiera dwa szablony kolekcji: \lstinline{List} oraz \lstinline{Dictionary}.
+Pierwszy z nich jest prostą listą jednokierunkową, umożliwiającą dodawanie, zliczanie oraz uzyskiwanie dostępu do elementu po indeksie.
+Słownik został zaimplementowany używając tej kolekcji, zamiast drzewa.
+Ta decyzja sprawia, że to mapowanie jest znacznie wolniejsze niż podobne typy z bibliotek standardowych innych języków.
+Znalezienie elementu po kluczu ma liniową złożoność obliczeniową, w porównaniu z logarytmiczną złożonością \lstinline{std::map} z C++ czy stałą złożonością \lstinline{System.Collections.Generic.Dictionary} z C\#.
+Przy tworzeniu kolekcji dla biblioteki standardowej C-=-1, kładziono nacisk na nakład pracy programisty ponad wydajność.
 
-\subsubsection{Debugger}
+Zarządzanie pamięcią w bibliotece standardowej zostało zbudowane na bazie funkcji języka C \cite{cLangStandard}.
+Mechanizmy automatycznego zarządzania zasobami, opisane w rozdziale \ref{memory_management}, używają procedur \lstinline{malloc} oraz \lstinline{free}, zaimportowanych używając technik z rozdziału \ref{external_symbols}.
 
-\subsubsection{Wtyczka do VS code}
-\subsection{Wyzwania}
-Generyki są zależne od kontekstu
-Specjalne operatory nameof typeof etc
-odchudzenie kompilatora przez trzymanie metadanych o funkcjach jako runtime value i funkcje do dostępu do tego jako klucz-wartość
+\subsection{Przyszła praca}
+
+Zaproponowana implementacja kompilatora oraz bibliotek C-=-1, jest bardzo prosta i niekompletna.
+Istnieje w niej wiele braków, które należy uzupełnić w ramach przyszłej pracy nad językiem.
+
+Najważniejszym problemem jest brak funkcji do generowania kodu w bibliotece podstawowej.
+Wiele z najciekawszych zastosowań C-=-1 polega właśnie na tej funkcjonalności i jej brak stanowi znaczącą przeszkodę przy analizie możliwości języka.

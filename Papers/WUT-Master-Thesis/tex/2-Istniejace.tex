@@ -1,33 +1,110 @@
 \section{Istniejące rozwiązania}
-Wśród przemysłowo zastosowanych języków programowania istnieje szeroka gama mechanizmów meta-programistycznych. Stosuje się w nich zarówno statyczną jak i dynamiczną refleksję. W popularnie używanych językach, mechanizmy dynamiczne są zwykle dużo bardziej rozbudowane, przyjazne użytkownikowi i potężne.
+
+Wśród przemysłowo stosowanych języków programowania istnieje szeroka gama mechanizmów metaprogramistycznych. Stosuje się w nich zarówno statyczną, jak i dynamiczną refleksję. 
+W popularnie używanych językach mechanizmy dynamiczne są zwykle dużo bardziej rozbudowane i przyjazne użytkownikowi.
+
+W tym rozdziale zostaną przedstawione wybrane języki programowania oraz dostępne w nich mechanizmy metaprogramistyczne.
+Te istniejące rozwiązania będą stanowić podstawę dla analizy możliwości C-=-1.
+
+
+
 \subsection{C\#}
+Język C\# od początku swojego istnienia wspierał refleksję\cite{csharp:getType}.
+Środowisko uruchomieniowe DotNet zostało zaprojektowane z myślą o dynamicznym ładowaniu plików bibliotecznych \cite{csharp:assemblies}.
+W związku z tym większość mechanizmów metaprogramistycznych w językach opartych na nim jest używana w trakcie uruchomienia.
+W ostatnich wersjach Microsoft dodał jednak pewne możliwości do generowania i analizowania kodu w trakcie kompilacji, w ramach otwartego kompilatora Roslyn \cite{csharp:source_generators}.
+
 \subsubsection{Atrybuty}
-W języku C\# atrybuty służą głównie do przechowywania metadanych.
+W języku C\# atrybuty służą głównie do przechowywania metadanych \cite{csharp:attributes}.
+Na rynku, istnieją rozwiązania, które wykorzystują takie adnotacje do modyfikacji programu, jednak takie zastosowanie nie jest proste.
+Ponadto, jakiekolwiek zmiany w kodzie aplikacji, będą zachodzić w trakcie uruchomienia, nie kompilacji.
+Oznacza to narzuty, zarówno czasu wykonania, jak i wielkości pliku wykonywalnego, które w wielu kontekstach są nieakceptowalne \cite{csharp:reflection_cost, cpp:reflection:high_performance}.
 \subsubsection{Refleksja}
+
+Informacja o organizacji programu jest integralną częścią skompilowanego pliku C\#.
+W czasie uruchomienia aplikacja ma pełny wgląd we własną strukturę.
+Ponieważ w C\# występuje dynamiczna refleksja, program ma również dostęp do metadanych w bibliotekach ładowanych w czasie pracy.
+Ten mechanizm niesie ze sobą też pewne koszty.
+Refleksja w czasie uruchomienia niesie za sobą poważne koszty, które w niektórych kontekstach są nieakceptowalne.
+Ponadto, obecność informacji o typach i funkcjach w skompilowanym pliku znacząco ułatwia dekompilację.
+
+Można też argumentować, że dostęp do metadanych programu w trakcie uruchomienia utrudnia optymalizacje.
+Program może przeglądać własną strukturę i dynamiczne wywoływać kod na podstawie pozyskanych informacji.
+W związku z tym niektóre typy optymalizacji takie jak \lstinline{inlining} (bezpośrednie użycie ciała funkcji, zamiast jej wywołania) nie są możliwe \cite{dotnet:method_inlining}.
+
 \subsubsection{Analizatory kodu}
+
+Jednym z wyników publicznego udostępnienia kodu kompilatora Roslyn\cite{roslyn}, było udostępnienie programistom API kompilatora służącego do analizy kodu.
+Programista może więc stworzyć własny analizator w ramach swojego projektu.
+Zaletą tego podejścia  jest spójność używanego języka.
+Projekt pisany w C\# może być analizowany w C\#, bez żadnych dodatkowych restrykcji.
+Unika to problemu tworzenia dodatkowego dialektu języka, jaki występuje w C++.
+
 \subsubsection{Generatory kodu}
-C\#9 wprowadził możliwość pisania generatorów kodu. Jest to bardzo podobne rozwiązanie do makr w języku Rust. Generatory kodu to specjalne klasy, których kod jest wykonywany w trakcie kompilacji. 
-Mechanizm C\# jest jednak bardziej zaawansowany. Umożliwia generowanie kodu używając wszystkich elementów języka, zamiast zapewniać prosty szablon. Te generatory, tak jak w Rust, nie mają jednak dostępu do informacji zbieranych przez kompilator, poza drzewem składniowym oraz nie mogą modyfikować istniejącego kodu.\par
-Generatory kodu nadal są rozwijane i w najbliższym czasie nie wejdą do stabilnego C\#. Stanowią one jednak ciekawą zmianę w kierunku języka, w stronę większego wsparcia dla statycznego meta-programowania.
+
+Kompilator Roslyn w języku C\#9 wprowadził również, możliwość pisania generatorów kodu \cite{csharp:source_generators,roslyn}.
+Jest to bardzo podobne rozwiązanie do makr w języku Rust \cite{rust, klabnik2019rust}. Generatory kodu to specjalne klasy, których kod jest wykonywany w trakcie kompilacji. 
+Mechanizm C\# jest jednak bardziej zaawansowany.
+Umożliwia generowanie kodu, używając wszystkich elementów języka, zamiast zapewniać prosty szablon.
+Te generatory, tak jak w Rust, nie mają jednak dostępu do informacji zbieranych przez kompilator, poza drzewem składniowym oraz nie mogą modyfikować istniejącego kodu.
+
+Generatory kodu nadal są rozwijane i stanowią już część stabilnego C\#.
+Stanowią one jednak ciekawą zmianę w kierunku rozwoju języka. 
+Generatory kodu są pierwszym przejawem statycznego metaprogramowania w C\#
+
 \subsection {Rust}
-Ponieważ Rust jest stosunkowo młody, jego projektanci mogli czerpać z doświadczeń innych języków. Wyraźnie widać to w jego składni, zintegrowanym systemie zarządzania zależnościami oraz bardzo przyjaznym kompilatorze.\par
+Ponieważ Rust \cite{rust, klabnik2019rust} jest stosunkowo młody, jego projektanci mogli czerpać z doświadczeń innych języków. Wyraźnie widać to w jego składni, zintegrowanym systemie zarządzania zależnościami oraz bardzo przyjaznym kompilatorze.\par
 Z tego powodu, nie zawiera on też tradycyjnego preprocesora, takiego jak w C/C++ czy C\#. Makra w Rust są tak naprawdę funkcjami operującymi na drzewie składniowym programu. Jest to zdecydowany postęp względem prostego zastępowania tekstu jak w C/C++, lecz ma też swoje wady.\par
-Makra w języku Rust nadal operują na, co prawda ustrukturyzowanym, ale nadal, tekście. Oznacza to, że nie mają one dostępu do systemu typów ani żadnych innych informacji zgromadzonych przez kompilator.\par
+Makra w języku Rust nadal operują na, co prawda strukturyzowanym, ale nadal, tekście. Oznacza to, że nie mają one dostępu do systemu typów ani żadnych innych informacji zgromadzonych przez kompilator.\par
 \subsection{C++20}
-C++ zawiera szeroką gamę mechanizmów meta-programistycznych oraz technik do statycznej walidacji kodu. Były one stopniowo wprowadzane do języka przez cały czas jego istnienia, bez spójnego planu.\par
+C++ \cite{ISO:cpp20} zawiera szeroką gamę mechanizmów metaprogramistycznych oraz technik do statycznej analizy kodu. Były one stopniowo wprowadzane do języka przez cały czas jego istnienia, bez spójnego planu.\par
 \subsubsection{Szablony}
-Szablony w C++ można rozumieć jako oddzielny, funkcyjny, zdolny do symulacji maszyny Turinga, język programowania \cite{template_turing_complete}. Meta-programowanie szablonowe powstało nie jako świadomy wysiłek twórców języka, lecz jako naturalna, nieprzewidziana konsekwencja jego zasad.\par
+Szablony w C++ można rozumieć jako oddzielny, funkcyjny, zdolny do symulacji maszyny Turinga \cite{template_turing_complete}, język programowania.
+Metaprogramowanie szablonowe powstało nie jako świadomy wysiłek twórców języka, lecz jako naturalna, nieprzewidziana konsekwencja jego zasad.
+
 \subsubsection{Koncepty}
-Koncepty zostały wprowadzone w C++20 jako sposób na lepsze dokumentowanie szablonów, oraz czytelniejsze komunikaty o błędzie w wypadku niepoprawnego użycia. Używa się ich do ograniczania, które typy mogą zostać wykorzystane w danym szablonie.\par
-Koncepty są definiowane jako zbiór wymagań, które typ musi spełnić. Mogą to być proste wyrażenia logiczne jak i weryfikowanie czy dana metoda istnieje oraz jaki typ zwraca. W przeciwieństwie do pozostałych omawianych mechanizmów, koncepty bronią programistę przed niezrozumiałymi błędami kompilacji zamiast przed błędami czasu uruchomienia.\par
+Koncepty (ang: concept) zostały wprowadzone w C++20 \cite{ISO:cpp20} jako sposób na lepsze dokumentowanie szablonów oraz czytelniejsze komunikaty o błędzie w wypadku niepoprawnego użycia.
+Używa się ich do ograniczania, które typy mogą zostać wykorzystane w danym szablonie.
+Stanowią praktyczną aplikację idei ograniczonego polimorfizmu z teorii typów \cite{Cardelli85onunderstanding}.
+
+Koncepty są definiowane jako zbiór wymagań, które typ musi spełnić.
+Mogą to być proste wyrażenia logiczne, jak i weryfikowanie czy dana metoda istnieje oraz jaki typ zwraca.
+W przeciwieństwie do pozostałych omawianych mechanizmów koncepty bronią programistę przed niezrozumiałymi błędami kompilacji zamiast przed błędami wykonania.
+
 \subsubsection{Atrybuty}
-Atrybuty zostały oficjalnie wprowadzone do języka w C++11. Umożliwiają one przekazanie kompilatorowi dodatkowych informacji na temat kodu źródłowego. Te dane są potem wykorzystywane w trakcie kompilacji do wydawania lub ignorowania ostrzeżeń. Dwa przykłady warte omówienia to fallthrough oraz no\_discard, ponieważ prezentują obydwa przypadki zastosowania atrybutu.\par
-Atrybut fallthrough powstał, aby rozwiązać typowy problem języków zawierających konstrukcję switch. W większości zastosowań, celem programisty jest stworzenie zestawu niezależnych od siebie przypadków, spośród których zostanie wykonany jeden na podstawie wartości jakiejś zmiennej.\par
-Niestety domyślnym zachowaniem konstrukcji switch, po wykonaniu bloku jest przejście do następnego (tak zwany fallthrough). Kompilatory zaczęły więc wydawać ostrzeżenie, jeśli blok case nie zostanie zakończony instrukcją break. To tworzy jednak inny problem: czasami programista chce osiągnąć dokładnie takie zachowanie. Niektóre kompilatory zaczęły przez to zwracać uwagę na komentarze, szukając tam wyrażenia fallthrough (w GCC flaga -Wimplicit-fallthrough=3) \cite{gcc_warnings}.\par
-W C++11 sformalizowano to zachowanie, tworząc atrybut fallthrough \cite{ISO:2012:III}. Zaaplikowanie go do przypadku konstrukcji switch, powstrzymuje kompilator przed wydaniem ostrzeżenia.\par
-Atrybut no\_discard zamiast uciszać ostrzeżenie, generuje je. Jego zadaniem jest wykrywanie sytuacji w których programista ignoruje wartość zwracaną przez funkcję. Można go zaaplikować zarówno do typów (wtedy każda funkcja zwracająca ten typ staje się no\_discard) lub do funkcji.\par
-Typowym przykładem zastosowanie tego atrybutu są kody błędów. Ze względu na duży koszt mechanizmu wyjątków w C++, w niektórych projektach się ich nie stosuje. Zamiast tego, funkcje których wykonanie może się nie powieść, zwracają strukturę informującą o błędzie. Ponieważ programista wołający taką funkcję, nie ma obowiązku sprawdzić wyniku tego wywołania, łatwo było o błąd. Stąd konieczność atrybutu no\_discard.\par
-Podstawową wadą atrybutów w C++ jest fakt, że są one zachowaniem bezpośrednio wpisanym w kompilator. Nie istnieje możliwość napisania własnego atrybutu a ich lista jest bardzo krótka.\par
+Atrybuty zostały oficjalnie wprowadzone do języka w C++11\cite{ISO:2012:III}. 
+Umożliwiają one przekazanie kompilatorowi dodatkowych informacji na temat kodu źródłowego.
+Te dane są potem wykorzystywane w trakcie kompilacji do wydawania lub ignorowania ostrzeżeń.
+Dwa przykłady warte omówienia to \lstinline{fallthrough} oraz \lstinline{no_discard}, ponieważ prezentują obydwa przypadki zastosowania atrybutu.
+
+Atrybut \lstinline{fallthrough} powstał, aby rozwiązać typowy problem języków zawierających konstrukcję \lstinline{switch}. W większości zastosowań celem programisty jest stworzenie zestawu niezależnych od siebie przypadków, spośród których zostanie wykonany jeden na podstawie wartości jakiejś zmiennej.\par
+Niestety domyślnym zachowaniem konstrukcji \lstinline{switch}, po wykonaniu bloku jest przejście do następnego (tak zwany \lstinline{fallthrough}). Kompilatory zaczęły więc wydawać ostrzeżenie, jeśli blok case nie zostanie zakończony instrukcją \lstinline{break}. To tworzy jednak inny problem: czasami programista chce osiągnąć dokładnie takie zachowanie. Niektóre kompilatory zaczęły przez to zwracać uwagę na komentarze, szukając tam wyrażenia \lstinline{fallthrough} (w GCC flaga -Wimplicit-fallthrough=3) \cite{gcc_warnings}.\par
+W C++11 sformalizowano to zachowanie, tworząc atrybut \lstinline{fallthrough} \cite{ISO:2012:III}. Zaaplikowanie go do przypadku konstrukcji \lstinline{switch}, powstrzymuje kompilator przed wydaniem ostrzeżenia.\par
+Atrybut \lstinline{no_discard}, zamiast uciszać ostrzeżenie, generuje je. Jego zadaniem jest wykrywanie sytuacji, w których programista ignoruje wartość zwracaną przez funkcję. Można go zaaplikować zarówno do typów (wtedy każda funkcja zwracająca ten typ staje się \lstinline{no_discard}) lub do funkcji.\par
+Typowym przykładem zastosowania tego atrybutu są kody błędów. Ze względu na duży koszt mechanizmu wyjątków w C++, w niektórych projektach się ich nie stosuje. Zamiast tego, funkcje których wykonanie może się nie powieść, zwracają strukturę informującą o błędzie. Ponieważ programista wywołujący taką funkcję, nie ma obowiązku sprawdzić wyniku tego wywołania, łatwo było o błąd. Stąd konieczność atrybutu \lstinline{no_discard}.
+
+Podstawową wadą atrybutów w C++ jest fakt, że są one zachowaniem bezpośrednio wpisanym w kompilator. Nie istnieje możliwość napisania własnego atrybutu a ich lista, jest bardzo krótka.\par
 \subsubsection{Funkcje constexpr}
-Język C++11 wprowadził koncepcję constexpr. Zaaplikowanie tego modyfikatora do zmiennej lub funkcji, informuje kompilator że mogą one być ewaluowane w trakcie kompilacji. Funkcje constexpr mają też nałożony szereg ograniczeń co do swojej struktury. Z każdą kolejną wersją języka są one rozluźniane, jednak nie każda funkcja może być ewaluowana w trakcie kompilacji.\par
-Ponadto, funkcje constexpr nie mają większego dostępu do struktury programu niż normalny program. Nie dają one możliwości modyfikowania istniejącego ani generowania nowego kodu. Stanowią one więc jedynie sposób na optymalizację programu.\par
+Język C++11 wprowadził koncepcję \lstinline{constexpr}\cite{ISO:2012:III}.
+Zaaplikowanie tego modyfikatora do zmiennej lub funkcji, informuje kompilator, że mogą one być ewaluowane w trakcie kompilacji. Funkcje \lstinline{constexpr} mają też nałożony szereg ograniczeń co do swojej struktury. Z każdą kolejną wersją języka jest ich coraz mniej, jednak nie każda funkcja może być ewaluowana w trakcie kompilacji.
+
+Ponadto, funkcje \lstinline{constexpr} nie mają większego dostępu do struktury programu niż normalny program. Nie dają one możliwości modyfikowania istniejącego ani generowania nowego kodu. Stanowią one więc jedynie sposób na optymalizację programu.
+W związku z tym mechanizm \lstinline{constexpr} został skrytykowany za jawne definiowanie które funkcje są wykonywalne w czasie kompilacji.
+Yauhen Klimiankou argumentował \cite{Klimiankou:contexpr_great_good_wrong_idea}, że wykonywalność funkcji w czasie kompilacji powinna być przejrzysta dla programisty i obsługiwana przez kompilator automatycznie.
+
+\subsection{Podsumowanie}
+
+Współczesne języki programowania oferują szeroką gamę mechanizmów metaprogramistycznych.
+Można je szeroko podzielić na dwie kategorie: statyczne oraz dynamiczne.
+Języki zarządzane, takie jak C\# czy Java, oferują głównie metaprogramowanie dynamiczne.
+Struktura programu może być analizowana i modyfikowana w czasie uruchomienia.
+Metaprogramowanie dynamiczne niesie ze sobą koszt w czasie uruchomienia oraz wymaganej pamięci operacyjnej, ale daje też bardzo duże możliwości.
+
+Metaprogramowanie statyczne, występujące w językach takich jak C++, Rust, czy od niedawna C\#, odbywa się całkowicie w czasie kompilacji.
+Nie niesie ze sobą żadnych kosztów w czasie uruchomienia, jednak jest dużo bardziej ograniczone od metaprogramowania dynamicznego.
+Programista ma ograniczone możliwości wglądu w strukturę programu i nie może modyfikować jego istniejących części.
+
+Obecnie nie istnieje język programowania zawierający mechanizmy metaprogramowania statycznego, porównywalne z dynamicznymi.
+Programista, w zależności od wybranego języka, nie może modyfikować istniejących części programu, bądź ma ograniczony wgląd w strukturę programu.
+C-=-1 ma sprawdzić jak uzupełnienie tego braku, wpływa na tworzenie aplikacji.
+

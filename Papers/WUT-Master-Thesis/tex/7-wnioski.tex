@@ -1,1 +1,57 @@
-\section{Wnioski}
+\section{Wnioski z implementacji kompilatora C-=-1}
+
+Celem C-=-1 nie było jednak zastąpić C++, Rust czy C\#, a zbadać jak priorytetyzacja wsparcia dla statycznego metaprogramowania wpływa na język oraz pisany w nim kod. 
+Pod tym względem, można go uznać za sukces.
+C-=-1, z oczywistych powodów, pod wieloma względami jest gorszy od tych języków.
+Wiele udogodnień, traktowanych już jako standard, takich jak dedukcja parametrów generycznych czy semantyka przenoszenia nie zostało zaimplementowanych z powodu braku czasu.
+Ponadto wsparcie dla C-=-1 jest minimalne: nie istnieje edytor, który koloruje jego składnie, a kompilator oferuje w najlepszym wypadku bardzo podstawową diagnostykę.
+Na C-=-1 i narzędziami z nim związanymi, poświęcono niecałe dwa roboczolata, co jest bardzo małym nakładem pracy jak na język programowania.
+
+Wiele aspektów tego języka, zostało niestety omówione wyłącznie na poziomie teoretycznym, ze względu na brak wsparcia kompilatora.
+Stworzenie nowego języka programowania jest zadaniem dużo bardziej złożonym i czasochłonnym niż zakładano na początku tej pracy.
+Z tego powodu, zabrakło czasu, aby zrealizować projekt C-=-1 w pełni.
+
+
+\subsection{Kategoryzacja języka}
+
+C-=-1 od samego początku był definiowany jako kompilowany język programowania ze wsparciem dla statycznego metaprogramowania i wykonywania kodu w czasie kompilacji.
+Oryginalny projekt implementacji zakładał więc, że kompilator będzie zawierał w sobie moduł interpretujący reprezentację pośrednią programu.
+Po wykonaniu transformacji na kodzie użytkownika kompilator miał przejąć kontrolę i dokonać kompilacji do kodu maszynowego.
+
+Jednak w wyniku zmian opisanych w rozdziale \ref{Backend_Interface}, kompilacja do kodu maszynowego została zaimplementowana w interpretowanym C-=-1.
+Oznacza to, że kompilator składa się wyłącznie z frontendu oraz środowiska uruchomieniowego które, udostępnia interfejs biblioteki llvm \cite{lattner2008llvm}.
+Z tego powodu, w ogólnym przypadku, C-=-1 można zaklasyfikować jako silnie typowany język interpretowany.
+
+Należy jednak pamiętać, że ten język zawiera w sobie rozróżnienie między kodem wykonywalnym w czasie uruchomienia a kompilacji.
+Ponadto, jego projekt zawiera semantykę typową dla języków kompilowanych: jawną alokację obiektów na stercie, ręczne zarządzanie pamięcią oraz wskazania. 
+Ten aspekt został opisany w rozdziale \ref{Language_desig}.
+Tak więc najlepszym sposobem na zkategoryzowanie C-=-1 jest uznanie go za hybrydę pomiędzy językiem kompilowanym a interpretowanym.
+
+
+\subsection{Rozszerzalność języka}
+
+Umożliwienie programiście modyfikowanie kodu oraz tworzenie własnych adnotacji sprawia, że język można bardzo łatwo rozszerzyć o nowe mechanizmy.
+W rozdziale \ref{Language_extensibility} opisano przykłady składni niewspieranej przez C-=-1, a którą można dodać przy użyciu proponowanego mechanizmu atrybutów.
+
+Wykorzystując go, programista może zawęzić zbiór programów akceptowanych przez kompilator, przy użyciu analizy statycznej.
+W rozdziałach \ref{no_discard} oraz \ref{const} przedstawiono przykłady adnotacji istniejących w C++ jako część języka, które można dodać do C-=-1.
+Po dodaniu wyjątków trywialną będzie też implementacja atrybutu \lstinline{noexcept}, oznaczającego funkcje, która nigdy nie rzuca.
+
+\subsection{Dyskusja rozwiązania}
+\label{diadvantages}
+
+Zaproponowane podejście niesie ze sobą pewne wady.
+Być możne najpoważniejszą z nich jest utrudniony rozwój kompilatora.
+Ponieważ model programu musi edytowalny przez interpretowany kod, należy go zbudować ze struktur danych interpretera.
+Dokładne uzasadnienie i opis implementacji znajduje się w rozdziale \ref{backend_integration}.
+Opisane tam wyzwania stanowią argument przeciwko konstruowaniu języków programowania w ten sposób. 
+Chwilowo nie ma alternatywnej implementacji, która zachowuje silne typowanie w kodzie kompilatora.
+
+Inny problem dotyczy samej konstrukcji języka.
+Zaproponowane w tej pracy mechanizmy metaprogramistyczne, mogą prowadzić do zwiększenia poziomu złożoności tworzonego kodu.
+Ponieważ atrybuty w C-=-1 mogą nadpisywać kod użytkownika, nadużycie tego mechanizmu może prowadzić do trudno przewidywalnego zachowania.
+Ten problem staje się jeszcze poważniejszy, jeśli dany fragment programu jest modyfikowany przez więcej niż jeden atrybut.
+W takiej sytuacji kolejność modyfikacji będzie wpływać na wynik kompilacji.
+Jest to jeden z powodów, przez które generatory kodu w C\# nie mogą analizować wygenerowanego kodu \cite{roslyn:source_generators}.
+Zasadność tej krytyki powinna być tematem przyszłych badań, używając bardziej kompletnej implementacji kompilatora.
+

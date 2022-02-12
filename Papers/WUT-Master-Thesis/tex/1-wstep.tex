@@ -1,15 +1,30 @@
 \section{Wstęp}
 Celem tej pracy jest zaproponowanie nowych mechanizmów statycznego 
-meta-programowania. Zostały one zaprojektowane z myślą o elastyczność statycznej analizy kodu oraz prostocie projektowania nowych analizatorów. 
-Statyczna analiza kodu to technika wyciągania wniosków na temat programu, na podstawie wyłącznie jego kodu źródłowego \cite{survey_of_metaprograming}. Jednym z ważniejszych jej celów jest wykrywanie typowych błędów programistycznych, zanim program zostanie skompilowany. Ostatnia dekada rozwoju języków programowania i narzędzi z nimi związanych, wskazuje, że zapotrzebowanie na statyczną walidację kodu rośnie.
-W tym samym czasie doszło do gwałtownego wzrostu zainteresowania meta-programowaniem. Ten termin obejmuje zarówno refleksję, czyli pozyskiwanie informacji o strukturze programu jak i modyfikację kodu. W zależności od tego czy dany mechanizm jest aktywny w czasie kompilacji czy uruchomienia, nazywamy go statycznym lub dynamicznym.
-Meta-program można zdefiniować jako aplikację która spełnia jedno z następujących wymagań \cite{nielson2004principles}:
+metaprogramowania.
+Zostały one zaprojektowane z myślą o statycznej analizie kodu oraz prostocie projektowania nowych analizatorów.
+Statyczna analiza kodu to technika wyciągania wniosków na temat programu, na podstawie wyłącznie jego kodu źródłowego \cite{survey_of_metaprograming}.
+
+Jednym z ważniejszych celów analizatora jest wykrywanie typowych błędów programistycznych, bez uruchomienia programu.
+Ostatnia dekada rozwoju języków programowania i narzędzi z nimi związanych wskazuje, że zapotrzebowanie na statyczną analizę kodu rośnie.
+W tym samym czasie doszło do gwałtownego wzrostu zainteresowania metaprogramowaniem. Ten termin obejmuje zarówno refleksję, czyli pozyskiwanie informacji o strukturze programu, jak i modyfikację kodu. W zależności od tego, czy dany mechanizm jest aktywny w czasie kompilacji, czy uruchomienia, nazywamy go odpowiednio statycznym lub dynamicznym.
+Meta-program można zdefiniować jako aplikację, która spełnia jedno z następujących wymagań \cite{nielson2004principles}:
 \begin{enumerate}
 \item Program operuje na innym programie.
 \item Program wytwarza inny program jako swój wynik.
 \item Program uzyskuje dostęp lub modyfikuje własną strukturę.
 \end{enumerate}
-Zaproponowane mechanizmy umożliwiają stworzenie aplikacji jawnie złożonej z dwóch części. Konwencjonalnego programu, który zostanie skompilowany do formy wykonywalnej oraz meta-programu, który zostanie wykonany w czasie kompilacji. Celem drugiej części kodu jest walidacja i modyfikacja pierwszej części.
-Aby to osiągnąć, zaprojektowany został nowy, uproszczony język programowania zawierający proponowane mechanizmy. To podejście zostało przyjęte, aby ułatwić pisanie kompilatora. Tworzenie nowego języka daje możliwość podejmowania decyzji, które upraszczają jego analizę, kosztem wygody programisty.
-Kontynuując tradycję zaczętą przez Bjarne Stroustrup-a nazwa, którą nadano temu nowemu językowi, jest żartem programistycznym. C++ swoją nazwę wziął od jednego ze sposobów na inkrementację zmiennej o nazwie C \cite{stroustrup_com}. W ten sam sposób w który C++ jest rozwiniętą wersją C, C-=-1 (wymawiane „cm”) jest nietypową alternatywą dla C++. C-=-1 zostało nazwane na podstawie C++ ponieważ dzieli z nim podstawy filozoficzne oraz niektóre decyzje projektowe. Te podobieństwa zostały opisane w rozdziale 3.
-W ramach prac badawczych, zaimplementowano podstawową bibliotekę standardową oraz napisano szereg prostych programów z jej wykorzystaniem. Następnie porównano je z ekwiwalentnymi programami w innych językach programowania, pod kątem złożoności, czytelności i powstałych plików wykonywalnych.
+
+Zaproponowane w rozdziale mechanizmy, opisane dokładniej w rozdziale \ref{Attributes_definition}, umożliwiają stworzenie aplikacji jawnie złożonej z dwóch części:
+konwencjonalnego programu, który zostanie skompilowany do formy wykonywalnej oraz meta-programu, który zostanie wykonany w czasie kompilacji.
+Celem meta-kodu jest wykonanie analizy oraz modyfikacji konwencjonalnej części aplikacji.
+Aby to osiągnąć, zaprojektowany został nowy, uproszczony język programowania zawierający proponowane mechanizmy.
+Nie użyto istniejącego języka, aby ułatwić stworzenie kompilatora.
+
+Kontynuując tradycję zaczętą przez Bjarne Stroustrup-a nazwa, którą nadano temu nowemu językowi, jest żartem programistycznym. C++ swoją nazwę wziął od jednego ze sposobów na inkrementację zmiennej o nazwie C \cite{stroustrup_com}. 
+W ten sam sposób, w który C++ jest rozwiniętą wersją C, C-=-1 (wymawiane 'cm1') jest nietypową alternatywą dla C++. C-=-1 zostało nazwane na podstawie C++ ponieważ dzieli z nim podstawy filozoficzne oraz niektóre decyzje projektowe. Te podobieństwa zostały opisane w rozdziale 3.
+W ramach prac badawczych zaimplementowano podstawową bibliotekę standardową oraz napisano szereg prostych programów z jej wykorzystaniem. Następnie porównano je z programami, osiągającymi ten sam cel, napisanymi w innych językach programowania, pod kątem złożoności, czytelności i powstałych plików wykonywalnych.
+
+W ramach tej pracy zaprojektowano i zaimplementowano nowy język programowania, jego kompilator oraz bibliotekę standardową.
+W rozdziałach \ref{Language_desig} i \ref{implementation} opisano ten proces.
+Następnie przeprowadzono badania nad jego użytecznością, przez porównanie z innymi językami, co zostało opisane w rozdziale \ref{comparison}.
+

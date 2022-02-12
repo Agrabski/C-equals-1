@@ -33,7 +33,6 @@ importAliasDeclaration: identifier (':' identifier)?;
 
 literalFunction
     : 'typeof' '(' typeSpecifier ')'
-
     ;
 
 typeDeclaration:
