@@ -56,8 +56,6 @@ std::unique_ptr<CompilationResult> cMCompiler::compiler::llvmIntegration::compil
 			{
 				for (auto& mod : result->modules)
 				{
-					mod->dump();
-					std::cout << std::endl;
 				}
 				throw;
 			}
@@ -84,8 +82,6 @@ void cMCompiler::compiler::llvmIntegration::compileToBinary(
 	llvm::TargetOptions opt;
 	auto RM = llvm::Optional<llvm::Reloc::Model>();
 	not_null machine = target->createTargetMachine(triplet, CPU, Features, opt, RM);
-	for (auto& module : result->modules)
-		module->dump();
 	for (auto& module : result->modules)
 	{
 		if (!llvm::verifyModule(*module, &llvm::outs()))

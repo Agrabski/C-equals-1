@@ -13,8 +13,3 @@ public att<function> NoDiscard
 			raiseError(&(call._pointerToSource), "Return value of a no-discard function is not used", 123);
 	}
 }
-
-private fn test()
-{
-	enumerate(1,2);
-}

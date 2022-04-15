@@ -135,8 +135,6 @@ void appendAssign(
 					// todo: incorporate values into the exception
 					std::string exceptionMessage = "Cannot store ";
 					llvm::raw_string_ostream rso = llvm::raw_string_ostream(exceptionMessage);
-					value->dump();
-					pointer->dump();
 					valueType->print(rso);
 					rso << " into pointer of type ";
 					pointer->getType()->print(rso);
