@@ -3,18 +3,18 @@
  * can be found in the LICENSE.txt file in the project root.
  */
 
-#include "atn/LL1Analyzer.h"
-#include "Token.h"
-#include "atn/RuleTransition.h"
-#include "misc/IntervalSet.h"
-#include "RuleContext.h"
-#include "atn/DecisionState.h"
-#include "Recognizer.h"
-#include "atn/ATNType.h"
-#include "Exceptions.h"
-#include "support/CPPUtils.h"
+#include "LL1Analyzer.h"
+#include "../Token.h"
+#include "../atn/RuleTransition.h"
+#include "../misc/IntervalSet.h"
+#include "../RuleContext.h"
+#include "DecisionState.h"
+#include "../Recognizer.h"
+#include "ATNType.h"
+#include "../Exceptions.h"
+#include "../support/CPPUtils.h"
 
-#include "atn/ATN.h"
+#include "ATN.h"
 
 using namespace antlr4;
 using namespace antlr4::atn;

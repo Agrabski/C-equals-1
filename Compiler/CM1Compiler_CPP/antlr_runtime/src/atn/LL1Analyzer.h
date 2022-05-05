@@ -5,10 +5,10 @@
 
 #pragma once
 
-#include "Token.h"
-#include "support/BitSet.h"
-#include "atn/PredictionContext.h"
-#include "atn/ATNConfig.h"
+#include "../Token.h"
+#include "../support/BitSet.h"
+#include "PredictionContext.h"
+#include "ATNConfig.h"
 
 namespace antlr4 {
 namespace atn {

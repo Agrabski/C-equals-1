@@ -3,11 +3,11 @@
  * can be found in the LICENSE.txt file in the project root.
  */
 
-#include "misc/MurmurHash.h"
-#include "atn/PredictionContext.h"
+#include "../misc/MurmurHash.h"
+#include "PredictionContext.h"
 #include "SemanticContext.h"
 
-#include "atn/ATNConfig.h"
+#include "ATNConfig.h"
 
 using namespace antlr4::atn;
 

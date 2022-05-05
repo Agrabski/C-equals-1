@@ -1,22 +1,23 @@
 module;
 #include "../DataStructures/Type.hpp"
-export module Marshalling;
+export module Execution.Marshalling;
 
 
 
-namespace cMCompiler::Execution
+namespace cMCompiler::execution
 {
-	export template<size_t Size>
-	struct MarshalledObject
+	export struct MarshalledObject
 	{
+		static inline const size_t minimumObjectSize = alignof(void*);
 		dataStructures::TypeReference containedType;
-		std::array<std::byte, Size> data;
+		std::byte data[minimumObjectSize];
 	};
 
 	export size_t getObjectSize(dataStructures::TypeReference type)
 	{
 		if (type.isPointer())
 			return sizeof(void*);
+		std::terminate();
 	}
 }
 

@@ -36,7 +36,6 @@ namespace antlr4 {
   class NullPointerException;
   class ParseCancellationException;
   class Parser;
-  class ParserInterpreter;
   class ParserRuleContext;
   class ProxyErrorListener;
   class RecognitionException;

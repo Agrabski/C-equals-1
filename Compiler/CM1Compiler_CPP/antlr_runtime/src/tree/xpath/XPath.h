@@ -6,6 +6,7 @@
 #pragma once
 
 #include "antlr4-common.h"
+#include "XPathElement.h"
 
 namespace antlr4 {
 namespace tree {

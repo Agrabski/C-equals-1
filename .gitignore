@@ -37,3 +37,7 @@ Papers/WUT-Master-Thesis/main.run.xml
 Papers/WUT-Master-Thesis/main.synctex.gz
 Papers/WUT-Master-Thesis/main.toc
 Papers/WUT-Master-Thesis/out/
+/Compiler/CM1Compiler_CPP/antlr_runtime/build
+/Compiler/CM1Compiler_CPP/build
+/Compiler/CM1Compiler_CPP/out/
+/Compiler/CM1Compiler_CPP/dist

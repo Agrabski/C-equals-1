@@ -3,36 +3,36 @@
  * can be found in the LICENSE.txt file in the project root.
  */
 
-#include "atn/ATNDeserializationOptions.h"
+#include "ATNDeserializationOptions.h"
 
-#include "atn/ATNType.h"
-#include "atn/ATNState.h"
-#include "atn/ATN.h"
+#include "ATNType.h"
+#include "ATNState.h"
+#include "ATN.h"
 
-#include "atn/LoopEndState.h"
-#include "atn/DecisionState.h"
-#include "atn/RuleStartState.h"
-#include "atn/RuleStopState.h"
-#include "atn/TokensStartState.h"
-#include "atn/RuleTransition.h"
-#include "atn/EpsilonTransition.h"
-#include "atn/PlusLoopbackState.h"
-#include "atn/PlusBlockStartState.h"
-#include "atn/StarLoopbackState.h"
-#include "atn/BasicBlockStartState.h"
-#include "atn/BasicState.h"
-#include "atn/BlockEndState.h"
-#include "atn/StarLoopEntryState.h"
+#include "LoopEndState.h"
+#include "DecisionState.h"
+#include "RuleStartState.h"
+#include "RuleStopState.h"
+#include "TokensStartState.h"
+#include "RuleTransition.h"
+#include "EpsilonTransition.h"
+#include "PlusLoopbackState.h"
+#include "PlusBlockStartState.h"
+#include "StarLoopbackState.h"
+#include "BasicBlockStartState.h"
+#include "BasicState.h"
+#include "BlockEndState.h"
+#include "StarLoopEntryState.h"
 
-#include "atn/AtomTransition.h"
-#include "atn/StarBlockStartState.h"
-#include "atn/RangeTransition.h"
-#include "atn/PredicateTransition.h"
-#include "atn/PrecedencePredicateTransition.h"
-#include "atn/ActionTransition.h"
-#include "atn/SetTransition.h"
-#include "atn/NotSetTransition.h"
-#include "atn/WildcardTransition.h"
+#include "AtomTransition.h"
+#include "StarBlockStartState.h"
+#include "RangeTransition.h"
+#include "PredicateTransition.h"
+#include "PrecedencePredicateTransition.h"
+#include "ActionTransition.h"
+#include "SetTransition.h"
+#include "NotSetTransition.h"
+#include "WildcardTransition.h"
 #include "Token.h"
 
 #include "misc/IntervalSet.h"
@@ -40,18 +40,19 @@
 #include "support/CPPUtils.h"
 #include "support/StringUtils.h"
 
-#include "atn/LexerCustomAction.h"
-#include "atn/LexerChannelAction.h"
-#include "atn/LexerModeAction.h"
-#include "atn/LexerMoreAction.h"
-#include "atn/LexerPopModeAction.h"
-#include "atn/LexerPushModeAction.h"
-#include "atn/LexerSkipAction.h"
-#include "atn/LexerTypeAction.h"
+#include "LexerCustomAction.h"
+#include "LexerChannelAction.h"
+#include "LexerModeAction.h"
+#include "LexerMoreAction.h"
+#include "LexerPopModeAction.h"
+#include "LexerPushModeAction.h"
+#include "LexerSkipAction.h"
+#include "LexerTypeAction.h"
 
-#include "atn/ATNDeserializer.h"
+#include "ATNDeserializer.h"
 
 #include <string>
+#include <gsl/gsl>
 
 using namespace antlr4;
 using namespace antlr4::atn;
@@ -75,7 +76,7 @@ namespace {
 	{
 		auto const result = deserializeInt32(data, p);
 		p += 2;
-		return gsl::narrow<ssize_t>( result);
+		return ssize_t{ result };
 	}
 
 	// We templatize this on the function type so the optimizer can inline

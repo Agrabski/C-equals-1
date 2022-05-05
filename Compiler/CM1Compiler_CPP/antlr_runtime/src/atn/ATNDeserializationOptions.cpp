@@ -3,7 +3,7 @@
  * can be found in the LICENSE.txt file in the project root.
  */
 
-#include "atn/ATNDeserializationOptions.h"
+#include "ATNDeserializationOptions.h"
 
 using namespace antlr4::atn;
 

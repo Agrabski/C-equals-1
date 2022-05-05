@@ -72,7 +72,6 @@ int main(int argc, char* argv[])
 						for(auto const& error : interf.errors)
 							std::cout << "error " << error.code << ": " << error.text << " " << error.source.filePath_ << " line: " << error.source.lineNumber_ << std::endl;
 						std::cout << interf.errors.size() << " errors occured. Compilation terminated"<<std::endl;
-						return -1;
 					}
 				});
 		}
