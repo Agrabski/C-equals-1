@@ -29,7 +29,7 @@ set(ROOT_NAMESPACE Execution)
 target_link_libraries(${PROJECT_NAME} PUBLIC
     DataStructures
 )
+
 find_package(Microsoft.GSL CONFIG REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE Microsoft.GSL::GSL)
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
 

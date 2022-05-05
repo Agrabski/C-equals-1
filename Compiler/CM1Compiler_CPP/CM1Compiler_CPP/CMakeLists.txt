@@ -7,7 +7,17 @@ set(Header_Files
     "CLIInterface.hpp"
 )
 source_group("Header Files" FILES ${Header_Files})
-configure_file("compiler-interface" )
+
+configure_file("compiler-interface/manifest.mn" "${CMAKE_CURRENT_BINARY_DIR}/compiler-interface/src/manifest.mn" COPYONLY)
+configure_file("compiler-interface/src/boolean.cm" "${CMAKE_CURRENT_BINARY_DIR}/compiler-interface/src/boolean.cm" COPYONLY)
+configure_file("compiler-interface/src/build_expression.cm" "${CMAKE_CURRENT_BINARY_DIR}/compiler-interface/src/build_expression.cm" COPYONLY)
+configure_file("compiler-interface/src/build_function.cm" "${CMAKE_CURRENT_BINARY_DIR}/compiler-interface/src/build_function.cm" COPYONLY)
+configure_file("compiler-interface/src/entry_point.cm" "${CMAKE_CURRENT_BINARY_DIR}/compiler-interface/src/entry_point.cm" COPYONLY)
+configure_file("compiler-interface/src/fileintrinsics.cm" "${CMAKE_CURRENT_BINARY_DIR}/compiler-interface/src/fileintrinsics.cm" COPYONLY)
+configure_file("compiler-interface/src/function_body.cm" "${CMAKE_CURRENT_BINARY_DIR}/compiler-interface/src/function_body.cm" COPYONLY)
+configure_file("compiler-interface/src/operator.cm" "${CMAKE_CURRENT_BINARY_DIR}/compiler-interface/src/operator.cm" COPYONLY)
+configure_file("compiler-interface/src/package_registry.cm" "${CMAKE_CURRENT_BINARY_DIR}/compiler-interface/src/package_registry.cm" COPYONLY)
+configure_file("compiler-interface/src/string.cm" "${CMAKE_CURRENT_BINARY_DIR}/compiler-interface/src/string.cm" COPYONLY)
 
 
 set(Source_Files

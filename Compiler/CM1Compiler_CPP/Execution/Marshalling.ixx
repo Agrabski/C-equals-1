@@ -8,8 +8,12 @@ namespace cMCompiler::execution
 {
 	export struct MarshalledObject
 	{
+		struct ControlBlock
+		{
+
+			dataStructures::TypeReference containedType;
+		} controlBlock;
 		static inline const size_t minimumObjectSize = alignof(void*);
-		dataStructures::TypeReference containedType;
 		std::byte data[minimumObjectSize];
 	};
 

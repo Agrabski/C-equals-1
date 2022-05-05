@@ -251,4 +251,3 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 )
 find_package(Microsoft.GSL CONFIG REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE Microsoft.GSL::GSL)
-set(CXX_STANDARD, 20)

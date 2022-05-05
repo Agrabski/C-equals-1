@@ -16,6 +16,10 @@ namespace cMCompiler::dataStructures
 		TypeReference() = default;
 		TypeReference(Type* t) noexcept : type(t) {}
 		TypeReference(Type* t, size_t refCount) noexcept : type(t), referenceCount(refCount) {}
+		bool isIntegral() const noexcept
+		{
+
+		}
 		bool isPointer() const noexcept
 		{
 			return referenceCount > 0;
