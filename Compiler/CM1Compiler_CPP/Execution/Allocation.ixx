@@ -11,13 +11,6 @@ import Execution.Marshalling;
 
 namespace cMCompiler::execution
 {
-	constexpr size_t calculateObjectSize(dataStructures::TypeReference const& type)
-	{
-		constexpr auto baseSize = sizeof(MarshalledObject) + MarshalledObject::minimumObjectSize;
-		if (type.isPointer() || type.isIntegral())
-			return baseSize;
-	}
-
 	class DynamicBuffer
 	{
 		static inline constexpr auto capacity = 64;
@@ -25,7 +18,7 @@ namespace cMCompiler::execution
 		size_t individualObjectSize_;
 		uint64_t freeObjectMask_;
 	public:
-		DynamicBuffer(size_t size, size_t alignment) :
+		DynamicBuffer(size_t size) :
 			content_(reinterpret_cast<std::byte*>(std::malloc(size * capacity))), individualObjectSize_(size)
 		{}
 		bool release(gsl::not_null<std::byte*> object) noexcept
@@ -65,18 +58,18 @@ namespace cMCompiler::execution
 	class HeapComponent
 	{
 		std::vector<DynamicBuffer> buffers_;
+		size_t objectSize_;
 		DynamicBuffer& getFreeBuffer()
 		{
 			auto buffer = std::ranges::find_if(buffers_, [](auto const& b) {return b.hasCapacity(); });
 			if (buffer != buffers_.end())
 				return *buffer;
-			buffers_.emplace_back();
+			buffers_.emplace_back(objectSize_);
 			return buffers_.back();
 		}
 	public:
-		HeapComponent(int containedObjectFieldCount) :
-			objectSize_(calculateObjectSize(containedObjectFieldCount))
-		{}
+		HeapComponent(size_t objectSize) : objectSize_(objectSize) {}
+
 		not_null<MarshalledObject*> allocate()
 		{
 			auto& buffer = getFreeBuffer();
@@ -98,11 +91,19 @@ namespace cMCompiler::execution
 			object->controlBlock.containedType = type;
 		}
 
+		HeapComponent& getHeap(size_t objectSize)
+		{
+			if(auto result = heapsByObjectSize_.find(objectSize); result != heapsByObjectSize_.end())
+				return result->second;
+			else
+				return heapsByObjectSize_.insert({objectSize, HeapComponent(objectSize)}).first->second;
+		}
+
 	public:
 
 		gsl::not_null<MarshalledObject*> allocate(dataStructures::TypeReference const& type)
 		{
-			auto& heap = heapsByObjectSize_[calculateObjectSize(type)];
+			auto& heap =getHeap(calculateObjectSize(type));
 			auto result = heap.allocate();
 			setupControlBlock(type, result);
 			return result;
@@ -110,7 +111,7 @@ namespace cMCompiler::execution
 
 		void release(not_null<MarshalledObject*> object)
 		{
-			auto& heap = heapsByObjectSize_[calculateObjectSize(object->controlBlock.containedType)];
+			auto& heap =getHeap(calculateObjectSize(object->controlBlock.containedType));
 			heap.release(object);
 		}
 	};

@@ -2,14 +2,50 @@
   "configurations": [
     {
       "name": "x64-Debug",
-      "generator": "Visual Studio 17 2022",
+      "generator": "Visual Studio 17 2022 Win64",
       "configurationType": "Debug",
       "buildRoot": "${projectDir}\\out\\build\\${name}",
       "installRoot": "${projectDir}\\out\\install\\${name}",
-      "cmakeCommandArgs": "",
-      "buildCommandArgs": "",
       "ctestCommandArgs": "",
-      "inheritEnvironments": [ "msvc_x64_x64" ]
+      "inheritEnvironments": [ "msvc_x64_x64" ],
+      "intelliSenseMode": "windows-msvc-x64",
+      "variables": [
+        {
+          "name": "Boost_INCLUDE_DIR",
+          "value": "E:/vcpkg/installed/x64-windows-static-md/include",
+          "type": "PATH"
+        },
+        {
+          "name": "Boost_LIBRARY_DIR_DEBUG",
+          "value": "E:/vcpkg/installed/x64-windows-static-md/debug/lib",
+          "type": "PATH"
+        },
+        {
+          "name": "Boost_LIBRARY_DIR_RELEASE",
+          "value": "E:/vcpkg/installed/x64-windows-static-md/lib",
+          "type": "PATH"
+        },
+        {
+          "name": "Boost_PROGRAM_OPTIONS_LIBRARY_DEBUG",
+          "value": "E:/vcpkg/installed/x64-windows-static-md/debug/lib/boost_program_options-vc140-mt-gd.lib",
+          "type": "FILEPATH"
+        },
+        {
+          "name": "Boost_PROGRAM_OPTIONS_LIBRARY_RELEASE",
+          "value": "E:/vcpkg/installed/x64-windows-static-md/lib/boost_program_options-vc140-mt.lib",
+          "type": "FILEPATH"
+        },
+        {
+          "name": "Boost_REGEX_LIBRARY_DEBUG",
+          "value": "E:/vcpkg/installed/x64-windows-static-md/debug/lib/boost_regex-vc140-mt-gd.lib",
+          "type": "FILEPATH"
+        },
+        {
+          "name": "Boost_REGEX_LIBRARY_RELEASE",
+          "value": "E:/vcpkg/installed/x64-windows-static-md/lib/boost_regex-vc140-mt.lib",
+          "type": "FILEPATH"
+        }
+      ]
     }
   ]
 }

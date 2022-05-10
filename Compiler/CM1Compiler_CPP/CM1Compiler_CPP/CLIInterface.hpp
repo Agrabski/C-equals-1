@@ -13,13 +13,13 @@ namespace cMCompiler
 		options.add_options()
 			("help", "print program help")
 			("operation", value<std::string>())
-			("compiler-interface", value<std::string>())
+			("compiler-interface", value<std::string>(), "Path to compiler interface that overides the default implementation")
 			("input", value<std::string>(), "Path to file to be compiled.");
 		variables_map vm;
 
 		store(command_line_parser(argc, argv).options(options).run(), vm);
 
-		if (vm.find("help") != vm.end())
+		if (vm.find("help") != vm.end() || vm.empty())
 		{
 			options.print(std::cout);
 			return std::optional<dataStructures::CompilationContext>();

@@ -990,6 +990,7 @@ void buildPackage()
 	appendLogicalConstants(result->rootNamespace());
 	result->rootNamespace()->append<Type>("char");
 	auto usize = result->rootNamespace()->append<Type>("usize");
+	usize->metadata().appendFlag(TypeFlags::IsIntegralType);
 	result->rootNamespace()->appendGeneric<Type>({ "T" },
 		[](auto const& genericParameters) -> not_null<Type*>
 		{

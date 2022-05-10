@@ -5,6 +5,9 @@ enable_language(C)
 set(CMAKE_SYSTEM_VERSION 10.0 CACHE STRING "" FORCE)
 set (CMAKE_CXX_STANDARD 23)
 set(CMAKE_EXPERIMENTAL_CXX_MODULE_DYNDEP, 1)
+SET (CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS}")
+# cancer but there is a bug in cmake/msvc
+add_compile_definitions(_CPPUNWIND)
 
 project(CM1Compiler_CPP CXX)
 
@@ -26,59 +29,9 @@ endif()
 ################################################################################
 set(CMAKE_CONFIGURATION_TYPES
     "Debug"
-    "DebugStatic"
     "Release"
-    "ReleaseStatic"
     CACHE STRING "" FORCE
 )
-
-################################################################################
-# Global compiler options
-################################################################################
-if(MSVC)
-    # remove default flags provided with CMake for MSVC
-    set(CMAKE_CXX_FLAGS "")
-    set(CMAKE_CXX_FLAGS_DEBUG "")
-    set(CMAKE_CXX_FLAGS_DEBUGSTATIC "")
-    set(CMAKE_CXX_FLAGS_RELEASE "")
-    set(CMAKE_CXX_FLAGS_RELEASESTATIC "")
-endif()
-
-################################################################################
-# Global linker options
-################################################################################
-if(MSVC)
-    # remove default flags provided with CMake for MSVC
-    set(CMAKE_EXE_LINKER_FLAGS "")
-    set(CMAKE_MODULE_LINKER_FLAGS "")
-    set(CMAKE_SHARED_LINKER_FLAGS "")
-    set(CMAKE_STATIC_LINKER_FLAGS "")
-    set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS}")
-    set(CMAKE_MODULE_LINKER_FLAGS_DEBUG "${CMAKE_MODULE_LINKER_FLAGS}")
-    set(CMAKE_SHARED_LINKER_FLAGS_DEBUG "${CMAKE_SHARED_LINKER_FLAGS}")
-    set(CMAKE_STATIC_LINKER_FLAGS_DEBUG "${CMAKE_STATIC_LINKER_FLAGS}")
-    set(CMAKE_EXE_LINKER_FLAGS_DEBUGSTATIC "${CMAKE_EXE_LINKER_FLAGS}")
-    set(CMAKE_MODULE_LINKER_FLAGS_DEBUGSTATIC "${CMAKE_MODULE_LINKER_FLAGS}")
-    set(CMAKE_SHARED_LINKER_FLAGS_DEBUGSTATIC "${CMAKE_SHARED_LINKER_FLAGS}")
-    set(CMAKE_STATIC_LINKER_FLAGS_DEBUGSTATIC "${CMAKE_STATIC_LINKER_FLAGS}")
-    set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS}")
-    set(CMAKE_MODULE_LINKER_FLAGS_RELEASE "${CMAKE_MODULE_LINKER_FLAGS}")
-    set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS}")
-    set(CMAKE_STATIC_LINKER_FLAGS_RELEASE "${CMAKE_STATIC_LINKER_FLAGS}")
-    set(CMAKE_EXE_LINKER_FLAGS_RELEASESTATIC "${CMAKE_EXE_LINKER_FLAGS}")
-    set(CMAKE_MODULE_LINKER_FLAGS_RELEASESTATIC "${CMAKE_MODULE_LINKER_FLAGS}")
-    set(CMAKE_SHARED_LINKER_FLAGS_RELEASESTATIC "${CMAKE_SHARED_LINKER_FLAGS}")
-    set(CMAKE_STATIC_LINKER_FLAGS_RELEASESTATIC "${CMAKE_STATIC_LINKER_FLAGS}")
-endif()
-
-################################################################################
-# Nuget packages function stub.
-################################################################################
-function(use_package TARGET PACKAGE VERSION)
-    message(WARNING "No implementation of use_package. Create yours. "
-                    "Package \"${PACKAGE}\" with version \"${VERSION}\" "
-                    "for target \"${TARGET}\" is ignored!")
-endfunction()
 
 ################################################################################
 # Common utils
@@ -94,11 +47,11 @@ include(CMake/GlobalSettingsInclude.cmake OPTIONAL)
 # Use solution folders feature
 ################################################################################
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-set(Boost_USE_STATIC_LIBS ON)
 
 ################################################################################
 # Sub-projects
 ################################################################################
+
 add_subdirectory(antlr_runtime)
 add_subdirectory(CM1Compiler_CPP)
 add_subdirectory(Compiler)

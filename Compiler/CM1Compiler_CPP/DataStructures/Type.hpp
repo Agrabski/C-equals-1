@@ -20,7 +20,11 @@ namespace cMCompiler::dataStructures
 	enum TypeFlags : int64_t
 	{
 		None = 0b0,
-		ExcludeAtRuntime = 0x1
+		ExcludeAtRuntime = 0b1,
+		IsIntegralType = 0b10,
+		// Signifies that this type contains a compiler intrinsic
+		// that is actually represented by a pointer
+		IsCompilerIntrinsic = 0b100
 	};
 
 	TypeFlags operator|(TypeFlags lhs, TypeFlags rhs);
@@ -64,7 +68,7 @@ namespace cMCompiler::dataStructures
 				result.push_back(c.get());
 			return result;
 		}
-		
+
 		std::vector<not_null<Generic<Function>*>> genericMethods()
 		{
 			auto result = std::vector<gsl::not_null<Generic<Function>*>>();
@@ -111,12 +115,17 @@ namespace cMCompiler::dataStructures
 
 		Field* appendField(std::string const& name, TypeReference type);
 
-		std::vector<gsl::not_null<Field*>> fields()
+
+
+		constexpr auto fields_range()
 		{
-			auto result = std::vector<gsl::not_null<Field*>>();
-			for (auto& c : fields_)
-				result.push_back(c.get());
-			return result;
+			return fields_ | std::views::transform([](auto& f) {return not_null(f.get()); });
+		}
+
+		std::vector<not_null<Field*>> fields()
+		{
+			auto range = fields_range();
+			return std::vector<not_null<Field*>>(range.begin(), range.end());
 		}
 
 		template<typename T>
