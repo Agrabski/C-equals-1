@@ -20,7 +20,11 @@ namespace cMCompiler::dataStructures
 	enum TypeFlags : int64_t
 	{
 		None = 0b0,
-		ExcludeAtRuntime = 0x1
+		ExcludeAtRuntime = 0b1,
+		IsIntegralType = 0b10,
+		// Signifies that this type contains a compiler intrinsic
+		// that is actually represented by a pointer
+		IsCompilerIntrinsic = 0b100
 	};
 
 	TypeFlags operator|(TypeFlags lhs, TypeFlags rhs);
@@ -64,13 +68,18 @@ namespace cMCompiler::dataStructures
 				result.push_back(c.get());
 			return result;
 		}
-		
+
 		std::vector<not_null<Generic<Function>*>> genericMethods()
 		{
 			auto result = std::vector<gsl::not_null<Generic<Function>*>>();
 			for (auto& c : genericFunction_)
 				result.push_back(c.get());
 			return result;
+		}
+
+		constexpr auto fields_range()
+		{
+			return fields_ | std::views::transform([](auto& f) {return not_null(f.get()); });
 		}
 
 		std::vector<not_null<Type*>> const& interfaces() const noexcept

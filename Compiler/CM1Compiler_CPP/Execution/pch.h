@@ -6,7 +6,8 @@
 
 #ifndef PCH_H
 #define PCH_H
-#include "../Utilities/compilation_shim.hpp"
+
 // add headers that you want to pre-compile here
+#include "framework.h"
 
 #endif //PCH_H

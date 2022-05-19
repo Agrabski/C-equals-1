@@ -45,3 +45,18 @@ cMCompiler::dataStructures::TypeReference cMCompiler::dataStructures::TypeRefere
 {
 	return { type, 0 };
 }
+
+bool cMCompiler::dataStructures::TypeReference::isPointer() const noexcept
+{
+	return referenceCount > 0;
+}
+
+bool cMCompiler::dataStructures::TypeReference::isIntegral() const noexcept
+{
+	return !isPointer() && !isVoidType() && type->metadata().hasFlag(TypeFlags::IsIntegralType);
+}
+
+bool cMCompiler::dataStructures::TypeReference::isCompilerIntrinsic() const noexcept
+{
+	return !isPointer() && !isVoidType() && type->metadata().hasFlag(TypeFlags::IsCompilerIntrinsic);
+}

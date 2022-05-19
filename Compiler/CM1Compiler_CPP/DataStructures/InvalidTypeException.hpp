@@ -5,6 +5,7 @@
 
 namespace cMCompiler::dataStructures
 {
+	struct TypeReference;
 	class InvalidTypeException : public RuntimeException
 	{
 	public:
