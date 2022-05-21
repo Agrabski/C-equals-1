@@ -22,10 +22,13 @@ namespace cMCompiler::execution
 
 	export size_t calculateObjectSize(dataStructures::TypeReference const& type)
 	{
-		constexpr auto baseSize = sizeof(MarshalledObject) + MarshalledObject::minimumObjectSize;
 		if (type.isPointer() || type.isIntegral() || type.isCompilerIntrinsic())
-			return baseSize;
-		std::terminate();
+			return sizeof(MarshalledObject);
+		auto result = sizeof(MarshalledObject::ControlBlock);
+		for (auto const field : type.type->fields_range())
+			result += calculateObjectSize(field->type());
+		assert(result >= sizeof(MarshalledObject));
+		return result;
 	}
 
 	constexpr size_t calculateFieldIndex(

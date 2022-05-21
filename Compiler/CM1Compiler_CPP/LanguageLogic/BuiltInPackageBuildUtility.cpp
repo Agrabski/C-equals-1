@@ -729,6 +729,7 @@ void buildUsize(gsl::not_null<Type*> usize_type)
 	using cMCompiler::language::convertToIntegral;
 	using cMCompiler::dataStructures::execution::usize;
 	using cMCompiler::dataStructures::Function;
+	usize_type->metadata().appendFlag(TypeFlags::IsIntegralType);
 	auto ns = defaultPackage__->rootNamespace();
 
 	createOperator(

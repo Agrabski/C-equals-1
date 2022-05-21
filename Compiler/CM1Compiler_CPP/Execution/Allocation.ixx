@@ -90,6 +90,9 @@ namespace cMCompiler::execution
 		void setupControlBlock(dataStructures::TypeReference const& type, not_null<MarshalledObject*> object)
 		{
 			object->controlBlock.containedType = type;
+			if (!type.isPointer())
+				for (auto const field : type.type->fields_range())
+					setupControlBlock(field->type(), tryGetFieldAddress(object, field));
 		}
 
 		HeapComponent& getHeap(size_t objectSize)
