@@ -10,21 +10,45 @@ export module Execution.Marshalling;
 
 namespace cMCompiler::execution
 {
+	export struct ControlBlock
+	{
+		dataStructures::TypeReference containedType;
+	};
+
+	export template<typename T>
+		concept marshalled_object = requires(T t)
+	{
+		{t.controlBloc}-> std::same_as<ControlBlock>;
+		{t.getDataPointer()}-> std::same_as<std::byte*>;
+	};
+
 	export struct MarshalledObject
 	{
-		struct ControlBlock
-		{
-			dataStructures::TypeReference containedType;
-		} controlBlock;
+		ControlBlock controlBlock;
 		static inline const size_t minimumObjectSize = alignof(void*);
 		std::byte data[minimumObjectSize];
+		std::byte* getDataPointer()
+		{
+			return data;
+		}
+	};
+
+	export template<typename T>
+		struct MarshalledNativeObject
+	{
+		ControlBlock controlBlock;
+		T data;
+		std::byte* getDataPointer()
+		{
+			return reinterpret_cast<std::byte*>(&data);
+		}
 	};
 
 	export size_t calculateObjectSize(dataStructures::TypeReference const& type)
 	{
 		if (type.isPointer() || type.isIntegral() || type.isCompilerIntrinsic())
 			return sizeof(MarshalledObject);
-		auto result = sizeof(MarshalledObject::ControlBlock);
+		auto result = sizeof(ControlBlock);
 		for (auto const field : type.type->fields_range())
 			result += calculateObjectSize(field->type());
 		assert(result >= sizeof(MarshalledObject));
