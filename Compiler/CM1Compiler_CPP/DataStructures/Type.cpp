@@ -48,6 +48,13 @@ Field* cMCompiler::dataStructures::Type::appendField(std::string const& name, Ty
 	return result;
 }
 
+Field* cMCompiler::dataStructures::Type::getField(std::string const& name) const noexcept
+{
+	if (auto r = std::ranges::find_if(fields_, [&](auto const& f) {return f->name() == name; }); r != fields_.end())
+		return r->get();
+	return nullptr;
+}
+
 TypeFlags cMCompiler::dataStructures::operator|(TypeFlags lhs, TypeFlags rhs)
 {
 	return static_cast<TypeFlags>(static_cast<int64_t>(lhs) | static_cast<int64_t>(rhs));

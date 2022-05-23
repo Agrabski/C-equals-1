@@ -14,6 +14,12 @@ namespace cMCompiler::semanticModel
 	export struct VariableReferenceExpression
 	{
 		execution::MarshalledNativeObject<dataStructures::Variable*> variable;
+		execution::MarshalledPointer
+			parent = execution::MarshalledPointer(
+				dataStructures::TypeReference{ language::getExpressionDescriptor(), 1 }, nullptr
+				);
+		execution::MarshalledNativeObject<dataStructures::SourcePointer> pointerToSource;
+		//todo: add pointer to source
 	};
 }
 

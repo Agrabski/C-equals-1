@@ -128,6 +128,8 @@ namespace cMCompiler::dataStructures
 			return result;
 		}
 
+		Field* getField(std::string const& name) const noexcept;
+
 		template<typename T>
 		gsl::not_null<Generic<T>*> appendGeneric(
 			std::vector<std::string>&& parameterNames,

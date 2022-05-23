@@ -121,6 +121,7 @@ namespace cMCompiler::execution
 			auto size = sizeof(MarshalledNativeObject<T>);
 			auto& heap = getHeap(size);
 			not_null result = reinterpret_cast<MarshalledNativeObject<T>*>(heap.allocate().get());
+			new (result) MarshalledNativeObject<T>();
 			setupControlBlock(type, result);
 			result->data = std::move(object);
 			return result;

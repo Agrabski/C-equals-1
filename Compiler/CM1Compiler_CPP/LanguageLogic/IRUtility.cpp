@@ -243,17 +243,10 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildFiel
 gsl::not_null<Type*> cMCompiler::language::buildVariableReferenceExpression(gsl::not_null<dataStructures::Namespace*> irNs)
 {
 	auto result = irNs->append<Type>("variableReferenceExpression"s);
-	auto f = result->append<Function>("variable"s)->setReturnType({ getVariableDescriptor(), 0 });
-	f->setAccessibility(Accessibility::Public);
-	createGetter(f, result);
-	result->appendField("_variable"s, { getVariableDescriptor(), 0 });
-	auto t = result->append<Function>("type"s)->setReturnType({ getTypeDescriptor(), 0 });
-	t->setAccessibility(Accessibility::Public);
-	createGetter(t, result);
+	result->appendField("variable"s, { getVariableDescriptor(), 0 });
 
-	result->appendField("_type", { getTypeDescriptor(), 0 });
-
-	implementExpressionInterface(result);
+	result->appendField("parentExpression", { getExpressionDescriptor(), 1 });
+	result->appendField("pointerToSource", { getPointerToSource(), 0 });
 	return result;
 }
 

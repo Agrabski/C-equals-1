@@ -5,6 +5,7 @@ module;
 #include "../Utilities/compilation_shim.hpp"
 #include "../LanguageLogic/BuiltInPackageBuildUtility.hpp"
 #include "../DataStructures/TypeReference.hpp"
+#include "../DataStructures/SourcePointer.hpp"
 #include "../LanguageLogic/IRUtility.hpp"
 export module Execution.Prymitives;
 import Execution.Marshalling;
@@ -47,3 +48,5 @@ namespace cMCompiler::execution
 }
 
 MAP_TO_TYPE_DESCRIPTOR(cMCompiler::dataStructures::Variable*, cMCompiler::language::getVariableDescriptor, 0);
+MAP_TO_TYPE_DESCRIPTOR(std::string, cMCompiler::language::getString, 0);
+MAP_TO_TYPE_DESCRIPTOR(cMCompiler::dataStructures::SourcePointer, cMCompiler::language::getPointerToSource, 0);
