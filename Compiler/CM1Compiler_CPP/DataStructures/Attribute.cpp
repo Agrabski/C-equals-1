@@ -7,6 +7,7 @@ cMCompiler::dataStructures::Attribute::Attribute(std::string name, Namespace* pa
 	INamedObject(name, (INamedObject*)parent, p), describingType_(std::make_unique<Type>(name, parent, p)) 
 {
 	describingType_->metadata().appendFlag(TypeFlags::ExcludeAtRuntime);
+	describingType_->metadata().appendFlag(TypeFlags::IsCompilerIntrinsic);
 }
 
 std::vector<cMCompiler::dataStructures::INamedObject*> cMCompiler::dataStructures::Attribute::children()

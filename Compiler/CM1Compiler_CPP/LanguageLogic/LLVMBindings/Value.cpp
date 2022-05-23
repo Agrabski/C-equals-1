@@ -28,6 +28,7 @@ gsl::not_null<Type*> cMCompiler::language::buildValue(gsl::not_null<dataStructur
 	assert(value == nullptr);
 	value = backendns->append<Type>("llvmValue");
 	value->metadata().appendFlag(TypeFlags::ExcludeAtRuntime);
+	value->metadata().appendFlag(TypeFlags::IsCompilerIntrinsic);
 	createCustomFunction(
 		value->append<Function>("type"),
 		value,

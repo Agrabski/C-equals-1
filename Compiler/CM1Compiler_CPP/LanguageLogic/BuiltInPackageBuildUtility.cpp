@@ -121,6 +121,7 @@ gsl::not_null<Type*> buildTypeDescriptor(gsl::not_null<Namespace*> compilerNs)
 	type->setAccessibility(Accessibility::Public);
 	type->appendField("name", { cMCompiler::language::getString(), 0 })->setAccessibility(Accessibility::Public);
 	type->metadata().appendFlag(TypeFlags::ExcludeAtRuntime);
+	type->metadata().appendFlag(TypeFlags::IsCompilerIntrinsic);
 	return type;
 }
 
@@ -130,6 +131,7 @@ gsl::not_null<Type*> buildFunctionDescriptor(gsl::not_null<Namespace*> compilerN
 	function->setTypeClassifier(TypeClassifier::Class);
 	function->setAccessibility(Accessibility::Public);
 	function->metadata().appendFlag(TypeFlags::ExcludeAtRuntime);
+	function->metadata().appendFlag(TypeFlags::IsCompilerIntrinsic);
 	return function;
 }
 
@@ -138,6 +140,7 @@ gsl::not_null<Type*> buildNamespaceDescriptor(gsl::not_null<Namespace*> compiler
 	auto ns = compilerNs->append<Type>("namespaceDescriptor");
 	ns->setTypeClassifier(TypeClassifier::Class);
 	ns->setAccessibility(Accessibility::Public);
+	ns->metadata().appendFlag(TypeFlags::IsCompilerIntrinsic);
 	ns->metadata().appendFlag(TypeFlags::ExcludeAtRuntime);
 	return ns;
 }
@@ -149,6 +152,7 @@ gsl::not_null<Type*> buildPackageDescriptor(gsl::not_null<Namespace*> compilerNs
 	ns->setTypeClassifier(TypeClassifier::Class);
 	ns->setAccessibility(Accessibility::Public);
 	ns->metadata().appendFlag(TypeFlags::ExcludeAtRuntime);
+	ns->metadata().appendFlag(TypeFlags::IsCompilerIntrinsic);
 
 	createCustomFunction(
 		ns->append<Function>("getAllTypes")->setReturnType({ getCollectionTypeFor({ getTypeDescriptor(), 0 }), 0 }),
@@ -551,6 +555,7 @@ void buildGenericFunctionDescriptor(gsl::not_null<Namespace*> compilerNs)
 {
 	auto result = compilerNs->append<Type>("genericFunctionDescriptor");
 	result->metadata().appendFlag(TypeFlags::ExcludeAtRuntime);
+	result->metadata().appendFlag(TypeFlags::IsCompilerIntrinsic);
 	createOperator(
 		getDefaultPackage()->rootNamespace(),
 		"==",
@@ -570,6 +575,7 @@ void buildTypeGenericInstantiationInfo(gsl::not_null<Namespace*> compilerNs)
 {
 	auto result = compilerNs->append<Type>("genericInstantiationInfo");
 	result->metadata().appendFlag(TypeFlags::ExcludeAtRuntime);
+	result->metadata().appendFlag(TypeFlags::IsCompilerIntrinsic);
 	using namespace cMCompiler::dataStructures::execution;
 	using namespace cMCompiler::dataStructures;
 	createCustomFunction(
@@ -856,6 +862,7 @@ void buildUsize(gsl::not_null<Type*> usize_type)
 
 void buildString(gsl::not_null<Type*> string)
 {
+	string->metadata().appendFlag(TypeFlags::IsCompilerIntrinsic);
 	auto replace = createCustomFunction(string->append<Function>("replace"), string,
 		[](value_map&& a, generic_parameters)->runtime_value
 		{

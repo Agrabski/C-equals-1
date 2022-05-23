@@ -118,6 +118,7 @@ gsl::not_null<Type*> cMCompiler::language::buildVariableDescriptor(gsl::not_null
 {
 	auto result = irNs->append<Type>("variableDescriptor"s);
 	result->metadata().appendFlag(TypeFlags::ExcludeAtRuntime);
+	result->metadata().appendFlag(TypeFlags::IsCompilerIntrinsic);
 	createCustomFunction(
 		result
 		->append<Function>("name"s)
@@ -182,6 +183,7 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildFiel
 {
 	auto result = compilerNs->append<Type>("fieldDescriptor"s);
 	result->metadata().appendFlag(TypeFlags::ExcludeAtRuntime);
+	result->metadata().appendFlag(TypeFlags::IsCompilerIntrinsic);
 	createCustomFunction(
 		result->append<Function>("name"s)
 		->setReturnType({ getString(), 0 }),

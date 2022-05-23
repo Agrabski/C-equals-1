@@ -87,12 +87,13 @@ namespace cMCompiler::execution
 	{
 		std::map<size_t, HeapComponent> heapsByObjectSize_;
 
-		void setupControlBlock(dataStructures::TypeReference const& type, not_null<MarshalledObject*> object)
+		template<marshalled_object Marshalled>
+		void setupControlBlock(dataStructures::TypeReference const& type, not_null<Marshalled*> object)
 		{
 			object->controlBlock.containedType = type;
 			if (!type.isPointer())
-				for (auto const field : type.type->fields_range())
-					setupControlBlock(field->type(), tryGetFieldAddress(object, field));
+				for (auto const field : type.type->fields())
+					setupControlBlock(field->type(), not_null(tryGetFieldAddress(object, field)));
 		}
 
 		HeapComponent& getHeap(size_t objectSize)
@@ -110,6 +111,18 @@ namespace cMCompiler::execution
 			auto& heap = getHeap(calculateObjectSize(type));
 			auto result = heap.allocate();
 			setupControlBlock(type, result);
+			return result;
+		}
+
+		template<marshallable_native_object T>
+		gsl::not_null<MarshalledNativeObject<T>*> allocateNative(T&& object)
+		{
+			auto type = getTypeFor<T>();
+			auto size = sizeof(MarshalledNativeObject<T>);
+			auto& heap = getHeap(size);
+			not_null result = reinterpret_cast<MarshalledNativeObject<T>*>(heap.allocate().get());
+			setupControlBlock(type, result);
+			result->data = std::move(object);
 			return result;
 		}
 

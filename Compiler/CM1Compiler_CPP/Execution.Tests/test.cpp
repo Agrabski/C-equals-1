@@ -8,11 +8,12 @@ using namespace cMCompiler::language;
 using namespace cMCompiler::execution;
 using namespace cMCompiler::dataStructures;
 
-TEST(TestCaseName, TestName) {
+TEST(TestCaseName, AllocatePrymitiveWithBasicApi)
+{
 	auto heap = cMCompiler::execution::CompileTimeHeap();
 	getDefaultPackage();
 	auto usize = cMCompiler::language::getUsize();
-	auto type = cMCompiler::dataStructures::TypeReference{ usize, 1 };
+	auto type = cMCompiler::dataStructures::TypeReference{ usize, 0 };
 	auto object = heap.allocate(type);
 	cMCompiler::execution::setPrymitiveValue<unsigned long long>(object, 32ULL);
 	auto returned = cMCompiler::execution::getPrymitiveValue<unsigned long long>(object);
@@ -21,6 +22,22 @@ TEST(TestCaseName, TestName) {
 	ASSERT_EQ(object->controlBlock.containedType.referenceCount , type.referenceCount);
 
 }
+
+
+TEST(TestCaseName, AllocatePrymitiveWithGenericApi)
+{
+	auto heap = cMCompiler::execution::CompileTimeHeap();
+	getDefaultPackage();
+	auto usize = cMCompiler::language::getUsize();
+	auto type = cMCompiler::dataStructures::TypeReference{ usize, 1 };
+
+	auto object = heap.allocateNative(32ULL);
+	ASSERT_EQ(object->data, 32ULL);
+	ASSERT_EQ(object->controlBlock.containedType.type, type.type);
+	ASSERT_EQ(object->controlBlock.containedType.referenceCount, type.referenceCount);
+
+}
+
 
 TEST(TestCaseName, GetFieldFromComposite)
 {
@@ -33,8 +50,8 @@ TEST(TestCaseName, GetFieldFromComposite)
 	auto heap = cMCompiler::execution::CompileTimeHeap();
 	auto object = heap.allocate({ composite, 0 });
 
-	auto marshalledF1 = tryGetFieldAddress(object, f1);
-	auto marshalledF2 = tryGetFieldAddress(object, f2);
+	not_null marshalledF1 = tryGetFieldAddress(object, f1);
+	not_null marshalledF2 = tryGetFieldAddress(object, f2);
 
 	setPrymitiveValue(marshalledF1, 1ULL);
 	setPrymitiveValue(marshalledF2, 15ULL);

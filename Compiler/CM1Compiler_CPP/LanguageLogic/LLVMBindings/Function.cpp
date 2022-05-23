@@ -74,6 +74,7 @@ gsl::not_null<Type*> cMCompiler::language::buildFunctionDescriptor(gsl::not_null
 	appendGetParameter(result, llvmType, backendns, llvmValue, result);
 	appendGetName(result, llvmType, backendns, llvmValue, result);
 	result->metadata().appendFlag(TypeFlags::ExcludeAtRuntime);
+	result->metadata().appendFlag(TypeFlags::IsCompilerIntrinsic);
 	//todo: do
 	return result;
 }

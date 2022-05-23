@@ -13,21 +13,16 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\SemanticModelComponents">
+      <UniqueIdentifier>{7b111743-ab95-47b3-8446-8b4fd9d09dff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Marshalling.ixx">
+    <ClCompile Include="SemanticModel.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Prymitives.ixx">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="VariableReferenceExpression.ixx">
+      <Filter>Source Files\SemanticModelComponents</Filter>
     </ClCompile>
-    <ClCompile Include="Allocation.ixx">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Utility.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

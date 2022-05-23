@@ -170,6 +170,7 @@ gsl::not_null<Type*> cMCompiler::language::buildModuleDescriptor(
 {
 	auto result = backendns->append<Type>("llvmModule");
 	result->metadata().appendFlag(TypeFlags::ExcludeAtRuntime);
+	result->metadata().appendFlag(TypeFlags::IsCompilerIntrinsic);
 	appendFunction(result, llvmFunction, llvmType);
 	appendType(result, llvmType);
 	appendFunctions(result, llvmFunction);

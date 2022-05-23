@@ -21,6 +21,7 @@ gsl::not_null<Type*> cMCompiler::language::buildTypeDescriptor(gsl::not_null<dat
 {
 	auto result = backendns->append<Type>("llvmType");
 	result->metadata().appendFlag(TypeFlags::ExcludeAtRuntime);
+	result->metadata().appendFlag(TypeFlags::IsCompilerIntrinsic);
 	createCustomFunction(
 		result->append<Function>("setFields"),
 		result,
