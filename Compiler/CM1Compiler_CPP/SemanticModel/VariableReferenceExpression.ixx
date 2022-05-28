@@ -8,6 +8,7 @@ export module SemanticModel:VariableReferenceExpression;
 
 import Execution.Marshalling;
 import Execution.Prymitives;
+import SourceFileReference;
 
 namespace cMCompiler::semanticModel
 {
@@ -18,8 +19,7 @@ namespace cMCompiler::semanticModel
 			parent = execution::MarshalledPointer(
 				dataStructures::TypeReference{ language::getExpressionDescriptor(), 1 }, nullptr
 				);
-		execution::MarshalledNativeObject<dataStructures::SourcePointer> pointerToSource;
-		//todo: add pointer to source
+		execution::MarshalledNativeObject<SourcePointer> pointerToSource;
 	};
 }
 

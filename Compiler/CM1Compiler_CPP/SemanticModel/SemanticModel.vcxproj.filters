@@ -24,5 +24,8 @@
     <ClCompile Include="VariableReferenceExpression.ixx">
       <Filter>Source Files\SemanticModelComponents</Filter>
     </ClCompile>
+    <ClCompile Include="SourceFileReference.ixx">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

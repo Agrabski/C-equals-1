@@ -45,6 +45,9 @@ namespace cMCompiler::execution
 			assert(pointer->controlBlock.containedType.dereference() == value->controlBlock.containedType);
 		(*reinterpret_cast<MarshalledObject**> (pointer->data)) = value;
 	}
+
+	export using MarshalledString = MarshalledNativeObject<std::string>;
+	export using MarshalledInteger = MarshalledNativeObject<unsigned long long>;
 }
 
 MAP_TO_TYPE_DESCRIPTOR(cMCompiler::dataStructures::Variable*, cMCompiler::language::getVariableDescriptor, 0);

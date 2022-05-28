@@ -138,7 +138,7 @@ namespace cMCompiler::execution
 		size_t base = 0;
 		for (auto const f : type->fields())
 			if (f != field)
-				base += calculateObjectSize(field->type());
+				base += calculateObjectSize(f->type());
 			else break;
 		return base;
 	}

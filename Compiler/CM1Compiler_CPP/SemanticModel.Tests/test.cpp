@@ -5,6 +5,7 @@
 import Execution.Allocation;
 import SemanticModel;
 import Execution.Prymitives;
+import SourceFileReference;
 
 using namespace cMCompiler::semanticModel;
 using namespace cMCompiler::execution;
@@ -33,7 +34,11 @@ TEST(TestCaseName, VariableReferenceExpressionFieldsMappedCorrectly) {
 
 	auto heap = cMCompiler::execution::CompileTimeHeap();
 
-	auto variableRef = cMCompiler::semanticModel::VariableReferenceExpression{ MarshalledNativeObject{variable.get() } };
+	auto variableRef = cMCompiler::semanticModel::VariableReferenceExpression{
+		MarshalledNativeObject{variable.get() } ,
+		MarshalledPointer(TypeReference{ getExpressionDescriptor(), 1 }, nullptr),
+		MarshalledNativeObject{cMCompiler::semanticModel::SourcePointer{{"abc"}, 15}}
+	};
 	auto marshalledObject = heap.allocateNative<VariableReferenceExpression>(VariableReferenceExpression(variableRef));
 
 	ASSERT_EQ(
@@ -46,6 +51,10 @@ TEST(TestCaseName, VariableReferenceExpressionFieldsMappedCorrectly) {
 		*reinterpret_cast<MarshalledPointer*>(tryGetFieldAddress(marshalledObject, getVariableReferenceExpressionDescriptor()->getField("parentExpression")))
 	);
 
+	ASSERT_EQ(
+		(size_t)tryGetFieldAddress(marshalledObject, getVariableReferenceExpressionDescriptor()->getField("pointerToSource")) - (size_t)(&marshalledObject->data),
+		(size_t)offsetof(VariableReferenceExpression, pointerToSource)
+	);
 	ASSERT_TRUE(
 		variableRef.pointerToSource ==
 		*reinterpret_cast<decltype(variableRef.pointerToSource)*>(tryGetFieldAddress(marshalledObject, getVariableReferenceExpressionDescriptor()->getField("pointerToSource")))
