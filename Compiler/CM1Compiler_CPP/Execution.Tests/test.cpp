@@ -29,7 +29,7 @@ TEST(TestCaseName, AllocatePrymitiveWithGenericApi)
 	auto heap = cMCompiler::execution::CompileTimeHeap();
 	getDefaultPackage();
 	auto usize = cMCompiler::language::getUsize();
-	auto type = cMCompiler::dataStructures::TypeReference{ usize, 1 };
+	auto type = cMCompiler::dataStructures::TypeReference{ usize, 0 };
 
 	auto object = heap.allocateNative(32ULL);
 	ASSERT_EQ(object->data, 32ULL);

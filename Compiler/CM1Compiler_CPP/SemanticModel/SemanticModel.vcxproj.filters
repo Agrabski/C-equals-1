@@ -27,5 +27,11 @@
     <ClCompile Include="SourceFileReference.ixx">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LiteralExpression.ixx">
+      <Filter>Source Files\SemanticModelComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="Expression.ixx">
+      <Filter>Source Files\SemanticModelComponents</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

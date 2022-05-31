@@ -115,7 +115,7 @@ namespace cMCompiler::execution
 		}
 
 		template<marshallable_native_object T>
-		gsl::not_null<MarshalledNativeObject<T>*> allocateNative(T&& object)
+		gsl::not_null<MarshalledNativeObject<T>*> allocateNative(T const& object)
 		{
 			auto type = getTypeFor<T>();
 			auto size = sizeof(MarshalledNativeObject<T>);
@@ -123,7 +123,7 @@ namespace cMCompiler::execution
 			not_null result = reinterpret_cast<MarshalledNativeObject<T>*>(heap.allocate().get());
 			new (result) MarshalledNativeObject<T>();
 			setupControlBlock(type, result);
-			result->data = std::move(object);
+			result->data = object;
 			return result;
 		}
 

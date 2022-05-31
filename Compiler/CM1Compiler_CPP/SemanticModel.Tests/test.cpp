@@ -19,12 +19,12 @@ TEST(TestCaseName, VariableReferenceExpressionMarshallsCorrectly) {
 
 	auto heap = cMCompiler::execution::CompileTimeHeap();
 
-	auto variableRef = cMCompiler::semanticModel::VariableReferenceExpression{ MarshalledNativeObject{variable.get() } };
-	auto marshalledObject = heap.allocateNative<VariableReferenceExpression>(VariableReferenceExpression(variableRef));
+	auto variableRef = cMCompiler::semanticModel::VariableReferenceExpression{ variable };
+	auto& marshalledObject = *heap.allocateNative(variableRef);
 
-	ASSERT_EQ(marshalledObject->controlBlock.containedType.type, getVariableReferenceExpressionDescriptor());
-	ASSERT_EQ(marshalledObject->controlBlock.containedType.referenceCount, 0);
-	ASSERT_EQ(marshalledObject->data.variable.data, variableRef.variable.data);
+	ASSERT_EQ(marshalledObject.controlBlock.containedType.type, getVariableReferenceExpressionDescriptor());
+	ASSERT_EQ(marshalledObject.controlBlock.containedType.referenceCount, 0);
+	ASSERT_EQ(marshalledObject->variable.data, variableRef.variable.data);
 }
 
 TEST(TestCaseName, VariableReferenceExpressionFieldsMappedCorrectly) {
@@ -35,11 +35,10 @@ TEST(TestCaseName, VariableReferenceExpressionFieldsMappedCorrectly) {
 	auto heap = cMCompiler::execution::CompileTimeHeap();
 
 	auto variableRef = cMCompiler::semanticModel::VariableReferenceExpression{
-		MarshalledNativeObject{variable.get() } ,
-		MarshalledPointer(TypeReference{ getExpressionDescriptor(), 1 }, nullptr),
-		MarshalledNativeObject{cMCompiler::semanticModel::SourcePointer{{"abc"}, 15}}
+		variable.get(),
 	};
-	auto marshalledObject = heap.allocateNative<VariableReferenceExpression>(VariableReferenceExpression(variableRef));
+	variableRef.pointerToSource = MarshalledNativeObject{ cMCompiler::semanticModel::SourcePointer{{"abc"}, 15} };
+	auto marshalledObject = heap.allocateNative(variableRef);
 
 	ASSERT_EQ(
 		variableRef.variable,
@@ -47,7 +46,7 @@ TEST(TestCaseName, VariableReferenceExpressionFieldsMappedCorrectly) {
 	);
 
 	ASSERT_EQ(
-		variableRef.parent,
+		variableRef.parentExpression,
 		*reinterpret_cast<MarshalledPointer*>(tryGetFieldAddress(marshalledObject, getVariableReferenceExpressionDescriptor()->getField("parentExpression")))
 	);
 

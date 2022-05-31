@@ -9,17 +9,15 @@ export module SemanticModel:VariableReferenceExpression;
 import Execution.Marshalling;
 import Execution.Prymitives;
 import SourceFileReference;
+import :Expression;
 
 namespace cMCompiler::semanticModel
 {
-	export struct VariableReferenceExpression
+	export struct VariableReferenceExpression : Expression
 	{
 		execution::MarshalledNativeObject<dataStructures::Variable*> variable;
-		execution::MarshalledPointer
-			parent = execution::MarshalledPointer(
-				dataStructures::TypeReference{ language::getExpressionDescriptor(), 1 }, nullptr
-				);
-		execution::MarshalledNativeObject<SourcePointer> pointerToSource;
+		VariableReferenceExpression(dataStructures::Variable* v) noexcept : variable(v) {}
+		VariableReferenceExpression() noexcept = default;
 	};
 }
 

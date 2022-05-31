@@ -107,9 +107,24 @@ namespace cMCompiler::execution
 			data = std::move(value);
 		}
 
+		MarshalledNativeObject(T const& value) : MarshalledNativeObject()
+		{
+			data = value;
+		}
+
 		bool operator==(MarshalledNativeObject<T>const& other)const noexcept
 		{
 			return other.data == data && controlBlock.containedType == other.controlBlock.containedType;
+		}
+
+		T* operator->()
+		{
+			return &data;
+		}
+
+		T const* operator->() const
+		{
+			return &data;
 		}
 	};
 

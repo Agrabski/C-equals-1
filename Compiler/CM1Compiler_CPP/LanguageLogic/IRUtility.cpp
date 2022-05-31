@@ -243,10 +243,11 @@ gsl::not_null<cMCompiler::dataStructures::Type*> cMCompiler::language::buildFiel
 gsl::not_null<Type*> cMCompiler::language::buildVariableReferenceExpression(gsl::not_null<dataStructures::Namespace*> irNs)
 {
 	auto result = irNs->append<Type>("variableReferenceExpression"s);
+	result->appendField("parentExpression", { getExpressionDescriptor(), 1 });
+	result->appendField("parentStatement", { getIInstruction(), 1 });
+	result->appendField("pointerToSource", { getPointerToSource(), 0 });
 	result->appendField("variable"s, { getVariableDescriptor(), 0 });
 
-	result->appendField("parentExpression", { getExpressionDescriptor(), 1 });
-	result->appendField("pointerToSource", { getPointerToSource(), 0 });
 	return result;
 }
 

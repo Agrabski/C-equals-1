@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Expression.ixx" />
+    <ClCompile Include="LiteralExpression.ixx" />
     <ClCompile Include="SemanticModel.ixx" />
     <ClCompile Include="SourceFileReference.ixx" />
     <ClCompile Include="VariableReferenceExpression.ixx" />
