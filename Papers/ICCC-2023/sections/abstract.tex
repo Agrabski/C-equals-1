@@ -6,8 +6,8 @@ CTFE first approach places the interpreter as the central component of the compi
 Translation of user code into the executable form is done using an interpreted module, written in the target language, and uses the same data structures accessible to the programmer.
 This boosts the flexibility and extensibility of the compiler and ensures the completness of the available metadata and the ability to execute any code at compile-time.
 
-CTFE first pattern is design with compiling low-level, non-garbage-collected, reflection-enabled languages in mind.
-It was created in order to compile C-=-1, which aimed to allow the programmer to execute any code at compile time, as well as anylyze and modify the program structure.
+CTFE first pattern is designed with compiling low-level, non-garbage-collected, reflection-enabled languages in mind.
+It was created in order to compile C-=-1, which aimed to allow the programmer to execute any code at compile time, as well as analyze and modify the program structure.
 Thanks to the extensibility of the designed compiler, programs written in C-=-1 can also generate marshalling bindings for other languages and support a variety of unexpected programming paradigms.
 
 The flexibility and extensibility of CTFE frist are offset by higher complexity of the compiler and rigidity of the data strctures used.
