@@ -1,13 +1,22 @@
 \section{Language and compiler design}
 
+CTFE First apporach was created during implementation of the first compiler for the C-=-1 language\cite{grabski2022compilation}.
+The need for a new approach to compiler construction arose due to the unusal characteristics of the language, further described in chapter \ref{language-design}.
+Chapter \ref{compiler-design} describes the CTFE First approach and how the compiler is structured. 
+
 \subsection{Design of C-=-1}
+\label{language-design}
+
+C-=-1 was designed as a compiled, low-level, non-garbage-collected programming language, similar to C, C++ or Rust.
+What diffirentiates C-=-1 are its two founding principles: all code is executable at compile-time and support rich metaprogramming.
+The primary purpose of the language was to research how these ideas influence software written in it \cite{grabski2022compilation}.
 
 \subsubsection{Type system}
 
 \subsubsection{Attributes and metaprogramming}
 
 \subsection{Design of the compiler}
-
+\label{compiler-design}
 \subsubsection{Frontend}
 
 \subsubsection{Interpreter}
