@@ -4,4 +4,10 @@ Compile-time function execution is an aspect of a programming language, that all
 The goals and capabilities of CTFE depend on the language and is discussed in chapter \ref{related-work}, however it plays a secondary role in the compilation process.
 
 CTFE first builds the compiler around the interpreter component.
-The role of the compiler is to construct the semantic model
+The role of the compiler is to construct the semantic model of the program being compiled and pass it as data to the interpreted Compiler-Intreface module.
+Compiler-Interface then tranforms the model into the backend's assembly language to be compiled to executable.
+Structure of the compiler and its influence on the language design is further discussed in chapter \ref{language-compiler-design}.
+
+Using CTFE First approach carries with it certain unique implementation considerations.
+Data structures used within the compiler and the way that the program is modeled is tightly coupled with the compiled language.
+These challenges, as well as how they were solved in C-=-1 compiler were described in chapter \ref{implementation}.
