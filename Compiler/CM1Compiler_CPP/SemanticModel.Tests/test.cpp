@@ -60,4 +60,35 @@ TEST(TestCaseName, VariableReferenceExpressionFieldsMappedCorrectly) {
 	);
 }
 
+TEST(TestCaseName, LiteralExpressionFieldsMappedCorrectly) {
+	auto heap = cMCompiler::execution::CompileTimeHeap();
+
+	auto value = heap.allocateNative(32ULL);
+
+	auto literal = cMCompiler::semanticModel::LiteralExpression{
+		MarshalledPointer(TypeReference{getUsize(), 1}, reinterpret_cast<MarshalledObject*>(value.get()))
+	};
+	literal.pointerToSource = MarshalledNativeObject{ cMCompiler::semanticModel::SourcePointer{{"abc"}, 15} };
+	auto marshalledObject = heap.allocateNative(literal);
+
+	ASSERT_EQ(
+		literal.value,
+		*reinterpret_cast<decltype(literal.value)*>(tryGetFieldAddress(marshalledObject, getVariableReferenceExpressionDescriptor()->getField("value")))
+	);
+
+	ASSERT_EQ(
+		literal.parentExpression,
+		*reinterpret_cast<MarshalledPointer*>(tryGetFieldAddress(marshalledObject, getVariableReferenceExpressionDescriptor()->getField("parentExpression")))
+	);
+
+	ASSERT_EQ(
+		(size_t)tryGetFieldAddress(marshalledObject, getVariableReferenceExpressionDescriptor()->getField("pointerToSource")) - (size_t)(&marshalledObject->data),
+		(size_t)offsetof(VariableReferenceExpression, pointerToSource)
+	);
+	ASSERT_TRUE(
+		literal.pointerToSource ==
+		*reinterpret_cast<decltype(literal.pointerToSource)*>(tryGetFieldAddress(marshalledObject, getVariableReferenceExpressionDescriptor()->getField("pointerToSource")))
+	);
+}
+
 

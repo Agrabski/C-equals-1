@@ -204,7 +204,7 @@ void cMCompiler::compiler::FunctionBodyBuilder::buildForRangeLoop(
 
 	// todo: jesus fucking christ
 
-
+	
 	buildForLoop(
 		decorateTemporary(body, 1),
 		[=]()

@@ -16,6 +16,9 @@ namespace cMCompiler::semanticModel
 	export struct LiteralExpression : Expression
 	{
 		execution::MarshalledPointer value;
+		LiteralExpression() noexcept = default;
+
+		LiteralExpression(execution::MarshalledPointer v) noexcept : value(v) {}
 	};
 }
 
