@@ -38,6 +38,8 @@ Finaly the Backend generates the executable file.
 \subsubsection{Frontend}
 \label{frontend}
 
+In the CTFE First approach, frontend serves the same role of constructing the programs intermidiate representation, as in conventional compilers \cite{puntambekar:compiler_design}.
+
 \subsubsection{Interpreter}
 \label{interpreter}
 
@@ -46,3 +48,12 @@ Finaly the Backend generates the executable file.
 
 \subsubsection{Backend}
 \label{backend}
+
+CTFE First does not put any additional requierments on compiler backend.
+When using this pattern, an out-of-the-box backend library, can be used, as was the case with C-=-1 compiler.
+
+The backend code must be invokable from within the interpreted program in the target language.
+Depending on how the interpreter was designed, this can represent a significant undertaking.
+Compiler backends are large and for the Compiler Interface to take advantage of them fully, they must be fully available.
+This means exposing each function and type within the library, to the interpreted code.
+These bindings could feasibly be generated automatically \cite{marshalling_auto_generation}, but this tehnique was not used when implementing C-=-1 compiler.
