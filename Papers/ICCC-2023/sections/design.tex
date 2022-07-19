@@ -17,10 +17,31 @@ The primary purpose of the language was to research how these ideas influence so
 
 \subsection{Design of the compiler}
 \label{compiler-design}
+
+CTFE First compiler has four major components: Frontend, Interpreter, Compiler Interface and Backend.
+Figure \ref{CTFE-first-compiler-structure} contains a diagram with an overview of how these pieces interact with eachother, during the compilaton process.
+Frontend, described in chapter \ref{frontend}, parses the code in the compiled language and constructs its intermidaite representation, using interpreter's data structures.
+It is used to analyze both user code and the Compiler Interface.
+After the intermidiate representation is constructed, it is passed on to the Interpreter, which was described in chapter \ref{interpreter}.
+Compiler Interface intermidiate representation is then executed, using the user program as data. 
+This step converts the semantic model of the program into the backends intermidiate language.
+This process has been further explained in chapter \ref{compiler-interface}.
+Finaly the Backend generates the executable file.
+
+\begin{figure}
+	\includegraphics[height=10cm]{pictures/compiler-structure.png}
+	\caption{CTFE First compiler structure}
+	\label{CTFE-first-compiler-structure}
+\end{figure}
+
 \subsubsection{Frontend}
+\label{frontend}
 
 \subsubsection{Interpreter}
+\label{interpreter}
 
-\subsubsection{Compiler interface}
+\subsubsection{Compiler interface} 
+\label{compiler-interface}
 
 \subsubsection{Backend}
+\label{backend}
