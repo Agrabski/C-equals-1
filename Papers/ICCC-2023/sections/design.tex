@@ -1,24 +1,18 @@
-\section{Language and compiler design}
-\label{language-compiler-design}
-
-CTFE First apporach was created during implementation of the first compiler for the C-=-1 language\cite{grabski2022compilation}.
-The need for a new approach to compiler construction arose due to the unusal characteristics of the language, further described in chapter \ref{language-design}.
-Chapter \ref{compiler-design} describes the CTFE First approach and how the compiler is structured. 
-
-\subsection{Design of C-=-1}
+\section{Design of C-=-1}
 \label{language-design}
 
 C-=-1 was designed as a compiled, low-level, non-garbage-collected programming language, similar to C, C++ or Rust.
 What diffirentiates C-=-1 are its two founding principles: all code is executable at compile-time and support rich metaprogramming.
 The primary purpose of the language was to research how these ideas influence software written in it \cite{grabski2022compilation}.
 
-\subsubsection{Type system}
+\subsection{Type system}
 
-\subsubsection{Attributes and metaprogramming}
+\subsection{Attributes and metaprogramming}
 
-\subsection{Design of the compiler}
+\section{Design of the compiler}
 \label{compiler-design}
 
+CTFE First apporach was created during implementation of the first compiler for the C-=-1 language\cite{grabski2022compilation}.
 CTFE First compiler has four major components: Frontend, Interpreter, Compiler Interface and Backend.
 Figure \ref{CTFE-first-compiler-structure} contains a diagram with an overview of how these pieces interact with eachother, during the compilaton process.
 Frontend, described in chapter \ref{frontend}, parses the code in the compiled language and constructs its intermidaite representation, using interpreter's data structures.
@@ -35,18 +29,19 @@ Finaly the Backend generates the executable file.
 	\label{CTFE-first-compiler-structure}
 \end{figure}
 
-\subsubsection{Frontend}
+\subsection{Frontend}
 \label{frontend}
 
 In the CTFE First approach, frontend serves the same role of constructing the programs intermidiate representation, as in conventional compilers \cite{puntambekar:compiler_design}.
+The major difference lays in the data structures used to represent the program.
 
-\subsubsection{Interpreter}
+\subsection{Interpreter}
 \label{interpreter}
 
-\subsubsection{Compiler interface} 
+\subsection{Compiler interface} 
 \label{compiler-interface}
 
-\subsubsection{Backend}
+\subsection{Backend}
 \label{backend}
 
 CTFE First does not put any additional requierments on compiler backend.

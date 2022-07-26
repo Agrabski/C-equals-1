@@ -6,7 +6,8 @@ The goals and capabilities of CTFE depend on the language and is discussed in ch
 CTFE first builds the compiler around the interpreter component.
 The role of the compiler is to construct the semantic model of the program being compiled and pass it as data to the interpreted Compiler-Intreface module.
 Compiler-Interface then tranforms the model into the backend's assembly language to be compiled to executable.
-Structure of the compiler and its influence on the language design is further discussed in chapter \ref{language-compiler-design}.
+The design of the language that sparked this approach was described in chapter \ref{language-design}.
+Chapter \ref{compiler-design} deals with structure of a CTFE First compiler and how its components interact.
 
 Using CTFE First approach carries with it certain unique implementation considerations.
 Data structures used within the compiler and the way that the program is modeled is tightly coupled with the compiled language.
