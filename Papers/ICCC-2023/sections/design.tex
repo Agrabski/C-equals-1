@@ -38,9 +38,23 @@ The major difference lays in the data structures used to represent the program.
 \subsection{Interpreter}
 \label{interpreter}
 
-\subsection{Compiler interface} 
+In CTFE First, interpreter is the heart of the compiler.
+It executes the Compiler-Interface which translates the intermidiate representation into the backend's assembly and serves as what is sometimes called the 'middle-end' of the compiler\cite{hsu2021llvm}.
+To do it, it must be able to treat the program's intermidiate representation both as code and data.
+
+
+\subsection{Compiler Interface} 
 \label{compiler-interface}
 
+Compiler Interface translates the program's intermidaite representation into the backend's assembly language.
+This component is interpreted during compilation.
+What stands out about CTFE First is that this part of the compiler can thus be written in the target language, during Stage 0 of the compiler bootstrapping process, as was the case for the C-=-1 compiler\cite{puntambekar:compiler_design, novillo2007gcc, grabski2022compilation}.
+
+Compiler Interface is a regular code package that contains a function marked as the Compiler Interface Entry-point.
+That procedure must accept a set of modules to be compiled and a Compilation Context that is used to generate the Backends assembly.
+The module descriptors that are passed to the Compiler Interface are built by the frontend, as can be seen in figure \ref{CTFE-first-compiler-structure}.
+
+After the Compiler Interface has finished generating backend assembly, the Compiler Backend is invoked to generate the binary executable.
 \subsection{Backend}
 \label{backend}
 
