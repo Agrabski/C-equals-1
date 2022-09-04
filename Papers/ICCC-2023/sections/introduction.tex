@@ -1,9 +1,13 @@
 \section{Introduction}
 
-Compile-time function execution is an aspect of a programming language, that allows the programmer to execute code at compile-time.
-The goals and capabilities of CTFE depend on the language and is discussed in chapter \ref{related-work}, however it plays a secondary role in the compilation process.
 
-CTFE first builds the compiler around the interpreter component.
+Compile-time function execution (CTFE) is an aspect of a programming language, that allows the programmer to execute code at compile-time.
+It has been gaining popularity with low level programming langauges such as Rust or C++.
+The goals and capabilities of CTFE depend on the language and are discussed in chapter \ref{related-work}, however it plays a secondary role in the compilation process.
+
+This paper proposes a new approach to compiler construction that places Compile Time Function Execution capabilities as the first priority.
+This architecture is called CTFE First.
+CTFE First builds the compiler around the interpreter component.
 The role of the compiler is to construct the semantic model of the program being compiled and pass it as data to the interpreted Compiler-Intreface module.
 Compiler-Interface then tranforms the model into the backend's assembly language to be compiled to executable.
 The design of the language that sparked this approach was described in chapter \ref{language-design}.

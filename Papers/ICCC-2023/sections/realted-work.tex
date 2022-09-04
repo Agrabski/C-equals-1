@@ -3,3 +3,17 @@
 
 Many currently used programming languages allow the programmer to execute some code at compile time, including C\# \cite{csharp:source_generators,roslyn}, Rust \cite{rust, klabnik2019rust} and C++ \cite{ISO:cpp20}.
 
+Rust language compiler is the most similar in capability, to what was demonstrated with C-=-1, as a feature of CTFE First.
+It allows the user to write code that performs some transformations of the program, and interact with the evnoirment during the build process.
+The two relevant features are build scripts and macros.
+
+Rust macros, mutch like the classic C-style preprocessor macros, generate additional code as text.
+The major difference between the systems is that Rust macros operate on tokens rather than text and use syntax similar to regular Rust code.
+This mechanism is powerfull, allowing the user to rewrite code to avoid repetition, simplify certain tasks and create new syntax.
+They are however unable to reflect on the program as a whole or obtain mutch of the information available to the compiler.
+
+Build scripts, on the other hand, are programs that execute prior to compilation of the main package.
+They are meant to prepare the envoirment for building the program, by for example compiling its external dependencies.
+They do not have any information about the structure of the program being compiled.
+If a task, done by a build script, were to require such data, it would have to analyze the code by itself, without any help from the compiler.
+This makes application such as automatically genertaing bindings for other programming languages significantly more difficult.
