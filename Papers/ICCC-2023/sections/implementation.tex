@@ -6,6 +6,11 @@ The most important aspect of implementing a CTFE First compiler is the design of
 
 Languages that seek to exploit CTFE First approach in design of their compilers, should define a set of data structures to describe user code, i.e. an Semantic Model.
 It will allow the programmer to interact and mainpulate the structure of the program at compile-time.
+The Semantic model designed and implemented for C-=-1 is described in chapter \ref{semantic_model}.
+
+The final piece of a CTFE First compiler is the Backend Interface.
+It is a program, written in the target language, and ran at compile-time that translates the semantic model into the backends assembly language.
+Backend Interface implemented for C-=-1 is relativley small and has been described in chapter \ref{implementation/backend-interface}.
 
 \subsection{Interpreter data structures}
 \label{data_structures}
@@ -37,6 +42,7 @@ It was realised as a pointer to the owning pointer of the value.
 The reasoning behind this decision was to allow assigning to the referenced value.
 
 \subsection{Program semantic model}
+\label{semantic_model}
 
 A major motivation in creating CTFE First was the ability to support languages with compile-time metaprogramming.
 This includes reflection and modification of the code being compiled.
@@ -50,7 +56,11 @@ The remainder of user code is organised around namespaces, types, functions and 
 These parts of the model are repesented by native classes of the host language and form the basis for the rest of the model.
 
 The most complex part of the model is the representation of the function body.
+Like in most programming languages, a C-=-1 function can contain a variety of instruction types.
+That includes complex statements and blocks of statements that can be arbitrarly nested.
+Each instruction may also contain expressions of any complexity.
 
+To deal with this complexity, C-=-1 semantic model for functions is build around two interfaces: \lstinline{IInstruction} and \lstinline{IExpression} and their concrete implementations.
 
 \subsection{Backend interface}
 \label{implementation/backend-interface}
