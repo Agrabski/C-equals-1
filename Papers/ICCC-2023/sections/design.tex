@@ -5,9 +5,15 @@ C-=-1 was designed as a compiled, low-level, non-garbage-collected programming l
 What diffirentiates C-=-1 are its two founding principles: all code is executable at compile-time and support rich metaprogramming.
 The primary purpose of the language was to research how these ideas influence software written in it \cite{grabski2022compilation}.
 
+C-=-1 is a simple language, built with the minimum set of features needed to demonstrate the usefulness of the proposed metaprogramming features.
+
 \subsection{Type system}
 
 C-=-1 type system heavily borrows from C++.
+Program may contain user defined classes, with members which may have limited accessibility.
+Generic programming is achieved by the use of templates, although they are mutch more limited than the ones present in C++.
+The user may also use pointers to objects, with arbitrary indirection (for example pointer to pointer to object).
+Additionally, the language contains the concept of an \lstinline{interface}, similar to the one found in C\#.
 
 \subsection{Attributes and metaprogramming}
 
@@ -50,6 +56,20 @@ It may then modify the semantic model or report warnings or errors.
 
 Listing \ref{lst:noDiscardCm1} contains an example of a C-=-1 attribute: \lstinline{noDiscard}.
 It works in the same manner as the attribute of the same name present in C++17 \cite{ISO:cpp17}: if applied to a function, the result of that invoking procedure must be used.
+
+To declare an attribute in C-=-1, the \lstinline{att} keyword is used.
+After that, attribute targets should be listed in angled brackets, as on line 0 of Listing \ref{lst:noDiscardCm1}.
+Attributes may target any number of language elements, including types, functions, variables and fields.
+Attribute from Listing \ref{lst:noDiscardCm1} declares two member functions: \lstinline{attach} on line 4 and \lstinline{onCall} on line 6.
+
+The \lstinline{attach} method is called after names of all of the program elements have been gathered, but before the compiler started to analyze function bodies.
+It is common accross all attribute targets and accepts the descriptor of the attached program element (function, field, type, etc.).
+Only during call to \lstinline{attach} can the attribute change aspects of the program that affect function overload resolution, for example
+whether a function is invokable at run or compile time.
+
+The \lstinline{onCall} method is an example of a function reacting to usage of the annotated program element.
+They are speciffic to a given attribute target.
+Within this function, the attribute may analyze and modify the code, as well as raise errors or warnings.
 
 \section{Design of the compiler}
 \label{compiler-design}
