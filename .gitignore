@@ -14,6 +14,7 @@
 **/Debug
 **/Release
 **/packages
+*.log
 /Compiler/CM1Compiler_CPP/Parser/
 Papers/SDM1/out/
 Papers/SDM1/out/article.pdf

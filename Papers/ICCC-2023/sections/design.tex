@@ -11,6 +11,46 @@ C-=-1 type system heavily borrows from C++.
 
 \subsection{Attributes and metaprogramming}
 
+Metaprogramming in C-=-1 is based around attributes.
+Attributes work in a manner similar to the ones found in C\#.
+They are types, which may contain fields and methods.
+They can also, be used to annotate other elements of the program, such as types, functions or variables.
+
+In C-=-1 these attributes may implement special member functions that react to uses of the annotated program element.
+For example, an attribute that can be attached to a function, may implement \lstinline{onCall} special member function.
+It will be called, at compile time, for each invocation of the annotated procedure.
+Within the special method, the attribute will have access to the semantic model of the call site.
+It may then modify the semantic model or report warnings or errors.
+
+\begin{minipage}{\linewidth}
+
+	\begin{lstlisting}[
+	  numbers=left,
+	  firstnumber=0,
+	  caption={noDiscard attribute in C-=-1},
+	  aboveskip=0pt,
+	  label={lst:noDiscardCm1}
+	  ]
+  public att<function> NoDiscard
+  {
+	public fn attach(f: functionDescriptor)
+	{}
+	public fn onCall(call: functionCallExpression*)
+	{
+	if(call._parentStatment != null<IInstruction>())
+	  raiseError(
+		&(call._pointerToSource),
+		"Return value of a no-discard function is not used",
+		123
+	  );
+	}
+  }
+  \end{lstlisting}
+\end{minipage}
+
+Listing \ref{lst:noDiscardCm1} contains an example of a C-=-1 attribute: \lstinline{noDiscard}.
+It works in the same manner as the attribute of the same name present in C++17 \cite{ISO:cpp17}: if applied to a function, the result of that invoking procedure must be used.
+
 \section{Design of the compiler}
 \label{compiler-design}
 
