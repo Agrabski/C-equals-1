@@ -16,13 +16,13 @@ C-=-1 type system heavily borrows from C++.
 
 CTFE First apporach was created during implementation of the first compiler for the C-=-1 language\cite{grabski2022compilation}.
 CTFE First compiler has four major components: Frontend, Interpreter, Compiler Interface and Backend.
-Figure \ref{CTFE-first-compiler-structure} contains a diagram with an overview of how these pieces interact with eachother, during the compilaton process.
+Figure \ref{CTFE-first-compiler-structure} contains a diagram with an overview of how these parts interact with eachother, during the compilaton process.
 Frontend, described in chapter \ref{frontend}, parses the code in the compiled language and constructs its intermidaite representation, using interpreter's data structures.
 It is used to analyze both user code and the Compiler Interface.
 After the intermidiate representation is constructed, it is passed on to the Interpreter, which was described in chapter \ref{interpreter}.
-Compiler Interface intermidiate representation is then executed, using the user program as data. 
+Compiler Interface intermidiate representation is then executed, using the user program as data.
 This step converts the semantic model of the program into the backends intermidiate language.
-This process has been further explained in chapter \ref{compiler-interface}.
+This process is further explained in chapter \ref{compiler-interface}.
 Finaly the Backend generates the executable file.
 
 \begin{figure}
@@ -44,13 +44,22 @@ In CTFE First, interpreter is the heart of the compiler.
 It executes the Compiler-Interface which translates the intermidiate representation into the backend's assembly and serves as what is sometimes called the 'middle-end' of the compiler\cite{hsu2021llvm}.
 To do it, it must be able to treat the program's intermidiate representation both as code and data.
 
+An important consideration with implementing a CTFE First compiler, is what limitations to put on modifications of user code.
+Depending on language design, it may be possible to introduce circular references between the functions that modify the codebase.
+For example if function \lstinline{A} is modified by function \lstinline{B} and \lstinline{B} invokes \lstinline{A}, the behaviour of the program is unpredictable.
+This problem will only be magnified by larger program sizes.
 
-\subsection{Compiler Interface} 
+One of the possible solutions to the above mentioned problem is to limit which functions can be invoked at compiletime.
+C-=-1 allows code within a compiletime context to invoke procedures only from other packages, declared explicitly as dependencies.
+It additionally prohibits modification of dependencies.
+Therefore its is impossible for a function to modify a procedure it depends on.% todo: wording, example
+
+\subsection{Compiler Interface}
 \label{compiler-interface}
 
 Compiler Interface translates the program's intermidaite representation into the backend's assembly language.
 This component is interpreted during compilation.
-What stands out about CTFE First is that this part of the compiler can thus be written in the target language, during Stage 0 of the compiler bootstrapping process, as was the case for the C-=-1 compiler\cite{puntambekar:compiler_design, novillo2007gcc, grabski2022compilation}.
+What is unique about CTFE First is that this part of the compiler can thus be written in the target language, during Stage 0 of the compiler bootstrapping process, as was the case for the C-=-1 compiler\cite{puntambekar:compiler_design, novillo2007gcc, grabski2022compilation}.
 
 Compiler Interface is a regular code package that contains a function marked as the Compiler Interface Entry-point.
 That procedure must accept a set of modules to be compiled and a Compilation Context that is used to generate the Backends assembly.
@@ -60,11 +69,11 @@ After the Compiler Interface has finished generating backend assembly, the Compi
 \subsection{Backend}
 \label{backend}
 
-CTFE First does not put any additional requierments on compiler backend.
+CTFE First does not put any additional requirements on compiler backend.
 When using this pattern, an out-of-the-box backend library, can be used, as was the case with C-=-1 compiler.
 
 The backend code must be invokable from within the interpreted program in the target language.
 Depending on how the interpreter was designed, this can represent a significant undertaking.
-Compiler backends are large and for the Compiler Interface to take advantage of them fully, they must be fully available.
+Compiler backends are large and for the Compiler Interface to take advantage of them, they must be fully available.
 This means exposing each function and type within the library, to the interpreted code.
 These bindings could feasibly be generated automatically \cite{marshalling_auto_generation}, but this tehnique was not used when implementing C-=-1 compiler.
