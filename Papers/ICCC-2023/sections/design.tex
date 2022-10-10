@@ -13,7 +13,7 @@ The primary motivation for those mechanisms, is providing the programmer with th
 
 C-=-1 type system heavily borrows from C++.
 Program may contain user defined classes, with members which may have limited accessibility.
-Generic programming is achieved by the use of templates, although they are mutch more limited than the ones present in C++.
+Generic programming is achieved by the use of templates, although they are much more limited than the ones present in C++.
 The user may also use pointers to objects, with arbitrary indirection (for example pointer to pointer to object).
 Additionally, the language contains the concept of an \lstinline{interface}, similar to the one found in C\#.
 
@@ -138,7 +138,7 @@ In CTFE First, interpreter is the heart of the compiler.
 It executes the Compiler-Interface which translates the intermidiate representation into the backend's assembly and serves as what is sometimes called the 'middle-end' of the compiler\cite{hsu2021llvm}.
 To do it, it must be able to treat the program's intermidiate representation both as code and data.
 
-An important consideration with implementing a CTFE First compiler, is what limitations to put on modifications of user code.
+An important consideration with implementing a CTFE First compiler, is what limitations to put on modifications of user code. %todo: longer
 Depending on language design, it may be possible to introduce circular references between the functions that modify the codebase.
 For example if function \lstinline{A} is modified by function \lstinline{B} and \lstinline{B} invokes \lstinline{A}, the behaviour of the program is unpredictable.
 This problem will only be magnified by larger program sizes.
@@ -167,7 +167,7 @@ CTFE First does not put any additional requirements on compiler backend.
 When using this pattern, an out-of-the-box backend library, can be used, as was the case with C-=-1 compiler.
 
 The backend code must be invokable from within the interpreted program in the target language.
-Depending on how the interpreter was designed, this can represent a significant undertaking.
+Depending on how the interpreter was designed, this may require significant effort. %todo: maybe other word
 Compiler backends are large and for the Compiler Interface to take advantage of them, they must be fully available.
 This means exposing each function and type within the library, to the interpreted code.
 These bindings could feasibly be generated automatically \cite{marshalling_auto_generation}, but this tehnique was not used when implementing C-=-1 compiler.

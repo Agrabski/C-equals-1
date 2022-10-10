@@ -4,7 +4,7 @@
 The first CTFE First was created for the C-=-1 language, using out-of-the-box parser generator and backend.
 The most important aspect of implementing a CTFE First compiler is the design of the data structures, described in chapter \ref{data_structures}, that will be used by the interpreter.
 
-Languages that seek to exploit CTFE First approach in design of their compilers, should define a set of data structures to describe user code, i.e. an Semantic Model.
+Languages that seek to exploit CTFE First approach in design of their compilers, should define a set of data structures to describe user code, i.e. a Semantic Model. %todo: languages are not people
 It will allow the programmer to interact and mainpulate the structure of the program at compile-time.
 The Semantic model designed and implemented for C-=-1 is described in chapter \ref{semantic_model}.
 
@@ -115,7 +115,7 @@ define i32 @average(i32 %0, i32 %1, i32 %2){
 \end{minipage}
 
 Certain other intrinsic operations were defined using external dependencies.
-C-=-1 memory managment library, in the runtime context, builds on a simple interface capable of allocating and deleting a continous buffer.
+C-=-1 memory managment library, in the runtime context, builds on a simple interface capable of allocating and deleting a continous buffer. %todo: simpler
 It is comprised of two functions: \lstinline{unsafe_new} and \lstinline{delete}.
 In the standard library, they are explicitly mapped to \lstinline{malloc} and \lstinline{free} functions from the C runtime.
 
