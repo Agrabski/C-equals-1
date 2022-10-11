@@ -61,6 +61,19 @@ That includes complex statements and blocks of statements that can be arbitrarly
 Each instruction may also contain expressions of any complexity.
 
 To deal with this complexity, C-=-1 semantic model for functions is build around two interfaces: \lstinline{IInstruction} and \lstinline{IExpression} and their concrete implementations.
+Every category of instruction or expression is represented by its own type.
+The user may then analyze the structure of the program, using a dynamic type conversion mechanism similar to C++ \lstinline{dynamic_cast} \cite{ISO:cpp98}.
+
+To aid in generating meaningfull error messages, all elements of the semantic model, have a \lstinline{sourcePointers}.
+It is a simple structure, that contains the filename and the line number of the expression or instruction.
+This information can be passed to compiler intrinsic functions, such as \lstinline{raiseError}, to generate error messages for the user.
+Listing \ref{lst:noDiscardCm1} contains a example use of this functionality.
+
+Component responsible for creating the semantic model are a major part of the compiler.
+There are two operations that this module performs: building the definition of the types used to describe a program, and creating an instance of the model, given semantic information.
+C-=-1 compiler has a hard-coded definition of its base library.
+It contains definitions of primitive types and types used to build the semantic model of a program.
+The description of this library must be built manually, as it is very closley integrated with the compiler.
 
 \subsection{Backend interface}
 \label{implementation/backend-interface}
@@ -115,7 +128,7 @@ define i32 @average(i32 %0, i32 %1, i32 %2){
 \end{minipage}
 
 Certain other intrinsic operations were defined using external dependencies.
-C-=-1 memory managment library, in the runtime context, builds on a simple interface capable of allocating and deleting a continous buffer. %todo: simpler
+C-=-1 memory managment library, in the runtime context, uses a simple interface capable of allocating and deleting a continous buffer.
 It is comprised of two functions: \lstinline{unsafe_new} and \lstinline{delete}.
 In the standard library, they are explicitly mapped to \lstinline{malloc} and \lstinline{free} functions from the C runtime.
 

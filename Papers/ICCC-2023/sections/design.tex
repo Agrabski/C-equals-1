@@ -138,14 +138,24 @@ In CTFE First, interpreter is the heart of the compiler.
 It executes the Compiler-Interface which translates the intermidiate representation into the backend's assembly and serves as what is sometimes called the 'middle-end' of the compiler\cite{hsu2021llvm}.
 To do it, it must be able to treat the program's intermidiate representation both as code and data.
 
-An important consideration with implementing a CTFE First compiler, is what limitations to put on modifications of user code. %todo: longer
+\begin{figure}
+	\includegraphics[width=6cm]{pictures/circular-function-reference.jpg}
+	\caption{Example of circular reference in meta code}
+	\label{circular-function-reference}
+\end{figure}
+
+An important consideration with implementing a CTFE First compiler, is what code can be executed at compile-time. %todo: longer
 Depending on language design, it may be possible to introduce circular references between the functions that modify the codebase.
-For example if function \lstinline{A} is modified by function \lstinline{B} and \lstinline{B} invokes \lstinline{A}, the behaviour of the program is unpredictable.
+Figure \ref{circular-function-reference} contains a diagram of such a scenario.
+\lstinline{A}, \lstinline{B} and \lstinline{C} are all functions.
+If function \lstinline{B} is modified by function \lstinline{C} and \lstinline{C} invokes \lstinline{B}, the behaviour of function \lstinline{A} is unpredictable.
 This problem will only be magnified by larger program sizes.
+
 
 One of the possible solutions to the above mentioned problem is to limit which functions can be invoked at compiletime.
 C-=-1 allows code within a compiletime context to invoke procedures only from other packages, declared explicitly as dependencies.
-It additionally prohibits modification of dependencies.
+Circular references between packages, as in most other languages, are forbiden.
+C-=-1 additionally prohibits modification of dependencies.
 Therefore its is impossible for a function to modify a procedure it depends on.% todo: wording, example
 
 \subsection{Compiler Interface}
