@@ -3,29 +3,29 @@
 
 C-=-1 was designed as a compiled, low-level, non-garbage-collected programming language, similar to C, C++ or Rust.
 What diffirentiates C-=-1 are its two founding principles: all code is executable at compile-time and support rich metaprogramming.
-The primary purpose of the language was to research how these ideas influence software written in it \cite{grabski2022compilation}.
+The primary purpose of the language was to investigate how these ideas influence software written in it \cite{grabski2022compilation}.
 
 C-=-1 is a simple language, built with the minimum set of features needed to demonstrate the usefulness of the proposed metaprogramming features.
 They are discussed further in chapter \ref{design:attributes_and_metaprogramming}.
-The primary motivation for those mechanisms, is providing the programmer with the ability to create domain specific static analysis and code generation tools, without creating a seperate program.
+The primary motivation for those mechanisms, is providing the programmer the ability to create domain specific static analysis and code generation tools, without creating a separate program.
 
 \subsection{Type system}
 
-C-=-1 type system heavily borrows from C++.
+C-=-1 type system borrows from C++.
 Program may contain user defined classes, with members which may have limited accessibility.
 Generic programming is achieved by the use of templates, although they are much more limited than the ones present in C++.
 The user may also use pointers to objects, with arbitrary indirection (for example pointer to pointer to object).
-Additionally, the language contains the concept of an \lstinline{interface}, similar to the one found in C\#.
+Additionally, the language contains the concept of an \lstinline{interface}, similar to the one found in C\# \cite{hejlsberg2003c}.
 
 \subsection{Attributes and metaprogramming}
 \label{design:attributes_and_metaprogramming}
 
-Metaprogramming in C-=-1 is based around attributes.
+Metaprogramming in C-=-1 is based on attributes.
 Attributes work in a manner similar to the ones found in C\#.
 They are types, which may contain fields and methods.
 They can also, be used to annotate other elements of the program, such as types, functions or variables.
 
-In C-=-1 these attributes may implement special member functions that react to uses of the annotated program element.
+In C-=-1 these attributes may implement special member functions that react to use of the annotated program element.
 For example, an attribute that can be attached to a function, may implement \lstinline{onCall} special member function.
 It will be called, at compile time, for each invocation of the annotated procedure.
 Within the special method, the attribute will have access to the semantic model of the call site.
@@ -61,11 +61,11 @@ Listing \ref{lst:noDiscardCm1} contains an example of a C-=-1 attribute: \lstinl
 It works in the same manner as the attribute of the same name present in C++17 \cite{ISO:cpp17}: if applied to a function, the result of that invoking procedure must be used.
 
 To declare an attribute in C-=-1, the \lstinline{att} keyword is used.
-After that, attribute targets should be listed in angled brackets, as on line 0 of Listing \ref{lst:noDiscardCm1}.
+After that, attribute targets should be listed in angled brackets, as in line 0 of Listing \ref{lst:noDiscardCm1}.
 Attributes may target any number of language elements, including types, functions, variables and fields.
-Attribute from Listing \ref{lst:noDiscardCm1} declares two member functions: \lstinline{attach} on line 4 and \lstinline{onCall} on line 6.
+Attribute from Listing \ref{lst:noDiscardCm1} declares two member functions: \lstinline{attach} in line 4 and \lstinline{onCall} in line 6.
 
-The \lstinline{attach} method is called after names of all of the program elements have been gathered, but before the compiler started to analyze function bodies.
+The \lstinline{attach} method is called after names of all of the program elements have been gathered, but before the compiler starts to analyze function bodies.
 It is common accross all attribute targets and accepts the descriptor of the attached program element (function, field, type, etc.).
 Only during call to \lstinline{attach} can the attribute change aspects of the program that affect function overload resolution, for example
 whether a function is invokable at run or compile time.
@@ -111,11 +111,11 @@ The example presented in Listing \ref{lst:noDiscardCm1}, although very basic, de
 CTFE First apporach was created during implementation of the first compiler for the C-=-1 language\cite{grabski2022compilation}.
 CTFE First compiler has four major components: Frontend, Interpreter, Compiler Interface and Backend.
 Figure \ref{CTFE-first-compiler-structure} contains a diagram with an overview of how these parts interact with eachother, during the compilaton process.
-Frontend, described in chapter \ref{frontend}, parses the code in the compiled language and constructs its intermidaite representation, using interpreter's data structures.
+Frontend, described in chapter \ref{frontend}, parses the code in the compiled language and constructs its intermediate representation, using interpreter's data structures.
 It is used to analyze both user code and the Compiler Interface.
-After the intermidiate representation is constructed, it is passed on to the Interpreter, which was described in chapter \ref{interpreter}.
-Compiler Interface intermidiate representation is then executed, using the user program as data.
-This step converts the semantic model of the program into the backends intermidiate language.
+After the intermediate representation is constructed, it is passed to the Interpreter, which was described in chapter \ref{interpreter}.
+Compiler Interface intermediate representation is then executed, using the user program as data.
+This step converts the semantic model of the program into the backends intermediate language.
 This process is further explained in chapter \ref{compiler-interface}.
 Finaly the Backend generates the executable file.
 
@@ -128,15 +128,15 @@ Finaly the Backend generates the executable file.
 \subsection{Frontend}
 \label{frontend}
 
-In the CTFE First approach, frontend serves the same role of constructing the programs intermidiate representation, as in conventional compilers \cite{puntambekar:compiler_design}.
-The major difference lays in the data structures used to represent the program.
+In the CTFE First approach, frontend serves the same role of constructing the programs intermediate representation, as in conventional compilers \cite{puntambekar:compiler_design}.
+The major difference lays in the data structures used to describe the program.
 
 \subsection{Interpreter}
 \label{interpreter}
 
-In CTFE First, interpreter is the heart of the compiler.
-It executes the Compiler-Interface which translates the intermidiate representation into the backend's assembly and serves as what is sometimes called the 'middle-end' of the compiler\cite{hsu2021llvm}.
-To do it, it must be able to treat the program's intermidiate representation both as code and data.
+In CTFE First, interpreter is main component of the compiler.
+It executes the Compiler-Interface which translates the intermediate representation into the backend's assembly and serves as what is sometimes called the 'middle-end' of the compiler\cite{hsu2021llvm}.
+To do it, it must be able to treat the program's intermediate representation both as code and data.
 
 \begin{figure}
 	\includegraphics[width=6cm]{pictures/circular-function-reference.jpg}
@@ -161,9 +161,9 @@ Therefore its is impossible for a function to modify a procedure it depends on.%
 \subsection{Compiler Interface}
 \label{compiler-interface}
 
-Compiler Interface translates the program's intermidaite representation into the backend's assembly language.
+Compiler Interface translates the program's intermediate representation into the backend's assembly language.
 This component is interpreted during compilation.
-What is unique about CTFE First is that this part of the compiler can thus be written in the target language, during Stage 0 of the compiler bootstrapping process, as was the case for the C-=-1 compiler\cite{puntambekar:compiler_design, novillo2007gcc, grabski2022compilation}.
+What is unique about CTFE First is that this part of the compiler can thus be written in the target language, during Stage 0 of the compiler bootstrapping process, as in the case of the C-=-1 compiler\cite{puntambekar:compiler_design, novillo2007gcc, grabski2022compilation}.
 
 Compiler Interface is a regular code package that contains a function marked as the Compiler Interface Entry-point.
 That procedure must accept a set of modules to be compiled and a Compilation Context that is used to generate the Backends assembly.
@@ -180,4 +180,4 @@ The backend code must be invokable from within the interpreted program in the ta
 Depending on how the interpreter was designed, this may require significant effort. %todo: maybe other word
 Compiler backends are large and for the Compiler Interface to take advantage of them, they must be fully available.
 This means exposing each function and type within the library, to the interpreted code.
-These bindings could feasibly be generated automatically \cite{marshalling_auto_generation}, but this tehnique was not used when implementing C-=-1 compiler.
+These bindings could feasibly be generated automatically \cite{marshalling_auto_generation}, but this technique was not used when implementing C-=-1 compiler.
