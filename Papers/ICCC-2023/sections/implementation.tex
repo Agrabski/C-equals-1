@@ -1,14 +1,14 @@
 \section{Implementation}
 \label{implementation}
 
-The first CTFE First was created for the C-=-1 language, using out-of-the-box parser generator and backend.
-The most important aspect of implementing a CTFE First compiler is the design of the data structures, described in chapter \ref{data_structures}, that will be used by the interpreter.
+The first CTFEF was created for the C-=-1 language, using out-of-the-box parser generator and backend.
+The most important aspect of implementing a CTFEF compiler is the design of the data structures, described in chapter \ref{data_structures}, that will be used by the interpreter.
 
-Languages that seek to exploit CTFE First approach in design of their compilers, should define a set of data structures to describe user code, i.e. a Semantic Model. %todo: languages are not people
+In order to exploit CTFEF approach in design of a compiler, the language should contain a set of data structures to describe user code, i.e. a Semantic Model.
 It will allow the programmer to interact and mainpulate the structure of the program at compile-time.
 The Semantic model designed and implemented for C-=-1 is described in chapter \ref{semantic_model}.
 
-The final part of a CTFE First compiler is the Backend Interface.
+The final part of a CTFEF compiler is the Backend Interface.
 It is a program, written in the target language, and ran at compile-time that translates the semantic model into the backends assembly language.
 Backend Interface implemented for C-=-1 is relativley small and is described in chapter \ref{implementation/backend-interface}.
 
@@ -17,11 +17,12 @@ Backend Interface implemented for C-=-1 is relativley small and is described in 
 Data structures of the C-=-1 Interpreter have been designed having the ease of development and debugging in mind.
 They are thus not particularly efficent.
 
-\begin{figure}
-	\includegraphics[width=8cm]{pictures/interpreter_data_structures_uml.png}
+%todo: double column
+\begin{figure*}
+	\includegraphics[width=12cm]{pictures/interpreter_data_structures_uml.png}
 	\caption{Class diagram of C-=-1 interpreter data structures}
 	\label{fig:interpreter_data_structures}
-\end{figure}
+\end{figure*}
 
 Figure \ref{fig:interpreter_data_structures} contains a class diagram of most of the types used to represent values within C-=-1.
 All of them derive from \lstinline{IRuntimeValue} and are managed via C++ smart pointers.
@@ -44,7 +45,7 @@ The reasoning behind this decision was to allow assigning to the referenced valu
 \subsection{Program semantic model}
 \label{semantic_model}
 
-A major motivation for creating CTFE First was the ability to support languages with compile-time metaprogramming.
+A major motivation for creating CTFEF was the ability to support languages with compile-time metaprogramming.
 This includes reflection and modification of the code being compiled.
 User program has to be represented as a complete and modifiable object, using the interpreters data structures.
 

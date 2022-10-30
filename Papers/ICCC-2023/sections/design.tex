@@ -1,6 +1,6 @@
 \section{Design of C-=-1}
 \label{language-design}
-
+%todo: mention novel, new, innovative
 C-=-1 was designed as a compiled, low-level, non-garbage-collected programming language, similar to C, C++ or Rust.
 What diffirentiates C-=-1 are its two founding principles: all code is executable at compile-time and support rich metaprogramming.
 The primary purpose of the language was to investigate how these ideas influence software written in it \cite{grabski2022compilation}.
@@ -31,6 +31,15 @@ It will be called, at compile time, for each invocation of the annotated procedu
 Within the special method, the attribute will have access to the semantic model of the call site.
 It may then modify the semantic model or report warnings or errors.
 
+
+Listing \ref{lst:noDiscardCm1} contains an example of a C-=-1 attribute: \lstinline{noDiscard}.
+It works in the same manner as the attribute of the same name present in C++17 \cite{ISO:cpp17}: if applied to a function, the result of that invoking procedure must be used.
+
+To declare an attribute in C-=-1, the \lstinline{att} keyword is used.
+After that, attribute targets should be listed in angled brackets, as in line 0 of Listing \ref{lst:noDiscardCm1}.
+Attributes may target any number of language elements, including types, functions, variables and fields. %todo: switch target to smth else
+Attribute from Listing \ref{lst:noDiscardCm1} declares two member functions: \lstinline{attach} in line 4 and \lstinline{onCall} in line 6.
+
 \begin{minipage}{\linewidth}
 
 	\begin{lstlisting}[
@@ -56,14 +65,6 @@ It may then modify the semantic model or report warnings or errors.
   }
   \end{lstlisting}
 \end{minipage}
-
-Listing \ref{lst:noDiscardCm1} contains an example of a C-=-1 attribute: \lstinline{noDiscard}.
-It works in the same manner as the attribute of the same name present in C++17 \cite{ISO:cpp17}: if applied to a function, the result of that invoking procedure must be used.
-
-To declare an attribute in C-=-1, the \lstinline{att} keyword is used.
-After that, attribute targets should be listed in angled brackets, as in line 0 of Listing \ref{lst:noDiscardCm1}.
-Attributes may target any number of language elements, including types, functions, variables and fields.
-Attribute from Listing \ref{lst:noDiscardCm1} declares two member functions: \lstinline{attach} in line 4 and \lstinline{onCall} in line 6.
 
 The \lstinline{attach} method is called after names of all of the program elements have been gathered, but before the compiler starts to analyze function bodies.
 It is common accross all attribute targets and accepts the descriptor of the attached program element (function, field, type, etc.).
@@ -108,8 +109,8 @@ The example presented in Listing \ref{lst:noDiscardCm1}, although very basic, de
 \section{Design of the compiler}
 \label{compiler-design}
 
-CTFE First apporach was created during implementation of the first compiler for the C-=-1 language\cite{grabski2022compilation}.
-CTFE First compiler has four major components: Frontend, Interpreter, Compiler Interface and Backend.
+CTFEF apporach was created during implementation of the first compiler for the C-=-1 language\cite{grabski2022compilation}.
+CTFEF compiler has four major components: Frontend, Interpreter, Compiler Interface and Backend.
 Figure \ref{CTFE-first-compiler-structure} contains a diagram with an overview of how these parts interact with eachother, during the compilaton process.
 Frontend, described in chapter \ref{frontend}, parses the code in the compiled language and constructs its intermediate representation, using interpreter's data structures.
 It is used to analyze both user code and the Compiler Interface.
@@ -120,31 +121,34 @@ This process is further explained in chapter \ref{compiler-interface}.
 Finaly the Backend generates the executable file.
 
 \begin{figure}
-	\includegraphics[height=10cm]{pictures/compiler-structure.png}
-	\caption{CTFE First compiler structure}
+	\includegraphics[height=14cm]{pictures/compiler-structure.png}
+	\caption{CTFEF compiler structure}
 	\label{CTFE-first-compiler-structure}
 \end{figure}
 
 \subsection{Frontend}
 \label{frontend}
 
-In the CTFE First approach, frontend serves the same role of constructing the programs intermediate representation, as in conventional compilers \cite{puntambekar:compiler_design}.
+In the CTFEF approach, frontend serves the same role of constructing the programs intermediate representation, as in conventional compilers \cite{puntambekar:compiler_design}.
 The major difference lays in the data structures used to describe the program.
+For a CTFEF compiler to work, they must be accessible to the program running within the interpreter.
+The increace of complexity, caused by using data structures accessible from interpreted code, depends on the design of the interpreter.
+
 
 \subsection{Interpreter}
 \label{interpreter}
 
-In CTFE First, interpreter is main component of the compiler.
+In CTFEF, interpreter is main component of the compiler.
 It executes the Compiler-Interface which translates the intermediate representation into the backend's assembly and serves as what is sometimes called the 'middle-end' of the compiler\cite{hsu2021llvm}.
 To do it, it must be able to treat the program's intermediate representation both as code and data.
 
 \begin{figure}
-	\includegraphics[width=6cm]{pictures/circular-function-reference.jpg}
+	\includegraphics[width=7cm]{pictures/circular-function-reference.jpg}
 	\caption{Example of circular reference in meta code}
 	\label{circular-function-reference}
 \end{figure}
 
-An important consideration with implementing a CTFE First compiler, is what code can be executed at compile-time. %todo: longer
+An important consideration with implementing a CTFEF compiler, is what code can be executed at compile-time.
 Depending on language design, it may be possible to introduce circular references between the functions that modify the codebase.
 Figure \ref{circular-function-reference} contains a diagram of such a scenario.
 \lstinline{A}, \lstinline{B} and \lstinline{C} are all functions.
@@ -156,14 +160,14 @@ One of the possible solutions to the above mentioned problem is to limit which f
 C-=-1 allows code within a compiletime context to invoke procedures only from other packages, declared explicitly as dependencies.
 Circular references between packages, as in most other languages, are forbiden.
 C-=-1 additionally prohibits modification of dependencies.
-Therefore its is impossible for a function to modify a procedure it depends on.% todo: wording, example
+Therefore its is impossible for a function to modify a procedure it depends on.
 
 \subsection{Compiler Interface}
 \label{compiler-interface}
 
 Compiler Interface translates the program's intermediate representation into the backend's assembly language.
 This component is interpreted during compilation.
-What is unique about CTFE First is that this part of the compiler can thus be written in the target language, during Stage 0 of the compiler bootstrapping process, as in the case of the C-=-1 compiler\cite{puntambekar:compiler_design, novillo2007gcc, grabski2022compilation}.
+What is unique about CTFEF is that this part of the compiler can thus be written in the target language, during Stage 0 of the compiler bootstrapping process, as in the case of the C-=-1 compiler\cite{puntambekar:compiler_design, novillo2007gcc, grabski2022compilation}.
 
 Compiler Interface is a regular code package that contains a function marked as the Compiler Interface Entry-point.
 That procedure must accept a set of modules to be compiled and a Compilation Context that is used to generate the Backends assembly.
@@ -173,7 +177,7 @@ After the Compiler Interface has finished generating backend assembly, the Compi
 \subsection{Backend}
 \label{backend}
 
-CTFE First does not put any additional requirements on compiler backend.
+CTFEF does not put any additional requirements on compiler backend.
 When using this pattern, an out-of-the-box backend library, can be used, as was the case with C-=-1 compiler.
 
 The backend code must be invokable from within the interpreted program in the target language.

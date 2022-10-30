@@ -1,15 +1,20 @@
-As static metaprogramming is becoming more relevant, compilers must adapt to acomodate them.
-This requires exposing more information about the code, from the compiler, to the programmer as well as more powerfull compile-time function execution capabilities.
-The interpreter component of a compiler therefore becomes more and more important.
+As static metaprogramming is becoming more relevant, compilers must adapt to accommodate them.
+This requires exposing more information about the code, from the compiler to the programmer as well as more powerful compile-time function execution capabilities.
+The interpreter component of a compiler therefore becomes more important.
 
-In this paper a new approach to compiler architecture that places the interpreter as the central component of the compiler.
+
+In this paper a novel approach to compiler architecture that places the interpreter as the central component of the compiler is proposed.
 Translation of user code into the executable form is done using an interpreted module, written in the target language, and uses the same data structures accessible to the programmer.
-This improves the flexibility and extensibility of the compiler and ensures the completness of the available metadata and the ability to execute any code at compile-time.
+This improves the flexibility and extensibility of the compiler and ensures the completeness of the available metadata and the ability to execute any code at the compile-time.
+
 
 Compile Time Function Execution (CTFE) First pattern is designed with compiling low-level, non-garbage-collected, reflection-enabled languages in mind.
-It was created in order to compile C-=-1, which aimed to allow the programmer to execute any code at compile time, as well as analyze and modify the program structure.
+It was created to compile C-=-1, a new programming language, which aimed to allow the programmer to execute any code at compile time, as well as analyze and modify the program structure.
 Grace to the extensibility of the designed compiler, programs written in C-=-1 can also generate marshalling bindings for other languages and support a variety of unexpected programming paradigms.
 
-The flexibility and extensibility of CTFE frist are offset by higher complexity of the compiler and rigidity of the data strctures used.
+
+The additional flexibility and extensibility of CTFEF comes at a cost.
+The compiler becomes more complex, and it uses rigid data structures.
 The interpreted module, which is a large component, is difficult to debug.
-Since the programmer has access to the same data structures, used by the compiler, they are a part of the compiled languages standard library and backwards compability must be maitained.
+The programmer has access to the same data structures as the compiler.
+They are therefore a part of the compiled languages standard library and backwards compatibility  must be maintained.

@@ -1,12 +1,12 @@
 \section{Conclusions}
 
-CTFE First approach to compiler construction offers high degree of compiler extensibility, at the cost of development time and performance, compared with conventional compilers.
+CTFEF approach to compiler construction offers high degree of compiler extensibility, at the cost of development time and performance, compared with conventional compilers.
 Since user code has access to the same information as the compiler at compile time, it may perform more advanced functions.
 The thesis that introduced this approach \cite{grabski2020} demonstrated numerous practical application: generating bindings for other languages, static analysis and extending semantics of the language.
 These goals are significantly easier to accomplish, thanks to the access to semantic model of the program, constructed by the compiler.
 Authors of language tools do not need to analyze the user program.
 
-On the other hand, implementing a compiler is more difficult.
+On the other hand, using CTFEF approach has some drawbacks. Implementing a compiler is more difficult.
 Since a significant part of the compiler is interpreted, developing it means working with worse tooling and less mature ecosystem.
 This makes wirting the code as well as debugging it significantly more difficult.
 However, this drawback also means that work on the compiler in the target language may start as early as stage 0 of compiler bootstraping\cite{puntambekar:compiler_design, novillo2007gcc}.
@@ -14,5 +14,5 @@ However, this drawback also means that work on the compiler in the target langua
 The compiler created for C-=-1, has unaceptable performance, as noted by the original C-=-1 paper \cite{grabski2022compilation}.
 Compiling the C-=-1 standard library, containing around 200 lines of code, takes aproximatley 10 minutes.
 Majority of that time is spent on interpreting the compiler interface.
-This is a significant barier to adopting CTFE First approach.
-Since the compiler implemented for C-=-1 was made as a research tool with minimal effort, further work is needed to determine the CTFE First approach has on performance.
+This is a significant barier to adopting CTFEF approach.
+Since the compiler implemented for C-=-1 was made as a research tool with minimal effort, further work is needed to explore the performance issues of CTFEF approach.

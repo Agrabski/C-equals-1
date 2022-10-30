@@ -6,13 +6,13 @@ It has been gaining popularity with low level programming langauges such as Rust
 The goals and capabilities of CTFE depend on the language and are discussed in chapter \ref{related-work}.
 
 In this paper a new approach to compiler construction that places Compile Time Function Execution capabilities as the first priority is proposed.
-This architecture is called CTFE First.
-CTFE First builds the compiler around the interpreter component.
+This architecture is called CTFEF: Compile Time Function Execution First.
+CTFEF builds the compiler around the interpreter component.
 The role of the compiler is to construct the semantic model of the program being compiled and pass it as data to the interpreted Compiler-Intreface module.
 Compiler-Interface then tranforms the model into the backend's assembly language to be compiled to executable.
-The design of the language that motivated this approach is described in chapter \ref{language-design}.
-Chapter \ref{compiler-design} describes the structure of a CTFE First compiler and how its components interact.
+The design of the language that motivated this approach is described in chapter \ref{language-design}. %todo: mention language name. mention its new
+Chapter \ref{compiler-design} describes the structure of a CTFEF compiler and how its components interact.
 
-Using CTFE First approach carries with it certain unique implementation considerations.
+Using CTFEF approach carries with it certain unique implementation considerations.
 Data structures used within the compiler and the way that the program is modeled is tightly coupled with the compiled language.
 These challenges, as well as how they were solved in C-=-1 compiler are described in chapter \ref{implementation}.
