@@ -1,19 +1,17 @@
 \section{Related work}
 \label{related-work}
 
-Many currently used programming languages allow the programmer to execute some code at compile time, including C\# \cite{csharp:source_generators,roslyn}, Rust \cite{rust, klabnik2019rust} and C++ \cite{ISO:cpp20}.
+Many currently used programming languages allow the programmer to execute some code at compile time, for example: C\# \cite{csharp:source_generators,roslyn}, Rust \cite{rust, klabnik2019rust} and C++ \cite{ISO:cpp20}.
 
 Rust language compiler is the most similar in capability, to what was demonstrated with C-=-1, as a feature of CTFEF.
-It allows the user to write code that performs some transformations of the program, and interact with the envoirment during the build process.
+It allows the user to write code that performs some transformations of the program, and interact with the environment during the build process.
 The two relevant features are build scripts and macros.
+Rust macros, similar to the classic C-style preprocessor macros, generate additional code as text.
+The major difference between the systems is that Rust macros operate on tokens, rather than text, and use syntax similar to regular Rust code.
+This mechanism is powerful, allowing the user to rewrite code to avoid repetition, simplify certain tasks and create new syntax.
+They are however unable to reflect on the program as a whole or obtain some information available to the compiler.
 
-Rust macros, much like the classic C-style preprocessor macros, generate additional code as text.
-The major difference between the systems is that Rust macros operate on tokens rather than text and use syntax similar to regular Rust code.
-This mechanism is powerfull, allowing the user to rewrite code to avoid repetition, simplify certain tasks and create new syntax.
-They are however unable to reflect on the program as a whole or obtain much of the information available to the compiler.
-
-Build scripts, on the other hand, are programs that execute prior to compilation of the main package.
-They prepare the envoirment for building the program by, for example, compiling its external dependencies.
-They do not have any information about the structure of the program being compiled.
-Build scripts that require such data, would have to analyze the code by itself, without any help from the compiler.
-This makes application such as automatically genertaing bindings for other programming languages significantly more difficult.
+Build scripts, on the other hand, are programs that execute before the compilation of the main package.
+They prepare the environment for building the program, for example, compile external dependencies.
+The structure of the program being compiled, is not available for build scripts.
+Build scripts accessing such data, would have to analyze the code by themselves, without any compiler assistance, and that makes automatic generation of bindings for other programming languages very difficult.

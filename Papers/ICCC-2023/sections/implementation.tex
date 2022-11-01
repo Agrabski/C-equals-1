@@ -9,7 +9,7 @@ It will allow the programmer to interact and mainpulate the structure of the pro
 The Semantic model designed and implemented for C-=-1 is described in chapter \ref{semantic_model}.
 
 The final part of a CTFEF compiler is the Backend Interface.
-It is a program, written in the target language, and ran at compile-time that translates the semantic model into the backends assembly language.
+It is a program, written in the target language, and ran at compile-time that translates the semantic model into the backends' assembly language.
 Backend Interface implemented for C-=-1 is relativley small and is described in chapter \ref{implementation/backend-interface}.
 
 \begin{figure*}
@@ -25,14 +25,14 @@ They are thus not particularly efficent.
 
 Figure \ref{fig:interpreter_data_structures} contains a class diagram of most of the types used to represent values within C-=-1.
 All of them derive from \lstinline{IRuntimeValue} and are managed via C++ smart pointers.
-The interface of the base class allows the value to be converted to a human readable format, serialisation, deserialisation and copying.
+The interface of the base class allows the value to be converted to a human-readable format, serialisation, deserialisation and copying.
 
 The most primitive types within the hierarchy are \lstinline{StringValue} and \lstinline{IntegerValue}.
 They are simple wrappers for strings and integers, present in the host language.
 Floating point numbers were not implemented as they were not nessecary for implementation of a basic compiler.
 
 User-defined types are represented using \lstinline{ObjectValue}.
-The contents of an objects is kept as a \lstinline{string} - \lstinline{IRuntimeValue} dictionary, with field names as keys and \lstinline{uniqe_ptr<IRuntimeValue>} as values.
+The contents of an object is kept as a \lstinline{string} - \lstinline{IRuntimeValue} dictionary, with field names as keys and \lstinline{uniqe_ptr<IRuntimeValue>} as values.
 C-=-1 object is therefore spread out in memory, even if the fields are directly contained within the class, without any indirection.
 
 
@@ -46,7 +46,7 @@ The reasoning behind this decision was to allow assigning to the referenced valu
 
 A major motivation for creating CTFEF was the ability to support languages with compile-time metaprogramming.
 This includes reflection and modification of the code being compiled.
-User program has to be represented as a complete and modifiable object, using the interpreters data structures.
+User program has to be represented as a complete and modifiable object, using the interpreters' data structures.
 
 C-=-1 language model divides the user program into assemblies.
 They represent an individual program package: a library or an executable file.
@@ -67,7 +67,7 @@ The user may then analyze the structure of the program, using a dynamic type con
 To aid in generating meaningfull error messages, all elements of the semantic model, have a \lstinline{sourcePointers}.
 It is a simple structure, that contains the filename and the line number of the expression or instruction.
 This information can be passed to compiler intrinsic functions, such as \lstinline{raiseError}, to generate error messages for the user.
-Listing \ref{lst:noDiscardCm1} contains a example use of this functionality.
+Listing \ref{lst:noDiscardCm1} contains an example use of this functionality.
 
 Component responsible for creating the semantic model are a major part of the compiler.
 There are two operations that this module performs: building the definition of the types used to describe a program, and creating an instance of the model, given semantic information.
@@ -92,7 +92,7 @@ Future versions, with additional effort, may generate the ideal LLVMIR from line
 
 Certain other intrinsic operations are defined using external dependencies.
 C-=-1 memory managment library, in the runtime context, uses a simple interface capable of allocating and deleting a continous buffer.
-It is comprised of two functions: \lstinline{unsafe_new} and \lstinline{delete}.
+It consists of two functions: \lstinline{unsafe_new} and \lstinline{delete}.
 In the standard library, they are explicitly mapped to \lstinline{malloc} and \lstinline{free} functions from the C runtime.
 
 Backend interface must also allow the programmer to influence how the executable code is generated.

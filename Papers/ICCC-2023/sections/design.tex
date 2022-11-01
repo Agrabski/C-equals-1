@@ -36,7 +36,7 @@ It works in the same manner as the attribute of the same name present in C++17 \
 
 To declare an attribute in C-=-1, the \lstinline{att} keyword is used.
 After that, attribute targets should be listed in angled brackets, as in line 0 of Listing \ref{lst:noDiscardCm1}.
-Attributes valid targets for attributes includes a number of language elements, such as types, functions, variables and fields.Attribute from Listing \ref{lst:noDiscardCm1} declares two member functions: \lstinline{attach} in line 4 and \lstinline{onCall} in line 6.
+Attributes valid targets for attributes includes a number of language elements, such as types, functions, variables and fields. Attribute from Listing \ref{lst:noDiscardCm1} declares two member functions: \lstinline{attach} in line 4 and \lstinline{onCall} in line 6.
 
 \begin{minipage}{\linewidth}
 
@@ -64,7 +64,7 @@ Attributes valid targets for attributes includes a number of language elements, 
   \end{lstlisting}
 \end{minipage}
 
-The \lstinline{attach} method is called after names of all of the program elements have been gathered, but before the compiler starts to analyze function bodies.
+The \lstinline{attach} method is called after names of all the program elements have been gathered, but before the compiler starts to analyze function bodies.
 It is common accross all attribute targets and accepts the descriptor of the attached program element (function, field, type, etc.).
 Only during call to \lstinline{attach} can the attribute change aspects of the program that affect function overload resolution, for example
 whether a function is invokable at run or compile time.
@@ -154,11 +154,11 @@ If function \lstinline{B} is modified by function \lstinline{C} and \lstinline{C
 This problem will only be magnified by larger program sizes.
 
 
-One of the possible solutions to the above mentioned problem is to limit which functions can be invoked at compiletime.
+One of the possible solutions to the above-mentioned problem is to limit which functions can be invoked at compiletime.
 C-=-1 allows code within a compiletime context to invoke procedures only from other packages, declared explicitly as dependencies.
 Circular references between packages, as in most other languages, are forbiden.
 C-=-1 additionally prohibits modification of dependencies.
-Therefore its is impossible for a function to modify a procedure it depends on.
+Therefore, its is impossible for a function to modify a procedure it depends on.
 
 \subsection{Compiler Interface}
 \label{compiler-interface}
