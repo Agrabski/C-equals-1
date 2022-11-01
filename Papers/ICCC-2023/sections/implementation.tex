@@ -29,7 +29,7 @@ The interface of the base class allows the value to be converted to a human-read
 
 The most primitive types within the hierarchy are \lstinline{StringValue} and \lstinline{IntegerValue}.
 They are simple wrappers for strings and integers, present in the host language.
-Floating point numbers were not implemented as they were not nessecary for implementation of a basic compiler.
+Floating point numbers were not implemented as they were not necessary for implementation of a basic compiler.
 
 User-defined types are represented using \lstinline{ObjectValue}.
 The contents of an object is kept as a \lstinline{string} - \lstinline{IRuntimeValue} dictionary, with field names as keys and \lstinline{uniqe_ptr<IRuntimeValue>} as values.
@@ -53,7 +53,7 @@ They represent an individual program package: a library or an executable file.
 The compiler is invoked to compile an assembly, together with its dependencies.
 Assembly is the root object of C-=-1 program model, it stores a list of assemblies it depends on and the root namespace of the package it represents.
 The remainder of user code is organised into namespaces, types, functions and fields.
-These parts of the model are repesented by native classes of the host language and form the basis for the rest of the model.
+These parts of the model are represented by native classes of the host language and form the basis for the rest of the model.
 
 The most complex part of the model is the representation of the function body.
 Like in most programming languages, a C-=-1 function can contain a variety of instruction types.
@@ -80,7 +80,7 @@ The description of this library must be built manually, as it is very closley in
 \label{implementation/Backend-interface}
 
 The C-=-1 Backend interface uses LLVM \cite{llvmir} code generation API that has been exposed by the compiler.
-The functionality which has been made available to C-=-1 represents a minimal subset of LLVM, that is sufficent to implement a basic compiler.
+The functionality which has been made available to C-=-1 represents a minimal subset of LLVM, that is sufficient to implement a basic compiler.
 
 Besides translating user code, the Backend Interface must also generate the assembly for certain intrinsic operations.
 Functions such as integer arithmetic operators, array indexers or memory allocators are concepts too low-level to be expressed in C-=-1.
@@ -92,7 +92,7 @@ They are merely a wrapper around the actual LLVM intrinsic, meant to simplify im
 Future versions, with additional effort, may generate the ideal LLVMIR from line 21 of Listing \ref{impl:theoretical_llvmir}.
 
 Certain other intrinsic operations are defined using external dependencies.
-C-=-1 memory managment library, in the runtime context, uses a simple interface capable of allocating and deleting a continous buffer.
+C-=-1 memory management library, in the runtime context, uses a simple interface capable of allocating and deleting a continuous buffer.
 It consists of two functions: \lstinline{unsafe_new} and \lstinline{delete}.
 In the standard library, they are explicitly mapped to \lstinline{malloc} and \lstinline{free} functions from the C runtime.
 

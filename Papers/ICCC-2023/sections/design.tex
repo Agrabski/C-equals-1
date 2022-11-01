@@ -65,7 +65,7 @@ Attributes valid targets for attributes includes a number of language elements, 
 \end{minipage}
 
 The \lstinline{attach} method is called after names of all the program elements have been gathered, but before the compiler starts to analyze function bodies.
-It is common accross all attribute targets and accepts the descriptor of the attached program element (function, field, type, etc.).
+It is common across all attribute targets and accepts the descriptor of the attached program element (function, field, type, etc.).
 Only during call to \lstinline{attach} can the attribute change aspects of the program that affect function overload resolution, for example
 whether a function is invokable at run or compile time.
 
@@ -164,7 +164,7 @@ This problem will only be magnified by larger program sizes.
 
 One of the possible solutions to the above-mentioned problem is to limit which functions can be invoked at compiletime.
 C-=-1 allows code within a compiletime context to invoke procedures only from other packages, declared explicitly as dependencies.
-Circular references between packages, as in most other languages, are forbiden.
+Circular references between packages, as in most other languages, are forbidden.
 C-=-1 additionally prohibits modification of dependencies.
 Therefore, its is impossible for a function to modify a procedure it depends on.
 
