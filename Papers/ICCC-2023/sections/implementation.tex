@@ -25,7 +25,7 @@ They are thus not particularly efficent.
 
 Figure \ref{fig:interpreter_data_structures} contains a class diagram of most of the types used to represent values within C-=-1.
 All of them derive from \lstinline{IRuntimeValue} and are managed via C++ smart pointers.
-The interface of the base class allows the value to be converted to a human-readable format, serialisation, deserialisation and copying.
+The interface of the base class allows the value to be converted to a human-readable format, serialization, deserialization and copying.
 
 The most primitive types within the hierarchy are \lstinline{StringValue} and \lstinline{IntegerValue}.
 They are simple wrappers for strings and integers, present in the host language.
@@ -147,6 +147,12 @@ Interface \lstinline{ISymbolNameOverride} contains only one method: \lstinline{c
 Functions \lstinline{buildFunction} and \lstinline{getFunctionName}, from Listing \ref{lst:selected_backend_interface}, are parts of Backend Interface.
 They are invoked in order to convert a C-=-1 \lstinline{functionDescriptor} to a LLVMIR function.
 They were included in the Listing, because they are the only parts of the Backend Intreface that need to interact with \lstinline{ISymbolNameOverride} attributes.
+Both of these procedures, check whether an attribute implementing this interface is attached to the function they are currently processing.
+This happens on lines three and nineteen of Listing \ref{lst:selected_backend_interface}.
+If that attribute is present, code of that function is ignored, and it is treated as an external symbol: condition on line twenty ommits execution of \lstinline{build_block} function on line twenty-three.
+Procedure \lstinline{getFunctionName} contains a similar condition on line three, that decides how the name should be generated.
+If an \lstinline{ISymbolNameOverride} attribute is present, it will be created by \lstinline{createSymbolName} method of the attribute attached to the function.
+Otherwise, the \lstinline{mangleName} function will create name of function's symbol based on its parameters and return type.
 
 \begin{minipage}{\linewidth}
 
