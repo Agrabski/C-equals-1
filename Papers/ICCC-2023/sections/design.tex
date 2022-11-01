@@ -108,13 +108,20 @@ The example presented in Listing \ref{lst:noDiscardCm1}, although very basic, de
 \label{compiler-design}
 
 CTFEF apporach was created during implementation of the first compiler for the C-=-1 language\cite{grabski2022compilation}.
-CTFEF compiler has four major components: Frontend, Interpreter, Compiler Interface and Backend.
+CTFEF compiler has four major components: 
+\begin{enumerate}
+	\item Frontend
+	\item Interpreter
+	\item Compiler Interface
+	\item Backend
+\end{enumerate}
+
 Figure \ref{CTFE-first-compiler-structure} contains a diagram with an overview of how these parts interact with eachother, during the compilaton process.
-Frontend, described in chapter \ref{frontend}, parses the code in the compiled language and constructs its intermediate representation, using interpreter's data structures.
+Frontend, described in chapter \ref{Frontend}, parses the code in the compiled language and constructs its intermediate representation, using interpreter's data structures.
 It is used to analyze both user code and the Compiler Interface.
 After the intermediate representation is constructed, it is passed to the Interpreter, which was described in chapter \ref{interpreter}.
 Compiler Interface intermediate representation is then executed, using the user program as data.
-This step converts the semantic model of the program into the backends intermediate language.
+This step converts the semantic model of the program into the Backends intermediate language.
 This process is further explained in chapter \ref{compiler-interface}.
 Finaly the Backend generates the executable file.
 
@@ -125,19 +132,20 @@ Finaly the Backend generates the executable file.
 \end{figure}
 
 \subsection{Frontend}
-\label{frontend}
+\label{Frontend}
 
-In the CTFEF approach, frontend serves the same role of constructing the programs intermediate representation, as in conventional compilers \cite{puntambekar:compiler_design}.
+In the CTFEF approach, Frontend serves the same role of constructing the programs intermediate representation, as in conventional compilers \cite{puntambekar:compiler_design}.
 The major difference lays in the data structures used to describe the program.
 For a CTFEF compiler to work, they must be accessible to the program running within the interpreter.
-The increace of complexity, caused by using data structures accessible from interpreted code, depends on the design of the interpreter.
+This may make frontend more complex.
+The additional challenge of representing a user program, using interpreter data structures depends on the design of the interpreter.
 
 
 \subsection{Interpreter}
 \label{interpreter}
 
 In CTFEF, interpreter is main component of the compiler.
-It executes the Compiler-Interface which translates the intermediate representation into the backend's assembly and serves as what is sometimes called the 'middle-end' of the compiler\cite{hsu2021llvm}.
+It executes the Compiler-Interface which translates the intermediate representation into the Backend's assembly and serves as what is sometimes called the 'middle-end' of the compiler\cite{hsu2021llvm}.
 To do it, it must be able to treat the program's intermediate representation both as code and data.
 
 \begin{figure}
@@ -163,23 +171,24 @@ Therefore, its is impossible for a function to modify a procedure it depends on.
 \subsection{Compiler Interface}
 \label{compiler-interface}
 
-Compiler Interface translates the program's intermediate representation into the backend's assembly language.
+Compiler Interface translates the program's intermediate representation into the Backend's assembly language.
 This component is interpreted during compilation.
 What is unique about CTFEF is that this part of the compiler can thus be written in the target language, during Stage 0 of the compiler bootstrapping process, as in the case of the C-=-1 compiler\cite{puntambekar:compiler_design, novillo2007gcc, grabski2022compilation}.
 
 Compiler Interface is a regular code package that contains a function marked as the Compiler Interface Entry-point.
 That procedure must accept a set of modules to be compiled and a Compilation Context that is used to generate the Backends assembly.
-The module descriptors that are passed to the Compiler Interface are built by the frontend, as can be seen in figure \ref{CTFE-first-compiler-structure}.
+The module descriptors that are passed to the Compiler Interface are built by the Frontend, as can be seen in figure \ref{CTFE-first-compiler-structure}.
 
-After the Compiler Interface has finished generating backend assembly, the Compiler Backend is invoked to generate the binary executable.
+After the Compiler Interface has finished generating Backend assembly, the Compiler Backend is invoked to generate the binary executable.
 \subsection{Backend}
-\label{backend}
+\label{Backend}
 
-CTFEF does not put any additional requirements on compiler backend.
-When using this pattern, an out-of-the-box backend library, can be used, as was the case with C-=-1 compiler.
+CTFEF does not put any additional requirements on compiler Backend.
+When using this pattern, a generic Backend library, can be used.
+C-=-1 compiler used LLVM\cite{lattner2008llvm} as its backend.
 
-The backend code must be invokable from within the interpreted program in the target language.
+The Backend code must be invokable from within the interpreted program in the target language.
 Depending on how the interpreter was designed, this may require significant effort. %todo: maybe other word
-Compiler backends are large and for the Compiler Interface to take advantage of them, they must be fully available.
-This means exposing each function and type within the library, to the interpreted code.
+Compiler Backends are large and for the Compiler Interface to take advantage of them, their entire interface must be fully available in the interpreted context.
+This means exposing each function and type within the library, to the interpreted code, by duplicating their signatures.
 These bindings could feasibly be generated automatically \cite{marshalling_auto_generation}, but this technique was not used when implementing C-=-1 compiler.
