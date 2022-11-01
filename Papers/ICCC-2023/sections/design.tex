@@ -1,7 +1,6 @@
 \section{Design of C-=-1}
 \label{language-design}
-%todo: mention novel, new, innovative
-C-=-1 was designed as a compiled, low-level, non-garbage-collected programming language, similar to C, C++ or Rust.
+C-=-1 is a new programming languege, designed as compiled, low-level and non-garbage-collected, similar to C, C++ or Rust.
 What diffirentiates C-=-1 are its two founding principles: all code is executable at compile-time and support rich metaprogramming.
 The primary purpose of the language was to investigate how these ideas influence software written in it \cite{grabski2022compilation}.
 
@@ -37,8 +36,7 @@ It works in the same manner as the attribute of the same name present in C++17 \
 
 To declare an attribute in C-=-1, the \lstinline{att} keyword is used.
 After that, attribute targets should be listed in angled brackets, as in line 0 of Listing \ref{lst:noDiscardCm1}.
-Attributes may target any number of language elements, including types, functions, variables and fields. %todo: switch target to smth else
-Attribute from Listing \ref{lst:noDiscardCm1} declares two member functions: \lstinline{attach} in line 4 and \lstinline{onCall} in line 6.
+Attributes valid targets for attributes includes a number of language elements, such as types, functions, variables and fields.Attribute from Listing \ref{lst:noDiscardCm1} declares two member functions: \lstinline{attach} in line 4 and \lstinline{onCall} in line 6.
 
 \begin{minipage}{\linewidth}
 

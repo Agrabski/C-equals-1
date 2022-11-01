@@ -10,7 +10,8 @@ This architecture is called CTFEF: Compile Time Function Execution First.
 CTFEF builds the compiler around the interpreter component.
 The role of the compiler is to construct the semantic model of the program being compiled and pass it as data to the interpreted Compiler-Intreface module.
 Compiler-Interface then tranforms the model into the backend's assembly language to be compiled to executable.
-The design of the language that motivated this approach is described in chapter \ref{language-design}. %todo: mention language name. mention its new
+This approach was created during implementation of a compiler for C-=-1, a new language that prioritized static metaprogramming.
+The design of that language is described in chapter \ref{language-design}.
 Chapter \ref{compiler-design} describes the structure of a CTFEF compiler and how its components interact.
 
 Using CTFEF approach carries with it certain unique implementation considerations.

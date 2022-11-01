@@ -1,20 +1,8 @@
-As static metaprogramming is becoming more relevant, compilers must adapt to accommodate them.
-This requires exposing more information about the code, from the compiler to the programmer as well as more powerful compile-time function execution capabilities.
-The interpreter component of a compiler therefore becomes more important.
-
+As static metaprogramming is becoming more relevant, compilers must adapt to accommodate them. This requires exposing more information about the code, from the compiler to the programmer as well as more powerful compile-time function execution capabilities. The interpreter component of a compiler therefore becomes more important.
 
 In this paper a novel approach to compiler architecture that places the interpreter as the central component of the compiler is proposed.
-Translation of user code into the executable form is done using an interpreted module, written in the target language, and uses the same data structures accessible to the programmer.
-This improves the flexibility and extensibility of the compiler and ensures the completeness of the available metadata and the ability to execute any code at the compile-time.
+Translation of user code into the executable form is done by an interpreter, written in the target language. The data structures of interpreter are accessible also to the programmer. Such solution significantly improves flexibility and extensibility of the compiler and enables execution of any code at the compile-time.
 
+Compile Time Function Execution (CTFE) First pattern was designed for low-level, non-garbage-collected, reflection-enabled language C-=-1. This is a new programming language, which allows the programmer to execute any code at the compile time, as well as to analyze and modify the program structure. Grace to the extensibility of the designed compiler, programs written in C-=-1 can also generate marshalling bindings for other languages and support a variety of programming paradigms.
 
-Compile Time Function Execution (CTFE) First pattern is designed with compiling low-level, non-garbage-collected, reflection-enabled languages in mind.
-It was created to compile C-=-1, a new programming language, which aimed to allow the programmer to execute any code at compile time, as well as analyze and modify the program structure.
-Grace to the extensibility of the designed compiler, programs written in C-=-1 can also generate marshalling bindings for other languages and support a variety of unexpected programming paradigms.
-
-
-The additional flexibility and extensibility of CTFEF comes at a cost.
-The compiler becomes more complex, and it uses rigid data structures.
-The interpreted module, which is a large component, is difficult to debug.
-The programmer has access to the same data structures as the compiler.
-They are therefore a part of the compiled languages standard library and backwards compatibility  must be maintained.
+The significant flexibility and extensibility of CTFEF caused severe problems in compiler construction. The compiler appeared very complex, its parts, especially interpreter, were very difficult to debug. Compiler operates on inflexible data structures, accessible also for a programmer. They are therefore a part of the compiled languages standard library and backwards compatibility must be maintained.
