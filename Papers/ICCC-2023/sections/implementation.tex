@@ -2,33 +2,33 @@
 \label{implementation}
 
 The first CTFEF was created for the C-=-1 language, using generic parser generator and Backend.
-The most important aspect of implementing a CTFEF compiler is the design of the data structures, described in chapter \ref{data_structures}, that will be used by the interpreter.
+The most important aspect of implementing a CTFEF compiler is the design of the data structures, described in chapter \ref{data_structures}, that will be used by the Interpreter.
 
 In order to exploit CTFEF approach in design of a compiler, the language should contain a set of data structures to describe user code, i.e. a Semantic Model.
-It will allow the programmer to interact and mainpulate the structure of the program at compile-time.
+It will allow the programmer to interact and manipulate the structure of the program at compile-time.
 The Semantic model designed and implemented for C-=-1 is described in chapter \ref{semantic_model}.
 
 The final part of a CTFEF compiler is the Backend Interface.
-It is a program, written in the target language, and ran at compile-time that translates the semantic model into the Backends' assembly language.
-Backend Interface implemented for C-=-1 is relativley small and is described in chapter \ref{implementation/Backend-interface}.
+It is a program, written in the target language, and executed at compile-time that translates the semantic model into the Backends' assembly language.
+Backend Interface implemented for C-=-1 is relatively small and is described in chapter \ref{implementation/Backend-interface}.
 
 \begin{figure*}
-	\includegraphics[width=16cm]{pictures/interpreter_data_structures_uml.png}
-	\caption{Class diagram of C-=-1 interpreter data structures}
-	\label{fig:interpreter_data_structures}
+	\includegraphics[width=16cm]{pictures/Interpreter_data_structures_uml.png}
+	\caption{Class diagram of C-=-1 Interpreter data structures}
+	\label{fig:Interpreter_data_structures}
 \end{figure*}
 
 \subsection{Interpreter data structures}
 \label{data_structures}
 Data structures of the C-=-1 Interpreter have been designed having the ease of development and debugging in mind.
-They are thus not particularly efficent.
+They are thus not particularly efficient.
 
-Figure \ref{fig:interpreter_data_structures} contains a class diagram of most of the types used to represent values within C-=-1.
+Figure \ref{fig:Interpreter_data_structures} contains a class diagram of most of the types used to represent values within C-=-1.
 All of them derive from \lstinline{IRuntimeValue} and are managed via C++ smart pointers.
 The interface of the base class allows the value to be converted to a human-readable format, serialization, deserialization and copying.
 
 The most primitive types within the hierarchy are \lstinline{StringValue} and \lstinline{IntegerValue}.
-They are simple wrappers for strings and integers, present in the host language.
+They are simple wrappers for strings and integers, present in host language.
 Floating point numbers were not implemented as they were not necessary for implementation of a basic compiler.
 
 User-defined types are represented using \lstinline{ObjectValue}.
@@ -36,45 +36,44 @@ The contents of an object is kept as a \lstinline{string} - \lstinline{IRuntimeV
 C-=-1 object is therefore spread out in memory, even if the fields are directly contained within the class, without any indirection.
 
 
-There are several types of reference within the C-=-1 interpreter.
+There are several types of reference within the C-=-1 Interpreter.
 The most basic pointer type is a reference to C-=-1 value.
-It was realised as a pointer to the owning pointer of the value.
-The reasoning behind this decision was to allow assigning to the referenced value.
+It was realized as a pointer to the owning pointer of the value.
 
 \subsection{Program semantic model}
 \label{semantic_model}
 
 A major motivation for creating CTFEF was the ability to support languages with compile-time metaprogramming.
 This includes reflection and modification of the code being compiled.
-User program has to be represented as a complete and modifiable object, using the interpreters' data structures.
+User program has to be represented as a complete and modifiable object, using the Interpreters' data structures.
 
 C-=-1 language model divides the user program into assemblies.
 They represent an individual program package: a library or an executable file.
 The compiler is invoked to compile an assembly, together with its dependencies.
 Assembly is the root object of C-=-1 program model, it stores a list of assemblies it depends on and the root namespace of the package it represents.
-The remainder of user code is organised into namespaces, types, functions and fields.
+The remainder of user code is organized into namespaces, types, functions and fields.
 These parts of the model are represented by native classes of the host language and form the basis for the rest of the model.
 
 The most complex part of the model is the representation of the function body.
 Like in most programming languages, a C-=-1 function can contain a variety of instruction types.
-That includes complex statements and blocks of statements that can be arbitrarly nested.
+That includes complex statements and blocks of statements that can be arbitrarily nested.
 Each instruction may also contain expressions of any complexity.
 
 To deal with this complexity, C-=-1 semantic model for functions is build around two interfaces: \lstinline{IInstruction} and \lstinline{IExpression} and their concrete implementations.
 Every category of instruction or expression is represented by its own type.
 The user may then analyze the structure of the program, using a dynamic type conversion mechanism similar to C++ \lstinline{dynamic_cast} \cite{ISO:cpp98}.
 
-All elements of the semantic model, have a \lstinline{sourcePointers}.
+All elements of the semantic model, have a \lstinline{sourcePointer.}
 It is a simple structure, that contains the filename and the line number of the expression or instruction.
 This information can be passed to compiler intrinsic functions, such as \lstinline{raiseError}, to generate error messages for the user.
-Listing \ref{lst:noDiscardCm1} contains an example use of this functionality.
+Listing \ref{lst:noDiscardCm1} contains an example of this functionality.
 The \lstinline{pointerToSource} makes the messages generated by the compiler easier to understand for the programmer.
 
 Component responsible for creating the semantic model are a major part of the compiler.
 There are two operations that this module performs: building the definition of the types used to describe a program, and creating an instance of the model, given semantic information.
 C-=-1 compiler has a hard-coded definition of its base library.
 It contains definitions of primitive types and types used to build the semantic model of a program.
-The description of this library must be built manually, as it is very closley integrated with the compiler.
+The description of this library must be built manually, as it is very closely integrated with the compiler.
 
 \subsection{Backend interface}
 \label{implementation/Backend-interface}
@@ -141,16 +140,16 @@ define i32 @average(i32 %0, i32 %1, i32 %2){
 \end{minipage}
 
 
-One of the possible ways of achieving this, is to declare an interface for an attribute generating a functions symbol name.
+One of possible ways of achieving this, is to declare an interface for an attribute generating a functions symbol name.
 Listing \ref{lst:selected_Backend_interface} contains relevant code of a Backend Interface that uses such an attribute, to override mark external symbols.
 Interface \lstinline{ISymbolNameOverride} contains only one method: \lstinline{createSymbolName} that returns the name of the symbol in the generated assembly.
 
 Functions \lstinline{buildFunction} and \lstinline{getFunctionName}, from Listing \ref{lst:selected_Backend_interface}, are parts of Backend Interface.
 They are invoked in order to convert a C-=-1 \lstinline{functionDescriptor} to a LLVMIR function.
-They were included in the Listing, because they are the only parts of the Backend Intreface that need to interact with \lstinline{ISymbolNameOverride} attributes.
+They were included in the Listing, because they are the only parts of the Backend Interface that need to interact with \lstinline{ISymbolNameOverride} attributes.
 Both of these procedures, check whether an attribute implementing this interface is attached to the function they are currently processing.
 This happens on lines three and nineteen of Listing \ref{lst:selected_Backend_interface}.
-If that attribute is present, code of that function is ignored, and it is treated as an external symbol: condition on line twenty ommits execution of \lstinline{build_block} function on line twenty-three.
+If that attribute is present, code of that function is ignored, and it is treated as an external symbol: condition on line twenty omits execution of \lstinline{build_block} function on line twenty-three.
 Procedure \lstinline{getFunctionName} contains a similar condition on line three, that decides how the name should be generated.
 If an \lstinline{ISymbolNameOverride} attribute is present, it will be created by \lstinline{createSymbolName} method of the attribute attached to the function.
 Otherwise, the \lstinline{mangleName} function will create name of function's symbol based on its parameters and return type.
