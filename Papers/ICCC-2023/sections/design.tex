@@ -1,12 +1,12 @@
 \section{Design of C-=-1}
 \label{language-design}
-C-=-1 is a new programming language, designed as compiled, low-level and non-garbage-collected, similar to C, C++ or Rust.
-What differentiates C-=-1 are its two core principles: all code is executable at compile-time and support metaprogramming.
-The primary purpose of the language was to investigate how these ideas influence software written in it \cite{grabski2022compilation}.
+C-=-1 is a new programming language, designed as low-level and non-garbage-collected and compiled to native machine code, similar to C, C++ or Rust.
+What differentiates C-=-1 are its two core principles: all code is executable at compile-time and support for metaprogramming.
+The primary purpose of this language was to investigate how these ideas influence software written in it \cite{grabski2022compilation}.
 
 C-=-1 is a simple language, built with minimum set of features needed to demonstrate the usefulness of the proposed metaprogramming features.
 They are discussed further in chapter  \ref{design:attributes_and_metaprogramming}.
-The primary motivation for those mechanisms, was to provide to a programmer the ability to create domain specific static analysis and code generation tools, without creating a separate program.
+The primary motivation for those mechanisms was to provide to a programmer the ability to create domain specific static analysis and code generation tools, without creating a separate program.
 
 \subsection{Type system}
 
@@ -24,8 +24,8 @@ They can also be used to annotate other elements of the program, such as types, 
 
 In C-=-1 these attributes may implement special member functions that react to the use of an annotated program element.
 For example, an attribute that can be attached to a function, may implement \lstinline{onCall} special member function.
-It will be called, at compile time, for each invocation of the annotated procedure.
-Within the special method, the attribute will have access to the semantic model of the call site.
+It will be called at compile time, for each invocation of the annotated procedure.
+Within the special method the attribute will have access to the semantic model of the call site.
 It may then modify the semantic model or report warnings or errors.
 
 Listing \ref{lst:noDiscardCm1} contains an example of a C-=-1 attribute providing static analysis: \lstinline{noDiscard}.
@@ -37,6 +37,10 @@ Valid targets for attributes include a number of language elements, such as type
 The \lstinline{attach} method is called after names of all program elements have been gathered, but before compiler starts to analyze function bodies.
 It is common among all attribute targets and accepts the descriptor of the attached program element (function, field, type, etc.).
 Attribute can change aspects of the program that affect function overload resolution, such as  whether a function is invokable at run or compile time, only from within the \lstinline{attach} method.
+
+The \lstinline{onCall} method is an example of a function reacting to use an annotated program element.
+These methods are specific to a given attribute target.
+Within this function, the attribute may analyze and modify the code, as well as raise errors or warnings.
 
 \begin{minipage}{\linewidth}
 
@@ -64,9 +68,7 @@ public att<function> NoDiscard
   \end{lstlisting}
 \end{minipage}
 
-The \lstinline{onCall} method is an example of a function reacting to use of annotated program element.
-These methods are specific to a given attribute target.
-Within this function, the attribute may analyze and modify the code, as well as raise errors or warnings.
+
 
 Lines 6 to 11 of Listing \ref{lst:noDiscardCm1} are an example of a C-=-1 attribute providing static analysis.
 The \lstinline{onCall} method checks whether the attached function is invoked in an expression or instruction context.
@@ -114,7 +116,7 @@ CTFEF compiler has four major components:
 Figure \ref{CTFE-first-compiler-structure} contains a diagram with an overview of how these parts interact with each other, during the compilation process.
 Frontend, described in chapter \ref{Frontend}, parses the code in the compiled language and constructs its intermediate representation, using Interpreter's data structures.
 It is used to analyze both user code and the Compiler Interface.
-After the intermediate representation is constructed, it is passed to the Interpreter, which was described in chapter \ref{Interpreter}.
+After the intermediate representation is constructed, it is passed to the Interpreter, which is described in chapter \ref{Interpreter}.
 Compiler Interface intermediate representation is then executed, using the user program as data.
 This step converts the semantic model of the program into the Backends intermediate language.
 This process is further explained in chapter \ref{compiler-interface}.
@@ -133,7 +135,7 @@ In the CTFEF approach, Frontend serves the same role of constructing the program
 The major difference lays in the data structures used to describe the program.
 For a CTFEF compiler, they must be accessible to the program running within the Interpreter.
 This may make Frontend more complex.
-The additional challenge of representing a user program, using Interpreter data structures depends on the design of the Interpreter.
+The additional challenge of representing a user program, using Interpreter data structures, depends on the design of the Interpreter.
 
 
 \subsection{Interpreter}
@@ -152,7 +154,7 @@ To do it, it must be able to treat the program's intermediate representation bot
 An important issue for CTFEF compiler is decision what code can be executed at compile-time.
 In some languages it may be possible to introduce circular references between the functions that modify the codebase.
 Figure \ref{circular-function-reference} contains a diagram of such scenario.
-\lstinline{A}, \lstinline{B} and \lstinline{C} are all functions.
+\lstinline{A}, \lstinline{B} and \lstinline{C} are functions.
 If function \lstinline{B} is modified by function \lstinline{C} and \lstinline{C} invokes \lstinline{B}, the behavior of function \lstinline{A} is unpredictable.
 This problem will only be magnified by larger program sizes.
 
@@ -175,16 +177,16 @@ Compiler Interface contains a function marked as the Compiler Interface Entry-po
 That procedure must accept a set of modules to be compiled and a Compilation Context that is used to generate the Backends assembly.
 The module descriptors that are passed to the Compiler Interface are built by the Frontend, as can be seen in Figure \ref{CTFE-first-compiler-structure}.
 
-After the Compiler Interface has finished generating Backend assembly, the Compiler Backend is invoked to generate the binary executable.
+After the Compiler Interface finishes generating Backend assembly, the Compiler Backend is invoked to generate the binary executable.
 \subsection{Backend}
 \label{Backend}
 
 CTFEF does not put any additional requirements on compiler Backend.
-When using this approach, a generic Backend library, can be used.
+When using this approach, a generic Backend library can be used.
 C-=-1 compiler used LLVM\cite{lattner2008llvm} as its backend.
 
 The Backend code must be invokable from within the interpreted program in the target language.
 Depending on how the Interpreter was designed, this may require significant effort. %todo: maybe other word
 Compiler Backends are large and for the Compiler Interface to take advantage of them, their entire interface must be fully available in the interpreted context.
-This means exposing each function and type within the library, to the interpreted code, by duplicating their signatures.
+This means exposing each function and type within the library to the interpreted code, by duplicating their signatures.
 These bindings could feasibly be generated automatically \cite{marshalling_auto_generation}, but this technique was not used when implementing C-=-1 compiler.

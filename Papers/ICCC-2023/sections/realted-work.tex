@@ -9,7 +9,7 @@ The two relevant features are build scripts and macros.
 Rust macros, similar to the classic C-style preprocessor macros, generate additional code as text.
 The major difference between the systems is that Rust macros operate on tokens, rather than text, and use syntax similar to regular Rust code.
 This mechanism is powerful, allowing the user to rewrite code to avoid repetition, simplify certain tasks and create new syntax.
-They are however unable to reflect on the program as a whole or obtain some information available to the compiler.
+They are however unable to reflect on the program or obtain some information available to the compiler.
 
 Build scripts, on the other hand, are programs that execute before the compilation of the main package.
 They prepare the environment for building the program, for example, compile external dependencies.
@@ -31,8 +31,8 @@ If source generators could influence each other, the order in which they run wou
 Compilation performance would also be affected, as parallelization of source generators would become more difficult or even impossible.
 
 Although CTFEF was inspired by the C\# compiler, there are significant differences between them.
-C\# compiler extensions are compiled, separate, dynamic libraries loaded by the compiler and executed as a regular code.
+C\# compiler extensions are separate, compiled, dynamic libraries loaded by the compiler and executed as a regular code.
 In CTFEF components that analyze and generate code are part of regular code base and are not compiled separately.
 The intermediate representation of these modules is interpreted at compile time, together with other parts of compiler, and operate on the same representation of user program.
-CTFEF Is further described in chapter \ref{compiler-design}.
+CTFEF is further described in chapter \ref{compiler-design}.
 
