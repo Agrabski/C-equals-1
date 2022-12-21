@@ -1,0 +1,54 @@
+\documentclass[a4paper,twoside]{article}
+\usepackage[OT1]{fontenc}
+
+\usepackage{epsfig}
+\usepackage{listings}
+\usepackage{subcaption}
+\usepackage{calc}
+\usepackage{amssymb}
+\usepackage{amstext}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{multicol}
+\usepackage{pslatex}
+\usepackage{apalike}
+\usepackage[bottom]{footmisc}
+\usepackage{SCITEPRESS}     % Please add other packages that you may need BEFORE the SCITEPRESS.sty package.
+
+
+\begin{document}
+
+\title{Authors' Instructions: Preparation of Camera-Ready Contributions to SCITEPRESS Proceedings}
+
+\author{
+	\authorname{
+		Adam Grabski\sup{1}
+		\orcidAuthor{0000-0000-0000-0000}, Ilona Bluemke\sup{1}\orcidAuthor{0000-0000-0000-0000}
+	}
+	\affiliation{\sup{1}Department of Electronics and Information Technology, Warsaw University of Technology, Nowowiejska 15/19, Warsaw, Poland}
+	\email{adam.grabski@stud.pw.edu.pl, Ilona.Bluemke@pw.edu.pl}
+}
+
+
+\keywords{The paper must have at least one keyword. The text must be set to 9-point font size and without the use of bold or italic font style. For more than one keyword, please use a comma as a separator. Keywords must be titlecased.}
+
+\abstract{The abstract should summarize the contents of the paper and should contain at least 70 and at most 200 words. The text must be set to 9-point font size.}
+
+\onecolumn \maketitle \normalsize \setcounter{footnote}{0} \vfill
+
+\input{sections/introduction.tex}
+
+\input{sections/realted-work.tex}
+
+\input{sections/design.tex}
+
+\input{sections/implementation.tex}
+
+\input{sections/conclusions.tex}
+
+
+%% Bibliography
+\bibliography{bibliography}
+
+\end{document}
+

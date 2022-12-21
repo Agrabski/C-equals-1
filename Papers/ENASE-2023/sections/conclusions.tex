@@ -1,0 +1,19 @@
+\section{Conclusions}
+
+CTFEF is a new approach to compiler construction which offers high degree of compiler extensibility, at the cost of development time and performance, compared with conventional compilers.
+It places the interpreter as the main component of the compiler and focuses on executing user code at compile time.
+The user code has access to the same information as the compiler at compile time and may perform analysis or transformation of the compiled program.
+The thesis that introduced this approach \cite{grabski2020} demonstrated numerous practical application: generating bindings for other languages, static analysis and extending semantics of the language.
+These goals are significantly easier to accomplish, thanks to the access to semantic model of the program, constructed by the compiler.
+Authors of language tools do not need to analyze the user program.
+
+On the other hand, using CTFEF approach has some drawbacks. Implementing a compiler is more difficult.
+Since a significant part of the compiler is interpreted, the initial implementation requires working with the target language.
+The lack of available tools, such as integrated development environments, debuggers and libraries makes this part of the process significantly more difficult.
+On the other hand also means the work on the compiler in the target language may start at the very beginning of compiler bootstrapping process\cite{puntambekar:compiler_design, novillo2007gcc}.
+
+The compiler created for C-=-1 has unacceptable performance, as noted by the original C-=-1 paper \cite{grabski2022compilation}.
+Compiling the C-=-1 standard library, containing around 200 lines of code, takes approximately 10 minutes.
+Majority of that time is spent on interpreting the compiler interface.
+This is a significant barrier to adopting CTFEF approach.
+Since the compiler implemented for C-=-1 was made as a research tool with minimal effort, further work is needed to explore the performance issues of CTFEF approach.
