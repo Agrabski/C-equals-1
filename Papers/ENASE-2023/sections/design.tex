@@ -45,12 +45,14 @@ Within this function, the attribute may analyze and modify the code, as well as 
 \begin{minipage}{\linewidth}
 
 	\begin{lstlisting}[
-	  numbers=left,
-	  firstnumber=0,
-	  caption={noDiscard attribute in C-=-1},
-	  aboveskip=0pt,
-	  label={lst:noDiscardCm1}
-	  ]
+		numbers=left,
+		tabsize=2,
+		firstnumber=0,
+		breaklines=true,
+		caption={noDiscard attribute in C-=-1},
+		aboveskip=0pt,
+		label={lst:noDiscardCm1},basicstyle=\tiny
+	]
 public att<function> NoDiscard
 {
 	public fn attach(f: functionDescriptor)
@@ -63,7 +65,7 @@ public att<function> NoDiscard
 			"Return value of a no-discard function is not used",
 			123
 			);
-}
+	}
 }
   \end{lstlisting}
 \end{minipage}
@@ -80,11 +82,12 @@ The example presented in Listing \ref{lst:noDiscardCm1}, although very basic, de
 \begin{minipage}{\linewidth}
 
 	\begin{lstlisting}[
-	  numbers=left,
-	  firstnumber=0,
-	  caption={Example of using noDiscard attribute from Listing \ref{lst:noDiscardCm1}},
-	  aboveskip=0pt,
-	  label={lst:noDiscardUsageCm1}
+		numbers=left,
+		firstnumber=0,
+		caption={Example of using noDiscard attribute from Listing \ref{lst:noDiscardCm1}},
+		aboveskip=0pt,
+		breaklines=true,
+		label={lst:noDiscardUsageCm1},basicstyle=\tiny
 	  ]
   [noDiscard()]
   fn noDiscardFunction() -> usize;
@@ -168,7 +171,7 @@ Therefore, it is impossible for a function to modify a procedure, it depends on.
 Compiler Interface translates the program's intermediate representation into the Backend's assembly language.
 This component is interpreted during compilation.
 
-What is unique about CTFEF is that this part of the compiler can be written in the target language, during initial bootstrapping of the compiler bootstrapping process, i.e. initial implementation using another language \cite{puntambekar:compiler_design, novillo2007gcc}.
+What is unique about CTFEF is that this part of the compiler can be written in the target language, during initial bootstrapping of the compiler bootstrapping process, i.e. initial implementation using another language \cite{puntambekar:compiler_design,novillo2007gcc}.
 In case of the C-=-1 compiler, C++ was used to implement Frontend, Backend and Interpreter, with Compiler Interface written in C-=-1 \cite{grabski2022compilation}.
 
 Compiler Interface contains a function marked as the Compiler Interface Entry-point.

@@ -1,9 +1,11 @@
 \section{Introduction}
 
+Software Engineering is concerned with building good software. Very important type of software are compilers. Many books on compilers constructions has been published, among them the books written  by team Aho, Sethi, Ullman eg. \cite{aho2007compilers} are very popular. Currently, the chances of implementing a compiler are increasing because many domains languages are proposed and theirs compilers has to be produced. As new languages have new features theirs compilers must differ from the classic ones.
 
 Compile-time function execution (CTFE) is an aspect of a programming language, that allows the programmer to execute code at compile-time.
 It has been gaining popularity with programming languages without virtual machines such as Rust \cite{rust} or C++ \cite{ISO:cpp98}.
 The goals and capabilities of CTFE depend on the language and are discussed in details in chapter \ref{related-work}.
+Introduction of such mechanism to a language, significantly affects how software is written.
 
 In this paper a new approach to compiler construction that places Compile Time Function Execution capabilities as the first priority is proposed.
 This architecture is called CTFEF: Compile Time Function Execution First. CTFEF builds the compiler around the Interpreter component.

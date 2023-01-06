@@ -14,25 +14,24 @@
 \usepackage{apalike}
 \usepackage[bottom]{footmisc}
 \usepackage{SCITEPRESS}     % Please add other packages that you may need BEFORE the SCITEPRESS.sty package.
-
-
+\lstset{tabsize=2}
 \begin{document}
 
-\title{Authors' Instructions: Preparation of Camera-Ready Contributions to SCITEPRESS Proceedings}
+\title{Compilation through interpretation}
 
 \author{
 	\authorname{
 		Adam Grabski\sup{1}
-		\orcidAuthor{0000-0000-0000-0000}, Ilona Bluemke\sup{1}\orcidAuthor{0000-0000-0000-0000}
+		\orcidAuthor{0000-0002-2894-5976}, Ilona Bluemke\sup{1}\orcidAuthor{0000-0002-2894-5976}
 	}
 	\affiliation{\sup{1}Department of Electronics and Information Technology, Warsaw University of Technology, Nowowiejska 15/19, Warsaw, Poland}
 	\email{adam.grabski@stud.pw.edu.pl, Ilona.Bluemke@pw.edu.pl}
 }
 
 
-\keywords{The paper must have at least one keyword. The text must be set to 9-point font size and without the use of bold or italic font style. For more than one keyword, please use a comma as a separator. Keywords must be titlecased.}
+\keywords{compiler, interpreter, metaprogramming}
 
-\abstract{The abstract should summarize the contents of the paper and should contain at least 70 and at most 200 words. The text must be set to 9-point font size.}
+\abstract{\input{sections/abstract.tex}}
 
 \onecolumn \maketitle \normalsize \setcounter{footnote}{0} \vfill
 
@@ -48,7 +47,9 @@
 
 
 %% Bibliography
-\bibliography{bibliography}
 
+\bibliographystyle{apalike}
+{\small
+	\bibliography{bibliography}}
 \end{document}
 
