@@ -3,17 +3,18 @@
 
 Compile-time function execution (CTFE) is an aspect of a programming language, that allows the programmer to execute code at compile-time.
 It has been gaining popularity with programming languages without virtual machines such as Rust \cite{rust} or C++ \cite{ISO:cpp98}.
-The goals and capabilities of CTFE depend on the language and are discussed in details in chapter \ref{related-work}.
+The goals and capabilities of CTFE depend on the language and are discussed in details in section \ref{related-work}.
 
 In this paper a new approach to compiler construction that places Compile Time Function Execution capabilities as the first priority is proposed.
 This architecture is called CTFEF: Compile Time Function Execution First. CTFEF builds the compiler around the Interpreter component.
+The goal of this approach is to shorten the initial stage of compiler bootstrapping \cite{puntambekar:compiler_design, novillo2007gcc}, better support languages built around static metaprogramming and make the compiler more extensible.
 The role of the compiler is to construct the semantic model of the program being compiled and pass it as data to the interpreted Compiler-Interface module.
 Compiler-Interface then transforms the model into the assembly language to be compiled into executable.
 This approach was created during implementation of the compiler for C-=-1, a new language that prioritizes static metaprogramming.
-The design of that language is described in chapter \ref{language-design}.
-Related work is briefly shown in chapter \ref{related-work}.
-In chapter \ref{compiler-design} the structure of a CTFEF compiler and interactions among its components are presented.
-
-
 Using CTFEF approach causes many implementation difficulties. Data structures used within the compiler are tightly coupled with the compiled language.
-These problems and how they were solved in C-=-1 compiler are described in chapter \ref{implementation}.
+These problems and how they were solved in C-=-1 compiler are described in section \ref{implementation}.
+
+
+The design of that language is described in section \ref{language-design}.
+Related work is briefly shown in section \ref{related-work}.
+In section \ref{compiler-design} the structure of a CTFEF compiler and interactions among its components are presented.

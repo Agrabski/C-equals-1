@@ -70,6 +70,18 @@
 %% environment and commands, and keywords command.
 \maketitle
 
+\begin{abstract}
+
+	As static metaprogramming is becoming more relevant, compilers must adapt to accommodate them. This requires exposing more information about the code, from the compiler to the programmer as well as more powerful compile-time function execution capabilities. The Interpreter component of a compiler therefore becomes more important.
+
+	In this paper a novel approach to compiler architecture that places the Interpreter as the central component of the compiler is proposed.
+	Translation of user code into the executable form is done by an Interpreter, written in the target language. The data structures of Interpreter are accessible also to the programmer. Such solution significantly improves flexibility and extensibility of the compiler and enables execution of any code at the compile-time.
+
+	Compile Time Function Execution (CTFE) First pattern was designed for low-level, non-garbage-collected, reflection-enabled language C-=-1. This is a new programming language, which allows the programmer to execute any code at the compile time, as well as to analyze and modify the program structure. Grace to the extensibility of the designed compiler, programs written in C-=-1 can also generate marshalling bindings for other languages and support a variety of programming paradigms.
+
+	The significant flexibility and extensibility of CTFEF caused severe problems in compiler construction. The compiler appeared very complex, its parts, especially Interpreter, were very difficult to debug. Compiler operates on inflexible data structures, accessible also for a programmer. They are therefore a part of the compiled languages standard library and backwards compatibility must be maintained.
+
+\end{abstract}
 
 \input{sections/introduction.tex}
 

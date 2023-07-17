@@ -5,7 +5,7 @@ What differentiates C-=-1 are its two core principles: all code is executable at
 The primary purpose of this language was to investigate how these ideas influence software written in it \cite{grabski2022compilation}.
 
 C-=-1 is a simple language, built with minimum set of features needed to demonstrate the usefulness of the proposed metaprogramming features.
-They are discussed further in chapter  \ref{design:attributes_and_metaprogramming}.
+They are discussed further in section  \ref{design:attributes_and_metaprogramming}.
 The primary motivation for those mechanisms was to provide to a programmer the ability to create domain specific static analysis and code generation tools, without creating a separate program.
 
 \subsection{Type system}
@@ -29,10 +29,13 @@ Within the special method the attribute will have access to the semantic model o
 It may then modify the semantic model or report warnings or errors.
 
 Listing \ref{lst:noDiscardCm1} contains an example of a C-=-1 attribute providing static analysis: \lstinline{noDiscard}.
-It works in the same manner as the attribute of the same name present in C++17 \cite{ISO:cpp17}: if applied to a function, the result of that invoking procedure must be used.
+It works in the same manner as the attribute of the same name present in C++17 \cite{ISO:cpp17}: the result of invoking the annotated function must be used.
 To declare an attribute in C-=-1, the \lstinline{att} keyword is used.
 After that, attribute targets should be listed in angled brackets, as in line 0 of Listing \ref{lst:noDiscardCm1}.
 Valid targets for attributes include a number of language elements, such as types, functions, variables and fields. Attribute from Listing \ref{lst:noDiscardCm1} declares two member functions: \lstinline{attach} in line 4 and \lstinline{onCall} in line 6.
+Listing \ref{lst:noDiscardUsageCm1} contains an example of using the \lstinline{noDiscard} attribute.
+All uses of the \lstinline|noDiscardFunction|, except for the one on line 3 are valid.
+Using the function in a statement as opposed to an expression causes a compile-time error.
 
 The \lstinline{attach} method is called after names of all program elements have been gathered, but before compiler starts to analyze function bodies.
 It is common among all attribute targets and accepts the descriptor of the attached program element (function, field, type, etc.).
@@ -105,22 +108,24 @@ The example presented in Listing \ref{lst:noDiscardCm1}, although very basic, de
 CTFEF approach was created during implementation of the first compiler for the C-=-1 language\cite{grabski2022compilation}.
 CTFEF compiler has four major components:
 \begin{enumerate}
-	\item Frontend
-	\item Interpreter
-	\item Compiler Interface
-	\item Backend
+	\item Frontend.
+	\item Interpreter.
+	\item Compiler Interface.
+	\item Backend.
 \end{enumerate}
 
 Figure \ref{CTFE-first-compiler-structure} contains a diagram with an overview of how these parts interact with each other, during the compilation process.
-Frontend, described in chapter \ref{Frontend}, parses the code in the compiled language and constructs its intermediate representation, using Interpreter's data structures.
+Frontend, described in section \ref{Frontend}, parses the code in the compiled language and constructs its intermediate representation, using Interpreter's data structures.
+The structure and form of the intermediate representation is not specified by the CTFEF approach, as long as it contains all semantically relevant information from the source program.
 It is used to analyze both user code and the Compiler Interface.
-After the intermediate representation is constructed, it is passed to the Interpreter, which is described in chapter \ref{Interpreter}.
+After the intermediate representation is constructed, it is passed to the Interpreter, which is described in section \ref{Interpreter}.
 Compiler Interface intermediate representation is then executed, using the user program as data.
 This step converts the semantic model of the program into the Backends intermediate language.
-This process is further explained in chapter \ref{compiler-interface}.
+This process is further explained in section \ref{compiler-interface}.
 Finally, the Backend generates the executable file.
 
 \begin{figure}
+	\centering
 	\includegraphics[height=13cm]{pictures/compiler-structure.png}
 	\caption{CTFEF compiler structure}
 	\label{CTFE-first-compiler-structure}
@@ -144,6 +149,7 @@ It executes the Compiler-Interface which translates the intermediate representat
 To do it, it must be able to treat the program's intermediate representation both as code and data.
 
 \begin{figure}
+	\centering
 	\includegraphics[width=7cm]{pictures/circular-function-reference.jpg}
 	\caption{Example of circular reference in meta code}
 	\label{circular-function-reference}
@@ -153,7 +159,7 @@ An important issue for CTFEF compiler is decision what code can be executed at c
 In some languages it may be possible to introduce circular references between the functions that modify the codebase.
 Figure \ref{circular-function-reference} contains a diagram of such scenario.
 \lstinline{A}, \lstinline{B} and \lstinline{C} are functions.
-If function \lstinline{B} is modified by function \lstinline{C} and \lstinline{C} invokes \lstinline{B}, the behavior of function \lstinline{A} is unpredictable.
+If function \lstinline{B} is modified by function \lstinline{C} and \lstinline{B} invokes \lstinline{C}, the behavior of function \lstinline{A} is unpredictable.
 This problem will only be magnified by larger program sizes.
 
 One of possible solutions, to the above-mentioned problem, is to restrict which functions can be invoked at compile time.
@@ -166,7 +172,9 @@ Therefore, it is impossible for a function to modify a procedure, it depends on.
 \label{compiler-interface}
 
 Compiler Interface translates the program's intermediate representation into the Backend's assembly language.
-This component is interpreted during compilation.
+This component is interpreted during compilation and may be provided by the user.
+In case of C-=-1, compiler interface could be supplied to the compiler, the same way that the code being compiled is passed, as a collection of source files.
+Figure \ref{compiler-design} reflects this decision, treating the Compiler Interface as an input into the compiler, same as user code.
 
 What is unique about CTFEF is that this part of the compiler can be written in the target language, during initial bootstrapping of the compiler bootstrapping process, i.e. initial implementation using another language \cite{puntambekar:compiler_design, novillo2007gcc}.
 In case of the C-=-1 compiler, C++ was used to implement Frontend, Backend and Interpreter, with Compiler Interface written in C-=-1 \cite{grabski2022compilation}.

@@ -2,17 +2,18 @@
 \label{implementation}
 
 The first CTFEF was created for a new language: C-=-1, using generic parser generator and Backend.
-The most important aspect of implementing a CTFEF compiler is the design of the data structures, described in chapter \ref{data_structures}, that will be used by the Interpreter.
+The most important aspect of implementing a CTFEF compiler is the design of the data structures, described in section \ref{data_structures}, that will be used by the Interpreter.
 
 In order to exploit CTFEF approach in design of a compiler the language should contain a set of data structures to describe user code i.e. a Semantic Model.
 It will allow the programmer to interact and manipulate the structure of the program at compile-time.
-The Semantic model designed and implemented for C-=-1 is described in chapter \ref{semantic_model}.
+The Semantic model designed and implemented for C-=-1 is described in section \ref{semantic_model}.
 
 The final part of a CTFEF compiler is the Backend Interface.
 It is a program, written in the target language, and executed at compile-time that translates the semantic model into the Backends' assembly language.
-Backend Interface implemented for C-=-1 is relatively small and is described in chapter \ref{implementation/Backend-interface}.
+Backend Interface implemented for C-=-1 is relatively small and is described in section \ref{implementation/Backend-interface}.
 
 \begin{figure*}
+	\centering
 	\includegraphics[width=13cm]{pictures/Interpreter_data_structures_uml.png}
 	\caption{Class diagram of C-=-1 Interpreter data structures}
 	\label{fig:Interpreter_data_structures}
