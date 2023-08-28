@@ -1,4 +1,5 @@
-\documentclass[10pt,xcolor=svgnames]{beamer} %Beamer
+\documentclass[10pt]{beamer} %Beamer
+
 \usepackage{palatino} %font type
 \usepackage{caption}
 \usepackage{hyperref}
@@ -6,24 +7,8 @@
 \usepackage{listings}
 \usepackage{csquotes}
 
-\usefonttheme{metropolis} %Type of slides
-\usefonttheme[onlymath]{serif} %font type Mathematical expressions
-\usetheme[progressbar=frametitle,titleformat frame=smallcaps,numbering=counter]{metropolis} %This adds a bar at the beginning of each section.
-\useoutertheme[subsection=false]{miniframes} %Circles in the top of each frame, showing the slide of each section you are at
 
 \usepackage{appendixnumberbeamer} %enumerate each slide without counting the appendix
-\setbeamercolor{progress bar}{fg=Maroon!70!Coral} %These are the colours of the progress bar. Notice that the names used are the svgnames
-\setbeamercolor{title separator}{fg=DarkSalmon} %This is the line colour in the title slide
-\setbeamercolor{structure}{fg=black} %Colour of the text of structure, numbers, items, blah. Not the big text.
-\setbeamercolor{normal text}{fg=black!87} %Colour of normal text
-\setbeamercolor{alerted text}{fg=DarkRed!60!Gainsboro} %Color of the alert box
-\setbeamercolor{example text}{fg=Maroon!70!Coral} %Colour of the Example block text
-
-
-\setbeamercolor{palette primary}{bg=NavyBlue!50!DarkOliveGreen, fg=white} %These are the colours of the background. Being this the main combination and so one.
-\setbeamercolor{palette secondary}{bg=NavyBlue!50!DarkOliveGreen, fg=white}
-\setbeamercolor{palette tertiary}{bg=NavyBlue!40!Black, fg= white}
-\setbeamercolor{section in toc}{fg=NavyBlue!40!Black} %Color of the text in the table of contents (toc)
 
 %These next packages are the useful for Physics in general, you can add the extras here.
 \usepackage{amsmath,amssymb}
@@ -43,6 +28,10 @@
 \usepackage{color}
 
 \lstloadlanguages{C,C++,csh,Java}
+\usefonttheme{metropolis} %Type of slides
+\usefonttheme[onlymath]{serif} %font type Mathematical expressions
+\usetheme[progressbar=frametitle,titleformat frame=smallcaps,numbering=counter]{metropolis} %This adds a bar at the beginning of each section.
+\useoutertheme[subsection=false]{miniframes} %Circles in the top of each frame, showing the slide of each section you are at
 
 \definecolor{red}{rgb}{0.6,0,0}
 \definecolor{blue}{rgb}{0,0,0.6}
@@ -115,8 +104,6 @@ Warsaw Univeristy of Technology
 \begin{document}
 {
 
-\setbeamercolor{background canvas}{bg=NavyBlue!50!DarkOliveGreen, fg=white}
-\setbeamercolor{normal text}{fg=white}
 \maketitle
 }%This is the colour of the first slide. bg= background and fg=foreground
 
@@ -127,5 +114,6 @@ Warsaw Univeristy of Technology
 \end{frame}
 
 \input{sections/motivation.tex}
+\input{sections/CTFEF.tex}
 
 \end{document}
