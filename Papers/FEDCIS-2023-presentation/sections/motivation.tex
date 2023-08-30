@@ -45,6 +45,25 @@
 
 \end{frame}
 
+\begin{frame}[fragile]
+	\frametitle{Motivating example}
+	\begin{lstlisting}
+struct person {
+	std::string name;
+	int yearOfBirth;
+	int height;
+};
+void print(
+  std::ostream&s,
+  person const& p) {
+  s << p.name << '\n'
+    << p.yearOfBirth << '\n'
+    << p.height << '\n';
+}
+	\end{lstlisting}
+
+\end{frame}
+
 \begin{frame}
 	\frametitle{C-=-1}
 
