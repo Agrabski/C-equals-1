@@ -3,14 +3,104 @@
 \begin{frame}
     \frametitle{Type System}
 
-    
+    \begin{itemize}
+        \item Based on C++\begin{itemize}
+            \item Classes have methods and fields with access control
+            \item Interfaces are abstract classes with only virtual methods
+        \end{itemize}
+        \item Generic programming done via templates
+        \item Metaprogramming done with attributes\begin{itemize}
+            \item Special types similar in concept to C\#
+            \item Are notified at compiletime when a program element is used
+            \item May report diagnostics or modify code
+        \end{itemize}
+    \end{itemize}
 
 \end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Metaprogramming}
+
+    \begin{lstlisting}
+public att<function> NoDiscard {
+    public fn attach(f: functionDescriptor) {}
+    public fn onCall(call: functionCallExpression*) {
+        if(call._parentStatment != null<IInstruction>())
+            raiseError(&(call._pointerToSource), "Return value of a no-discard function is not used", 123);
+    }
+}
+[noDiscard()]
+fn noDiscardFunction() -> usize;
+fn main() -> usize {
+  noDiscardFunction(); // error 123: Return value of
+                       // a no-discard function is not used
+  let x = noDiscardFunction();     // ok
+  let y = x + noDiscardFunction(); // ok
+  return noDiscardFunction();      // ok
+}
+    \end{lstlisting}
+
+\end{frame}
+
 
 \begin{frame}
     \frametitle{Semantic model}
 
-    
+    \begin{itemize}
+        \item Interpreter operates on several types of value\begin{itemize}
+            \item Pimitives (string and integer)
+            \item Object
+            \item Reference to value
+            \item Marshalled references (reference to language entity, reference to native object eg: LlvmContext)
+        \end{itemize}
+        \item Only limited number of language entities have types associated with them in compiler code\begin{itemize}
+            \item Classes and their fields
+            \item Functions
+            \item Generics
+        \end{itemize}
+        \item The rest are expressed using interpreter data types\begin{itemize}
+            \item Instructions
+            \item Expressions
+            \item Literals
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Using compiler data structure}
+
+    \begin{lstlisting}
+Type* createType(
+    Namespace* target,
+    NameResolver& resolver,
+    NameResolutionContext& context,
+    TypeDeclarationContext* ctx,
+    path const& path)
+{
+ auto name = ::name(ctx);
+ auto type = target->get<dataStructures::Type>(name);
+ if (type == nullptr)
+  type = target->append<dataStructures::Type>(name);
+ if (ctx->classContentSequence() != nullptr)
+  for (auto member : ctx->classContentSequence()->functionDeclaration())
+   createFunction(not_null(type), member, context, path);
+ return type;
+}
+    \end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Using interpreter data structures}
+
+    \begin{lstlisting}
+runtime_value buildVariableReferenceExpressionDescriptor(Variable* var) {
+ auto [result, object] = heapAllocateObject(getVariableReferenceExpressionDescriptor());
+ object.setValue("_variable", createVariableDescriptor(var));
+ object.setValue("_type", createTypeDescriptor(var->type()));
+ return std::move(result);
+}
+    \end{lstlisting}
 
 \end{frame}
 
