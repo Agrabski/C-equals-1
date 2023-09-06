@@ -3,7 +3,18 @@
 \begin{frame}
     \frametitle{Conclusions}
 
-    
+    \begin{itemize}
+        \item CTFEF architecture is flexible \begin{itemize}
+            \item Several language features from other languages implemented as library features in C-=-1
+            \item Generating source code of other languages at compiletime
+        \end{itemize}
+        \item Parts of compiler written in target language on very early stage
+        \item Large amount ow work devoted to parts of compiler related to interpreting code\begin{itemize}
+            \item Interpreter
+            \item Defining primitive operations
+            \item Bindings to LLVM
+        \end{itemize}
+    \end{itemize}
 
 \end{frame}
 
@@ -11,7 +22,7 @@
     \frametitle{Conclusions}
 
     \begin{itemize}
-        \item C-=-1 performance is unsatisfactory\begin{itemize}
+        \item C-=-1 compiler performance is unsatisfactory\begin{itemize}
             \item ~10 minutes to compile 200 lines of code
         \end{itemize}
         \item Performance of the compiler was not a subject of the research, a lot of improvements are possible\begin{itemize}
